@@ -6,12 +6,12 @@
       <description>Most recent changes with links to updates.</description>
       <language>en</language>
          <item>
-            <title>Version 0.8a6 (bugs fixes; 2 new feature)</title>
+            <title>Version 0.8a8</title>
 						<sparkle:releaseNotesLink>
 							http://subler.googlecode.com/svn/doc/rnotes.html
 						</sparkle:releaseNotesLink>
             <pubDate>Tue, 10 Mar 2009 17:53:11 +0000</pubDate>
-            <enclosure url="http://subler.googlecode.com/files/Subler-0.8a6.zip" sparkle:version="0.8a6" length="1535295" type="application/octet-stream" sparkle:dsaSignature="MC4CFQDH4B8CT9lA4U5uN4UQ7uv5DU5/pAIVAINRQUVjB3K8/jDZ1W3qP30s8zDn" />
+            <enclosure url="http://subler.googlecode.com/files/Subler-0.8a8.zip" sparkle:version="0.8a8" length="1131839" type="application/octet-stream" sparkle:dsaSignature="MC0CFDMWyuf6fjzNDvuujbRkTb16ViNqAhUAwNSOIcwKHrFyqGE7dJMIFrzLjAw=" />
          </item>
    </channel>
 </rss>

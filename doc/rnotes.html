@@ -9,20 +9,30 @@
 
 	<body>
 		<br />
-			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="0" summary="Two column table with heading">
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="0" summary="New Features">
 				<tr>
 					<td class="blue" colspan="2">
-						<h3>Metadata and tracks import from MPEG-4 File</h3>
+						<h3>Experimental tracks import from mov and new mp4 file creation</h3>
 					</td>
 				</tr>
 				<tr>
 					<td valign="top">
-						<p>It's now possibile to import tracks and metadata from other mp4 files. H.264, AAC should work.</p>
+						<p>It's now possibile to create new mp4 file in Subler and import tracks from mov file. Tested with H.264 (with avc1 fourcc, broken H.264 from avi is not supported), AAC, AC-3, 3GPP Text Subtitles, SRT Subtitles (created with perian) and Chapters.</p>
+						<p>Content Rating writing support is now enabled.</p>
 					</td>
 				</tr>
+				<td class="blue" colspan="2">
+					<h3>Subtitle text styles</h3>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<p>Text style from srt are converted to the correspective tx3g style. Supported style are: italic, bold, underline. The actual style displayed depends on the player.</p>
+				</td>
+			</tr>
 			</table>
 			<br>
-			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="0" summary="Two column table with heading">
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="0" summary="Bug Fixes">
 				<tr>
 					<td class="blue" colspan="2">
 						<h3>Bug fixes</h3>
@@ -30,8 +40,7 @@
 				</tr>
 				<tr>
 					<td valign="top">
-						<p>Fixed a bug which may cause problem with future QuickTime versions and subtitles.</p>
-						<p>Better error checking.</p>
+						<p>Fixed a major regression with UTF-8 characters that caused problems in QuickTime</p>
 					</td>
 				</tr>
 			</table>
