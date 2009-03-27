@@ -1,5 +1,5 @@
-#summary Chapters text format supported by Subler
-#labels Phase-Support
+#summary Chapters text formats
+#labels Phase-Support,Featured
 
 = Introduction =
 
