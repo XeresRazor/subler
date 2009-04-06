@@ -12,23 +12,15 @@
 			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="0" summary="New Features">
 				<tr>
 					<td class="blue" colspan="2">
-						<h3>Experimental tracks import from mov and new mp4 file creation</h3>
+						<h3>Support for reading h.264, aac, and ac-3 elementary stream</h3>
 					</td>
 				</tr>
 				<tr>
 					<td valign="top">
-						<p>It's now possibile to create new mp4 file in Subler and import tracks from mov file. Tested with H.264 (with avc1 fourcc, broken H.264 from avi is not supported), AAC, AC-3, 3GPP Text Subtitles, SRT Subtitles (created with perian) and Chapters.</p>
-						<p>Content Rating writing support is now enabled.</p>
+						<p>Mux H.264 elementary stream, AAC-LC with adts header and AC-3 to mp4</p>
+						<p>New option to set the alternate group for video and audio tracks</p>
 					</td>
 				</tr>
-				<td class="blue" colspan="2">
-					<h3>Subtitle text styles</h3>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					<p>Text style from srt are converted to the correspective tx3g styles. Supported styles are: italic, bold, underline. The actual style displayed depends on the player.</p>
-				</td>
 			</tr>
 			</table>
 			<br>
@@ -40,7 +32,8 @@
 				</tr>
 				<tr>
 					<td valign="top">
-						<p>Fixed a major regression with UTF-8 characters that caused problems in QuickTime</p>
+						<p>Fixed a problem where after removing a chapter track a new one couldn't be added</p>
+						<p>Fixed video dimension when reading video from mov, if the mov file had been saved in QuickTime with a different window size.</p>
 					</td>
 				</tr>
 			</table>
