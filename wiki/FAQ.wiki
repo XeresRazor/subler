@@ -1,13 +1,5 @@
 #Frequently Asked Question.
 
-= Introduction =
+*Why doesn't QuickTime and others Apple's devices see the subtitles/chapters?*
 
-Add your content here.
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The file extension must be .m4v, or QuickTime and iPod/AppleTV won't show any subtitles tracks.
