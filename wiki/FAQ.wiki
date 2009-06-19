@@ -1,3 +1,4 @@
+#labels Featured
 #Frequently Asked Question.
 
 *Why doesn't QuickTime and others Apple's devices see the subtitles/chapters?*
