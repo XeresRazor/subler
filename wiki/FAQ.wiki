@@ -8,4 +8,4 @@ The file extension must be .m4v, or QuickTime and iPod/AppleTV won't show any su
 
 *Why does my SRT file not import in Subler?*
 
-Check that it's proper UTF-8 text encoding. You can use Jubler to edit the SRT file before importing in Subler.
+Even though the text encoding detector should detect the text encoding of your SRT file, it sometimes fails to do so. You'll increase your chances of success by using UTF-8 encoding. You can use Jubler to edit the SRT file before importing in Subler.
