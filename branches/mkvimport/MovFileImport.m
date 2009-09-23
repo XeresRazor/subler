@@ -6,37 +6,104 @@
 //  Copyright 2009 Damiano Galassi. All rights reserved.
 //
 
-extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
-
 #import "MovFileImport.h"
 #if !__LP64__
     #import <QuickTime/QuickTime.h>
 #endif
 #include "lang.h"
 
+extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
+
+@interface QTMovie(IdlingAdditions)
+ -(QTTime)maxTimeLoaded;
+@end
+
 @implementation MovFileImport
+
+-(void) movieLoaded
+{
+    NSArray *tracks = [sourceFile tracks];
+    importCheckArray = [[NSMutableArray alloc] initWithCapacity:[tracks count]];
+
+    NSInteger i;
+    for (i = 0; i < [tracks count]; i++) {
+        [importCheckArray addObject: [NSNumber numberWithBool:YES]];
+        QTTrack *track = [tracks objectAtIndex:i];
+        if ([[track attributeForKey:QTTrackIsChapterTrackAttribute] boolValue])
+            chapterTrackId = [[track attributeForKey:QTTrackIDAttribute] integerValue];
+    }
+
+    [addTracksButton setEnabled:YES];
+    [loadProgressBar setHidden:YES];
+}
 
 - (id)initWithDelegate:(id)del andFile: (NSString *)path
 {
-	if (self = [super initWithWindowNibName:@"FileImport"])
-	{        
-		delegate = del;
-        filePath = path;
-        sourceFile = [[QTMovie alloc] initWithFile:filePath error:nil];
-        NSArray *tracks = [sourceFile tracks];
-        importCheckArray = [[NSMutableArray alloc] initWithCapacity:[tracks count]];
-
-        NSInteger i;
-        for (i = 0; i < [tracks count]; i++) {
-            [importCheckArray addObject: [NSNumber numberWithBool:YES]];
-
-            QTTrack *track = [tracks objectAtIndex:i];
-            if ([[track attributeForKey:QTTrackIsChapterTrackAttribute] boolValue])
-                chapterTrackId = [[track attributeForKey:QTTrackIDAttribute] integerValue];
-        }
+	if (self = [super initWithWindowNibName:@"FileImport"]) {   
+        delegate = del;
+        filePath = [path retain];
     }
-
 	return self;
+}
+
+- (void)awakeFromNib 
+{
+    NSURL *movieUrl = [NSURL fileURLWithPath:filePath];
+    sourceFile = [[QTMovie alloc] initWithURL:movieUrl error:nil];
+    
+    if ([[sourceFile attributeForKey:QTMovieLoadStateAttribute] longValue] >= QTMovieLoadStateComplete) {
+        [self movieLoaded];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(loadStateChanged:) 
+                                                     name:QTMovieLoadStateDidChangeNotification 
+                                                   object:sourceFile];
+
+        loadTimer = [NSTimer scheduledTimerWithTimeInterval:1
+                                                     target:self
+                                                   selector:@selector(updateUI:)
+                                                   userInfo:nil
+                                                    repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:loadTimer
+                                     forMode:NSDefaultRunLoopMode];
+        [loadProgressBar setIndeterminate:NO];
+        [loadProgressBar setHidden:NO];
+        [loadProgressBar setUsesThreadedAnimation:YES];
+    }
+}
+
+-(void)loadStateChanged:(NSNotification *)notification
+{
+    long loadState = [[sourceFile attributeForKey:QTMovieLoadStateAttribute] longValue];
+
+    if (loadState >= QTMovieLoadStateComplete)
+    {
+        [self movieLoaded];
+
+        [loadTimer invalidate];
+        loadTimer = nil;
+        [tableView reloadData];
+    }
+    else if (loadState == -1)
+    {
+        NSLog(@"Error occurred");
+    }
+}
+
+-(double)_percentLoaded
+{
+    NSTimeInterval tMaxLoaded;
+    NSTimeInterval tDuration;
+    
+    QTGetTimeInterval([sourceFile duration], &tDuration);
+    QTGetTimeInterval([sourceFile maxTimeLoaded], &tMaxLoaded);
+    
+	return (double) tMaxLoaded/tDuration;
+}
+
+-(void) updateUI: (id) sender {
+    [loadProgressBar setDoubleValue:[self _percentLoaded] *100];
 }
 
 - (NSString*)formatForTrack: (QTTrack *)track;
@@ -87,19 +154,21 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
             break;
     }
     DisposeHandle((Handle)idh);
+#else
+    result = [track attributeForKey:QTTrackFormatSummaryAttribute];
 #endif
     return result;
 }
 
 - (NSString*)langForTrack: (QTTrack *)track;
 {
-    return [NSString stringWithFormat:@"%s", lang_for_qtcode(
+    return [NSString stringWithUTF8String:lang_for_qtcode(
                             [[track attributeForKey:QTTrackLanguageAttribute] longValue])->eng_name];
 }
 
 - (NSInteger) numberOfRowsInTableView: (NSTableView *) t
 {
-    if( !sourceFile )
+    if( !sourceFile || ([[sourceFile attributeForKey:QTMovieLoadStateAttribute] longValue] < QTMovieLoadStateComplete))
         return 0;
 
     return [[sourceFile tracks] count];
@@ -114,26 +183,24 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     if (!track)
         return nil;
     
-    if( [tableColumn.identifier isEqualToString: @"check"] )
+    if ([tableColumn.identifier isEqualToString: @"check"] )
         return [importCheckArray objectAtIndex: rowIndex];
-
-    if ([tableColumn.identifier isEqualToString:@"trackId"]) {
+    
+    if ([tableColumn.identifier isEqualToString:@"trackId"])
         return [track attributeForKey:QTTrackIDAttribute];
-    }
-
+    
     if ([tableColumn.identifier isEqualToString:@"trackName"])
         if ([[track attributeForKey:QTTrackIDAttribute] integerValue] == chapterTrackId)
             return @"Chapter Track";
         else
             return [track attributeForKey:QTTrackDisplayNameAttribute];
-
-    if ([tableColumn.identifier isEqualToString:@"trackInfo"]) {
+    
+    if ([tableColumn.identifier isEqualToString:@"trackInfo"])
         return [self formatForTrack:track];
-    }
-
-    if ([tableColumn.identifier isEqualToString:@"trackDuration"]) {
+    
+    if ([tableColumn.identifier isEqualToString:@"trackDuration"])
         return QTStringFromTime([[track attributeForKey:QTTrackRangeAttribute] QTTimeRangeValue].duration);
-    }
+    
     if ([tableColumn.identifier isEqualToString:@"trackLanguage"])
         return [self langForTrack:track];
 
@@ -151,6 +218,10 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (IBAction) closeWindow: (id) sender
 {
+    if (loadTimer)
+        [loadTimer invalidate];
+    [sourceFile release];
+    sourceFile = nil;
     if ([delegate respondsToSelector:@selector(importDone:)]) 
         [delegate importDone:nil];
 }
@@ -207,6 +278,8 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
                 newTrack.format = [self formatForTrack:track];
                 newTrack.Id = i;
                 newTrack.sourcePath = filePath;
+                newTrack.sourceFileHandle = sourceFile;
+                newTrack.sourceInputType = MP42SourceTypeQuickTime;
                 newTrack.name = [track attributeForKey:QTTrackDisplayNameAttribute];
                 newTrack.language = [self langForTrack:track];
                 [tracks addObject:newTrack];
@@ -225,6 +298,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 {
     [sourceFile release];
     [importCheckArray release];
+    [filePath release];
     [super dealloc];
 }
 

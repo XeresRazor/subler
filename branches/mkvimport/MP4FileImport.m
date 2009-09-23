@@ -15,18 +15,24 @@
 	if (self = [super initWithWindowNibName:@"FileImport"])
 	{        
 		delegate = del;
-        filePath = path;
-        sourceFile = [[MP42File alloc] initWithExistingFile:filePath andDelegate:self];
-        importCheckArray = [[NSMutableArray alloc] initWithCapacity:[sourceFile tracksCount]];
-
-        NSInteger i = [sourceFile tracksCount];
-        while (i) {
-            [importCheckArray addObject: [NSNumber numberWithBool:YES]];
-            i--;
-        }
+        filePath = [path retain];
     }
 
 	return self;
+}
+
+- (void)awakeFromNib
+{
+    sourceFile = [[MP42File alloc] initWithExistingFile:filePath andDelegate:self];
+    importCheckArray = [[NSMutableArray alloc] initWithCapacity:[sourceFile tracksCount]];
+    
+    NSInteger i = [sourceFile tracksCount];
+    while (i) {
+        [importCheckArray addObject: [NSNumber numberWithBool:YES]];
+        i--;
+        
+        [addTracksButton setEnabled:YES];        
+    }
 }
 
 - (NSInteger) numberOfRowsInTableView: (NSTableView *) t
@@ -67,9 +73,9 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     return nil;
 }
 
-- (void) tableView: (NSTableView *) tableView 
-    setObjectValue: (id) anObject 
-    forTableColumn: (NSTableColumn *) tableColumn 
+- (void) tableView: (NSTableView *) tableView
+    setObjectValue: (id) anObject
+    forTableColumn: (NSTableColumn *) tableColumn
                row: (NSInteger) rowIndex
 {
     if ([tableColumn.identifier isEqualToString: @"check"])
@@ -88,8 +94,11 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     NSInteger i;
 
     for (i = 0; i < [sourceFile tracksCount]; i++) {
-        if ([[importCheckArray objectAtIndex: i] boolValue])
-            [tracks addObject:[sourceFile trackAtIndex:i]];
+        if ([[importCheckArray objectAtIndex: i] boolValue]) {
+            MP42Track* track = [sourceFile trackAtIndex:i];
+            track.sourceInputType = MP42SourceTypeMP4;
+            [tracks addObject:track];
+        }
     }
 
     if ([delegate respondsToSelector:@selector(importDone:)]) 
@@ -99,6 +108,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (void) dealloc
 {
+    [filePath release];
     [sourceFile release];
     [importCheckArray release];
     [super dealloc];

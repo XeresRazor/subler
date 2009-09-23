@@ -98,6 +98,7 @@
     [sourcePath release];
     [name release];
     [language release];
+    [sourceFileHandle release];
     [super dealloc];
 }
 
@@ -109,6 +110,8 @@
 @synthesize sourcePath;
 @synthesize Id;
 @synthesize sourceId;
+@synthesize sourceFileHandle;
+@synthesize sourceInputType;
 
 @synthesize format;
 @synthesize name;
