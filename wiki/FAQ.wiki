@@ -4,3 +4,8 @@
 *Why doesn't QuickTime and others Apple's devices see the subtitles/chapters?*
 
 The file extension must be .m4v, or QuickTime and iPod/AppleTV won't show any subtitles tracks.
+
+
+*Why does my SRT file not import in Subler?*
+
+Check that it's proper UTF-8 text encoding. You can use Jubler to edit the SRT file before importing in Subler.
