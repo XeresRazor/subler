@@ -13,4 +13,4 @@ Even though the text encoding detector should detect the text encoding of your S
 
 *What's the "Optimize" fonction ?*
 
-It interleaves the audio and video samples, and puts the "MooV" atom at the begining of the file, restoring the Quicktime "fast-start" (or pseudo-streaming) ability of the file.
+It interleaves the audio and video samples, and puts the "MooV" atom at the begining of the file, restoring the Quicktime "fast-start" (also known as "pseudo-streaming") ability of the file.
