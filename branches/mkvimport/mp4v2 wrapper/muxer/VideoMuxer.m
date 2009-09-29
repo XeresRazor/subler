@@ -469,9 +469,9 @@ int write_track_to_socket(int socketFD, MatroskaFile *matroskaFile, StdIoStream 
 		{ 
 			size_t          rd; 
 			
-			if (fseek(ioStream->fp, FilePos, SEEK_SET)) 
+			if (fseeko(ioStream->fp, FilePos, SEEK_SET)) 
 			{ 
-				fprintf(stderr,"fseek(): %s\n", strerror(errno)); 
+				fprintf(stderr,"fseeko(): %s\n", strerror(errno)); 
 				
 				return MP4_INVALID_TRACK_ID;				
 			} 

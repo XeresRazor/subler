@@ -49,7 +49,7 @@ longlong StdIoScan(StdIoStream *st, uint64_t start, uint32_t signature) {
 	uint32_t    cmp = 0; 
 	FILE              *fp = st->fp; 
 	
-	if (fseek(fp, start, SEEK_SET)) 
+	if (fseeko(fp, start, SEEK_SET)) 
 		return -1; 
 	
 	while ((c = getc(fp)) != EOF) { 
