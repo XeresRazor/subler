@@ -27,7 +27,7 @@
  */ 
 int   StdIoRead(StdIoStream *st, uint64_t pos, void *buffer, int count) { 
 	size_t  rd; 
-	if (fseek(st->fp, pos, SEEK_SET)) { 
+	if (fseeko(st->fp, pos, SEEK_SET) == -1) { 
 		st->error = errno; 
 		return -1; 
 	} 
