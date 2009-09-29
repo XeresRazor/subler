@@ -318,3 +318,9 @@ int muxMP4AudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
 
     return dstTrackId;
 }
+
+int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId srcTrackId)
+{
+	return MP4_INVALID_TRACK_ID;
+	// just hand off to ac3/aac
+}
