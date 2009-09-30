@@ -21,8 +21,8 @@
  *                          for his work on ctts creation)
  */
 
-#define DEBUG_H264 1
-#define DEBUG_H264_READER 1
+//#define DEBUG_H264 0
+//#define DEBUG_H264_READER 0
 
 static const char*  ProgName = "Subler";
 static int Verbosity = 0;
