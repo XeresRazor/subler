@@ -440,8 +440,6 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
     else
         return MP4_INVALID_TRACK_ID;
 
-    mkv_SetTrackMask(matroskaFile, ~(1 << srcTrackId));
-
 	/* mask other tracks because we don't need them */
 	mkv_SetTrackMask(matroskaFile, ~(1 << srcTrackId));
 
@@ -552,11 +550,12 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
         }
     }
 
-    uint32_t ix = 0;
-    for (NSNumber *frameOffset in offsetsArray) {
-        const uint32_t sample_offset = ([frameOffset longLongValue] - minOffset) / (1000000000.f / 90000);
-        MP4SetSampleRenderingOffset(fileHandle, dstTrackId, 1 + ix++, sample_offset);
-    }
+    if (minOffset != 0) {
+        uint32_t ix = 0;
+        for (NSNumber *frameOffset in offsetsArray) {
+            const uint32_t sample_offset = ([frameOffset longLongValue] - minOffset) / (1000000000.f / 90000);
+            MP4SetSampleRenderingOffset(fileHandle, dstTrackId, 1 + ix++, sample_offset);
+        }
 
     MP4Duration editDuration = MP4ConvertFromTrackDuration(fileHandle,
                                                            dstTrackId,
@@ -564,6 +563,7 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
                                                            MP4GetTimeScale(fileHandle));
     MP4AddTrackEdit(fileHandle, dstTrackId, MP4_INVALID_EDIT_ID, -minOffset / (1000000000.f / 90000),
                     editDuration, 0);
+    }
 
     [pool release];
     [offsetsArray release];
