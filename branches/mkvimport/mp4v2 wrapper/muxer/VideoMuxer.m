@@ -453,7 +453,7 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
 	void            *frame = NULL;
 
     int buffer = 0;
-    const int bufferSize = 16;
+    const int bufferSize = 20;
     int success = 0;
     int bufferFlush = 0;
     int samplesWritten = 0;
@@ -488,9 +488,6 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
             // the frame duration and the offset from the start time, the end time is useless
             // duration calculation
             duration = [[queue lastObject] startTime] - currentSample->startTime;
-            
-            if (duration < 0)
-                duration = -duration;
 
             for (SBMatroskaSample *sample in queue)
                 if (sample != currentSample && (sample->startTime >= currentSample->startTime))
