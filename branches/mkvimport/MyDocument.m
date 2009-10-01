@@ -76,11 +76,13 @@
 
 - (void) reloadFile: (id) sender
 {
-    MP42File *newFile = [[MP42File alloc] initWithExistingFile:[[self fileURL] path] andDelegate:self];
-    [mp4File autorelease];
-    mp4File = newFile;
-    [fileTracksTable reloadData];
-    [self tableViewSelectionDidChange:nil];
+    if ([self fileURL]) {
+        MP42File *newFile = [[MP42File alloc] initWithExistingFile:[[self fileURL] path] andDelegate:self];
+        [mp4File autorelease];
+        mp4File = newFile;
+        [fileTracksTable reloadData];
+        [self tableViewSelectionDidChange:nil];
+    }
 }
 
 // Hook into the flow to fork a thread
@@ -112,26 +114,20 @@
 
     BOOL success = [self saveToURL:absoluteURL ofType:typeName forSaveOperation:saveOperation error:&outError];
 
-    if (!success && outError)
-        [self presentError:outError
-            modalForWindow:documentWindow
-                  delegate:nil
-        didPresentSelector:NULL
-               contextInfo:NULL];
-    else {
-        NSDictionary *fileAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        [NSNumber numberWithUnsignedInt:'M4V '], NSFileHFSTypeCode,
-                                        [NSNumber numberWithUnsignedInt:0], NSFileHFSCreatorCode,
-                                        nil];
+    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithUnsignedInt:'M4V '], NSFileHFSTypeCode,
+                                    [NSNumber numberWithUnsignedInt:0], NSFileHFSCreatorCode,
+                                    nil];
 
-        [[NSFileManager defaultManager] changeFileAttributes:fileAttributes atPath:[absoluteURL path]];
-        [self setFileURL:absoluteURL];
-        [self setFileModificationDate:[[[NSFileManager defaultManager]  
-                                        fileAttributesAtPath:[absoluteURL path] traverseLink:YES]  
-                                       fileModificationDate]];
-    }
+    [[NSFileManager defaultManager] changeFileAttributes:fileAttributes atPath:[absoluteURL path]];
+    [self setFileURL:absoluteURL];
+    [self setFileModificationDate:[[[NSFileManager defaultManager]  
+                                    fileAttributesAtPath:[absoluteURL path] traverseLink:YES]  
+                                   fileModificationDate]];
+    if (success && outError)
+        outError = nil;
 
-    [self performSelectorOnMainThread:@selector(saveDidComplete) withObject:nil waitUntilDone: NO];
+    [self performSelectorOnMainThread:@selector(saveDidComplete:) withObject:outError waitUntilDone: NO];
 }
 
 - (BOOL)prepareSavePanel:(NSSavePanel *)savePanel
@@ -176,14 +172,22 @@
     _64bit_time = [sender state];
 }
 
-- (void) saveDidComplete
+- (void) saveDidComplete: (NSError *)outError
 {
-    [self reloadFile:self];
-
     [NSApp endSheet: savingWindow];
     [savingWindow orderOut:self];
-
+    
     [optBar stopAnimation:nil];
+
+    if (outError) {
+        [self presentError:outError
+            modalForWindow:documentWindow
+                  delegate:nil
+        didPresentSelector:NULL
+               contextInfo:NULL];
+    }
+
+    [self reloadFile:self];
 }
 
 - (BOOL)writeSafelyToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName 

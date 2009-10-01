@@ -103,7 +103,7 @@
         }
     }
 
-    return YES;
+    return Id;
 }
 
 - (void) dealloc
