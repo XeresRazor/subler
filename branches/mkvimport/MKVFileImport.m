@@ -131,6 +131,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
                 newTrack.format = [NSString stringWithUTF8String:mkvTrack->CodecID];
                 newTrack.Id = i;
                 newTrack.sourcePath = filePath;
+                newTrack.sourceInputType = MP42SourceTypeMatroska;
                 newTrack.name = [NSString stringWithFormat:@"%s", mkvTrack->Name];
 				iso639_lang_t *isoLanguage = lang_for_code2(mkvTrack->Language);
 				newTrack.language = [NSString stringWithUTF8String:isoLanguage->eng_name];

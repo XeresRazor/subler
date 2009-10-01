@@ -39,5 +39,6 @@ int muxH264ElementaryStream(MP4FileHandle fileHandle, NSString* filePath, uint32
 #endif
     
 int muxMP4VideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId srcTrackId);
+
 int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId srcTrackId);
 
