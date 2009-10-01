@@ -472,7 +472,14 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
             [queue addObject:frameSample];
             [frameSample release];
         }
-        if ([queue count] < bufferSize & success == 0)
+        else if (success == -1 && bufferFlush == 1) {
+            // ad a last sample to get the duration for the last frame
+            frameSample = [[SBMatroskaSample alloc] init];
+            frameSample->startTime = [[queue lastObject] endTime];
+            [queue addObject:frameSample];
+            [frameSample release];
+        }
+        if ([queue count] < bufferSize && success == 0)
             continue;
         else {
             currentSample = [queue objectAtIndex:buffer];
@@ -481,8 +488,10 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
             // the frame duration and the offset from the start time, the end time is useless
             // duration calculation
             duration = [[queue lastObject] startTime] - currentSample->startTime;
+            
             if (duration < 0)
                 duration = -duration;
+
             for (SBMatroskaSample *sample in queue)
                 if (sample != currentSample && (sample->startTime >= currentSample->startTime))
                     if ((next_duration = (sample->startTime - currentSample->startTime)) < duration)
@@ -557,12 +566,12 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
             MP4SetSampleRenderingOffset(fileHandle, dstTrackId, 1 + ix++, sample_offset);
         }
 
-    MP4Duration editDuration = MP4ConvertFromTrackDuration(fileHandle,
-                                                           dstTrackId,
-                                                           MP4GetTrackDuration(fileHandle, dstTrackId),
-                                                           MP4GetTimeScale(fileHandle));
-    MP4AddTrackEdit(fileHandle, dstTrackId, MP4_INVALID_EDIT_ID, -minOffset / (1000000000.f / 90000),
-                    editDuration, 0);
+        MP4Duration editDuration = MP4ConvertFromTrackDuration(fileHandle,
+                                                               dstTrackId,
+                                                               MP4GetTrackDuration(fileHandle, dstTrackId),
+                                                               MP4GetTimeScale(fileHandle));
+        MP4AddTrackEdit(fileHandle, dstTrackId, MP4_INVALID_EDIT_ID, -minOffset / (1000000000.f / 90000),
+                        editDuration, 0);
     }
 
     [pool release];
