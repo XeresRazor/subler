@@ -504,10 +504,14 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
     
     int samplesWritten = 0;
     int success = 0;
-    
+
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    SBSubSerializer *ss = [[SBSubSerializer alloc] init];
+
     /* read frames from file */
     while (mkv_ReadFrame(matroskaFile, 0, &rt, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags) == 0)
 	{
+        printf("StartTime: %llu, EndTime: %llu\n", StartTime, EndTime);
         if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
             fprintf(stderr,"fseeko(): %s\n", strerror(errno));
             return MP4_INVALID_TRACK_ID;				
@@ -533,13 +537,37 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
                 fprintf(stderr,"Short read while reading frame\n");
             break;
         }
-        
-        NSString * string = [[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding];
-        writeSubtitleSample(fileHandle, dstTrackId, string, 1000);
+
+        NSString *string = [[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding];
+        SBSubLine *sl = [[SBSubLine alloc] initWithLine:string start:StartTime/10000000 end:EndTime/10000000];
+        [ss addLine:[sl autorelease]];
         [string release];
 
         samplesWritten++;
     }
+
+    [ss setFinished:YES];
+
+    int firstSub = 0;
+    while (![ss isEmpty]) {
+        SBSubLine *sl = [ss getSerializedPacket];
+        if (firstSub == 0) {
+            firstSub++;
+            if (!writeEmptySubtitleSample(fileHandle, dstTrackId, sl->begin_time ))
+                break;
+        }
+        if ([sl->line isEqualToString:@"\n"]) {
+            if (!writeEmptySubtitleSample(fileHandle, dstTrackId, sl->end_time - sl->begin_time))
+                break;
+            continue;
+        }
+        if (!writeSubtitleSample(fileHandle, dstTrackId, sl->line, sl->end_time - sl->begin_time))
+            break;
+    }
+    writeEmptySubtitleSample(fileHandle, dstTrackId, 10);
+
+    [ss release];
+    [pool release];
     
     mkv_Close(matroskaFile);
     fclose(ioStream->fp);
