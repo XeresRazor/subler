@@ -392,7 +392,6 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
 		close(parserSocketFD[0]);
 		mkv_Close(matroskaFile);
 		fclose(ioStream->fp);
-		
 	});
 	
 	H264Creator(fileHandle, NULL, framerate->timescale, framerate->duration, 1, parserSocketFD[0]);

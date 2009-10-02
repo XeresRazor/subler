@@ -12,7 +12,12 @@
 #if !__LP64__
     #import <QuickTime/QuickTime.h>
 #endif
+#import "MatroskaParser.h"
+#import "MatroskaFile.h"
+#import "lang.h"
 
+#include <sys/socket.h>
+#import <sys/un.h>
 // Create a subtitle track and set default values for the sample description
 static MP4TrackId createSubtitleTrack(MP4FileHandle fileHandle,
                                       uint16_t videoTrackWidth,
@@ -455,5 +460,88 @@ int muxMP4SubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
 
     MP4Close(srcFile);
 
+    return dstTrackId;    
+}
+
+int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId srcTrackId) {
+    MP4TrackId dstTrackId = MP4_INVALID_TRACK_ID;
+    StdIoStream *ioStream = calloc(1, sizeof(StdIoStream));
+
+    MatroskaFile *matroskaFile = openMatroskaFile((char *)[filePath UTF8String], ioStream);
+	TrackInfo *trackInfo = mkv_GetTrackInfo(matroskaFile, srcTrackId);
+
+    uint16_t videoWidth, videoHeight;
+    MP4TrackId videoTrack = findFirstVideoTrack(fileHandle);
+    if (videoTrack) {
+        videoWidth = getFixedVideoWidth(fileHandle, videoTrack);
+        videoHeight = MP4GetTrackVideoHeight(fileHandle, videoTrack);
+    }
+    else {
+        videoWidth = 640;
+        videoHeight = 480;
+    }
+    
+    if (!strcmp(trackInfo->CodecID, "S_TEXT/UTF8")) {        
+        // Add Subtitle track
+        dstTrackId = createSubtitleTrack(fileHandle, videoWidth, videoHeight, 60, 100);
+    }
+    else if (!strcmp(trackInfo->CodecID, "S_TEXT/ASS") || !strcmp(trackInfo->CodecID, "S_TEXT/SSA") ) {
+        //Not implemented
+        return MP4_INVALID_TRACK_ID;
+
+    }
+    else
+        return MP4_INVALID_TRACK_ID;
+    
+	/* mask other tracks because we don't need them */
+	mkv_SetTrackMask(matroskaFile, ~(1 << srcTrackId));
+    
+	uint64_t        StartTime, EndTime, FilePos, current_time = 0;
+    int64_t         offset, minOffset = 0, duration, next_duration;
+	uint32_t        rt, FrameSize, FrameFlags;
+	uint32_t        fb = 0;
+	void            *frame = NULL;
+    
+    int samplesWritten = 0;
+    int success = 0;
+    
+    /* read frames from file */
+    while (mkv_ReadFrame(matroskaFile, 0, &rt, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags) == 0)
+	{
+        if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
+            fprintf(stderr,"fseeko(): %s\n", strerror(errno));
+            return MP4_INVALID_TRACK_ID;				
+        } 
+        
+        if (fb < FrameSize) {
+            fb = FrameSize;
+            frame = realloc(frame, fb);
+            if (frame == NULL) {
+                fprintf(stderr,"Out of memory\n");
+                return MP4_INVALID_TRACK_ID;		
+            }
+        }
+        
+        size_t rd = fread(frame,1,FrameSize,ioStream->fp);
+        if (rd != FrameSize) {
+            if (rd == 0) {
+                if (feof(ioStream->fp))
+                    fprintf(stderr,"Unexpected EOF while reading frame\n");
+                else
+                    fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
+            } else
+                fprintf(stderr,"Short read while reading frame\n");
+            break;
+        }
+        
+        NSString * string = [[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding];
+        writeSubtitleSample(fileHandle, dstTrackId, string, 1000);
+        [string release];
+
+        samplesWritten++;
+    }
+    
+    mkv_Close(matroskaFile);
+    fclose(ioStream->fp);
     return dstTrackId;    
 }

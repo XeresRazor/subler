@@ -38,7 +38,7 @@
         i++;
     }
     else
-        chapterTrackId = 0;
+        chapterTrackId = -1;
     
     importCheckArray = [[NSMutableArray alloc] initWithCapacity:i];
 	
@@ -103,7 +103,7 @@ NSString* matroskaCodecIDToHumanReadableName(TrackInfo *track)
     if( !matroskaFile )
         return 0;
 	
-    if (chapterTrackId)
+    if (chapterTrackId > 0)
         return mkv_GetNumTracks(matroskaFile) + 1;
     else
         return mkv_GetNumTracks(matroskaFile);
