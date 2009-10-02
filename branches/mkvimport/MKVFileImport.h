@@ -15,7 +15,9 @@
 
 	NSString			*filePath;
     NSMutableArray		*importCheckArray;
-	
+
+    NSInteger chapterTrackId;
+
 	id delegate;
 	IBOutlet NSTableView *tableView;
 	IBOutlet NSButton    *addTracksButton;

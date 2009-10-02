@@ -27,9 +27,19 @@
 {
     ioStream = calloc(1, sizeof(StdIoStream)); 
 	matroskaFile = openMatroskaFile((char *)[filePath UTF8String], ioStream);
-	
+
 	NSInteger i = mkv_GetNumTracks(matroskaFile);
-		
+
+    Chapter* chapters;
+    unsigned count;
+    mkv_GetChapters(matroskaFile, &chapters, &count);
+    if (count) {
+        chapterTrackId = i;
+        i++;
+    }
+    else
+        chapterTrackId = 0;
+    
     importCheckArray = [[NSMutableArray alloc] initWithCapacity:i];
 	
     while (i) {
@@ -93,13 +103,36 @@ NSString* matroskaCodecIDToHumanReadableName(TrackInfo *track)
     if( !matroskaFile )
         return 0;
 	
-    return mkv_GetNumTracks(matroskaFile);
+    if (chapterTrackId)
+        return mkv_GetNumTracks(matroskaFile) + 1;
+    else
+        return mkv_GetNumTracks(matroskaFile);
 }
 
 - (id) tableView:(NSTableView *)tableView 
 objectValueForTableColumn:(NSTableColumn *)tableColumn 
              row:(NSInteger)rowIndex
 {
+    if (rowIndex == chapterTrackId) {
+        if( [tableColumn.identifier isEqualToString: @"check"] )
+            return [importCheckArray objectAtIndex: rowIndex];
+        
+        if ([tableColumn.identifier isEqualToString:@"trackId"])
+            return [NSNumber numberWithInt:chapterTrackId +1];
+        
+        if ([tableColumn.identifier isEqualToString:@"trackName"])
+            return @"Chapters Track";
+        
+        if ([tableColumn.identifier isEqualToString:@"trackInfo"])
+            return @"Text";
+        
+        if ([tableColumn.identifier isEqualToString:@"trackDuration"])
+            return nil;
+        
+        if ([tableColumn.identifier isEqualToString:@"trackLanguage"])
+            return nil;
+    }
+
 	TrackInfo *track = mkv_GetTrackInfo(matroskaFile, rowIndex);
     
 	if (!track)
@@ -175,7 +208,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
             // Text
             else if (mkvTrack->Type == TT_SUB)
 				newTrack = [[MP42SubtitleTrack alloc] init];
-            
+
             if (newTrack) {
                 newTrack.format = matroskaCodecIDToHumanReadableName(mkvTrack);
                 newTrack.Id = i;
@@ -190,6 +223,25 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         }
     }
 	
+    if ([[importCheckArray objectAtIndex: i] boolValue]) {
+        Chapter* chapters;
+        unsigned count;
+        MP42ChapterTrack *newTrack = [[MP42ChapterTrack alloc] init];
+
+        mkv_GetChapters(matroskaFile, &chapters, &count);
+        if (count) {
+            int xi = 0;
+            for (xi = 0; xi < chapters->nChildren; xi++) {
+                uint64_t timestamp = (chapters->Children[xi].Start) / 1000000;
+                if (!xi)
+                    timestamp = 0;
+                [newTrack addChapter:[NSString stringWithUTF8String:chapters->Children[xi].Display->String]
+                                            duration:timestamp];
+            }
+        }
+        [tracks addObject:newTrack];
+    }
+
     if ([delegate respondsToSelector:@selector(importDone:)]) 
         [delegate importDone:tracks];
 	
