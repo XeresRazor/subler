@@ -481,14 +481,9 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
         videoHeight = 480;
     }
     
-    if (!strcmp(trackInfo->CodecID, "S_TEXT/UTF8")) {        
+    if (!strcmp(trackInfo->CodecID, "S_TEXT/UTF8") || !strcmp(trackInfo->CodecID, "S_TEXT/ASS") || !strcmp(trackInfo->CodecID, "S_TEXT/SSA")) {        
         // Add Subtitle track
         dstTrackId = createSubtitleTrack(fileHandle, videoWidth, videoHeight, 60, 100);
-    }
-    else if (!strcmp(trackInfo->CodecID, "S_TEXT/ASS") || !strcmp(trackInfo->CodecID, "S_TEXT/SSA") ) {
-        //Not implemented
-        return MP4_INVALID_TRACK_ID;
-
     }
     else
         return MP4_INVALID_TRACK_ID;
