@@ -401,6 +401,7 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
 
     MatroskaFile *matroskaFile = openMatroskaFile((char *)[filePath UTF8String], ioStream);
 	TrackInfo *trackInfo = mkv_GetTrackInfo(matroskaFile, srcTrackId);
+    uint64_t timeScale = mkv_GetFileInfo(matroskaFile)->TimecodeScale / mkv_TruncFloat(trackInfo->TimecodeScale) * 1000;
 
     if (!strcmp(trackInfo->CodecID, "V_MPEG4/ISO/AVC")) {
         // Get avcC atom
@@ -537,7 +538,7 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
                            dstTrackId,
                            frame,
                            currentSample->frameSize,
-                           duration / (1000000000.f / 90000),
+                           duration / (timeScale / 90000.f),
                            0,
                            (currentSample->frameFlags & FRAME_KF));
 
@@ -559,7 +560,7 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
     if (minOffset != 0) {
         uint32_t ix = 0;
         for (NSNumber *frameOffset in offsetsArray) {
-            const uint32_t sample_offset = ([frameOffset longLongValue] - minOffset) / (1000000000.f / 90000);
+            const uint32_t sample_offset = ([frameOffset longLongValue] - minOffset) / (timeScale / 90000.f);
             MP4SetSampleRenderingOffset(fileHandle, dstTrackId, 1 + ix++, sample_offset);
         }
 
@@ -567,7 +568,7 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
                                                                dstTrackId,
                                                                MP4GetTrackDuration(fileHandle, dstTrackId),
                                                                MP4GetTimeScale(fileHandle));
-        MP4AddTrackEdit(fileHandle, dstTrackId, MP4_INVALID_EDIT_ID, -minOffset / (1000000000.f / 90000),
+        MP4AddTrackEdit(fileHandle, dstTrackId, MP4_INVALID_EDIT_ID, -minOffset / (timeScale / 90000.f),
                         editDuration, 0);
     }
 
