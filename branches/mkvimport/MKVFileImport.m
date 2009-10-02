@@ -121,7 +121,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
             return [NSNumber numberWithInt:chapterTrackId +1];
         
         if ([tableColumn.identifier isEqualToString:@"trackName"])
-            return @"Chapters Track";
+            return @"Chapter Track";
         
         if ([tableColumn.identifier isEqualToString:@"trackInfo"])
             return @"Text";
