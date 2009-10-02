@@ -331,9 +331,9 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
 
     MatroskaFile *matroskaFile = openMatroskaFile((char *)[filePath UTF8String], ioStream);
 	TrackInfo *trackInfo = mkv_GetTrackInfo(matroskaFile, srcTrackId);
-    
+
     if (!strcmp(trackInfo->CodecID, "A_AAC")) {
-        // Get codecprivate atom
+        // Get codecprivate
         UInt8* codecPrivate = (UInt8 *) malloc(trackInfo->CodecPrivateSize);
         memcpy(codecPrivate, trackInfo->CodecPrivate, trackInfo->CodecPrivateSize);
 
@@ -341,6 +341,7 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
         dstTrackId = MP4AddAudioTrack(fileHandle,
                                       mkv_TruncFloat(trackInfo->AV.Audio.SamplingFreq),
                                       1024, MP4_MPEG4_AUDIO_TYPE);
+
         // Set the audio profile in the IOD
         uint8_t profile = 0x0F;
         if (trackInfo->AV.Audio.Channels<=2) profile =  (mkv_TruncFloat(trackInfo->AV.Audio.SamplingFreq)<=24000) ? 0x28 : 0x29;  /*LC@L1 or LC@L2*/
@@ -352,6 +353,9 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
         MP4SetTrackESConfiguration(fileHandle, dstTrackId,
                                    codecPrivate, trackInfo->CodecPrivateSize);
         free(codecPrivate);
+    }
+    else if (!strcmp(trackInfo->CodecID, "A_AC3")) {
+
     }
     else
         return MP4_INVALID_TRACK_ID;
@@ -375,7 +379,7 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
             fprintf(stderr,"fseeko(): %s\n", strerror(errno));
             return MP4_INVALID_TRACK_ID;				
         } 
-        
+
         if (fb < FrameSize) {
             fb = FrameSize;
             frame = realloc(frame, fb);
@@ -384,7 +388,7 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
                 return MP4_INVALID_TRACK_ID;		
             }
         }
-        
+
         size_t rd = fread(frame,1,FrameSize,ioStream->fp);
         if (rd != FrameSize) {
             if (rd == 0) {
@@ -396,18 +400,19 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
                 fprintf(stderr,"Short read while reading frame\n");
             break;
         }
-        
+
         MP4WriteSample(fileHandle,
                        dstTrackId,
                        frame,
                        FrameSize,
-                       1024,
+                       MP4_INVALID_DURATION,
                        0,
                        1);
-        
+
         samplesWritten++;
     }
 
-    free(ioStream);
+    mkv_Close(matroskaFile);
+    fclose(ioStream->fp);
     return dstTrackId;
 }

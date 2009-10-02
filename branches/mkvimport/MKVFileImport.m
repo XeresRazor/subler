@@ -39,6 +39,55 @@
     }
 }
 
+NSString* getMatroskaTrackName(TrackInfo *track)
+{    
+    if (!track->Name) {
+        if (track->Type == TT_AUDIO)
+            return NSLocalizedString(@"Sound Track", @"Sound Track");
+        else if (track->Type == TT_VIDEO)
+            return NSLocalizedString(@"Video Track", @"Video Track");
+        else if (track->Type == TT_SUB)
+            return NSLocalizedString(@"Subtitle Track", @"Subtitle Track");
+        else
+            return NSLocalizedString(@"Unknown Track", @"Unknown Track");
+    }
+    else
+        return [NSString stringWithUTF8String:track->Name];
+}
+
+
+NSString* matroskaCodecIDToHumanReadableName(TrackInfo *track)
+{
+    if (track->CodecID) {
+        if (!strcmp(track->CodecID, "V_MPEG4/ISO/AVC"))
+            return @"H.264";
+        else if (!strcmp(track->CodecID, "A_AAC"))
+            return @"AAC";
+        else if (!strcmp(track->CodecID, "A_AC3"))
+            return @"AC-3";
+        else if (!strcmp(track->CodecID, "V_MPEG4/ISO/SP"))
+            return @"MPEG-4 Visual";
+        else if (!strcmp(track->CodecID, "A_DTS"))
+            return @"DTS";
+        else if (!strcmp(track->CodecID, "A_VORBIS"))
+            return @"Vorbis";
+        else if (!strcmp(track->CodecID, "A_FLAC"))
+            return @"Flac";
+        else if (!strcmp(track->CodecID, "S_TEXT/UTF8"))
+            return @"Plain Text";
+        else if (!strcmp(track->CodecID, "S_TEXT/ASS"))
+            return @"ASS";
+        else if (!strcmp(track->CodecID, "S_TEXT/SSA"))
+            return @"SSA";
+        else
+            return [NSString stringWithUTF8String:track->CodecID];
+    }
+    else {
+        return @"Unknown";
+    }
+}
+
+
 - (NSInteger) numberOfRowsInTableView: (NSTableView *) t
 {
     if( !matroskaFile )
@@ -62,10 +111,10 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         return [NSString stringWithFormat:@"%d", track->Number];
 	
     if ([tableColumn.identifier isEqualToString:@"trackName"])
-        return [NSString stringWithFormat:@"%s", track->Name];
+        return getMatroskaTrackName(track);
 	
     if ([tableColumn.identifier isEqualToString:@"trackInfo"])
-		return [NSString stringWithUTF8String:track->CodecID];
+		return matroskaCodecIDToHumanReadableName(track);
 	
     if ([tableColumn.identifier isEqualToString:@"trackDuration"])
 	{
@@ -128,11 +177,11 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 				newTrack = [[MP42SubtitleTrack alloc] init];
             
             if (newTrack) {
-                newTrack.format = [NSString stringWithUTF8String:mkvTrack->CodecID];
+                newTrack.format = matroskaCodecIDToHumanReadableName(mkvTrack);
                 newTrack.Id = i;
                 newTrack.sourcePath = filePath;
                 newTrack.sourceInputType = MP42SourceTypeMatroska;
-                newTrack.name = [NSString stringWithFormat:@"%s", mkvTrack->Name];
+                newTrack.name = getMatroskaTrackName(mkvTrack);
 				iso639_lang_t *isoLanguage = lang_for_code2(mkvTrack->Language);
 				newTrack.language = [NSString stringWithUTF8String:isoLanguage->eng_name];
                 [tracks addObject:newTrack];

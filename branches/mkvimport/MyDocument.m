@@ -94,7 +94,7 @@
 	  contextInfo:(void *)contextInfo
 {
     [optBar startAnimation:nil];
-    [saveOperationName setStringValue:@"Saving‚Ä¶"];
+    [saveOperationName setStringValue:@"Saving…"];
     [NSApp beginSheet:savingWindow modalForWindow:documentWindow
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];
 
@@ -214,7 +214,7 @@
 	}
     if (_optimize)
     {
-        [saveOperationName setStringValue:@"Optimizing‚Ä¶"];
+        [saveOperationName setStringValue:@"Optimizing…"];
         [mp4File optimize];
         _optimize = NO;
     }

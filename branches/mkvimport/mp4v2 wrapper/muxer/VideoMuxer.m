@@ -574,7 +574,8 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
     [pool release];
     [offsetsArray release];
     [queue release];
-    free(ioStream);
+    mkv_Close(matroskaFile);
+    fclose(ioStream->fp);
 #endif
     return dstTrackId;
 }
