@@ -28,7 +28,7 @@ MP4TrackId Ac3Creator(MP4FileHandle mp4File, FILE* inFile);
 int muxAACAdtsStream(MP4FileHandle fileHandle, NSString* filePath) {
     MP4TrackId dstTrackId = MP4_INVALID_TRACK_ID;
     FILE* inFile = fopen([filePath UTF8String], "rb");
-    
+
     dstTrackId = AacCreator(fileHandle, inFile);
     fclose(inFile);
 
@@ -336,15 +336,11 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
 	
 	mkv_SetTrackMask(matroskaFile, ~(1 << srcTrackId));
 	
-	uint64_t        StartTime, EndTime, FilePos, current_time = 0;
-    int64_t         offset, minOffset = 0, duration, next_duration;
+	uint64_t        StartTime, EndTime, FilePos;
 	uint32_t        rt, FrameSize, FrameFlags;
 	uint32_t        fb = 0;
-	uint8_t          *frame = NULL;
-	
-    int samplesWritten = 0;
-    int success = 0;
-	
+	uint8_t         *frame = NULL;
+
     if (!strcmp(trackInfo->CodecID, "A_AAC")) {
         // Get codecprivate
         UInt8* codecPrivate = (UInt8 *) malloc(trackInfo->CodecPrivateSize);
@@ -442,10 +438,7 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
                        FrameSize,
                        MP4_INVALID_DURATION,
                        0,
-                       1);		
-		
-		samplesWritten++;
-
+                       1);
     }
     else
         return MP4_INVALID_TRACK_ID;
@@ -486,8 +479,6 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
                        MP4_INVALID_DURATION,
                        0,
                        1);
-
-        samplesWritten++;
     }
 
     mkv_Close(matroskaFile);

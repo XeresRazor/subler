@@ -242,6 +242,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
                 }
             }
             [tracks addObject:newTrack];
+            [newTrack release];
         }
     }
 

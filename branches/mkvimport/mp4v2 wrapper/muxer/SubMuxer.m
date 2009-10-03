@@ -480,25 +480,29 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
         videoWidth = 640;
         videoHeight = 480;
     }
-    
-    if (!strcmp(trackInfo->CodecID, "S_TEXT/UTF8") || !strcmp(trackInfo->CodecID, "S_TEXT/ASS") || !strcmp(trackInfo->CodecID, "S_TEXT/SSA")) {        
+
+    if (!strcmp(trackInfo->CodecID, "S_TEXT/UTF8")
+        || !strcmp(trackInfo->CodecID, "S_TEXT/ASS")
+        || !strcmp(trackInfo->CodecID, "S_TEXT/SSA")) {  
+        // Get codecprivate, it contains the ssa/ass header.
+        UInt8* codecPrivate = (UInt8 *) malloc(trackInfo->CodecPrivateSize);
+        memcpy(codecPrivate, trackInfo->CodecPrivate, trackInfo->CodecPrivateSize);
+
         // Add Subtitle track
-        dstTrackId = createSubtitleTrack(fileHandle, videoWidth, videoHeight, 60, 100);
+        dstTrackId = createSubtitleTrack(fileHandle, videoWidth, videoHeight, 60, 1000);
+        
+        free(codecPrivate);
     }
     else
         return MP4_INVALID_TRACK_ID;
-    
+
 	/* mask other tracks because we don't need them */
 	mkv_SetTrackMask(matroskaFile, ~(1 << srcTrackId));
-    
-	uint64_t        StartTime, EndTime, FilePos, current_time = 0;
-    int64_t         offset, minOffset = 0, duration, next_duration;
+
+	uint64_t        StartTime, EndTime, FilePos;
 	uint32_t        rt, FrameSize, FrameFlags;
 	uint32_t        fb = 0;
 	void            *frame = NULL;
-    
-    int samplesWritten = 0;
-    int success = 0;
 
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     SBSubSerializer *ss = [[SBSubSerializer alloc] init];
@@ -506,12 +510,11 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
     /* read frames from file */
     while (mkv_ReadFrame(matroskaFile, 0, &rt, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags) == 0)
 	{
-        printf("StartTime: %llu, EndTime: %llu\n", StartTime, EndTime);
         if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
             fprintf(stderr,"fseeko(): %s\n", strerror(errno));
-            return MP4_INVALID_TRACK_ID;				
-        } 
-        
+            return MP4_INVALID_TRACK_ID;	
+        }
+    
         if (fb < FrameSize) {
             fb = FrameSize;
             frame = realloc(frame, fb);
@@ -520,7 +523,7 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
                 return MP4_INVALID_TRACK_ID;		
             }
         }
-        
+
         size_t rd = fread(frame,1,FrameSize,ioStream->fp);
         if (rd != FrameSize) {
             if (rd == 0) {
@@ -534,11 +537,9 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
         }
 
         NSString *string = [[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding];
-        SBSubLine *sl = [[SBSubLine alloc] initWithLine:string start:StartTime/10000000 end:EndTime/10000000];
+        SBSubLine *sl = [[SBSubLine alloc] initWithLine:string start:StartTime/1000000 end:EndTime/1000000];
         [ss addLine:[sl autorelease]];
         [string release];
-
-        samplesWritten++;
     }
 
     [ss setFinished:YES];
@@ -563,7 +564,7 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
 
     [ss release];
     [pool release];
-    
+
     mkv_Close(matroskaFile);
     fclose(ioStream->fp);
     return dstTrackId;    
