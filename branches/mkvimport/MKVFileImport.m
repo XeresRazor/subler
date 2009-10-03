@@ -223,23 +223,25 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         }
     }
 	
-    if ([[importCheckArray objectAtIndex: i] boolValue]) {
-        Chapter* chapters;
-        unsigned count;
-        MP42ChapterTrack *newTrack = [[MP42ChapterTrack alloc] init];
+    if (chapterTrackId > 0) {
+        if ([[importCheckArray objectAtIndex: i] boolValue]) {
+            Chapter* chapters;
+            unsigned count;
+            MP42ChapterTrack *newTrack = [[MP42ChapterTrack alloc] init];
 
-        mkv_GetChapters(matroskaFile, &chapters, &count);
-        if (count) {
-            int xi = 0;
-            for (xi = 0; xi < chapters->nChildren; xi++) {
-                uint64_t timestamp = (chapters->Children[xi].Start) / 1000000;
-                if (!xi)
-                    timestamp = 0;
-                [newTrack addChapter:[NSString stringWithUTF8String:chapters->Children[xi].Display->String]
-                                            duration:timestamp];
+            mkv_GetChapters(matroskaFile, &chapters, &count);
+            if (count) {
+                int xi = 0;
+                for (xi = 0; xi < chapters->nChildren; xi++) {
+                    uint64_t timestamp = (chapters->Children[xi].Start) / 1000000;
+                    if (!xi)
+                        timestamp = 0;
+                    [newTrack addChapter:[NSString stringWithUTF8String:chapters->Children[xi].Display->String]
+                                                duration:timestamp];
+                }
             }
+            [tracks addObject:newTrack];
         }
-        [tracks addObject:newTrack];
     }
 
     if ([delegate respondsToSelector:@selector(importDone:)]) 
