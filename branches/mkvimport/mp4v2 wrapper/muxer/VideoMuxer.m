@@ -404,7 +404,7 @@ int muxMKVVideoTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
 
     if (!strcmp(trackInfo->CodecID, "V_MPEG4/ISO/AVC")) {
         // Get avcC atom
-        uint8_t* avcCAtom = (uint8_t *) malloc(trackInfo->CodecPrivateSize); // mkv stores h.264 avcC in CodecPrivate
+        uint8_t* avcCAtom = (uint8_t *)malloc(trackInfo->CodecPrivateSize); // mkv stores h.264 avcC in CodecPrivate
         memcpy(avcCAtom, trackInfo->CodecPrivate, trackInfo->CodecPrivateSize);
 
         dstTrackId = MP4AddH264VideoTrack(fileHandle, 90000,

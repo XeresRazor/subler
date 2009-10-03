@@ -20,6 +20,8 @@
 #include <sys/socket.h>
 #import <sys/un.h>
 
+u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
+
 MP4TrackId AacCreator(MP4FileHandle mp4File, FILE* inFile);
 MP4TrackId Ac3Creator(MP4FileHandle mp4File, FILE* inFile);
 
@@ -331,7 +333,18 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
 
     MatroskaFile *matroskaFile = openMatroskaFile((char *)[filePath UTF8String], ioStream);
 	TrackInfo *trackInfo = mkv_GetTrackInfo(matroskaFile, srcTrackId);
-
+	
+	mkv_SetTrackMask(matroskaFile, ~(1 << srcTrackId));
+	
+	uint64_t        StartTime, EndTime, FilePos, current_time = 0;
+    int64_t         offset, minOffset = 0, duration, next_duration;
+	uint32_t        rt, FrameSize, FrameFlags;
+	uint32_t        fb = 0;
+	uint8_t          *frame = NULL;
+	
+    int samplesWritten = 0;
+    int success = 0;
+	
     if (!strcmp(trackInfo->CodecID, "A_AAC")) {
         // Get codecprivate
         UInt8* codecPrivate = (UInt8 *) malloc(trackInfo->CodecPrivateSize);
@@ -355,22 +368,87 @@ int muxMKVAudioTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId sr
         free(codecPrivate);
     }
     else if (!strcmp(trackInfo->CodecID, "A_AC3")) {
+		
+		// read first header to create track
+		int firstFrame = mkv_ReadFrame(matroskaFile, 0, &rt, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags);
+		if (firstFrame != 0)
+		{
+			return MP4_INVALID_TRACK_ID;
+		}
+		
+		if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
+            fprintf(stderr,"fseeko(): %s\n", strerror(errno));
+            return MP4_INVALID_TRACK_ID;				
+        } 
+		
+        if (fb < FrameSize) {
+            fb = FrameSize;
+            frame = realloc(frame, fb);
+            if (frame == NULL) {
+                fprintf(stderr,"Out of memory\n");
+                return MP4_INVALID_TRACK_ID;		
+            }
+        }
+		
+        size_t rd = fread(frame,1,FrameSize,ioStream->fp);
+        if (rd != FrameSize) 
+		{
+            if (rd == 0) 
+			{
+                if (feof(ioStream->fp))
+                    fprintf(stderr,"Unexpected EOF while reading frame\n");
+                else
+                    fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
+            } else
+                fprintf(stderr,"Short read while reading frame\n");
+			return MP4_INVALID_TRACK_ID; // we should be able to read at least one frame
+        }
+			
+		// parse AC3 header
+		// collect all the necessary meta information
+		u_int32_t samplesPerSecond;
+		uint32_t fscod, frmsizecod, bsid, bsmod, acmod, lfeon;
+		uint32_t lfe_offset = 4;
+		
+		fscod = (*(frame+4) >> 6) & 0x3;
+		frmsizecod = (*(frame+4) & 0x3f);
+		bsid =  (*(frame+5) >> 3) & 0x1f;
+		bsmod = (*(frame+5) & 0xf);
+		acmod = (*(frame+6) >> 5) & 0x7;
+		if (acmod == 2)
+			lfe_offset -= 2;
+		else {
+			if ((acmod & 1) && acmod != 1)
+				lfe_offset -= 2;
+			if (acmod & 4)
+				lfe_offset -= 2;
+		}
+		lfeon = (*(frame+6) >> lfe_offset) & 0x1;
+				
+		samplesPerSecond = MP4AV_Ac3GetSamplingRate(frame);
+		
+		// add the new audio track
+		dstTrackId = MP4AddAC3AudioTrack(fileHandle, samplesPerSecond,
+												 fscod,
+												 bsid,
+												 bsmod,
+												 acmod,
+												 lfeon,
+												 frmsizecod>>1);
+		// write the first sample
+		MP4WriteSample(fileHandle,
+                       dstTrackId,
+                       frame,
+                       FrameSize,
+                       MP4_INVALID_DURATION,
+                       0,
+                       1);		
+		
+		samplesWritten++;
 
     }
     else
         return MP4_INVALID_TRACK_ID;
-
-	/* mask other tracks because we don't need them */
-	mkv_SetTrackMask(matroskaFile, ~(1 << srcTrackId));
-
-	uint64_t        StartTime, EndTime, FilePos, current_time = 0;
-    int64_t         offset, minOffset = 0, duration, next_duration;
-	uint32_t        rt, FrameSize, FrameFlags;
-	uint32_t        fb = 0;
-	void            *frame = NULL;
-
-    int samplesWritten = 0;
-    int success = 0;
 
     /* read frames from file */
     while (mkv_ReadFrame(matroskaFile, 0, &rt, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags) == 0)

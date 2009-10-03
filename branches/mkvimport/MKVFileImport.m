@@ -185,7 +185,8 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     NSMutableArray *tracks = [[NSMutableArray alloc] init];
     NSInteger i;
 	
-    for (i = 0; i < mkv_GetNumTracks(matroskaFile); i++) {
+    for (i = 0; i < mkv_GetNumTracks(matroskaFile); i++) 
+	{
         if ([[importCheckArray objectAtIndex: i] boolValue])
 		{
 			TrackInfo *mkvTrack = mkv_GetTrackInfo(matroskaFile, i);
@@ -222,7 +223,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
             }
         }
     }
-	
+#if 0
     if (chapterTrackId > 0) {
         if ([[importCheckArray objectAtIndex: i] boolValue]) {
             Chapter* chapters;
@@ -243,7 +244,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
             [tracks addObject:newTrack];
         }
     }
-
+#endif
     if ([delegate respondsToSelector:@selector(importDone:)]) 
         [delegate importDone:tracks];
 	
