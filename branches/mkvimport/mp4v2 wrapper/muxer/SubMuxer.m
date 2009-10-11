@@ -481,18 +481,25 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
         videoHeight = 480;
     }
 
-    if (!strcmp(trackInfo->CodecID, "S_TEXT/UTF8")
-        || !strcmp(trackInfo->CodecID, "S_TEXT/ASS")
-        || !strcmp(trackInfo->CodecID, "S_TEXT/SSA")) {  
+    int ssa = 0;
+    if (!strcmp(trackInfo->CodecID, "S_TEXT/UTF8")) {  
+        // Add Subtitle track
+        dstTrackId = createSubtitleTrack(fileHandle, videoWidth, videoHeight, 60, 1000);
+    }
+    else if(!strcmp(trackInfo->CodecID, "S_TEXT/ASS")
+            || !strcmp(trackInfo->CodecID, "S_TEXT/SSA")) {
         // Get codecprivate, it contains the ssa/ass header.
-        UInt8* codecPrivate = (UInt8 *) malloc(trackInfo->CodecPrivateSize);
-        memcpy(codecPrivate, trackInfo->CodecPrivate, trackInfo->CodecPrivateSize);
-
+        NSString* string = [[NSString alloc] initWithBytes:trackInfo->CodecPrivate
+                                                    length:trackInfo->CodecPrivateSize
+                                                  encoding:NSUTF8StringEncoding];
+        NSLog(@"%@", string);
+        [string release];
+        
         // Add Subtitle track
         dstTrackId = createSubtitleTrack(fileHandle, videoWidth, videoHeight, 60, 1000);
         
-        free(codecPrivate);
-    }
+        ssa = 1;
+    } 
     else
         return MP4_INVALID_TRACK_ID;
 
@@ -536,10 +543,12 @@ int muxMKVSubtitleTrack(MP4FileHandle fileHandle, NSString* filePath, MP4TrackId
             break;
         }
 
-        NSString *string = [[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding];
+        NSString *string = [[[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding] autorelease];
+        if (ssa) {
+            string = StripSSALine(string);
+        }
         SBSubLine *sl = [[SBSubLine alloc] initWithLine:string start:StartTime/1000000 end:EndTime/1000000];
         [ss addLine:[sl autorelease]];
-        [string release];
     }
 
     [ss setFinished:YES];
