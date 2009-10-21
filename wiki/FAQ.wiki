@@ -11,6 +11,10 @@ The file extension must be .m4v, or QuickTime and iPod/AppleTV won't show any su
 Even though the text encoding detector should detect the text encoding of your SRT file, it sometimes fails to do so. You'll increase your chances of success by using UTF-8 encoding. You can use Jubler to edit the SRT file before importing in Subler.
 
 
-*What's the "Optimize" fonction ?*
+*Why doesn't QuickTime Player X shows my subtitles ?*
+
+QuickTime X has some known issues with subtitles lines that contains multiple styles. If you want to be compatible with QuickTime X you should remove all the style tags (i.e. <i></i>) from your srt file.
+
+*What's the "Optimize" function ?*
 
 It interleaves the audio and video samples, and puts the "MooV" atom at the begining of the file, restoring the Quicktime "fast-start" (also known as "pseudo-streaming") ability of the file.
