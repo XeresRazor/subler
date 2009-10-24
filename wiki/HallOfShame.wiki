@@ -1,0 +1,11 @@
+#labels Featured
+#Subler License Violator
+
+= Introduction =
+
+I hoped I wouldn't had to add a page like this so soon… but it happens. So here's a page like the ffmpeg's one.
+
+= Details =
+
+iSubtitle ( http://www.bitfield.se/isubtitle/index.html )
+  * Reuse part of Subler code violating the gpl license.
