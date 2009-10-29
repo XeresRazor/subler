@@ -18,3 +18,7 @@ QuickTime X has some known issues with subtitles lines that contains multiple st
 *What's the "Optimize" function ?*
 
 It interleaves the audio and video samples, and puts the "MooV" atom at the begining of the file, restoring the Quicktime "fast-start" (also known as "pseudo-streaming") ability of the file.
+
+*Why can't I mux file larger than 4GB?*
+
+You need to enable the "64 Bit chunk offset" checkbox if you think the files will be bigger than 4GB. It's not enabled by default, because many devices (old iPod, Playstation 3) can't read this type of mp4.
