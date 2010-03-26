@@ -5,6 +5,14 @@
         <link>http://subler.googlecode.com/svn/doc/appcast.xml</link>
         <description>Most recent changes with links to updates.</description>
         <language>en</language>
+		<item>
+            <title>Version 0.9.6</title>
+            <sparkle:releaseNotesLink>
+                http://subler.googlecode.com/svn/doc/rnotes096.html
+            </sparkle:releaseNotesLink>
+            <pubDate>Friday, 26 Mar 2010 8:00:00 +0000</pubDate>
+            <enclosure url="http://subler.googlecode.com/files/Subler-0.9.6.zip" sparkle:version="0.9.6" length="1694393" type="application/octet-stream" sparkle:dsaSignature="MC4CFQCFZVogYKJmMw/ofGptThUuU9UN/gIVAJPdBxKk7oF38NbZKcwImPlfqjXE" />
+        </item>
         <item>
             <title>Version 0.9.5</title>
             <sparkle:releaseNotesLink>
