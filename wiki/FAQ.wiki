@@ -13,7 +13,8 @@ Even though the text encoding detector should detect the text encoding of your S
 
 *Why doesn't QuickTime Player X shows my subtitles ?*
 
-QuickTime X has some known issues with subtitles lines that contains multiple styles. If you want to be compatible with QuickTime X you should remove all the style tags (i.e. <i></i>) from your srt file.
+Fixed in Mac OS X 10.6.3.
+(QuickTime X has some known issues with subtitles lines that contains multiple styles. If you want to be compatible with QuickTime X you should remove all the style tags (i.e. <i></i>) from your srt file.)
 
 *What's the "Optimize" function ?*
 
