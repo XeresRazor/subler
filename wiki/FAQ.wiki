@@ -5,6 +5,9 @@
 
 The file extension must be .m4v, or QuickTime and iPod/AppleTV won't show any subtitles tracks.
 
+*How can I add chapters' images?*
+
+Enable the "Create Preview Images" checkbox in the Preferences, the next time you will save or optimize a file, a new track with the chapters' images will be created.
 
 *Why does my SRT file not import in Subler?*
 
