@@ -1,0 +1,91 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+Some information on SublerCLI
+
+
+= Details =
+
+* -i set input file
+
+The file to which Subler will add things.
+
+* -s set subtitle input file
+
+the subtitle file (.srt)
+
+* -c set chapter input file
+
+the .txt files with the chapters (see the chapter help)
+
+* -p create chapters preview images
+
+an options to create an additional video track with the preview of the chapters, used by iTunes and something else.
+
+* -d set delay in ms
+
+the delay of the subtitle track
+
+* -a set height in pixel
+
+the height of the subtitle track
+
+* -l set track language (i.e. English)
+
+the language of the subtitle track
+
+* -n set track name
+
+the name of the subtitle track
+
+* -r remove existing subtitles
+
+remove all the existing subtitles tracks
+
+* -O optimize
+
+optimize the file by moving the moov atom at the begin and interleaving the samples
+
+* -h print this help information
+
+* -v print version
+
+* -t set tags {Tag Name:Tag Value}*
+|| Tag Name || Type ||
+|| Name || String ||
+|| Artist || String ||
+|| Album Artist || String ||
+|| Album || String ||
+|| Grouping || String ||
+|| Composer || String ||
+|| Comments || String ||
+|| Genre || String ||
+|| Release Date || YYYY-MM-DD String ||
+|| Track # || track#/totalTracks# String ||
+|| Disk # || disk#/totalDisks# String ||
+|| TV Show || String ||
+|| TV Episode # || number ||
+|| TV Network || String ||
+|| TV Episode ID || number ||
+|| TV Season || String ||
+|| Description || String ||
+|| Long Description || String ||
+|| Rating || String ||
+|| Rating Annotation || String ||
+|| Studio || String ||
+|| Cast || String ||
+|| Director || String ||
+|| Codirector || String ||
+|| Producers || String ||
+|| Screenwriters || String ||
+|| Lyrics || String ||
+|| Copyright || String ||
+|| Encoding Tool || String ||
+|| Encoded By || String ||
+|| contentID || String ||
+|| HD Video || bool ||
+|| Gapless || bool ||
+|| Content Rating || String ||
+|| Media Kind || String ||
+|| Artwork || String, path to the file ||
