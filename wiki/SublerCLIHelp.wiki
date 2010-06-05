@@ -53,39 +53,39 @@ optimize the file by moving the moov atom at the begin and interleaving the samp
 
 * -t set tags {Tag Name:Tag Value}*
 || Tag Name || Type ||
-|| Name || String ||
-|| Artist || String ||
-|| Album Artist || String ||
-|| Album || String ||
-|| Grouping || String ||
-|| Composer || String ||
-|| Comments || String ||
-|| Genre || String ||
-|| Release Date || YYYY-MM-DD String ||
-|| Track # || track#/totalTracks# String ||
-|| Disk # || disk#/totalDisks# String ||
-|| TV Show || String ||
-|| TV Episode # || number ||
-|| TV Network || String ||
+|| Name || string ||
+|| Artist || string ||
+|| Album Artist || string ||
+|| Album || string ||
+|| Grouping || string ||
+|| Composer || string ||
+|| Comments || string ||
+|| Genre || string ||
+|| Release Date || YYYY-MM-DD string ||
+|| Track # || track#/totalTracks# string ||
+|| Disk # || disk#/totalDisks# string ||
+|| TV Show || string ||
+|| TV Episode # || string ||
+|| TV Network || string ||
 || TV Episode ID || number ||
-|| TV Season || String ||
-|| Description || String ||
-|| Long Description || String ||
-|| Rating || String ||
-|| Rating Annotation || String ||
-|| Studio || String ||
-|| Cast || String ||
-|| Director || String ||
-|| Codirector || String ||
-|| Producers || String ||
-|| Screenwriters || String ||
-|| Lyrics || String ||
-|| Copyright || String ||
-|| Encoding Tool || String ||
-|| Encoded By || String ||
-|| contentID || String ||
+|| TV Season || string ||
+|| Description || string ||
+|| Long Description || string ||
+|| Rating || string, see the table below ||
+|| Rating Annotation || string ||
+|| Studio || string ||
+|| Cast || string ||
+|| Director || string ||
+|| Codirector || string ||
+|| Producers || string ||
+|| Screenwriters || string ||
+|| Lyrics || string ||
+|| Copyright || string ||
+|| Encoding Tool || string ||
+|| Encoded By || string ||
+|| contentID || string ||
 || HD Video || bool ||
 || Gapless || bool ||
-|| Content Rating || String ||
-|| Media Kind || String ||
-|| Artwork || String, path to the file ||
+|| Content Rating || string, see the table below ||
+|| Media Kind || string, see the table below ||
+|| Artwork || string, path to the file ||
