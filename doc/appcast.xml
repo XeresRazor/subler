@@ -14,6 +14,14 @@
             <enclosure url="http://subler.googlecode.com/files/Subler-0.9.8r2.zip" sparkle:version="0.9.8r2" length="1703939" type="application/octet-stream" sparkle:dsaSignature="MCwCFBWISKi3UZceaNOwg1QQUxLwvFbLAhRuLb62I05Tp8W5GWEC8oDb2bvWKQ==" />
         </item>
 		<item>
+            <title>Version 0.9.8</title>
+            <sparkle:releaseNotesLink>
+                http://subler.googlecode.com/svn/doc/rnotes098.html
+            </sparkle:releaseNotesLink>
+            <pubDate>Tuesday, 29 Jun 2010 10:00:00 +0000</pubDate>
+            <enclosure url="http://subler.googlecode.com/files/Subler-0.9.8.zip" sparkle:version="0.9.8" length="1706026" type="application/octet-stream" sparkle:dsaSignature="MCwCFEi3+sHrN5Xk9tlK+4taJ6t5s5LlAhRxp92eAUaWU29khRb1FpfHeZZsYQ==" />
+        </item>
+		<item>
             <title>Version 0.9.7</title>
             <sparkle:releaseNotesLink>
                 http://subler.googlecode.com/svn/doc/rnotes097.html
