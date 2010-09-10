@@ -13,6 +13,7 @@ extern NSString * const MP42SourceTypeRaw;
 
 #import <Foundation/Foundation.h>
 #import "mp4v2.h"
+@class MP42FileImporter;
 
 @interface MP42Track : NSObject {
     MP4TrackId  Id;
@@ -37,6 +38,13 @@ extern NSString * const MP42SourceTypeRaw;
 	MP4Duration duration;
 
     NSMutableDictionary *updatedProperty;
+    
+    //Muxer helper
+    MP4SampleId currentSampleId;
+    MP4Timestamp currentTime;
+    
+    MP42FileImporter * trackImporterHelper;
+    id trackDemuxerHelper;
 }
 
 @property(readwrite) MP4TrackId Id;
@@ -60,6 +68,11 @@ extern NSString * const MP42SourceTypeRaw;
 @property(readwrite) BOOL isEdited;
 @property(readwrite) BOOL isDataEdited;
 @property(readwrite) BOOL muxed;
+
+@property(readwrite) MP4SampleId currentSampleId;
+@property(readwrite) MP4Timestamp currentTime;
+@property(readwrite, retain) MP42FileImporter * trackImporterHelper;
+@property(readwrite, retain) id trackDemuxerHelper;
 
 @property(readwrite, retain) NSMutableDictionary *updatedProperty;
 

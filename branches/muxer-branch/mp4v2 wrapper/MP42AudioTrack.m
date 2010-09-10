@@ -39,7 +39,7 @@
     if (!fileHandle)
         return NO;
 
-    if (isEdited && !muxed) {
+    /*if (isEdited && !muxed) {
         if ([sourceInputType isEqualToString:MP42SourceTypeQuickTime]) {
 #if !__LP64__
             Id = muxMOVAudioTrack(fileHandle, sourceFileHandle, sourceId);
@@ -61,7 +61,7 @@
         }    
         muxed = YES;
         enableFirstAudioTrack(fileHandle);
-    }
+    }*/
     if (!Id && (outError != NULL)) {
         NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
         [errorDetail setValue:@"Error: couldn't mux audio track" forKey:NSLocalizedDescriptionKey];

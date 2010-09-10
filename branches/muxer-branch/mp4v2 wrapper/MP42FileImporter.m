@@ -3,7 +3,7 @@
 //  Subler
 //
 //  Created by Damiano Galassi on 31/01/10.
-//  Copyright 2010 Apple Inc. All rights reserved.
+//  Copyright 2010 Damiano Galassi All rights reserved.
 //
 
 #import "MP42FileImporter.h"
@@ -29,6 +29,22 @@
 
     return self;
 }
+
+- (NSUInteger)timescaleForTrack:(MP42Track *)track{
+    return 0;
+}
+- (NSSize)sizeForTrack:(MP42Track *)track{
+    return NSMakeSize(0,0);
+}
+- (NSData*)magicCookieForTrack:(MP42Track *)track{
+    return nil;
+}
+
+- (MP42SampleBuffer*)nextSampleForTrack:(MP42Track *)track
+{
+    return nil;
+}
+
 
 @synthesize tracksArray;
 

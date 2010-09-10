@@ -93,8 +93,10 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     NSInteger i = 0;
 
     for (MP42Track * track in [fileImporter tracksArray])
-        if ([[importCheckArray objectAtIndex: i++] boolValue])
+        if ([[importCheckArray objectAtIndex: i++] boolValue]) {
+            [track setTrackImporterHelper:fileImporter];
             [tracks addObject:track];
+        }
 
     if ([delegate respondsToSelector:@selector(importDone:)]) 
         [delegate importDone:tracks];

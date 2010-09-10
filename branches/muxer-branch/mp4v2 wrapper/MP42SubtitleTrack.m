@@ -80,7 +80,7 @@
                                      sourcePath,
                                      trackHeight);
         }
-        else if ([sourceInputType isEqualToString:MP42SourceTypeMP4])
+        /*else if ([sourceInputType isEqualToString:MP42SourceTypeMP4])
             Id = muxMP4SubtitleTrack(fileHandle, sourcePath, sourceId);
         else if ([sourceInputType isEqualToString:MP42SourceTypeQuickTime]) {
 #if !__LP64__
@@ -88,7 +88,7 @@
 #endif
         }
         else if ([sourceInputType isEqualToString:MP42SourceTypeMatroska])
-			Id = muxMKVSubtitleTrack(fileHandle, sourcePath, sourceId);
+			Id = muxMKVSubtitleTrack(fileHandle, sourcePath, sourceId);*/
 
         if (!Id && (outError != NULL)) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];

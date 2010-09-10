@@ -68,7 +68,7 @@
     if (!fileHandle)
         return NO;
 
-    if (isEdited && !muxed) {
+    /*if (isEdited && !muxed) {
         if ([sourceInputType isEqualToString:MP42SourceTypeQuickTime]) {
 #if !__LP64__
             Id = muxMOVVideoTrack(fileHandle, sourceFileHandle, sourceId);
@@ -82,7 +82,7 @@
 
         else if ([sourceInputType isEqualToString:MP42SourceTypeRaw])
             Id = muxH264ElementaryStream(fileHandle, sourcePath, sourceId);
-    }
+    }*/
 
     if (!Id && (outError != NULL)) {
         NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];

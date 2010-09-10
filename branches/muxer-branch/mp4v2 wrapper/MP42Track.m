@@ -101,6 +101,7 @@ NSString * const MP42SourceTypeRaw = @"Raw";
 
 - (void) dealloc
 {
+    [trackImporterHelper release];
     [updatedProperty release];
     [format release];
     [sourcePath release];
@@ -177,5 +178,10 @@ NSString * const MP42SourceTypeRaw = @"Raw";
 @synthesize isDataEdited;
 @synthesize muxed;
 @synthesize updatedProperty;
+
+@synthesize currentSampleId;
+@synthesize currentTime;
+@synthesize trackImporterHelper;
+@synthesize trackDemuxerHelper;
 
 @end

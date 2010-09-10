@@ -236,6 +236,18 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     for (track in tracksToBeDeleted)
         [self removeMuxedTrack:track];
 
+    MP42Muxer *muxer = [[MP42Muxer alloc] init];
+    for (track in tracks)
+        if (!(track.muxed) && !stopOperation) {
+            [muxer addTrack:track];
+    }
+
+    [muxer startWork:fileHandle];
+    [muxer work:fileHandle];
+    [muxer stopWork:fileHandle];
+    
+    [muxer release];
+
     for (track in tracks)
         if (track.isEdited && !stopOperation) {
             success = [track writeToFile:fileHandle error:outError];
