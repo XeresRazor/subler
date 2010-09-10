@@ -14,10 +14,11 @@
     struct MatroskaFile	*matroskaFile;
 	struct StdIoStream  *ioStream;
 
-    NSMutableArray *samplesBuffer;
     NSThread *dataReader;
+    NSInteger readerStatus;
     
-    NSInteger readerDone;
+    NSMutableArray *activeTracks;
+    NSMutableArray *samplesBuffer;
 }
 
 @end

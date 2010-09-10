@@ -34,6 +34,8 @@
         NSData *magicCookie = [[track trackImporterHelper] magicCookieForTrack:track];
         NSInteger timeScale = [[track trackImporterHelper] timescaleForTrack:track];
 
+        [[track trackImporterHelper] setActiveTrack:track];
+
         if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:@"H.264"]) {
             NSSize size = [[track trackImporterHelper] sizeForTrack:track];
 
@@ -132,12 +134,17 @@
 
 - (void)work:(MP4FileHandle)fileHandle
 {
+    NSMutableArray * trackImportersArray = [[NSMutableArray alloc] init];
     for (MP42Track * track in workingTracks) {
+        if (![trackImportersArray containsObject:[track trackImporterHelper]]) {
+            [trackImportersArray addObject:[track trackImporterHelper]];
+        }
+    }
 
+    for (id importerHelper in trackImportersArray) {
         MP42SampleBuffer * sampleBuffer;
-        MP42FileImporter * helper = [track trackImporterHelper];
 
-        while ((sampleBuffer = [helper nextSampleForTrack:track]) != nil) {
+        while ((sampleBuffer = [importerHelper nextSampleForMovie]) != nil) {
 
             MP4WriteSample(fileHandle, sampleBuffer->sampleTrackId,
                            sampleBuffer->sampleData, sampleBuffer->sampleSize,
@@ -147,6 +154,22 @@
             [sampleBuffer release];
         }
     }
+
+   /* for (MP42Track * track in workingTracks) {
+    
+    MP42SampleBuffer * sampleBuffer;
+    MP42FileImporter * helper = [track trackImporterHelper];
+    
+    while ((sampleBuffer = [helper nextSampleForTrack:track]) != nil) {
+    
+    MP4WriteSample(fileHandle, sampleBuffer->sampleTrackId,
+    sampleBuffer->sampleData, sampleBuffer->sampleSize,
+    sampleBuffer->sampleDuration, sampleBuffer->sampleOffset,
+    sampleBuffer->sampleIsSync);
+    
+    [sampleBuffer release];
+    }
+    }*/
 }
 
 - (void)stopWork:(MP4FileHandle)fileHandle

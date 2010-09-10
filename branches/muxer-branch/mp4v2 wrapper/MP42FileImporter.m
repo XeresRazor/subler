@@ -40,6 +40,16 @@
     return nil;
 }
 
+- (void)setActiveTrack:(MP42Track *)track
+{
+
+}
+
+- (MP42SampleBuffer*)nextSampleForMovie
+{
+    return nil;
+}
+
 - (MP42SampleBuffer*)nextSampleForTrack:(MP42Track *)track
 {
     return nil;

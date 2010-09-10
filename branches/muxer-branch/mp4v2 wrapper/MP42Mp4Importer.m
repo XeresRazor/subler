@@ -177,6 +177,96 @@
     return sample;
 }
 
+- (void) fillMovieSampleBuffer: (id)sender
+{
+    if (!fileHandle)
+        fileHandle = MP4Read([file UTF8String], 0);
+
+    NSInteger tracksNumber = [activeTracks count];
+    NSInteger tracksDone = 0;
+
+    while (1) {
+        for (MP42Track* track in activeTracks) {
+            MP4TrackId srcTrackId = [track sourceId];
+            uint8_t *pBytes = NULL;
+            uint32_t numBytes = 0;
+            MP4Duration duration;
+            MP4Duration renderingOffset;
+            MP4Timestamp pStartTime;
+            bool isSyncSample;
+
+            track.currentSampleId = track.currentSampleId + 1;
+
+            if (!MP4ReadSample(fileHandle,
+                               srcTrackId,
+                               track.currentSampleId,
+                               &pBytes, &numBytes,
+                               &pStartTime, &duration, &renderingOffset,
+                               &isSyncSample)) {
+                tracksDone++;
+                break;
+            }
+
+            MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
+            sample->sampleData = pBytes;
+            sample->sampleSize = numBytes;
+            sample->sampleDuration = duration;
+            sample->sampleOffset = renderingOffset;
+            sample->sampleTimestamp = pStartTime;
+            sample->sampleIsSync = isSyncSample;
+            sample->sampleTrackId = track.Id;
+
+            @synchronized(samplesBuffer) {
+                [samplesBuffer addObject:sample];
+            }
+        }
+        if (tracksDone >= tracksNumber)
+            readerStatus = 1;
+    }
+}
+
+- (MP42SampleBuffer*)nextSampleForMovie
+{
+    if (!fileHandle)
+        fileHandle = MP4Read([file UTF8String], 0);
+    
+    if (samplesBuffer == nil) {
+        samplesBuffer = [[NSMutableArray alloc] initWithCapacity:200];
+    }    
+    
+    if (!dataReader && !readerStatus) {
+        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
+        [dataReader start];
+    }
+    
+    while (![samplesBuffer count] && !readerStatus)
+        usleep(2000);
+    
+    if (readerStatus)
+        if ([samplesBuffer count] == 0) {
+            readerStatus = 0;
+            dataReader = nil;
+            return nil;
+        }
+    
+    MP42SampleBuffer* sample;
+    
+    @synchronized(samplesBuffer) {
+        sample = [samplesBuffer objectAtIndex:0];
+        [samplesBuffer removeObjectAtIndex:0];
+    }
+    
+    return sample;
+    
+}
+
+- (void)setActiveTrack:(MP42Track *)track {
+    if (!activeTracks)
+        activeTracks = [[NSMutableArray alloc] init];
+    
+    [activeTracks addObject:track];
+}
+
 - (void) dealloc
 {
     if (fileHandle)

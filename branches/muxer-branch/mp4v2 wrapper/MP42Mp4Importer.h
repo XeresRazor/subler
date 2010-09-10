@@ -12,6 +12,12 @@
 
 @interface MP42Mp4Importer : MP42FileImporter {
     MP4FileHandle  fileHandle;
+
+    NSThread *dataReader;
+    NSInteger readerStatus;
+
+    NSMutableArray *activeTracks;
+    NSMutableArray *samplesBuffer;
 }
 
 @end

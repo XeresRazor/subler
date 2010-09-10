@@ -101,6 +101,8 @@ NSString * const MP42SourceTypeRaw = @"Raw";
 
 - (void) dealloc
 {
+    if (trackDemuxerHelper)
+        [trackDemuxerHelper release];
     [trackImporterHelper release];
     [updatedProperty release];
     [format release];
