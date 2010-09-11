@@ -9,6 +9,7 @@
 #import "MP42MkvImporter.h"
 #import "MatroskaParser.h"
 #import "MatroskaFile.h"
+#import "SubUtilities.h"
 #import "lang.h"
 #import "MP42File.h"
 
@@ -32,10 +33,13 @@
     @public
     NSMutableArray *queue;
     NSMutableArray *offsetsArray;
-    
+
     NSMutableArray *samplesBuffer;
     uint64_t        current_time;
     unsigned int buffer, samplesWritten, bufferFlush;
+
+    NSInteger fileFormat;
+    SBSubSerializer *ss; 
 }
 @end
 
@@ -56,7 +60,8 @@
 - (void) dealloc {
     [queue release], queue = nil;
     [offsetsArray release], offsetsArray = nil;
-    [samplesBuffer release];
+    [samplesBuffer release], samplesBuffer = nil;
+    [ss release], ss = nil;
 
     [super dealloc];
 }
@@ -578,6 +583,42 @@ NSString* getMatroskaTrackName(TrackInfo *track)
                 [samplesBuffer addObject:sample];
             }
         }
+        
+        if (trackInfo->Type == TT_SUB) {
+            if (!trackHelper->ss)
+                trackHelper->ss = [[SBSubSerializer alloc] init];
+            trackHelper->samplesWritten++;
+
+            if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
+                fprintf(stderr,"fseeko(): %s\n", strerror(errno));
+                break;				
+            }
+
+            frame = malloc(FrameSize);
+            if (frame == NULL) {
+                fprintf(stderr,"Out of memory\n");
+                break;		
+            }
+
+            size_t rd = fread(frame,1,FrameSize,ioStream->fp);
+            if (rd != FrameSize) {
+                if (rd == 0) {
+                    if (feof(ioStream->fp))
+                        fprintf(stderr,"Unexpected EOF while reading frame\n");
+                    else
+                        fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
+                } else
+                    fprintf(stderr,"Short read while reading frame\n");
+            }
+
+            NSString *string = [[[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding] autorelease];
+            string = StripSSALine(string);
+
+            if ([string length]) {
+                SBSubLine *sl = [[SBSubLine alloc] initWithLine:string start:StartTime/1000000 end:EndTime/1000000];
+                [trackHelper->ss addLine:[sl autorelease]];
+            }
+        }        
 
         else if (trackInfo->Type == TT_VIDEO) {
             uint64_t timeScale = mkv_GetFileInfo(matroskaFile)->TimecodeScale / mkv_TruncFloat(trackInfo->TimecodeScale) * 1000;
@@ -631,16 +672,12 @@ NSString* getMatroskaTrackName(TrackInfo *track)
 
                 if (fseeko(ioStream->fp, currentSample->filePos, SEEK_SET)) {
                     fprintf(stderr,"fseeko(): %s\n", strerror(errno));
-                    [trackHelper->offsetsArray release];
-                    [trackHelper->queue release];
                     break;				
                 } 
 
                 frame = malloc(currentSample->frameSize);
                 if (frame == NULL) {
                     fprintf(stderr,"Out of memory\n");
-                    [trackHelper->offsetsArray release];
-                    [trackHelper->queue release];
                     break;		
                 }
 
@@ -686,6 +723,43 @@ NSString* getMatroskaTrackName(TrackInfo *track)
             }
         }        
     }
+    
+    for (MP42Track* track in activeTracks){
+        trackHelper = track.trackDemuxerHelper;
+        if (trackHelper->ss) {
+
+            MP42SampleBuffer *sample;
+            MP4TrackId dstTrackId = track.Id;
+            SBSubSerializer *ss = trackHelper->ss;
+
+            [ss setFinished:YES];
+
+            while (![ss isEmpty]) {
+                SBSubLine *sl = [ss getSerializedPacket];
+
+                if ([sl->line isEqualToString:@"\n"]) {
+                    if (!(sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time))) 
+                        break;
+
+                    @synchronized(samplesBuffer) {
+                        [samplesBuffer addObject:sample];
+                        trackHelper->samplesWritten++;
+                    }
+
+                    continue;
+                }
+                if (!(sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time)))
+                    break;
+
+                @synchronized(samplesBuffer) {
+                    [samplesBuffer addObject:sample];
+
+                trackHelper->samplesWritten++;
+                }
+            }
+        }
+    }
+
     NSLog(@"Reader work done");
     readerStatus = 1;
     [pool release];
@@ -694,19 +768,19 @@ NSString* getMatroskaTrackName(TrackInfo *track)
 - (MP42SampleBuffer*)nextSampleForMovie {
     if (!matroskaFile)
         return nil;
-    
+
     if (samplesBuffer == nil) {
         samplesBuffer = [[NSMutableArray alloc] initWithCapacity:200];
-    }    
-    
+    }
+
     if (!dataReader && !readerStatus) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
         [dataReader start];
     }
-    
+
     while (![samplesBuffer count] && !readerStatus)
         usleep(2000);
-    
+
     if (readerStatus)
         if ([samplesBuffer count] == 0) {
             readerStatus = 0;

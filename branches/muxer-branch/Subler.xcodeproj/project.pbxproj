@@ -235,8 +235,8 @@
 		A9ED7C4D1115CFBD00423241 /* MP42Mp4Importer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Mp4Importer.m; path = "mp4v2 wrapper/MP42Mp4Importer.m"; sourceTree = "<group>"; };
 		A9ED7C891115D32E00423241 /* MP42MovImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42MovImporter.h; path = "mp4v2 wrapper/MP42MovImporter.h"; sourceTree = "<group>"; };
 		A9ED7C8A1115D32E00423241 /* MP42MovImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42MovImporter.m; path = "mp4v2 wrapper/MP42MovImporter.m"; sourceTree = "<group>"; };
-		A9F5EA7E0F32E55000C057E0 /* SubUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SubUtilities.h; path = ../../SubUtilities.h; sourceTree = "<group>"; };
-		A9F5EA7F0F32E55000C057E0 /* SubUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SubUtilities.m; path = ../../SubUtilities.m; sourceTree = "<group>"; };
+		A9F5EA7E0F32E55000C057E0 /* SubUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubUtilities.h; sourceTree = "<group>"; };
+		A9F5EA7F0F32E55000C057E0 /* SubUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubUtilities.m; sourceTree = "<group>"; };
 		A9F5EBAD0F32F2DB00C057E0 /* lang.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lang.c; sourceTree = "<group>"; };
 		A9F5EBB00F32F31600C057E0 /* lang.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lang.h; sourceTree = "<group>"; };
 		A9FB9D3C0F83A5CF00AB791A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/VideoFramerate.xib; sourceTree = "<group>"; };
@@ -439,6 +439,8 @@
 				A9ED7C4D1115CFBD00423241 /* MP42Mp4Importer.m */,
 				A9ED7C891115D32E00423241 /* MP42MovImporter.h */,
 				A9ED7C8A1115D32E00423241 /* MP42MovImporter.m */,
+				A9F5EA7E0F32E55000C057E0 /* SubUtilities.h */,
+				A9F5EA7F0F32E55000C057E0 /* SubUtilities.m */,
 			);
 			name = importers;
 			sourceTree = "<group>";
@@ -454,8 +456,6 @@
 				A9C054B00F6D295A00AF15B5 /* AudioMuxer.m */,
 				A9C054CE0F6D2D9800AF15B5 /* VideoMuxer.h */,
 				A9C054CF0F6D2D9800AF15B5 /* VideoMuxer.m */,
-				A9F5EA7E0F32E55000C057E0 /* SubUtilities.h */,
-				A9F5EA7F0F32E55000C057E0 /* SubUtilities.m */,
 				A9D1C2031125454B0088168C /* h264.h */,
 				A9BB60680F833D2E005CD0BB /* h264.cpp */,
 				A9BB60780F83452D005CD0BB /* aac.cpp */,

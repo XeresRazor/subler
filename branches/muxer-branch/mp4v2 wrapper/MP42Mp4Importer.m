@@ -229,35 +229,34 @@
 {
     if (!fileHandle)
         fileHandle = MP4Read([file UTF8String], 0);
-    
+
     if (samplesBuffer == nil) {
         samplesBuffer = [[NSMutableArray alloc] initWithCapacity:200];
     }    
-    
+
     if (!dataReader && !readerStatus) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
         [dataReader start];
     }
-    
+
     while (![samplesBuffer count] && !readerStatus)
         usleep(2000);
-    
+
     if (readerStatus)
         if ([samplesBuffer count] == 0) {
             readerStatus = 0;
             dataReader = nil;
             return nil;
         }
-    
+
     MP42SampleBuffer* sample;
-    
+
     @synchronized(samplesBuffer) {
         sample = [samplesBuffer objectAtIndex:0];
         [samplesBuffer removeObjectAtIndex:0];
     }
-    
+
     return sample;
-    
 }
 
 - (void)setActiveTrack:(MP42Track *)track {
@@ -271,6 +270,10 @@
 {
     if (fileHandle)
         MP4Close(fileHandle);
+    if (activeTracks)
+        [activeTracks release];
+    if (samplesBuffer)
+        [samplesBuffer release];
 	[file release];
     [tracksArray release];
 
