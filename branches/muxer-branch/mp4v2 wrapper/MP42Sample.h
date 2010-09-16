@@ -14,7 +14,7 @@
 	void         *sampleData;
     uint64_t      sampleSize;
     MP4Duration   sampleDuration;
-    MP4Duration   sampleOffset;
+    int64_t       sampleOffset;
     MP4Timestamp  sampleTimestamp;
     MP4TrackId    sampleTrackId;
     BOOL          sampleIsSync;
@@ -23,7 +23,7 @@
 @property(readwrite) void         *sampleData;
 @property(readwrite) uint64_t      sampleSize;
 @property(readwrite) MP4Duration   sampleDuration;
-@property(readwrite) MP4Duration   sampleOffset;
+@property(readwrite) int64_t   sampleOffset;
 @property(readwrite) MP4Timestamp  sampleTimestamp;
 @property(readwrite) MP4TrackId    sampleTrackId;
 @property(readwrite) BOOL          sampleIsSync;

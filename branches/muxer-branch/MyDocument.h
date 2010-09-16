@@ -46,8 +46,8 @@
     IBOutlet NSTextField    *offset;
     
     IBOutlet NSButton *cancelSave;
-    BOOL _64bit_data;
-    BOOL _64bit_time;
+    IBOutlet NSButton *_64bit_data;
+    IBOutlet NSButton *_64bit_time;
     BOOL _optimize;
 }
 
@@ -62,8 +62,6 @@
 - (IBAction) closeOffsetSheet: (id) sender;
 
 - (IBAction) setSaveFormat: (id) sender;
-- (IBAction) set64bit_data: (id) sender;
-- (IBAction) set64bit_time: (id) sender;
 - (IBAction) cancelSaveOperation: (id) sender;
 - (IBAction) sendToExternalApp: (id) sender;
 

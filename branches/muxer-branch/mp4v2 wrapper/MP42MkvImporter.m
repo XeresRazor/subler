@@ -529,7 +529,7 @@ NSString* getMatroskaTrackName(TrackInfo *track)
     int64_t         offset, minOffset = 0, duration, next_duration;
     
     unsigned int bufferFlush = 0;
-    const unsigned int bufferSize = 24;
+    const unsigned int bufferSize = 20;
     int success = 0;    
     
     while ((success = mkv_ReadFrame(matroskaFile, 0, &Track, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags)) >=0 /*=-1*/) {
@@ -576,7 +576,7 @@ NSString* getMatroskaTrackName(TrackInfo *track)
             sample->sampleDuration = 1024;//EndTime - StartTime;
             sample->sampleOffset = 0;
             sample->sampleTimestamp = StartTime;
-            sample->sampleIsSync = FrameFlags & FRAME_KF;
+            sample->sampleIsSync = YES;
             sample->sampleTrackId = track.Id;
             
             @synchronized(samplesBuffer) {

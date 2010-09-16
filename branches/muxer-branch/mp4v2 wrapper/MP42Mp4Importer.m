@@ -185,8 +185,8 @@
     NSInteger tracksNumber = [activeTracks count];
     NSInteger tracksDone = 0;
 
-    while (1) {
-        for (MP42Track* track in activeTracks) {
+    for (MP42Track* track in activeTracks) {
+        while (1) {
             MP4TrackId srcTrackId = [track sourceId];
             uint8_t *pBytes = NULL;
             uint32_t numBytes = 0;
@@ -220,9 +220,9 @@
                 [samplesBuffer addObject:sample];
             }
         }
-        if (tracksDone >= tracksNumber)
-            readerStatus = 1;
     }
+    if (tracksDone >= tracksNumber)
+        readerStatus = 1;
 }
 
 - (MP42SampleBuffer*)nextSampleForMovie

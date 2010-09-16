@@ -179,9 +179,12 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     char* supportedBrands[4];
     uint32_t supportedBrandsCount = 0;
     uint32_t flags = 0;
-    if ([[attributes valueForKey:MP42Create64BitData] integerValue])
+
+    if ([[attributes valueForKey:MP42Create64BitData] boolValue]){
+        NSLog(@"64Bit Data");
         flags += 0x01;
-    if ([[attributes valueForKey:MP42Create64BitTime] integerValue])
+    }
+    if ([[attributes valueForKey:MP42Create64BitTime] boolValue])
         flags += 0x02;
 
     if ([fileExtension isEqualToString:@"m4v"]) {
@@ -260,7 +263,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 
     MP4Close(fileHandle);
 
-    if ([[attributes valueForKey:@"ChaptersPreview"] integerValue])
+    if ([[attributes valueForKey:@"ChaptersPreview"] boolValue])
         [self createChaptersPreview];
 
     return success;
