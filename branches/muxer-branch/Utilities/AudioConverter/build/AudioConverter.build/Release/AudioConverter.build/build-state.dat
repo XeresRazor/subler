@@ -1,607 +1,0 @@
-TAudioConverter
-v7
-r0
-t306317109.595649
-cCheck dependencies
-
-N/Developer/SDKs/MacOSX10.6.sdk
-c000000004C8A0B4B00000000000000EE
-t1284115275
-s238
-
-N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers/AudioToolbox.h
-c000000004C46BC210000000000000A22
-t1279704097
-s2594
-
-N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/CoreAudio.framework/Headers/CoreAudio.h
-c000000004C46A03A000000000000034B
-t1279696954
-s843
-
-N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h
-c000000004C46BD4600000000000013E6
-t1279704390
-s5094
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/assert.h
-c000000004AC59C810000000000000DCB
-t1254464641
-s3531
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/errno.h
-c000000004AC59C8100000000000003EB
-t1254464641
-s1003
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/pthread.h
-c000000004AC59C8100000000000038F0
-t1254464641
-s14576
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/setjmp.h
-c000000004AC59C810000000000000438
-t1254464641
-s1080
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/stdio.h
-c000000004AC59C820000000000004174
-t1254464642
-s16756
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/stdlib.h
-c000000004AC59C820000000000002DF5
-t1254464642
-s11765
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/string.h
-c000000004AC59C820000000000001731
-t1254464642
-s5937
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/zlib.h
-c000000004C4DF21300000000000102A5
-t1280176659
-s66213
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdarg.h
-c000000004AC59DB700000000000010DD
-t1254464951
-s4317
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdint.h
-c000000004AC59DB7000000000000190C
-t1254464951
-s6412
-
-N/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox
-c000000004C71C17100000000004D2720
-t1282523505
-s5056288
-
-N/System/Library/Frameworks/Foundation.framework/Foundation
-c000000004C5C450E0000000000B3F8D0
-t1281115406
-s11794640
-
-N/System/Library/Frameworks/QTKit.framework/QTKit
-c000000004C744FFD00000000006705E0
-t1282691069
-s6751712
-
-N/Users/damians/Desktop/AudioConverter/AudioConverter.m
-c000000004C91CEF10000000000005942
-t1284624113
-s22850
-i<Foundation/Foundation.h>
-i<assert.h>
-i<pthread.h>
-i"MatroskaFile.h"
-i"MatroskaParser.h"
-i"sfifo.h"
-i<AudioToolbox/AudioToolbox.h>
-i<CoreAudio/CoreAudio.h>
-
-N/Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch
-c000000004C8CD68A00000000000000AA
-t1284298378
-s170
-i<Foundation/Foundation.h>
-
-N/Users/damians/Desktop/AudioConverter/MatroskaFile.c
-c000000004C8D19060000000000000C68
-t1284315398
-s3176
-i<stdlib.h>
-i<stdio.h>
-i<errno.h>
-i<stdint.h>
-i"MatroskaParser.h"
-i"MatroskaFile.h"
-
-N/Users/damians/Desktop/AudioConverter/MatroskaFile.h
-c000000004C8D18FF00000000000001F8
-t1284315391
-s504
-i"MatroskaParser.h"
-
-N/Users/damians/Desktop/AudioConverter/MatroskaParser.c
-c000000004C8CE45A0000000000012AA5
-t1284301914
-s76453
-i<stdlib.h>
-i<stdarg.h>
-i<stdio.h>
-i<string.h>
-i<setjmp.h>
-i<tchar.h>
-i"MatroskaParser.h"
-i<zlib.h>
-
-N/Users/damians/Desktop/AudioConverter/MatroskaParser.h
-c000000004AD18B410000000000002D9F
-t1255246657
-s11679
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter.LinkFileList
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter.o
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/MatroskaFile.o
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/MatroskaParser.o
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/sfifo.o
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter.LinkFileList
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter.o
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/MatroskaFile.o
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/MatroskaParser.o
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/sfifo.o
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter
-t1284550600
-s75568
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter.LinkFileList
-c000000004C90921F0000000000000209
-t1284543007
-s521
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter.o
-t1284550599
-s41192
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/MatroskaFile.o
-t1284543016
-s10624
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/MatroskaParser.o
-t1284543018
-s180980
-
-N/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/sfifo.o
-t1284543016
-s7088
-
-N/Users/damians/Desktop/AudioConverter/build/Release/AudioConverter
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/build/Release/AudioConverter.dSYM
-t2
-s0
-
-N/Users/damians/Desktop/AudioConverter/sfifo.c
-c00000000453948E100000000000009FA
-t1161382113
-s2554
-i<string.h>
-i<stdlib.h>
-i"sfifo.h"
-
-N/Users/damians/Desktop/AudioConverter/sfifo.h
-c00000000453948E10000000000000912
-t1161382113
-s2322
-i<errno.h>
-
-N/usr/lib/libz.dylib
-c000000004BBD3066000000000003C090
-t1270689894
-s245904
-
-N/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-ayzgxvspwlywwjctngabkxnbewsp/AudioConverter_Prefix.pch.gch
-t1284543007
-s2195824
-
-N/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-bdgcihpkobaxwuffqewqgawxtxtm/AudioConverter_Prefix.pch.gch
-t2
-s0
-
-N/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-cmtlhprvgrzevgbkfafcdsprrbvl/AudioConverter_Prefix.pch.gch
-t2
-s0
-
-N/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dfohgemhipgrmzdqioswebxbpvwg/AudioConverter_Prefix.pch.gch
-t1284543012
-s40061712
-
-N/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dgxhjfcsghuyiuerkpirierrhqit/AudioConverter_Prefix.pch.gch
-t2
-s0
-
-N/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-esemrrugzpjgdzbdwdhpmywlymgw/AudioConverter_Prefix.pch.gch
-t2
-s0
-
-CCheck dependencies
-r0
-lSLF07#2@18"Check dependencies306317109#306317109#0(0"0(0#1#0"8621013824#0"0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter.o /Users/damians/Desktop/AudioConverter/AudioConverter.m normal i386 objective-c com.apple.compilers.gcc.4_2
-s306316914.671725
-e306316915.358745
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter.o
-x/Users/damians/Desktop/AudioConverter/AudioConverter.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@62"Compile /Users/damians/Desktop/AudioConverter/AudioConverter.m306316914#306316915#0(0"0(0#0#54"/Users/damians/Desktop/AudioConverter/AudioConverter.m8619231808#1629"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/i386 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-bdgcihpkobaxwuffqewqgawxtxtm/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/AudioConverter.m -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/MatroskaFile.o /Users/damians/Desktop/AudioConverter/MatroskaFile.c normal i386 c com.apple.compilers.gcc.4_2
-s306246191.836701
-e306246191.994280
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/MatroskaFile.o
-x/Users/damians/Desktop/AudioConverter/MatroskaFile.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'StdIoGetLastError':
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: implicit declaration of function 'strerror'
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: return makes pointer from integer without a cast
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'openMatroskaFile':
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:99: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:100: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:101: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:102: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:103: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:104: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:105: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:106: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:111: warning: format '%s' expects type 'char *', but argument 4 has type 'int'
-lSLF07#2@60"Compile /Users/damians/Desktop/AudioConverter/MatroskaFile.c306246191#306246191#0(1401"/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'StdIoGetLastError':/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: implicit declaration of function 'strerror'/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: return makes pointer from integer without a cast/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'openMatroskaFile':/Users/damians/Desktop/AudioConverter/MatroskaFile.c:99: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:100: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:101: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:102: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:103: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:104: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:105: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:106: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:111: warning: format '%s' expects type 'char *', but argument 4 has type 'int'11(22@43"Implicit declaration of function 'strerror'306246191#87#110#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#71#0#71#0#36"implicit declaration of function '*'0(22@48"Return makes pointer from integer without a cast306246191#197#115#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#71#0#71#0#0"0(22@41"Assignment from incompatible pointer type306246191#398#108#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#99#0#99#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246191#506#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#100#0#100#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246191#615#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#101#0#101#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246191#724#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#102#0#102#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246191#833#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#103#0#103#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246191#942#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#104#0#104#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246191#1051#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#105#0#105#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246191#1160#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#106#0#106#0#41"assignment from incompatible pointer type0(22@64"Format '%s' expects type 'char *', but argument 4 has type 'int'306246191#1269#132#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#111#0#111#0#56"format '*' expects type '*', but argument * has type '*'0(0#0#52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c8609266272#1615"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/i386 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-esemrrugzpjgdzbdwdhpmywlymgw/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/MatroskaFile.c -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/MatroskaFile.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/MatroskaParser.o /Users/damians/Desktop/AudioConverter/MatroskaParser.c normal i386 c com.apple.compilers.gcc.4_2
-s306246191.994388
-e306246194.159845
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/MatroskaParser.o
-x/Users/damians/Desktop/AudioConverter/MatroskaParser.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@62"Compile /Users/damians/Desktop/AudioConverter/MatroskaParser.c306246191#306246194#0(0"0(0#0#54"/Users/damians/Desktop/AudioConverter/MatroskaParser.c8603758912#1619"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/i386 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-esemrrugzpjgdzbdwdhpmywlymgw/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/MatroskaParser.c -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/MatroskaParser.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/sfifo.o /Users/damians/Desktop/AudioConverter/sfifo.c normal i386 c com.apple.compilers.gcc.4_2
-s306246192.416891
-e306246192.490444
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/sfifo.o
-x/Users/damians/Desktop/AudioConverter/sfifo.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@53"Compile /Users/damians/Desktop/AudioConverter/sfifo.c306246192#306246192#0(0"0(0#0#45"/Users/damians/Desktop/AudioConverter/sfifo.c8609315968#1601"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/i386 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-esemrrugzpjgdzbdwdhpmywlymgw/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/sfifo.c -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/sfifo.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter.o /Users/damians/Desktop/AudioConverter/AudioConverter.m normal ppc objective-c com.apple.compilers.gcc.4_2
-s306316914.852834
-e306316915.335495
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter.o
-x/Users/damians/Desktop/AudioConverter/AudioConverter.m
-xnormal
-xppc
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@62"Compile /Users/damians/Desktop/AudioConverter/AudioConverter.m306316914#306316915#0(0"0(0#0#54"/Users/damians/Desktop/AudioConverter/AudioConverter.m8625839744#1636"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/ppc -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-cmtlhprvgrzevgbkfafcdsprrbvl/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/AudioConverter.m -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/MatroskaFile.o /Users/damians/Desktop/AudioConverter/MatroskaFile.c normal ppc c com.apple.compilers.gcc.4_2
-s306246192.969693
-e306246193.131610
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/MatroskaFile.o
-x/Users/damians/Desktop/AudioConverter/MatroskaFile.c
-xnormal
-xppc
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'StdIoGetLastError':
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: implicit declaration of function 'strerror'
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: return makes pointer from integer without a cast
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'openMatroskaFile':
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:99: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:100: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:101: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:102: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:103: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:104: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:105: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:106: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:111: warning: format '%s' expects type 'char *', but argument 4 has type 'int'
-lSLF07#2@60"Compile /Users/damians/Desktop/AudioConverter/MatroskaFile.c306246192#306246193#0(1401"/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'StdIoGetLastError':/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: implicit declaration of function 'strerror'/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: return makes pointer from integer without a cast/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'openMatroskaFile':/Users/damians/Desktop/AudioConverter/MatroskaFile.c:99: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:100: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:101: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:102: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:103: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:104: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:105: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:106: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:111: warning: format '%s' expects type 'char *', but argument 4 has type 'int'11(22@43"Implicit declaration of function 'strerror'306246193#87#110#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#71#0#71#0#36"implicit declaration of function '*'0(22@48"Return makes pointer from integer without a cast306246193#197#115#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#71#0#71#0#0"0(22@41"Assignment from incompatible pointer type306246193#398#108#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#99#0#99#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246193#506#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#100#0#100#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246193#615#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#101#0#101#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246193#724#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#102#0#102#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246193#833#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#103#0#103#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246193#942#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#104#0#104#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246193#1051#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#105#0#105#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306246193#1160#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#106#0#106#0#41"assignment from incompatible pointer type0(22@64"Format '%s' expects type 'char *', but argument 4 has type 'int'306246193#1269#132#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#111#0#111#0#56"format '*' expects type '*', but argument * has type '*'0(0#0#52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c8609425632#1622"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/ppc -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dgxhjfcsghuyiuerkpirierrhqit/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/MatroskaFile.c -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/MatroskaFile.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/MatroskaParser.o /Users/damians/Desktop/AudioConverter/MatroskaParser.c normal ppc c com.apple.compilers.gcc.4_2
-s306246193.131724
-e306246195.448518
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/MatroskaParser.o
-x/Users/damians/Desktop/AudioConverter/MatroskaParser.c
-xnormal
-xppc
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@62"Compile /Users/damians/Desktop/AudioConverter/MatroskaParser.c306246193#306246195#0(0"0(0#0#54"/Users/damians/Desktop/AudioConverter/MatroskaParser.c8608914016#1626"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/ppc -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dgxhjfcsghuyiuerkpirierrhqit/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/MatroskaParser.c -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/MatroskaParser.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/sfifo.o /Users/damians/Desktop/AudioConverter/sfifo.c normal ppc c com.apple.compilers.gcc.4_2
-s306246194.193706
-e306246194.289549
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/sfifo.o
-x/Users/damians/Desktop/AudioConverter/sfifo.c
-xnormal
-xppc
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@53"Compile /Users/damians/Desktop/AudioConverter/sfifo.c306246194#306246194#0(0"0(0#0#45"/Users/damians/Desktop/AudioConverter/sfifo.c8609943232#1608"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/ppc -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dgxhjfcsghuyiuerkpirierrhqit/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/sfifo.c -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/sfifo.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter.o /Users/damians/Desktop/AudioConverter/AudioConverter.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
-s306243398.438535
-e306243399.781360
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter.o
-x/Users/damians/Desktop/AudioConverter/AudioConverter.m
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@62"Compile /Users/damians/Desktop/AudioConverter/AudioConverter.m306243398#306243399#0(0"0(0#0#54"/Users/damians/Desktop/AudioConverter/AudioConverter.m8621131232#1635"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/x86_64 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dfohgemhipgrmzdqioswebxbpvwg/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/AudioConverter.m -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/MatroskaFile.o /Users/damians/Desktop/AudioConverter/MatroskaFile.c normal x86_64 c com.apple.compilers.gcc.4_2
-s306235816.073197
-e306235816.164628
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/MatroskaFile.o
-x/Users/damians/Desktop/AudioConverter/MatroskaFile.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'StdIoGetLastError':
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: implicit declaration of function 'strerror'
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: return makes pointer from integer without a cast
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'openMatroskaFile':
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:99: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:100: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:101: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:102: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:103: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:104: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:105: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:106: warning: assignment from incompatible pointer type
-o/Users/damians/Desktop/AudioConverter/MatroskaFile.c:111: warning: format '%s' expects type 'char *', but argument 4 has type 'int'
-lSLF07#2@60"Compile /Users/damians/Desktop/AudioConverter/MatroskaFile.c306235816#306235816#0(1401"/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'StdIoGetLastError':/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: implicit declaration of function 'strerror'/Users/damians/Desktop/AudioConverter/MatroskaFile.c:71: warning: return makes pointer from integer without a cast/Users/damians/Desktop/AudioConverter/MatroskaFile.c: In function 'openMatroskaFile':/Users/damians/Desktop/AudioConverter/MatroskaFile.c:99: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:100: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:101: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:102: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:103: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:104: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:105: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:106: warning: assignment from incompatible pointer type/Users/damians/Desktop/AudioConverter/MatroskaFile.c:111: warning: format '%s' expects type 'char *', but argument 4 has type 'int'11(22@43"Implicit declaration of function 'strerror'306235816#87#110#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#71#0#71#0#36"implicit declaration of function '*'0(22@48"Return makes pointer from integer without a cast306235816#197#115#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#71#0#71#0#0"0(22@41"Assignment from incompatible pointer type306235816#398#108#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#99#0#99#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306235816#506#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#100#0#100#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306235816#615#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#101#0#101#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306235816#724#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#102#0#102#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306235816#833#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#103#0#103#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306235816#942#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#104#0#104#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306235816#1051#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#105#0#105#0#41"assignment from incompatible pointer type0(22@41"Assignment from incompatible pointer type306235816#1160#109#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#106#0#106#0#41"assignment from incompatible pointer type0(22@64"Format '%s' expects type 'char *', but argument 4 has type 'int'306235816#1269#132#0(6@52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c306008198#111#0#111#0#56"format '*' expects type '*', but argument * has type '*'0(0#0#52"/Users/damians/Desktop/AudioConverter/MatroskaFile.c8632120032#1621"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/x86_64 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-ayzgxvspwlywwjctngabkxnbewsp/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/MatroskaFile.c -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/MatroskaFile.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/MatroskaParser.o /Users/damians/Desktop/AudioConverter/MatroskaParser.c normal x86_64 c com.apple.compilers.gcc.4_2
-s306235816.164739
-e306235818.057954
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/MatroskaParser.o
-x/Users/damians/Desktop/AudioConverter/MatroskaParser.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@62"Compile /Users/damians/Desktop/AudioConverter/MatroskaParser.c306235816#306235818#0(0"0(0#0#54"/Users/damians/Desktop/AudioConverter/MatroskaParser.c8618602688#1625"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/x86_64 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-ayzgxvspwlywwjctngabkxnbewsp/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/MatroskaParser.c -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/MatroskaParser.o0#
-
-CCompileC build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/sfifo.o /Users/damians/Desktop/AudioConverter/sfifo.c normal x86_64 c com.apple.compilers.gcc.4_2
-s306235816.618717
-e306235816.692999
-r1
-xCompileC
-xbuild/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/sfifo.o
-x/Users/damians/Desktop/AudioConverter/sfifo.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@53"Compile /Users/damians/Desktop/AudioConverter/sfifo.c306235816#306235816#0(0"0(0#0#45"/Users/damians/Desktop/AudioConverter/sfifo.c8634211360#1607"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/x86_64 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -include /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-ayzgxvspwlywwjctngabkxnbewsp/AudioConverter_Prefix.pch -c /Users/damians/Desktop/AudioConverter/sfifo.c -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/sfifo.o0#
-
-CCreateUniversalBinary /Users/damians/Desktop/AudioConverter/build/Release/AudioConverter normal "i386 ppc"
-s306316915.385765
-e306316915.389982
-r1
-xCreateUniversalBinary
-x/Users/damians/Desktop/AudioConverter/build/Release/AudioConverter
-xnormal
-xi386 ppc
-lSLF07#2@68"CreateUniversalBinary build/Release/AudioConverter normal "i386 ppc"306316915#306316915#0(0"0(0#0#46"/Users/damians/Desktop/AudioConverter/i386 ppc8632412320#403"    cd /Users/damians/Desktop/AudioConverter    /usr/bin/lipo -create /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter -output /Users/damians/Desktop/AudioConverter/build/Release/AudioConverter0#
-
-CCreateUniversalBinary /Users/damians/Desktop/AudioConverter/build/Release/AudioConverter normal "x86_64 i386 ppc"
-s306243400.536165
-e306243400.539917
-r1
-xCreateUniversalBinary
-x/Users/damians/Desktop/AudioConverter/build/Release/AudioConverter
-xnormal
-xx86_64 i386 ppc
-lSLF07#2@75"CreateUniversalBinary build/Release/AudioConverter normal "x86_64 i386 ppc"306243400#306243400#0(0"0(0#0#53"/Users/damians/Desktop/AudioConverter/x86_64 i386 ppc8632773088#534"    cd /Users/damians/Desktop/AudioConverter    /usr/bin/lipo -create /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter -output /Users/damians/Desktop/AudioConverter/build/Release/AudioConverter0#
-
-CGenerateDSYMFile /Users/damians/Desktop/AudioConverter/build/Release/AudioConverter.dSYM /Users/damians/Desktop/AudioConverter/build/Release/AudioConverter
-s306316915.390071
-e306316915.426189
-r1
-xGenerateDSYMFile
-x/Users/damians/Desktop/AudioConverter/build/Release/AudioConverter.dSYM
-x/Users/damians/Desktop/AudioConverter/build/Release/AudioConverter
-lSLF07#2@79"GenerateDSYMFile build/Release/AudioConverter.dSYM build/Release/AudioConverter306316915#306316915#0(0"0(0#0#66"/Users/damians/Desktop/AudioConverter/build/Release/AudioConverter8631701312#219"    cd /Users/damians/Desktop/AudioConverter    /Developer/usr/bin/dsymutil /Users/damians/Desktop/AudioConverter/build/Release/AudioConverter -o /Users/damians/Desktop/AudioConverter/build/Release/AudioConverter.dSYM0#
-
-CLd /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter normal i386
-s306316915.358847
-e306316915.385654
-r1
-xLd
-x/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter
-xnormal
-xi386
-lSLF07#2@133"Link /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter306316915#306316915#0(0"0(0#0#0"8617760128#654"    cd /Users/damians/Desktop/AudioConverter    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/gcc-4.2 -arch i386 -isysroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/damians/Desktop/AudioConverter/build/Release -F/Users/damians/Desktop/AudioConverter/build/Release -filelist /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter.LinkFileList -mmacosx-version-min=10.6 -framework Foundation -lz -framework AudioToolbox -framework QTKit -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/i386/AudioConverter0#
-
-CLd /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter normal ppc
-s306316915.336722
-e306316915.364558
-r1
-xLd
-x/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter
-xnormal
-xppc
-lSLF07#2@132"Link /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter306316915#306316915#0(0"0(0#0#0"8625330560#651"    cd /Users/damians/Desktop/AudioConverter    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/gcc-4.2 -arch ppc -isysroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/damians/Desktop/AudioConverter/build/Release -F/Users/damians/Desktop/AudioConverter/build/Release -filelist /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter.LinkFileList -mmacosx-version-min=10.6 -framework Foundation -lz -framework AudioToolbox -framework QTKit -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/ppc/AudioConverter0#
-
-CLd /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter normal x86_64
-s306243399.781750
-e306243400.006800
-r1
-xLd
-x/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter
-xnormal
-xx86_64
-lSLF07#2@135"Link /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter306243399#306243400#0(0"0(0#0#0"8632695328#660"    cd /Users/damians/Desktop/AudioConverter    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/gcc-4.2 -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/damians/Desktop/AudioConverter/build/Release -F/Users/damians/Desktop/AudioConverter/build/Release -filelist /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter.LinkFileList -mmacosx-version-min=10.6 -framework Foundation -lz -framework AudioToolbox -framework QTKit -o /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/Objects-normal/x86_64/AudioConverter0#
-
-CProcessPCH /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-ayzgxvspwlywwjctngabkxnbewsp/AudioConverter_Prefix.pch.gch AudioConverter_Prefix.pch normal x86_64 c com.apple.compilers.gcc.4_2
-s306235807.342792
-e306235807.486609
-r1
-xProcessPCH
-x/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-ayzgxvspwlywwjctngabkxnbewsp/AudioConverter_Prefix.pch.gch
-xAudioConverter_Prefix.pch
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@36"Precompile AudioConverter_Prefix.pch306235807#306235807#0(0"0(0#0#63"/Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch8633744928#1503"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c-header -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/x86_64 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -c /Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch -o /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-ayzgxvspwlywwjctngabkxnbewsp/AudioConverter_Prefix.pch.gch0#
-
-CProcessPCH /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-bdgcihpkobaxwuffqewqgawxtxtm/AudioConverter_Prefix.pch.gch AudioConverter_Prefix.pch normal i386 objective-c com.apple.compilers.gcc.4_2
-s306246184.566119
-e306246191.015471
-r1
-xProcessPCH
-x/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-bdgcihpkobaxwuffqewqgawxtxtm/AudioConverter_Prefix.pch.gch
-xAudioConverter_Prefix.pch
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@36"Precompile AudioConverter_Prefix.pch306246184#306246191#0(0"0(0#0#63"/Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch8605513376#1509"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c-header -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/i386 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -c /Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch -o /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-bdgcihpkobaxwuffqewqgawxtxtm/AudioConverter_Prefix.pch.gch0#
-
-CProcessPCH /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-cmtlhprvgrzevgbkfafcdsprrbvl/AudioConverter_Prefix.pch.gch AudioConverter_Prefix.pch normal ppc objective-c com.apple.compilers.gcc.4_2
-s306246184.821157
-e306246191.292302
-r1
-xProcessPCH
-x/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-cmtlhprvgrzevgbkfafcdsprrbvl/AudioConverter_Prefix.pch.gch
-xAudioConverter_Prefix.pch
-xnormal
-xppc
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@36"Precompile AudioConverter_Prefix.pch306246184#306246191#0(0"0(0#0#63"/Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch8610143168#1517"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c-header -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/ppc -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -c /Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch -o /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-cmtlhprvgrzevgbkfafcdsprrbvl/AudioConverter_Prefix.pch.gch0#
-
-CProcessPCH /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dfohgemhipgrmzdqioswebxbpvwg/AudioConverter_Prefix.pch.gch AudioConverter_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
-s306235807.341861
-e306235812.566976
-r1
-xProcessPCH
-x/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dfohgemhipgrmzdqioswebxbpvwg/AudioConverter_Prefix.pch.gch
-xAudioConverter_Prefix.pch
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@36"Precompile AudioConverter_Prefix.pch306235807#306235812#0(0"0(0#0#63"/Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch8633919616#1513"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c-header -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/x86_64 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -c /Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch -o /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dfohgemhipgrmzdqioswebxbpvwg/AudioConverter_Prefix.pch.gch0#
-
-CProcessPCH /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dgxhjfcsghuyiuerkpirierrhqit/AudioConverter_Prefix.pch.gch AudioConverter_Prefix.pch normal ppc c com.apple.compilers.gcc.4_2
-s306246191.015777
-e306246191.834841
-r1
-xProcessPCH
-x/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dgxhjfcsghuyiuerkpirierrhqit/AudioConverter_Prefix.pch.gch
-xAudioConverter_Prefix.pch
-xnormal
-xppc
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@36"Precompile AudioConverter_Prefix.pch306246191#306246191#0(0"0(0#0#63"/Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch8609313888#1507"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c-header -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/ppc -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -c /Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch -o /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-dgxhjfcsghuyiuerkpirierrhqit/AudioConverter_Prefix.pch.gch0#
-
-CProcessPCH /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-esemrrugzpjgdzbdwdhpmywlymgw/AudioConverter_Prefix.pch.gch AudioConverter_Prefix.pch normal i386 c com.apple.compilers.gcc.4_2
-s306246184.567183
-e306246184.821018
-r1
-xProcessPCH
-x/var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-esemrrugzpjgdzbdwdhpmywlymgw/AudioConverter_Prefix.pch.gch
-xAudioConverter_Prefix.pch
-xnormal
-xi386
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@36"Precompile AudioConverter_Prefix.pch306246184#306246184#0(0"0(0#0#63"/Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch8605392832#1499"    cd /Users/damians/Desktop/AudioConverter    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c-header -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -mdynamic-no-pic -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-generated-files.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-own-target-headers.hmap -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-all-target-headers.hmap -iquote /Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/AudioConverter-project-headers.hmap -F/Users/damians/Desktop/AudioConverter/build/Release -I/Users/damians/Desktop/AudioConverter/build/Release/include -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources/i386 -I/Users/damians/Desktop/AudioConverter/build/AudioConverter.build/Release/AudioConverter.build/DerivedSources -c /Users/damians/Desktop/AudioConverter/AudioConverter_Prefix.pch -o /var/folders/Rx/RxuSdGW3FpiZ3tf1EM3+0U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/AudioConverter_Prefix-esemrrugzpjgdzbdwdhpmywlymgw/AudioConverter_Prefix.pch.gch0#
-
