@@ -29,7 +29,7 @@
 - (NSData*)magicCookieForTrack:(MP42Track *)track;
 - (void)setActiveTrack:(MP42Track *)track;
 
-- (MP42SampleBuffer*)nextSampleForMovie;
+- (MP42SampleBuffer*)copyNextSample;
 - (MP42SampleBuffer*)nextSampleForTrack:(MP42Track *)track;
 @end
 

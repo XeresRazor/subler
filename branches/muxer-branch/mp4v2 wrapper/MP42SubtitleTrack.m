@@ -74,22 +74,6 @@
 {
     if (isEdited && !muxed)
     {
-        if ([[sourcePath pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame ||
-            [[sourcePath pathExtension] caseInsensitiveCompare: @"smi"] == NSOrderedSame) {
-            Id = muxSRTSubtitleTrack(fileHandle,
-                                     sourcePath,
-                                     trackHeight);
-        }
-        /*else if ([sourceInputType isEqualToString:MP42SourceTypeMP4])
-            Id = muxMP4SubtitleTrack(fileHandle, sourcePath, sourceId);
-        else if ([sourceInputType isEqualToString:MP42SourceTypeQuickTime]) {
-#if !__LP64__
-            Id = muxMOVSubtitleTrack(fileHandle, sourceFileHandle, sourceId);
-#endif
-        }
-        else if ([sourceInputType isEqualToString:MP42SourceTypeMatroska])
-			Id = muxMKVSubtitleTrack(fileHandle, sourcePath, sourceId);*/
-
         if (!Id && (outError != NULL)) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
             [errorDetail setValue:@"Error: couldn't mux subtitle track" forKey:NSLocalizedDescriptionKey];

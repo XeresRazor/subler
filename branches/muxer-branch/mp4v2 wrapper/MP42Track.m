@@ -125,6 +125,7 @@ NSString * const MP42SourceTypeRaw = @"Raw";
 @synthesize sourceInputType;
 
 @synthesize format;
+@synthesize sourceFormat;
 @synthesize name;
 
 - (void) setName: (NSString *) newName
@@ -179,11 +180,12 @@ NSString * const MP42SourceTypeRaw = @"Raw";
 @synthesize isEdited;
 @synthesize isDataEdited;
 @synthesize muxed;
+@synthesize needConversion;
+
 @synthesize updatedProperty;
 
-@synthesize currentSampleId;
-@synthesize currentTime;
 @synthesize trackImporterHelper;
 @synthesize trackDemuxerHelper;
+@synthesize trackConverterHelper;
 
 @end

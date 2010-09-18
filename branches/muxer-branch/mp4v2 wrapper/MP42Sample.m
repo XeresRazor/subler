@@ -23,5 +23,6 @@
 @synthesize  sampleTimestamp;
 @synthesize  sampleTrackId;
 @synthesize  sampleIsSync;
+@synthesize  sampleSourceTrack;
 
 @end

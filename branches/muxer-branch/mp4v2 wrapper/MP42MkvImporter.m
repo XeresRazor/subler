@@ -123,6 +123,7 @@
 
             if (newTrack) {
                 newTrack.format = matroskaCodecIDToHumanReadableName(mkvTrack);
+                newTrack.sourceFormat = matroskaCodecIDToHumanReadableName(mkvTrack);
                 newTrack.Id = i;
                 newTrack.sourcePath = file;
                 newTrack.sourceInputType = MP42SourceTypeMatroska;
@@ -471,6 +472,7 @@ NSString* getMatroskaTrackName(TrackInfo *track)
 
     if (!dataReader && !readerStatus) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillTrackSampleBuffer:) object:track];
+        [dataReader setName:@"Matroska Demuxer"];
         [dataReader start];
     }
 
@@ -578,9 +580,12 @@ NSString* getMatroskaTrackName(TrackInfo *track)
             sample->sampleTimestamp = StartTime;
             sample->sampleIsSync = YES;
             sample->sampleTrackId = track.Id;
+            if(track.needConversion)
+                sample->sampleSourceTrack = track;
             
             @synchronized(samplesBuffer) {
                 [samplesBuffer addObject:sample];
+                [sample release];
             }
         }
         
@@ -719,6 +724,7 @@ NSString* getMatroskaTrackName(TrackInfo *track)
                 
                 @synchronized(samplesBuffer) {
                     [samplesBuffer addObject:sample];
+                    [sample release];
                 }
             }
         }        
@@ -743,6 +749,7 @@ NSString* getMatroskaTrackName(TrackInfo *track)
 
                     @synchronized(samplesBuffer) {
                         [samplesBuffer addObject:sample];
+                        [sample release];
                         trackHelper->samplesWritten++;
                     }
 
@@ -753,8 +760,8 @@ NSString* getMatroskaTrackName(TrackInfo *track)
 
                 @synchronized(samplesBuffer) {
                     [samplesBuffer addObject:sample];
-
-                trackHelper->samplesWritten++;
+                    [sample release];
+                    trackHelper->samplesWritten++;
                 }
             }
         }
@@ -765,7 +772,7 @@ NSString* getMatroskaTrackName(TrackInfo *track)
     [pool release];
 }
 
-- (MP42SampleBuffer*)nextSampleForMovie {
+- (MP42SampleBuffer*)copyNextSample {
     if (!matroskaFile)
         return nil;
 
@@ -775,6 +782,7 @@ NSString* getMatroskaTrackName(TrackInfo *track)
 
     if (!dataReader && !readerStatus) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
+        [dataReader setName:@"Matroska Demuxer"];
         [dataReader start];
     }
 
@@ -792,6 +800,7 @@ NSString* getMatroskaTrackName(TrackInfo *track)
 
     @synchronized(samplesBuffer) {
         sample = [samplesBuffer objectAtIndex:0];
+        [sample retain];
         [samplesBuffer removeObjectAtIndex:0];
     }
     
@@ -807,6 +816,9 @@ NSString* getMatroskaTrackName(TrackInfo *track)
 
 - (void) dealloc
 {
+    if (dataReader)
+        [dataReader release], dataReader = nil;
+
 	[file release];
     [tracksArray release];
 

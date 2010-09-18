@@ -242,6 +242,21 @@
     for (id format in formats)
         [fileFormat addItemWithTitle:format];
     
+    // note this is only available in Mac OS X 10.6+
+    if ([savePanel respondsToSelector:@selector(setNameFieldStringValue:)]) {
+        NSString *filename = nil;
+        for (NSUInteger i = 0; i < [mp4File tracksCount]; i++) {
+            MP42Track *track = [mp4File trackAtIndex:i];
+            if ([track sourcePath]) {
+                filename = [[[track sourcePath] lastPathComponent] stringByDeletingPathExtension];
+                break;
+            }
+        }
+        if (filename) {
+            [savePanel performSelector:@selector(setNameFieldStringValue:) withObject:filename];
+        }
+    }
+    
     return YES;
 }
 
@@ -681,11 +696,11 @@ returnCode contextInfo: (void *) contextInfo
         [fileExtension isEqualToString:@"ac3"])
         [self addAudioTrack:[sheet.filenames objectAtIndex: 0]];
 
-    else if ([fileExtension caseInsensitiveCompare: @"srt"] == NSOrderedSame ||
+    /*else if ([fileExtension caseInsensitiveCompare: @"srt"] == NSOrderedSame ||
              [fileExtension caseInsensitiveCompare: @"smi"] == NSOrderedSame)
         [self performSelectorOnMainThread:@selector(showSubititleWindow:)
                                withObject:[sheet.filenames objectAtIndex: 0] waitUntilDone: NO];
-
+     */
     else if ([fileExtension caseInsensitiveCompare: @"txt"] == NSOrderedSame)
          [self addChapterTrack:[sheet.filenames objectAtIndex: 0]];
 
@@ -808,10 +823,7 @@ returnCode contextInfo: (void *) contextInfo
                 [self addCCTrack:file];
             else if ([[file pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame ||
                      [[file pathExtension] caseInsensitiveCompare: @"smi"] == NSOrderedSame)
-                [self addSubtitleTrack:file
-                                 delay:0
-                                height:60
-                              language:getFilenameLanguage((CFStringRef)file)];
+                [self showImportSheet:file];
             else if ([[file pathExtension] caseInsensitiveCompare: @"m4v"] == NSOrderedSame ||
                      [[file pathExtension] caseInsensitiveCompare: @"mp4"] == NSOrderedSame ||
                      [[file pathExtension] caseInsensitiveCompare: @"m4a"] == NSOrderedSame ||

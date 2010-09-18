@@ -120,6 +120,12 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     track.muxed = NO;
     track.isEdited = YES;
     track.isDataEdited = YES;
+    if (trackNeedConversion(track.format)) {
+        track.needConversion = YES;
+    }
+    else
+        track.needConversion = NO;
+
     track.language = track.language;
     track.name = track.name;
     if ([track isMemberOfClass:[MP42ChapterTrack class]]) {
@@ -245,9 +251,8 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
             [muxer addTrack:track];
     }
 
-    [muxer startWork:fileHandle];
+    [muxer prepareWork:fileHandle];
     [muxer work:fileHandle];
-    [muxer stopWork:fileHandle];
     
     [muxer release];
 

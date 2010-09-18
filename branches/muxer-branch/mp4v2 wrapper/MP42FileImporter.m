@@ -10,6 +10,7 @@
 #import "MP42MkvImporter.h"
 #import "MP42Mp4Importer.h"
 #import "MP42MovImporter.h"
+#import "MP42SrtImporter.h"
 
 @implementation MP42FileImporter
 
@@ -26,6 +27,8 @@
         self = [[MP42Mp4Importer alloc] initWithDelegate:del andFile:fileUrl];
     else if ([[fileUrl pathExtension] caseInsensitiveCompare: @"mov"] == NSOrderedSame)
         self = [[MP42MovImporter alloc] initWithDelegate:del andFile:fileUrl];
+    else if ([[fileUrl pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame)
+        self = [[MP42SrtImporter alloc] initWithDelegate:del andFile:fileUrl];
 
     return self;
 }
@@ -45,7 +48,7 @@
 
 }
 
-- (MP42SampleBuffer*)nextSampleForMovie
+- (MP42SampleBuffer*)copyNextSample
 {
     return nil;
 }

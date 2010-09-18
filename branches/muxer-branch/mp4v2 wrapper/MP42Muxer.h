@@ -16,7 +16,7 @@
 
 - (void)addTrack:(MP42Track*)track;
 
-- (void)startWork:(MP4FileHandle)fileHandle;
+- (void)prepareWork:(MP4FileHandle)fileHandle;
 - (void)work:(MP4FileHandle)fileHandle;
 - (void)stopWork:(MP4FileHandle)fileHandle;
 

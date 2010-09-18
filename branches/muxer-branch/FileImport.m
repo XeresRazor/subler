@@ -31,6 +31,8 @@
     for (MP42Track *track in [fileImporter tracksArray])
         if (isTrackMuxable(track.format))
             [importCheckArray addObject: [NSNumber numberWithBool:YES]];
+        else if(trackNeedConversion(track.format))
+            [importCheckArray addObject: [NSNumber numberWithBool:YES]];
         else
             [importCheckArray addObject: [NSNumber numberWithBool:NO]];
 

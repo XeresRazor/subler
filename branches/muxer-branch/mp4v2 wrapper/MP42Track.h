@@ -22,6 +22,7 @@ extern NSString * const MP42SourceTypeRaw;
     NSString*   sourceInputType;
 
     NSString*   sourcePath;
+    NSString*   sourceFormat;
     NSString*   format;
     NSString*   name;
     NSString*   language;
@@ -32,19 +33,18 @@ extern NSString * const MP42SourceTypeRaw;
     BOOL    isEdited;
     BOOL    isDataEdited;
     BOOL    muxed;
+    BOOL    needConversion;
 
 	uint32_t    timescale; 
 	uint32_t    bitrate; 
 	MP4Duration duration;
 
     NSMutableDictionary *updatedProperty;
-    
-    //Muxer helper
-    MP4SampleId currentSampleId;
-    MP4Timestamp currentTime;
-    
+
     MP42FileImporter * trackImporterHelper;
     id trackDemuxerHelper;
+    id trackConverterHelper;
+
 }
 
 @property(readwrite) MP4TrackId Id;
@@ -53,6 +53,7 @@ extern NSString * const MP42SourceTypeRaw;
 @property(readwrite, assign) NSString* sourceInputType;
 
 @property(readwrite, retain) NSString *sourcePath;
+@property(readwrite, retain) NSString *sourceFormat;
 @property(readwrite, retain) NSString *format;
 @property(readwrite, retain) NSString *name;
 @property(readwrite, retain) NSString *language;
@@ -68,11 +69,11 @@ extern NSString * const MP42SourceTypeRaw;
 @property(readwrite) BOOL isEdited;
 @property(readwrite) BOOL isDataEdited;
 @property(readwrite) BOOL muxed;
+@property(readwrite) BOOL needConversion;
 
-@property(readwrite) MP4SampleId currentSampleId;
-@property(readwrite) MP4Timestamp currentTime;
 @property(readwrite, retain) MP42FileImporter * trackImporterHelper;
 @property(readwrite, retain) id trackDemuxerHelper;
+@property(readwrite, retain) id trackConverterHelper;
 
 @property(readwrite, retain) NSMutableDictionary *updatedProperty;
 

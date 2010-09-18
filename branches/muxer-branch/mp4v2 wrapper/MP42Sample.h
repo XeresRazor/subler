@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import "mp4v2.h"
 
+@class MP42Track;
+
 @interface MP42SampleBuffer : NSObject {
     @public
 	void         *sampleData;
@@ -18,6 +20,7 @@
     MP4Timestamp  sampleTimestamp;
     MP4TrackId    sampleTrackId;
     BOOL          sampleIsSync;
+    MP42Track    *sampleSourceTrack;
 }
 
 @property(readwrite) void         *sampleData;
@@ -27,5 +30,6 @@
 @property(readwrite) MP4Timestamp  sampleTimestamp;
 @property(readwrite) MP4TrackId    sampleTrackId;
 @property(readwrite) BOOL          sampleIsSync;
+@property(assign)    MP42Track    *sampleSourceTrack;
 
 @end

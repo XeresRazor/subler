@@ -10,6 +10,7 @@
 #import "MP42File.h"
 #import "MP42FileImporter.h"
 #import "MP42Sample.h"
+#import "SBAudioConverter.h"
 
 @implementation MP42Muxer
 
@@ -26,14 +27,20 @@
     [workingTracks addObject:track];
 }
 
-- (void)startWork:(MP4FileHandle)fileHandle
+- (void)prepareWork:(MP4FileHandle)fileHandle
 {
     for (MP42Track * track in workingTracks)
     {
-        MP4TrackId dstTrackId;
+        MP4TrackId dstTrackId = 0;
         NSData *magicCookie = [[track trackImporterHelper] magicCookieForTrack:track];
         NSInteger timeScale = [[track trackImporterHelper] timescaleForTrack:track];
+        
+        if([track isMemberOfClass:[MP42AudioTrack class]] && track.needConversion) {
+            track.format = @"AAC";
+            track.trackConverterHelper = [[SBAudioConverter alloc] initWithTrack:(MP42AudioTrack*)track];
+        }
 
+        // H.264 video track
         if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:@"H.264"]) {
             NSSize size = [[track trackImporterHelper] sizeForTrack:track];
 
@@ -70,6 +77,8 @@
             
             [[track trackImporterHelper] setActiveTrack:track];
         }
+
+        // MPEG-4 Visual video track
         else if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:@"MPEG-4 Visual"]) {
             MP4SetVideoProfileLevel(fileHandle, MPEG4_SP_L3);
             // Add video track
@@ -83,19 +92,55 @@
             
             [[track trackImporterHelper] setActiveTrack:track];
         }
+
+        // AAC audio track
         else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"AAC"]) {
             dstTrackId = MP4AddAudioTrack(fileHandle,
                                           timeScale,
                                           1024, MP4_MPEG4_AUDIO_TYPE);
 
-            MP4SetTrackESConfiguration(fileHandle, dstTrackId,
-                                       [magicCookie bytes],
-                                       [magicCookie length]);
+            if (!track.needConversion) {
+                MP4SetTrackESConfiguration(fileHandle, dstTrackId,
+                                           [magicCookie bytes],
+                                           [magicCookie length]);
+            }
             
             [[track trackImporterHelper] setActiveTrack:track];
         }
+
+        // AC-3 audio track
+        else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"AC-3"]) {
+            const UInt8 * ac3Info = (const UInt8 *)[magicCookie bytes];
+
+            dstTrackId = MP4AddAC3AudioTrack(fileHandle,
+                                             timeScale, 
+                                             ac3Info[0],
+                                             ac3Info[1],
+                                             ac3Info[2],
+                                             ac3Info[3],
+                                             ac3Info[4],
+                                             ac3Info[5]);            
+            [[track trackImporterHelper] setActiveTrack:track];
+        }
+
+        // 3GPP text track
         else if ([track isMemberOfClass:[MP42SubtitleTrack class]]) {
             NSSize videoSize = [[track trackImporterHelper] sizeForTrack:track];
+
+            if (!videoSize.width) {
+                MP4TrackId videoTrack;
+                
+                videoTrack = findFirstVideoTrack(fileHandle);
+                if (videoTrack) {
+                    videoSize.width = getFixedVideoWidth(fileHandle, videoTrack);
+                    videoSize.height = MP4GetTrackVideoHeight(fileHandle, videoTrack);
+                }
+                else {
+                    videoSize.width = 640;
+                    videoSize.height = 480;
+                }
+            }
+
             const uint8_t textColor[4] = { 255,255,255,255 };
             dstTrackId = MP4AddSubtitleTrack(fileHandle, timeScale, videoSize.width, 80);
 
@@ -149,16 +194,66 @@
     for (id importerHelper in trackImportersArray) {
         MP42SampleBuffer * sampleBuffer;
 
-        while ((sampleBuffer = [importerHelper nextSampleForMovie]) != nil) {
+        while ((sampleBuffer = [importerHelper copyNextSample]) != nil) {
 
-            MP4WriteSample(fileHandle, sampleBuffer->sampleTrackId,
-                           sampleBuffer->sampleData, sampleBuffer->sampleSize,
-                           sampleBuffer->sampleDuration, sampleBuffer->sampleOffset,
-                           sampleBuffer->sampleIsSync);
+            // The sample need additional conversion
+            if (sampleBuffer->sampleSourceTrack) {
+                MP42SampleBuffer *convertedSample;
+                SBAudioConverter * audioConverter = sampleBuffer->sampleSourceTrack.trackConverterHelper;
+                [audioConverter addSample:sampleBuffer];
+                while (![audioConverter needMoreSample]) {
+                    if ((convertedSample = [audioConverter copyEncodedSample]) != nil) {
+                        MP4WriteSample(fileHandle, convertedSample->sampleTrackId,
+                                       convertedSample->sampleData, convertedSample->sampleSize,
+                                       convertedSample->sampleDuration, convertedSample->sampleOffset,
+                                       convertedSample->sampleIsSync);
+                        [convertedSample release];
+                    }
+                    else {
+                        usleep(50);
+                    }
+                }
+                [sampleBuffer release];
+            }
 
-            [sampleBuffer release];
+            // Write the sample directly to the file
+            else {
+                MP4WriteSample(fileHandle, sampleBuffer->sampleTrackId,
+                               sampleBuffer->sampleData, sampleBuffer->sampleSize,
+                               sampleBuffer->sampleDuration, sampleBuffer->sampleOffset,
+                               sampleBuffer->sampleIsSync);
+                [sampleBuffer release];
+            }
         }
     }
+
+    [trackImportersArray release];
+    
+    for (MP42Track * track in workingTracks) {
+        if([track isMemberOfClass:[MP42AudioTrack class]] && track.needConversion) {
+            SBAudioConverter * audioConverter = (SBAudioConverter *) track.trackConverterHelper;
+            [audioConverter setDone:YES];
+            MP42SampleBuffer *convertedSample;
+            while (![audioConverter encoderDone]) {
+                if ((convertedSample = [audioConverter copyEncodedSample]) != nil) {
+                    MP4WriteSample(fileHandle, convertedSample->sampleTrackId,
+                                   convertedSample->sampleData, convertedSample->sampleSize,
+                                   convertedSample->sampleDuration, convertedSample->sampleOffset,
+                                   convertedSample->sampleIsSync);
+                    [convertedSample release];
+                }
+                else {
+                    usleep(50);
+                }
+                
+            }
+            NSData *magicCookie = [track.trackConverterHelper magicCookie];
+            MP4SetTrackESConfiguration(fileHandle, track.Id,
+                                       [magicCookie bytes],
+                                       [magicCookie length]);
+        }
+    }
+    
 }
 
 - (void)stopWork:(MP4FileHandle)fileHandle

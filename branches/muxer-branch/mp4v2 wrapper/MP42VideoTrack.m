@@ -74,12 +74,6 @@
             Id = muxMOVVideoTrack(fileHandle, sourceFileHandle, sourceId);
 #endif
         }
-        else if ([sourceInputType isEqualToString:MP42SourceTypeMP4])
-            Id = muxMP4VideoTrack(fileHandle, sourcePath, sourceId);
-
-		else if ([sourceInputType isEqualToString:MP42SourceTypeMatroska])
-			Id = muxMKVVideoTrack(fileHandle, sourcePath, sourceId);
-
         else if ([sourceInputType isEqualToString:MP42SourceTypeRaw])
             Id = muxH264ElementaryStream(fileHandle, sourcePath, sourceId);
     }*/
