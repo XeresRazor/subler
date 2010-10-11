@@ -469,7 +469,7 @@ BOOL isTrackMuxable(NSString * formatName)
 }
 
 BOOL trackNeedConversion(NSString * formatName) {
-    NSArray* supportedConversionFormats = [NSArray arrayWithObjects:@"Vorbis", @"DTS", @"FLAC", nil];
+    NSArray* supportedConversionFormats = [NSArray arrayWithObjects:@"Vorbis", @"DTS", @"Flac", @"Mp3", nil];
     
     for (NSString* type in supportedConversionFormats)
         if ([formatName isEqualToString:type])

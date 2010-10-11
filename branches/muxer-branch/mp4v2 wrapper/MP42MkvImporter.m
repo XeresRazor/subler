@@ -198,6 +198,8 @@ NSString* matroskaCodecIDToHumanReadableName(TrackInfo *track)
             return @"Vorbis";
         else if (!strcmp(track->CodecID, "A_FLAC"))
             return @"Flac";
+        else if (!strcmp(track->CodecID, "A_MPEG/L3"))
+            return @"Mp3";
         else if (!strcmp(track->CodecID, "S_TEXT/UTF8"))
             return @"Plain Text";
         else if (!strcmp(track->CodecID, "S_TEXT/ASS"))

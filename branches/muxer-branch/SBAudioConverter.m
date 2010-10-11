@@ -313,6 +313,14 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
             inputFormat.mFormatID = 'DTS ';
             inputFormat.mChannelsPerFrame = 6; // trackInfo->AV.Audio.Channels;
         }
+        else if ([track.sourceFormat isEqualToString:@"Mp3"]) {
+            bzero( &inputFormat, sizeof( AudioStreamBasicDescription ) );
+            inputFormat.mSampleRate = ( Float64 ) sampleRate;
+            inputFormat.mFormatID = kAudioFormatMPEGLayer3;
+            inputFormat.mFramesPerPacket = 1152;
+            inputFormat.mChannelsPerFrame = 2; // trackInfo->AV.Audio.Channels;
+        }
+        
     }
     
     bzero( &outputFormat, sizeof( AudioStreamBasicDescription ) );
