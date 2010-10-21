@@ -1,5 +1,5 @@
 #labels Featured
-=Subler Documentaion=
+=Subler Documentation=
 ===v 0.99.01===
 
 _add TOC here_
