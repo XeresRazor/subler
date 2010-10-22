@@ -8,23 +8,24 @@ For instance, lets say you have a movie in an .mkv file, and a text file with su
 
 ==Typical tasks==
 
-===How do I quickly transcode a file?===
+===Opening media===
+
+The Subler workflow is based on opening existing media files and using the track editor to work with them. Most tasks in Subler start with these steps:
 
 1) Open Subler<br/>
 2) Select "New" from the file menu. A project window will appear.<br/>
 3) Drag the file from the Finder into the project window.<br/>
 4) A sheet will appear showing you the tracks in the file. Select the ones you'd like (the defaults are right 90% of the time). Press the Add button.<br/>
+
+===How do I quickly transcode a file?===
+
 5) Select Save from the file menu, and give the new file a name.<br/>
 
 That's it! The transcode only takes a few minutes.
 
 ===How do I add a subtitle track?===
 
-1) Open Subler<br/>
-2) Select "New" from the file menu. A project window will appear.<br/>
-3) Drag the file from the Finder into the project window.<br/>
-4) A sheet will appear showing you the tracks in the file. Select the ones you'd like (the defaults are right 90% of the time). Press the Add button.<br/>
-5) Select Import->File.. or click the + button above the track listing in the project window.<br/>
+5) Select Import->File... from the File menu or click the + button above the track listing in the project window.<br/>
 6) Use the Open dialog to find the subtitle track, in .SRT format, and Open it.<br/>
 7) A pane appears allowing you to edit basic information about the track. Most times no changes will be needed, simply click Add.
 8) The subtitle track appears at the end of the track list, with a default name.
@@ -32,3 +33,14 @@ That's it! The transcode only takes a few minutes.
 i) You can double click the name to edit it.<br/>
 ii) The language of the subtitles can be changed in the track listing.<br/>
 iii) Selecting the subtitle track in the listing will display an editor allowing you to make changes to the visual appearance of the subtitles.<br/>
+
+===Using Subler to add and edit metadata===
+
+5) Select Import->tagChimp... from the File menu.<br/>
+6) In the window that appears, type in the title of the movie and press Return to start a search.<br/>
+7) Scroll through and click on the results to review them, and click Add when you find the one you want.<br/>
+
+i) meta data is not a track, and does not appear in the track listing. To edit it, click a blank area in the track listing to "select nothing".
+ii) tags can be added manually using the + pop-up menu below the tag listing
+iii) existing tags can be edited by double-clicking on them
+iv) the Artwork and Other Settings tabs in are also metadata, but these editors make it easier to work with these particular types of data.
