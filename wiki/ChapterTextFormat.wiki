@@ -7,7 +7,7 @@ Description of the chapters text format that Subler can import.
 
 = Details =
 
-Subler can import chapter from two different format.
+Subler can import chapter in two different formats.
 
 The first one is the one used by mp4v2's mp4chaps utility
 It's a simple format, it consist in the timestamp followed by the chapter title.
