@@ -1,0 +1,33 @@
+#summary Various ways to use Subler
+
+==Overview==
+
+Subler is based around the idea of "projects". In the Subler, projects are represented by windows with a track listing at the top, and data from the tracks below. After creating a new project, you associate it with media tracks by Open…ing files from the File menu, or simply dragging and dropping them from the Finder into the project window. As each file is added, you will be asked which tracks you would like to read out of the file, adding them to the track list.
+
+For instance, lets say you have a movie in an .mkv file, and a text file with subtitles for the movie in an .srt file. To make a new file with the movie and the subtitles, you would create a new project, drag the movie file into the project window, then drag the subtitle file into the project, then save. Presto! It's that easy!
+
+==Typical tasks==
+
+===How do I quickly transcode a file?===
+
+1) Open Subler<br/>
+2) Select "New" from the file menu. A project window will appear.<br/>
+3) Drag the file from the Finder into the project window.<br/>
+4) A sheet will appear showing you the tracks in the file. Select the ones you'd like (the defaults are right 90% of the time). Press the Add button.<br/>
+5) Select Save from the file menu, and give the new file a name.<br/>
+
+That's it! The transcode only takes a few minutes.
+
+===How do I add a subtitle track?===
+
+1) Open Subler<br/>
+2) Select "New" from the file menu. A project window will appear.<br/>
+3) Drag the file from the Finder into the project window.<br/>
+4) A sheet will appear showing you the tracks in the file. Select the ones you'd like (the defaults are right 90% of the time). Press the Add button.<br/>
+5) Select Import->File.. or click the + button above the track listing in the project window.<br/>
+6) Use the Open dialog to find the subtitle track, in .SRT format, and Open it.<br/>
+7) A pane appears allowing you to edit basic information about the track. Most times no changes will be needed, simply click Add.
+8) The subtitle track appears at the end of the track list, with a default name.
+
+i) You can double click the name to edit it.<br/>
+ii) Selecting the subtitle track in the listing will display an editor allowing you to make changes to the visual appearance of the subtitles.<br/>
