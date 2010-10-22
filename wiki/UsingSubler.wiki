@@ -41,7 +41,7 @@ iii) Selecting the subtitle track in the listing will display an editor allowing
 
 Another common task when working with movie files is adding or editing the "metadata" tags. These are the little switches that do things like turn on the HD flag in iTunes, or add season information to tv shows. These are well populated from sources like iTunes, but most DVD rippers and tv recording boxes fail to set any of these flags. There are a variety of tools on the Mac for working with these flags, like MetaX. But after using Subler for this job only one time, you'll probably never use them again.
 
-Subler uses tagChimp to find and set these flags, but can also do this manually. Using tagChimp is so fast and easy, you may as well try it. Follow the steps above to create a project and open you file, then...
+Subler uses tagChimp to find and set these flags, but can also do this manually. Using tagChimp is so fast and easy, you may as well try it. Follow the steps above to create a project and open your file, then...
 
 5) Select Import->tagChimp... from the File menu.<br/>
 6) In the window that appears, type in the title of the movie and press Return to start a search.<br/>
@@ -54,7 +54,8 @@ iv) the Artwork and Other Settings tabs in are also metadata, but these editors 
 
 ===Adding and editing chapters===
 
-Chapters in Subler have to be imported from exis
+Chapter data already inside media files will be properly imported into Subler, and can be easily edited them by selecting the track and then using the editor below. Subler can also import chapter listings from text files, which can be an easier format to work with. The chapter format used by Subler is simple, and can be found in the ChapterTextFormat document.
+
+To import chapters from a file, follow the steps above to create a project and open your file, then
 
 5) 
-ChapterTextFormat
