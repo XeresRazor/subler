@@ -30,4 +30,5 @@ That's it! The transcode only takes a few minutes.
 8) The subtitle track appears at the end of the track list, with a default name.
 
 i) You can double click the name to edit it.<br/>
-ii) Selecting the subtitle track in the listing will display an editor allowing you to make changes to the visual appearance of the subtitles.<br/>
+ii) The language of the subtitles can be changed in the track listing.<br/>
+iii) Selecting the subtitle track in the listing will display an editor allowing you to make changes to the visual appearance of the subtitles.<br/>
