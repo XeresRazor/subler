@@ -1,9 +1,8 @@
-#summary One-sentence summary of this page.
+#summary SublerCLI man file
 
 = Introduction =
 
 Some information on SublerCLI
-
 
 = Details =
 
