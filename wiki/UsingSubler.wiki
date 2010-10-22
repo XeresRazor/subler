@@ -47,10 +47,10 @@ Subler uses tagChimp to find and set these flags, but can also do this manually.
 6) In the window that appears, type in the title of the movie and press Return to start a search.<br/>
 7) Scroll through and click on the results to review them, and click Add when you find the one you want.<br/>
 
-i) meta data is not a track, and does not appear in the track listing. To edit it, click a blank area in the track listing to "select nothing".
-ii) tags can be added manually using the + pop-up menu below the tag listing
-iii) existing tags can be edited by double-clicking on them
-iv) the Artwork and Other Settings tabs in are also metadata, but these editors make it easier to work with these particular types of data.
+i) meta data is not a track, and does not appear in the track listing. To edit it, click a blank area in the track listing to "select nothing".<br/>
+ii) tags can be added manually using the + pop-up menu below the tag listing<br/>
+iii) existing tags can be edited by double-clicking on them<br/>
+iv) the Artwork and Other Settings tabs in are also metadata, but these editors make it easier to work with these particular types of data.<br/>
 
 ===Adding and editing chapters===
 
