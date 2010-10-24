@@ -1,4 +1,4 @@
-#summary Chapters text formats
+#summary Chapter marker text-file formats
 #labels Phase-Support,Featured
 
 = Introduction =
