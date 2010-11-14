@@ -14,13 +14,13 @@ Since every task below needs a project, here's the steps for opening a new proje
 
 ==Typical tasks==
 
-===How do I quickly transcode a file?===
+===How do I quickly remux a file?===
 
 You have a movie in mkv format that you're pretty sure will work fine in QuickTime. How do you convert the mkv to m4v? Follow the steps above to create a project and open the file, and then...
 
 5) Select Save from the file menu, and give the new file a name.<br/>
 
-That's it! The transcode only takes a few minutes.
+That's it! The remux only takes a few minutes.
 
 ===How do I add a subtitle track?===
 
