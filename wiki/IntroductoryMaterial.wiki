@@ -2,7 +2,7 @@
 
 =What is Subler?=
 
-Subler is a Mac OS X application that opens media containers, allows you to add or remove data inside them, and then saves them out again. In the specialized language of the video world, Subler is a "transcoder", a transcoder dedicated to creating MPEG4 files (.m4v, .mp4) for iDevices.
+Subler is a Mac OS X application that opens media containers, allows you to add or remove data inside them, and then saves them out again. In the specialized language of the video world, Subler is a "muxer" (or multiplexer), a muxer dedicated to creating MPEG4 files (.m4v, .mp4) for iDevices.
 
 Subler original purpose was to allow you to easily add subtitles to your video files, and thus the name "subler". In time, new features have been added to help Subler solve similar common problems. For instance, with Subler you can open an existing media file, add chapter titles, remove an unwanted commentary track, tag the file, and then save it back out again.
 
@@ -18,19 +18,19 @@ To support this sort of flexibility, multimedia systems like QuickTime try to se
 
 But this isn't as true as it was. With the introduction of the H.264 video format, the entire media world has quickly been moving to MP4 media. That means that the video inside that QuickTime file is the same as the video inside an AVI. Audio too is likely to work across platforms. In theory, QuickTime should be the major container format and everyone should be able to read it, as it was accepted as part of the wider MP4 standard. In spite of this, or perhaps because of it, different container formats continue to proliferate. Other major container formats are .avi from the Wintel world, and .mkv, an open-standard developed under the Matroska project.
 
-===What is "transcoding"?===
+===What is "muxing"?===
 
 Media container files all have the same basic purpose, and generally have the same set of features. All of them have their own advantages and problems. Honestly, there's little technical reason, these days, to pick one format over the other. This is especially true if you consider the media inside the container. Most movies contain a video track, one or more audio tracks, and sometimes a text track for subtitles.
 
 In the past it was unlikely that the formats of the media inside could play on other platforms -- an .avi file from the Wintel world would normally include video that Apple's QuickTime understood. But more recently, the H.264 format has rapidly started taking over the video side of things, and AC-3 is common for sound. So, when you open this variety of containers, you often find the media within would work just fine on your iDevice, if only the container was the right one.
 
-"Transcoding" is the task of changing the container format, taking the media from one container format and then placing it, unchanged, into another container. Thats what Subler does; it takes media out of practically any recent container file, and moves it into a working QuickTime file. If the media inside can be played by your iDevice, and this is increasingly common, Subler can convert the file for you in seconds.
+"Muxing" is the task of changing the container format, taking the media from one container format and then placing it, unchanged, into another container. Thats what Subler does; it takes media out of practically any recent container file, and moves it into a working QuickTime file. If the media inside can be played by your iDevice, and this is increasingly common, Subler can convert the file for you in seconds.
 
 '''What's the difference between Subler and Handbrake?'''
 
-Subler is a transcoder, it takes the media inside a container, adds or removes tracks and makes similar minor changes, and saves out the media in another container. This process is very fast -- transcoding a 1-hour movie takes maybe two to three minutes.
+Subler is a muxer, it takes the media inside a container, adds or removes tracks and makes similar minor changes, and saves out the media in another container. This process is very fast -- remuxing a 1-hour movie takes maybe two to three minutes.
 
-Handbrake is a converter, or "recoder". It takes the media inside the container, converts it into a new format, and saves it to another container. Converting a movie requires every frame of the video to be decoded and recoded into a new format, which can take hours.
+Handbrake is a converter, or "transcoder". It takes the media inside the container, converts it into a new format, and saves it to another container. Converting a movie requires every frame of the video to be decoded and recoded into a new format, which can take hours.
 
 Subler only "works" if the media formats inside the container are something your media device can play. Handbrake can ''change'' that media into something your media device can play. So why would you use Subler at all? Because it's extremely fast. So when the formats are compatible and the stars align, Subler is the way to go. It's so fast, you should just try it to see what happens, and then move on to Handbrake if that doesn't work.
 
@@ -42,7 +42,7 @@ http://en.wikipedia.org/wiki/FFmpeg#Formats
 
 ===What else does it do?===
 
-Subler was not originally a transcoder, it was originally a way for opening up media files for editing subtitle tracks. This functionality is still there, improved, expanded, and is used in some form with just about every file.
+Subler was not originally a full featured mp4 muxer, it was originally a way for opening up media files for editing subtitle tracks. This functionality is still there, improved, expanded, and is used in some form with just about every file.
 
 Subler supports the SubRip style subtitle tracks, in .srt files. SubRip is a text file containing the subtitle text with some basic mark-up to add style and properly synch it with the video. Subler can add multiple caption files to support multiple languages, and has a few switches you can use to move the titles around or delay them to account for additional material added to the start of the file (ads). Here's an outline of the basic format:
 
