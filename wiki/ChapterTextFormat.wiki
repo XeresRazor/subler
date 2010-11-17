@@ -34,3 +34,5 @@ CHAPTER03NAME=Aboard Serenity (Main Titles)
 CHAPTER04=00:14:49.088 
 CHAPTER04NAME=Going for a Ride
 }}}
+
+The file needs to be a .txt text file.
