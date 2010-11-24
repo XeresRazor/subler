@@ -68,23 +68,6 @@
     if (!fileHandle)
         return NO;
 
-    /*if (isEdited && !muxed) {
-        if ([sourceInputType isEqualToString:MP42SourceTypeQuickTime]) {
-#if !__LP64__
-            Id = muxMOVVideoTrack(fileHandle, sourceFileHandle, sourceId);
-#endif
-        }
-        else if ([sourceInputType isEqualToString:MP42SourceTypeRaw])
-            Id = muxH264ElementaryStream(fileHandle, sourcePath, sourceId);
-    }*/
-
-    if (!Id && (outError != NULL)) {
-        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
-        [errorDetail setValue:@"Error: couldn't mux video track" forKey:NSLocalizedDescriptionKey];
-        *outError = [NSError errorWithDomain:@"MP42Error"
-                                        code:110
-                                    userInfo:errorDetail];
-    }
     else if (Id) {
         [super writeToFile:fileHandle error:outError];
 

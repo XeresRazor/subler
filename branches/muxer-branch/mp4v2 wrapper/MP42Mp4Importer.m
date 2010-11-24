@@ -207,6 +207,7 @@
 
 - (void) fillMovieSampleBuffer: (id)sender
 {
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     if (!fileHandle)
         fileHandle = MP4Read([file UTF8String], 0);
 
@@ -223,6 +224,10 @@
 
     for (MP42Track* track in activeTracks) {
         while (1) {
+            while ([samplesBuffer count] >= 200) {
+                usleep(200);
+            }
+
             MP4TrackId srcTrackId = [track sourceId];
             uint8_t *pBytes = NULL;
             uint32_t numBytes = 0;
@@ -261,6 +266,8 @@
     }
     if (tracksDone >= tracksNumber)
         readerStatus = 1;
+    
+    [pool release];
 }
 
 - (MP42SampleBuffer*)copyNextSample

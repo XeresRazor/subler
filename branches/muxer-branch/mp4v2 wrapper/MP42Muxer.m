@@ -190,6 +190,7 @@
 
 - (void)work:(MP4FileHandle)fileHandle
 {
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     NSMutableArray * trackImportersArray = [[NSMutableArray alloc] init];
     for (MP42Track * track in workingTracks) {
         if (![trackImportersArray containsObject:[track trackImporterHelper]]) {
@@ -259,7 +260,7 @@
                                        [magicCookie length]);
         }
     }
-
+    [pool release];
 }
 
 - (void)stopWork:(MP4FileHandle)fileHandle

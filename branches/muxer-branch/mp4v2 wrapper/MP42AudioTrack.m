@@ -39,30 +39,6 @@
     if (!fileHandle)
         return NO;
 
-    /*if (isEdited && !muxed) {
-        if ([sourceInputType isEqualToString:MP42SourceTypeQuickTime]) {
-#if !__LP64__
-            Id = muxMOVAudioTrack(fileHandle, sourceFileHandle, sourceId);
-#endif
-        }
-        else if ([sourceInputType isEqualToString:MP42SourceTypeRaw])
-        {
-            if ([[sourcePath pathExtension] isEqualToString:@"aac"])
-                Id = muxAACAdtsStream(fileHandle, sourcePath);
-
-            else if ([[sourcePath pathExtension] isEqualToString:@"ac3"])
-                Id = muxAC3ElementaryStream(fileHandle, sourcePath);
-        }    
-        muxed = YES;
-        enableFirstAudioTrack(fileHandle);
-    }*/
-    if (!Id && (outError != NULL)) {
-        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
-        [errorDetail setValue:@"Error: couldn't mux audio track" forKey:NSLocalizedDescriptionKey];
-        *outError = [NSError errorWithDomain:@"MP42Error"
-                                        code:110
-                                    userInfo:errorDetail];
-    }
     if (Id)
         [super writeToFile:fileHandle error:outError];
 
