@@ -23,8 +23,10 @@
     return self;
 }
 
-- (void)addTrack:(MP42Track*)track{
-    [workingTracks addObject:track];
+- (void)addTrack:(MP42Track*)track
+{
+    if (![track isMemberOfClass:[MP42ChapterTrack class]])
+        [workingTracks addObject:track];
 }
 
 - (void)prepareWork:(MP4FileHandle)fileHandle
@@ -113,7 +115,7 @@
             const UInt8 * ac3Info = (const UInt8 *)[magicCookie bytes];
 
             dstTrackId = MP4AddAC3AudioTrack(fileHandle,
-                                             timeScale, 
+                                             timeScale,
                                              ac3Info[0],
                                              ac3Info[1],
                                              ac3Info[2],
@@ -178,6 +180,10 @@
             
             [[track trackImporterHelper] setActiveTrack:track];
         }
+        else {
+            continue;
+        }
+
         track.Id = dstTrackId;
     }
 }
@@ -253,7 +259,7 @@
                                        [magicCookie length]);
         }
     }
-    
+
 }
 
 - (void)stopWork:(MP4FileHandle)fileHandle

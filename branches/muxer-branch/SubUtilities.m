@@ -438,7 +438,7 @@ static int parse_SYNC(NSString *str)
 {
 	NSScanner *sc = [NSScanner scannerWithString:str];
     
-	int res;
+	int res = 0;
     
 	if ([sc scanString:@"START=" intoString:nil])
 		[sc scanInt:&res];
@@ -724,8 +724,8 @@ int LoadSMIFromPath(NSString *path, SBSubSerializer *ss, int subCount)
 int ParseSSAHeader(NSString *header) {
     NSString *info;
     NSString *styles;
-    NSString *splitLine  = @"\\n+";
-    NSArray * stylesArray;
+    //NSString *splitLine  = @"\\n+";
+    //NSArray * stylesArray;
 
     //NSLog(@"%@", header);
     NSScanner *sc = [NSScanner scannerWithString:header];
@@ -736,7 +736,7 @@ int ParseSSAHeader(NSString *header) {
     }
     [sc scanUpToString:@"[Events]" intoString:&styles];
     if (styles) {
-        stylesArray = [styles componentsSeparatedByRegex:splitLine];
+        //stylesArray = [styles componentsSeparatedByRegex:splitLine];
         //NSLog(@"%@", styles);
     }
     [sc scanUpToString:@"Format:" intoString:nil];

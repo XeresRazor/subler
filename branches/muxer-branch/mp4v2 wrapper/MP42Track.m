@@ -128,6 +128,10 @@ NSString * const MP42SourceTypeRaw = @"Raw";
 @synthesize sourceFormat;
 @synthesize name;
 
+- (NSString *) name {
+    return name;
+}
+
 - (void) setName: (NSString *) newName
 {
     [name autorelease];
@@ -136,7 +140,9 @@ NSString * const MP42SourceTypeRaw = @"Raw";
     [updatedProperty setValue:@"True" forKey:@"name"];
 }
 
-@synthesize language;
+- (NSString *) language {
+    return language;
+}
 
 - (void) setLanguage: (NSString *) newLang
 {
@@ -146,7 +152,9 @@ NSString * const MP42SourceTypeRaw = @"Raw";
     [updatedProperty setValue:@"True" forKey:@"language"];
 }
 
-@synthesize enabled;
+- (BOOL) enabled {
+    return enabled;
+}
 
 - (void) setEnabled: (BOOL) newState
 {
@@ -155,7 +163,9 @@ NSString * const MP42SourceTypeRaw = @"Raw";
     [updatedProperty setValue:@"True" forKey:@"enabled"];
 }
 
-@synthesize alternate_group;
+- (uint64_t) alternate_group {
+    return alternate_group;
+}
 
 - (void) setAlternate_group: (uint64_t) newGroup
 {
@@ -164,7 +174,9 @@ NSString * const MP42SourceTypeRaw = @"Raw";
     [updatedProperty setValue:@"True" forKey:@"alternate_group"];
 }
 
-@synthesize startOffset;
+- (int64_t) startOffset {
+    return startOffset;
+}
 
 - (void) setStartOffset:(int64_t)newOffset
 {

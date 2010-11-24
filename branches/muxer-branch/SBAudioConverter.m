@@ -197,18 +197,16 @@ OSStatus EncoderDataProc(AudioConverterRef              inAudioConverter,
 
 		outputPos += ioOutputDataPackets;
     }
-    
-    free(encoderData.srcBuffer);
-    free(encoderData.pktDescs);
+
     free(outputBuffer);
     
     AudioConverterDispose(converterEnc);
-    
+
     [pool release];
-    
+
     NSLog(@"Encoder Done");
     encoderDone = 1;
-    
+
     return;
 }
 
@@ -235,6 +233,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
     if (![afio->inputSamplesBuffer count] && afio->fileReaderDone) {
         *ioNumberDataPackets = 0;
+        return err;
     }
     else {
         @synchronized(afio->inputSamplesBuffer) {
@@ -287,7 +286,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
             inputFormat.mBytesPerPacket = 0;
             inputFormat.mFramesPerPacket = 0;
             inputFormat.mBytesPerFrame = 0;
-            inputFormat.mChannelsPerFrame = 2; // trackInfo->AV.Audio.Channels;
+            inputFormat.mChannelsPerFrame = track.channels;
             inputFormat.mBitsPerChannel = 0;
             
             magicCookie = DescExt_XiphVorbis([srcMagicCookie length], [srcMagicCookie bytes]);
@@ -296,7 +295,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
             bzero( &inputFormat, sizeof( AudioStreamBasicDescription ) );
             inputFormat.mSampleRate = ( Float64 ) sampleRate;
             inputFormat.mFormatID = 'XiFL';
-            inputFormat.mChannelsPerFrame = 2; // trackInfo->AV.Audio.Channels;
+            inputFormat.mChannelsPerFrame = track.channels;
             
             magicCookie = DescExt_XiphFLAC([srcMagicCookie length], [srcMagicCookie bytes]);
         }
@@ -305,20 +304,20 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
             inputFormat.mSampleRate = ( Float64 ) sampleRate;
             inputFormat.mFormatID = kAudioFormatAC3;
             inputFormat.mFramesPerPacket = 1536;
-            inputFormat.mChannelsPerFrame = 6; // trackInfo->AV.Audio.Channels;
+            inputFormat.mChannelsPerFrame = track.channels;
         }
         else if ([track.sourceFormat isEqualToString:@"DTS"]) {
             bzero( &inputFormat, sizeof( AudioStreamBasicDescription ) );
             inputFormat.mSampleRate = ( Float64 ) sampleRate;
             inputFormat.mFormatID = 'DTS ';
-            inputFormat.mChannelsPerFrame = 6; // trackInfo->AV.Audio.Channels;
+            inputFormat.mChannelsPerFrame = track.channels;
         }
         else if ([track.sourceFormat isEqualToString:@"Mp3"]) {
             bzero( &inputFormat, sizeof( AudioStreamBasicDescription ) );
             inputFormat.mSampleRate = ( Float64 ) sampleRate;
             inputFormat.mFormatID = kAudioFormatMPEGLayer3;
             inputFormat.mFramesPerPacket = 1152;
-            inputFormat.mChannelsPerFrame = 2; // trackInfo->AV.Audio.Channels;
+            inputFormat.mChannelsPerFrame = track.channels;
         }
         
     }
@@ -430,14 +429,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
     readerDone = 1;
     NSLog(@"Reader Done");
 
-    while (!encoderDone)
-        usleep(5000);
-
-    free(decoderData.srcBuffer);
-    free(decoderData.pktDescs);
     free(outputBuffer);
-
-    sfifo_close(&fifo);
 
     AudioConverterDispose(converterDec);
 
@@ -451,11 +443,12 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
     {
         outputSamplesBuffer = [[NSMutableArray alloc] init];
         inputSamplesBuffer = [[NSMutableArray alloc] init];
+
+        decoderThread = [[NSThread alloc] initWithTarget:self selector:@selector(DecoderThreadMainRoutine:) object:track];
+        [decoderThread setName:@"Audio Decoder"];
+        [decoderThread start];        
     }
     
-    decoderThread = [[NSThread alloc] initWithTarget:self selector:@selector(DecoderThreadMainRoutine:) object:track];
-    [decoderThread setName:@"Audio Decoder"];
-    [decoderThread start];    
     return self;
 }
 
@@ -508,6 +501,15 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
 - (void) dealloc
 {
+    NSLog(@"Dealloc");
+    sfifo_close(&fifo);
+
+    free(decoderData.srcBuffer);
+    free(decoderData.pktDescs);
+
+    free(encoderData.srcBuffer);
+    free(encoderData.pktDescs);
+    
     [outputMagicCookie release];
 
     [decoderThread release];

@@ -147,8 +147,30 @@
 @synthesize trackWidth;
 @synthesize trackHeight;
 
-@synthesize hSpacing;
-@synthesize vSpacing;
+
+- (uint64_t) hSpacing {
+    return hSpacing;
+}
+
+- (void) setHSpacing:(uint64_t)newHSpacing
+{
+    hSpacing = newHSpacing;
+    isEdited = YES;
+    [updatedProperty setValue:@"True" forKey:@"hSpacing"];
+    
+}
+
+- (uint64_t) vSpacing {
+    return vSpacing;
+}
+
+- (void) setVSpacing:(uint64_t)newVSpacing
+{
+    vSpacing = newVSpacing;
+    isEdited = YES;
+    [updatedProperty setValue:@"True" forKey:@"vSpacing"];
+    
+}
 
 @synthesize offsetX;
 @synthesize offsetY;

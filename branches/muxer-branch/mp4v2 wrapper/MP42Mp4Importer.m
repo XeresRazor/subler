@@ -91,7 +91,7 @@
     {
         if (!strcmp(media_data_name, "avc1")) {
             // Extract and rewrite some kind of avcC extradata from the mp4 file.
-            NSMutableData *avcCData = [[NSMutableData alloc] init];
+            NSMutableData *avcCData = [[[NSMutableData alloc] init] autorelease];
 
             uint8_t configurationVersion = 1;
             uint8_t AVCProfileIndication;
@@ -155,11 +155,10 @@
             free(pictheadersize);
             
             magicCookie = [avcCData copy];
-            [avcCData release];
             [seqData release];
             [pictData release];
 
-            return magicCookie;
+            return [magicCookie autorelease];
         }
     }
 
@@ -202,9 +201,8 @@
     sample->sampleTimestamp = pStartTime;
     sample->sampleIsSync = isSyncSample;
     sample->sampleTrackId = track.Id;
-    
 
-    return sample;
+    return [sample autorelease];
 }
 
 - (void) fillMovieSampleBuffer: (id)sender
@@ -222,7 +220,6 @@
     }
 
     Mp4TrackHelper* trackHelper;
-
 
     for (MP42Track* track in activeTracks) {
         while (1) {

@@ -267,7 +267,8 @@ static NSInteger sortFunction (id ldict, id rdict, void *context) {
     [stdOut release];
     [args release];
     [task release];
-    return results;
+
+    return [results autorelease];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response

@@ -13,6 +13,8 @@
 #import "lang.h"
 #import "MP42File.h"
 
+#include "rational.h"
+
 @interface MatroskaSample : NSObject {
 @public
     unsigned long long startTime;
@@ -105,17 +107,29 @@
             if (mkvTrack->Type == TT_VIDEO)  {
                 newTrack = [[MP42VideoTrack alloc] init];
 
-                [(MP42VideoTrack*)newTrack setTrackWidth:mkvTrack->AV.Video.PixelWidth];
-                [(MP42VideoTrack*)newTrack setTrackHeight:mkvTrack->AV.Video.PixelHeight];
+
                 [(MP42VideoTrack*)newTrack setWidth:mkvTrack->AV.Video.PixelWidth];
                 [(MP42VideoTrack*)newTrack setHeight:mkvTrack->AV.Video.PixelHeight];
-                [(MP42VideoTrack*)newTrack setHSpacing:1];
-                [(MP42VideoTrack*)newTrack setVSpacing:1];
+                
+                AVRational dar, invPixelSize, sar;
+                dar			   = (AVRational){mkvTrack->AV.Video.DisplayWidth, mkvTrack->AV.Video.DisplayHeight};
+                invPixelSize   = (AVRational){mkvTrack->AV.Video.PixelHeight, mkvTrack->AV.Video.PixelWidth};
+                sar = av_mul_q(dar, invPixelSize);    
+                
+                av_reduce(&sar.num, &sar.den, sar.num, sar.den, fixed1);  
+
+                [(MP42VideoTrack*)newTrack setTrackWidth:mkvTrack->AV.Video.PixelWidth * sar.num / sar.den];
+                [(MP42VideoTrack*)newTrack setTrackHeight:mkvTrack->AV.Video.PixelHeight];
+
+                [(MP42VideoTrack*)newTrack setHSpacing:sar.num];
+                [(MP42VideoTrack*)newTrack setVSpacing:sar.den];
             }
 
             // Audio
-            else if (mkvTrack->Type == TT_AUDIO)
+            else if (mkvTrack->Type == TT_AUDIO) {
                 newTrack = [[MP42AudioTrack alloc] init];
+                [(MP42AudioTrack*)newTrack setChannels:mkvTrack->AV.Audio.Channels];
+            }
 
             // Text
             else if (mkvTrack->Type == TT_SUB)
@@ -245,7 +259,7 @@ NSString* getMatroskaTrackName(TrackInfo *track)
 
 - (NSSize)sizeForTrack:(MP42Track *)track
 {
-      return NSMakeSize([(MP42VideoTrack*)track trackWidth], [(MP42VideoTrack*) track trackHeight]);
+      return NSMakeSize([(MP42VideoTrack*)track width], [(MP42VideoTrack*) track height]);
 }
 
 - (NSData*)magicCookieForTrack:(MP42Track *)track
@@ -556,14 +570,20 @@ NSString* getMatroskaTrackName(TrackInfo *track)
                 fprintf(stderr,"fseeko(): %s\n", strerror(errno));
                 break;				
             }
-            
-            frame = malloc(FrameSize);
+
+            if (trackInfo->CompMethodPrivateSize != 0) {
+                frame = malloc(FrameSize + trackInfo->CompMethodPrivateSize);
+                memcpy(frame, trackInfo->CompMethodPrivate, trackInfo->CompMethodPrivateSize);
+            }
+            else
+                frame = malloc(FrameSize);
+
             if (frame == NULL) {
                 fprintf(stderr,"Out of memory\n");
                 break;		
             }
             
-            size_t rd = fread(frame,1,FrameSize,ioStream->fp);
+            size_t rd = fread(frame + trackInfo->CompMethodPrivateSize,1,FrameSize,ioStream->fp);
             if (rd != FrameSize) {
                 if (rd == 0) {
                     if (feof(ioStream->fp))
@@ -682,13 +702,19 @@ NSString* getMatroskaTrackName(TrackInfo *track)
                     break;				
                 } 
 
-                frame = malloc(currentSample->frameSize);
+                if (trackInfo->CompMethodPrivateSize != 0) {
+                    frame = malloc(currentSample->frameSize + trackInfo->CompMethodPrivateSize);
+                    memcpy(frame, trackInfo->CompMethodPrivate, trackInfo->CompMethodPrivateSize);
+                }
+                else
+                    frame = malloc(currentSample->frameSize);
+
                 if (frame == NULL) {
                     fprintf(stderr,"Out of memory\n");
                     break;		
                 }
 
-                size_t rd = fread(frame,1,currentSample->frameSize,ioStream->fp);
+                size_t rd = fread(frame + trackInfo->CompMethodPrivateSize,1,currentSample->frameSize,ioStream->fp);
                 if (rd != currentSample->frameSize) {
                     if (rd == 0) {
                         if (feof(ioStream->fp))
@@ -700,9 +726,10 @@ NSString* getMatroskaTrackName(TrackInfo *track)
                     break;
                 }
 
+
                 MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
                 sample->sampleData = frame;
-                sample->sampleSize = currentSample->frameSize;
+                sample->sampleSize = currentSample->frameSize + trackInfo->CompMethodPrivateSize;
                 sample->sampleDuration = duration / (timeScale / 90000.f);
                 sample->sampleOffset = offset / (timeScale / 90000.f);
                 sample->sampleTimestamp = StartTime;

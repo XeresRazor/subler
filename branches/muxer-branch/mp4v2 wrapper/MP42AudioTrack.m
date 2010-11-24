@@ -77,13 +77,18 @@
     [super dealloc];
 }
 
-@synthesize volume;
-
 - (void) setVolume: (float) newVolume
 {
     volume = newVolume;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"volume"];
 }
+
+- (float) volume
+{
+    return volume;
+}
+
+@synthesize channels;
 
 @end

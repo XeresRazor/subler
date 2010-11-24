@@ -184,7 +184,7 @@
 		A9629C830F56F7B6001D6A75 /* MP42File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42File.h; path = "mp4v2 wrapper/MP42File.h"; sourceTree = "<group>"; };
 		A9629C840F56F7B6001D6A75 /* MP42File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42File.m; path = "mp4v2 wrapper/MP42File.m"; sourceTree = "<group>"; };
 		A9629C850F56F7B6001D6A75 /* MP42Metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Metadata.h; path = "mp4v2 wrapper/MP42Metadata.h"; sourceTree = "<group>"; };
-		A9629C860F56F7B6001D6A75 /* MP42Metadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Metadata.m; path = "mp4v2 wrapper/MP42Metadata.m"; sourceTree = "<group>"; };
+		A9629C860F56F7B6001D6A75 /* MP42Metadata.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = MP42Metadata.m; path = "mp4v2 wrapper/MP42Metadata.m"; sourceTree = "<group>"; };
 		A9629C870F56F7B6001D6A75 /* MP42SubtitleTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42SubtitleTrack.h; path = "mp4v2 wrapper/MP42SubtitleTrack.h"; sourceTree = "<group>"; };
 		A9629C880F56F7B6001D6A75 /* MP42SubtitleTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42SubtitleTrack.m; path = "mp4v2 wrapper/MP42SubtitleTrack.m"; sourceTree = "<group>"; };
 		A9629C890F56F7B6001D6A75 /* MP42Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Track.h; path = "mp4v2 wrapper/MP42Track.h"; sourceTree = "<group>"; };
@@ -937,6 +937,7 @@
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/mp4v2\"/**";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/mp4v2\"/**";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -967,6 +968,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/mp4v2\"/**";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/mp4v2\"/**";
 				PREBINDING = NO;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = macosx10.5;

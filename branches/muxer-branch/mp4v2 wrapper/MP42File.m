@@ -289,24 +289,25 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
         MP4DeleteChapters(fileHandle, MP4ChapterTypeAny, track.Id);
     else
         MP4DeleteTrack(fileHandle, track.Id);
-    
+
     if ([track.format isEqualToString:@"Photo - JPEG"]) {
         MP42ChapterTrack * chapterTrack = nil;
         MP4TrackId refTrack = findFirstVideoTrack(fileHandle);
         if (!refTrack)
             refTrack = 1;
-        
+
         MP4RemoveAllTrackReferences(fileHandle, "tref.chap", refTrack);
         for (MP42Track * track in tracks)
             if ([track isMemberOfClass:[MP42ChapterTrack class]])
                 chapterTrack = (MP42ChapterTrack*) track;
-        
+
         if (chapterTrack)
             MP4AddTrackReference(fileHandle, "tref.chap", [chapterTrack Id], refTrack);
     }
 
     updateTracksCount(fileHandle);
     updateMoovDuration(fileHandle);
+
     if ([track isMemberOfClass:[MP42SubtitleTrack class]])
         enableFirstSubtitleTrack(fileHandle);
 }

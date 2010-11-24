@@ -23,13 +23,12 @@
         NSInteger trackCount =1;
         tracksArray = [[NSMutableArray alloc] initWithCapacity:trackCount];
 
-        NSInteger i, success;
+        NSInteger success = 0;
 
         MP42Track *newTrack = [[MP42SubtitleTrack alloc] init];
 
         newTrack.format = @"3GPP Text";
         newTrack.sourceFormat = @"Srt";
-        newTrack.Id = i;
         newTrack.sourcePath = file;
         newTrack.sourceInputType = MP42SourceTypeRaw;
 
@@ -39,6 +38,15 @@
         }
         else if ([[fileUrl pathExtension] caseInsensitiveCompare: @"smi"] == NSOrderedSame) {
             success = LoadSMIFromPath(fileUrl, ss, 1);
+        }
+
+        if (!success) {
+            [ss release];
+            [tracksArray release];
+            [newTrack release];
+            [self release];
+            
+            return nil;
         }
 
         [ss setFinished:YES];
@@ -67,7 +75,7 @@
 
 - (MP42SampleBuffer*)nextSampleForTrack:(MP42Track *)track
 {
-    return [self copyNextSample];
+    return [[self copyNextSample] autorelease];
 }
 
 - (MP42SampleBuffer*)copyNextSample {
@@ -97,6 +105,7 @@
 
 - (void) dealloc
 {
+    [ss release];
 	[file release];
     [tracksArray release];
 
