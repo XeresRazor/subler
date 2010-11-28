@@ -14,7 +14,7 @@
 
 - (id)initWithDelegate:(id)del andFile: (NSString *)path
 {
-	if (self = [super initWithWindowNibName:@"VideoFramerate"])
+	if ((self = [super initWithWindowNibName:@"VideoFramerate"]))
 	{        
 		delegate = del;
         filePath = [path retain];
