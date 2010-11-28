@@ -385,7 +385,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
                             waitUntilDone:YES];
 
         // If we haven't got enought images, return.
-        if ([previewImages count] != [[chapterTrack chapters] count]) {
+        if ([previewImages count] < [[chapterTrack chapters] count]) {
             [pool release];
             return NO;
         }
