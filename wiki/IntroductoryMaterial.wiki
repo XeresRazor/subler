@@ -36,9 +36,7 @@ Subler only "works" if the media formats inside the container are something your
 
 ===What containers does Subler read?===
 
-Subler is based on an open-source library called ffmpeg. ffmpeg is constantly updated to support new formats. A fairly recent list of these can be found on the Wikipedia article on the topic, here:
-
-http://en.wikipedia.org/wiki/FFmpeg#Formats
+Subler can read mp4, mov and matroska.
 
 ===What else does it do?===
 
