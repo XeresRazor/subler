@@ -14,7 +14,7 @@
 
 - (id) initWithSourcePath:(NSString *)source trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
-    if (self = [super initWithSourcePath:source trackID:trackID fileHandle:fileHandle])
+    if ((self = [super initWithSourcePath:source trackID:trackID fileHandle:fileHandle]))
     {
         MP4GetTrackFloatProperty(fileHandle, Id, "tkhd.volume", &volume);
     }
@@ -24,7 +24,7 @@
 
 -(id) init
 {
-    if (self = [super init])
+    if ((self = [super init]))
     {
         name = @"Sound Track";
         language = @"Unknown";

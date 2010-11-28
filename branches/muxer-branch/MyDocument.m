@@ -142,7 +142,7 @@
   didSaveSelector:(SEL)didSaveSelector
 	  contextInfo:(void *)contextInfo
 {
-    [optBar startAnimation:nil];
+    //[optBar startAnimation:nil];
     [saveOperationName setStringValue:@"Saving…"];
     [NSApp beginSheet:savingWindow modalForWindow:documentWindow
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];
@@ -205,9 +205,12 @@
 	}
     if (_optimize)
     {
+        [optBar setIndeterminate:YES];
         [saveOperationName setStringValue:@"Optimizing…"];
         [mp4File optimize];
         _optimize = NO;
+        [optBar stopAnimation:self];
+        [optBar setIndeterminate:NO];
     }
     [attributes release];
     return success;
@@ -218,7 +221,7 @@
     [NSApp endSheet: savingWindow];
     [savingWindow orderOut:self];
     
-    [optBar stopAnimation:nil];
+    //[optBar stopAnimation:nil];
     
     if (outError) {
         [self presentError:outError
@@ -297,6 +300,18 @@
 }
 
 #pragma mark Interface validation
+
+- (void)progressStatus: (CGFloat)progress {
+    //[optBar setIndeterminate:NO];
+    //[optBar setUsesThreadedAnimation:YES];
+    [self performSelectorOnMainThread:@selector(updateProgressBar:)
+                           withObject:[NSNumber numberWithDouble:progress] waitUntilDone: NO];
+
+}
+
+- (void)updateProgressBar: (NSNumber *)progress {
+    [optBar setDoubleValue:[progress doubleValue]];
+}
 
 - (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {

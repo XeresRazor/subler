@@ -39,7 +39,7 @@
 
 - (id)initWithDelegate:(id)del andFile:(NSString *)fileUrl
 {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         delegate = del;
         file = [fileUrl retain];
 
@@ -81,9 +81,30 @@
     
     if (MP4_IS_AUDIO_TRACK_TYPE(trackType))
     {
-        uint8_t *ppConfig; uint32_t pConfigSize;
-        MP4GetTrackESConfiguration(fileHandle, srcTrackId, &ppConfig, &pConfigSize);
-        magicCookie = [NSData dataWithBytes:ppConfig length:pConfigSize];
+        if (!strcmp(media_data_name, "ac-3")) {
+            uint64_t fscod, bsid, bsmod, acmod, lfeon, bit_rate_code;
+            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.fscod", &fscod);
+            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.bsid", &bsid);
+            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.bsmod", &bsmod);
+            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.acmod", &acmod);
+            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.lfeon", &lfeon);
+            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.bit_rate_code", &bit_rate_code);
+
+            NSMutableData *ac3Info = [[NSMutableData alloc] init];
+            [ac3Info appendBytes:&fscod length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&bsid length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&bsmod length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&acmod length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&lfeon length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&bit_rate_code length:sizeof(uint64_t)];
+
+            return [ac3Info autorelease];
+            
+        } else {
+            uint8_t *ppConfig; uint32_t pConfigSize;
+            MP4GetTrackESConfiguration(fileHandle, srcTrackId, &ppConfig, &pConfigSize);
+            magicCookie = [NSData dataWithBytes:ppConfig length:pConfigSize];
+        }
         return magicCookie;
     }
 

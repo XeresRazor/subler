@@ -13,7 +13,7 @@
 
 - (id) initWithSourcePath:(NSString *)source trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
-    if (self = [super initWithSourcePath:source trackID:trackID fileHandle:fileHandle])
+    if ((self = [super initWithSourcePath:source trackID:trackID fileHandle:fileHandle]))
     {
         height = MP4GetTrackVideoHeight(fileHandle, Id);
         width = MP4GetTrackVideoWidth(fileHandle, Id);
@@ -54,7 +54,7 @@
 
 -(id) init
 {
-    if (self = [super init])
+    if ((self = [super init]))
     {
         name = @"Video Track";
         language = @"Unknown";

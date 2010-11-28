@@ -12,12 +12,19 @@
 
 @interface MP42Muxer : NSObject {
     NSMutableArray *workingTracks;
+    id delegate;
 }
+- (id)initWithDelegate:(id)del;
 
 - (void)addTrack:(MP42Track*)track;
 
 - (void)prepareWork:(MP4FileHandle)fileHandle;
 - (void)work:(MP4FileHandle)fileHandle;
 - (void)stopWork:(MP4FileHandle)fileHandle;
+
+@end
+
+@interface NSObject (MP42MuxerDelegateMethod)
+- (void)progressStatus: (CGFloat)progress;
 
 @end

@@ -29,7 +29,7 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
 
 - (id)initWithDelegate:(id)del andFile:(NSString *)fileUrl
 {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         delegate = del;
         file = [fileUrl retain];
 

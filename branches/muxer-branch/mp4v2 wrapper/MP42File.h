@@ -61,6 +61,6 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
 @end
 
 @interface NSObject (MP42FileDelegateMethod)
-- (void)optimizeDidComplete;
+- (void)progressStatus: (CGFloat)progress;
 
 @end

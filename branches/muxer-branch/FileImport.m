@@ -14,7 +14,7 @@
 
 - (id)initWithDelegate:(id)del andFile: (NSString *)fileUrl
 {
-	if (self = [super initWithWindowNibName:@"FileImport"])
+	if ((self = [super initWithWindowNibName:@"FileImport"]))
 	{        
 		delegate = del;
         file = [fileUrl retain];

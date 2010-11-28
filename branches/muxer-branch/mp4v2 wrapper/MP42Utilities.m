@@ -420,28 +420,28 @@ CFDataRef DescExt_XiphFLAC(UInt32 codecPrivateSize, const void * codecPrivate)
 	if (codecPrivateSize) {
         CFMutableDataRef sndDescExt = CFDataCreateMutable(NULL, 0);
 		UInt32 uid = 0;
-        
+
 		size_t privateSize = codecPrivateSize;
 		UInt8 *privateBuf = (unsigned char *) codecPrivate, *privateEnd = privateBuf + privateSize;
-        
+
 		unsigned long serialnoatom[3] = { EndianU32_NtoB(sizeof(serialnoatom)), 
 			EndianU32_NtoB(kCookieTypeOggSerialNo), 
 			EndianU32_NtoB(uid) };
-        
+
         CFDataAppendBytes(sndDescExt, (UInt8 *)serialnoatom, sizeof(serialnoatom));
-        
+
 		privateBuf += 4; // skip 'fLaC'
-        
+
 		while ((privateEnd - privateBuf) > 4) {
 			uint32_t packetHeader = EndianU32_BtoN(*(uint32_t*)privateBuf);
 			int lastPacket = packetHeader >> 31, blockType = (packetHeader >> 24) & 0x7F;
 			uint32_t packetSize = (packetHeader & 0xFFFFFF) + 4;
 			uint32_t xiphHeader[2] = {EndianU32_NtoB(packetSize + sizeof(xiphHeader)),
 				EndianU32_NtoB(blockType ? kCookieTypeFLACMetadata : kCookieTypeFLACStreaminfo)};
-            
+
 			if ((privateEnd - privateBuf) < packetSize)
 				break;
-            
+
             CFDataAppendBytes(sndDescExt, (UInt8 *)xiphHeader, sizeof(xiphHeader));
             CFDataAppendBytes(sndDescExt, privateBuf, packetSize);
             
@@ -450,7 +450,7 @@ CFDataRef DescExt_XiphFLAC(UInt32 codecPrivateSize, const void * codecPrivate)
 			if (lastPacket)
 				break;
 		}
-        
+
 		return sndDescExt;	
 	}
 	return nil;
@@ -460,7 +460,7 @@ BOOL isTrackMuxable(NSString * formatName)
 {
     NSArray* supportedFormats = [NSArray arrayWithObjects:@"H.264", @"AAC", @"AC-3", @"3GPP Text", @"Text", @"Plain Text", @"ASS", @"SSA",
                                  @"CEA-608", @"Photo - JPEG", @"Vorbis", nil];
-    
+
     for (NSString* type in supportedFormats)
         if ([formatName isEqualToString:type])
             return YES;
@@ -470,11 +470,11 @@ BOOL isTrackMuxable(NSString * formatName)
 
 BOOL trackNeedConversion(NSString * formatName) {
     NSArray* supportedConversionFormats = [NSArray arrayWithObjects:@"Vorbis", @"DTS", @"Flac", @"Mp3", @"AC-3", nil];
-    
+
     for (NSString* type in supportedConversionFormats)
         if ([formatName isEqualToString:type])
             return YES;
-    
+
     return NO;
 }
 

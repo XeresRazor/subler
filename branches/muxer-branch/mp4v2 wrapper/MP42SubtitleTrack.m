@@ -15,7 +15,7 @@
 
 - (id) initWithSourcePath:(NSString *)source trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
-    if (self = [super initWithSourcePath:source trackID:trackID fileHandle:fileHandle])
+    if ((self = [super initWithSourcePath:source trackID:trackID fileHandle:fileHandle]))
     {
         MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.tx3g.defTextBoxBottom", &height);
         MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.tx3g.defTextBoxRight", &width);
@@ -26,7 +26,7 @@
 
 -(id) init
 {
-    if (self = [super init])
+    if ((self = [super init]))
     {
         name = @"Subtitle Track";
         format = @"3GPP Text";
@@ -40,7 +40,7 @@
                      height:(unsigned int)subHeight
                    language:(NSString *)subLanguage
 {
-    if (self = [super init])
+    if ((self = [super init]))
     {
         name = @"Subtitle Track";
         format = @"3GPP Text";

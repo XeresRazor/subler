@@ -19,6 +19,9 @@
     
     NSMutableArray *activeTracks;
     NSMutableArray *samplesBuffer;
+    
+    CGFloat progress;
+    u_int64_t fileDuration;
 }
 
 @end

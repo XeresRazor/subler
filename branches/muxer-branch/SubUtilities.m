@@ -26,7 +26,7 @@
 @implementation SBSubSerializer
 -(id)init
 {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		lines = [[NSMutableArray alloc] init];
 		finished = NO;
 		last_begin_time = last_end_time = 0;
@@ -185,7 +185,7 @@ canOutput:
 @implementation SBSubLine
 -(id)initWithLine:(NSString*)l start:(unsigned)s end:(unsigned)e
 {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		if ([l characterAtIndex:[l length]-1] != '\n') l = [l stringByAppendingString:@"\n"];
 		line = [l retain];
 		begin_time = s;

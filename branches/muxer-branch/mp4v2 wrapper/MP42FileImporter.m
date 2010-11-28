@@ -58,6 +58,10 @@
     return nil;
 }
 
+- (CGFloat)progress {
+    return 0;
+}
+
 
 @synthesize tracksArray;
 

@@ -31,6 +31,8 @@
 
 - (MP42SampleBuffer*)copyNextSample;
 - (MP42SampleBuffer*)nextSampleForTrack:(MP42Track *)track;
+- (CGFloat)progress;
+
 @end
 
 @interface NSObject (MP42FileImporterDelegateMethod)

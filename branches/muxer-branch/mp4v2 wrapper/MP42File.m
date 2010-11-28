@@ -24,7 +24,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 
 - (id)initWithDelegate:(id)del;
 {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         delegate = del;
         hasFileRepresentation = NO;
         tracks = [[NSMutableArray alloc] init];
@@ -38,7 +38,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 
 - (id)initWithExistingFile:(NSString *)path andDelegate:(id)del;
 {
-    if (self = [super init])
+    if ((self = [super init]))
 	{
         delegate = del;
 
@@ -245,7 +245,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     for (track in tracksToBeDeleted)
         [self removeMuxedTrack:track];
 
-    MP42Muxer *muxer = [[MP42Muxer alloc] init];
+    MP42Muxer *muxer = [[MP42Muxer alloc] initWithDelegate:self];
     for (track in tracks)
         if (!(track.muxed) && !stopOperation) {
             [muxer addTrack:track];
@@ -277,6 +277,11 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 - (void) stopOperation;
 {
     stopOperation = TRUE;
+}
+
+- (void)progressStatus: (CGFloat)progress {
+    if ([delegate respondsToSelector:@selector(progressStatus:)]) 
+        [delegate progressStatus:progress];
 }
 
 - (void) removeMuxedTrack: (MP42Track *)track

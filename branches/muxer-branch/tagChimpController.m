@@ -15,7 +15,7 @@
 
 - (id)initWithDelegate:(id)del
 {
-	if (self = [super initWithWindowNibName:@"MetadataImport"]) {        
+	if ((self = [super initWithWindowNibName:@"MetadataImport"])) {        
 		delegate = del;
 
         NSMutableParagraphStyle * ps = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];

@@ -893,6 +893,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/mp4v2\"",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = Subler;
 			};
 			name = Debug;
@@ -916,6 +917,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/mp4v2\"",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = Subler;
 			};
 			name = Release;

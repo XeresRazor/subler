@@ -14,12 +14,22 @@
 
 @implementation MP42Muxer
 
--(id)init
+- (id)init
 {
     if ((self = [super init]))
     {
         workingTracks = [[NSMutableArray alloc] init];
     }
+    return self;
+}
+
+- (id)initWithDelegate:(id)del
+{
+    if ((self = [super init])) {
+        workingTracks = [[NSMutableArray alloc] init];
+        delegate = del;
+    }
+    
     return self;
 }
 
@@ -76,7 +86,7 @@
             }
 
             MP4SetVideoProfileLevel(fileHandle, 0x15);
-            
+
             [[track trackImporterHelper] setActiveTrack:track];
         }
 
@@ -91,7 +101,16 @@
             MP4SetTrackESConfiguration(fileHandle, dstTrackId,
                                        [magicCookie bytes],
                                        [magicCookie length]);
-            
+
+            [[track trackImporterHelper] setActiveTrack:track];
+        }
+
+        // Photo-JPEG video track
+        else if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:@"Photo - JPEG"]) {
+            // Add video track
+            MP4AddMJpegVideoTrack(fileHandle, timeScale,
+                                  MP4_INVALID_DURATION, [(MP42VideoTrack*)track width], [(MP42VideoTrack*)track height]);
+
             [[track trackImporterHelper] setActiveTrack:track];
         }
 
@@ -112,7 +131,7 @@
 
         // AC-3 audio track
         else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"AC-3"]) {
-            const UInt8 * ac3Info = (const UInt8 *)[magicCookie bytes];
+            const uint64_t * ac3Info = (const uint64_t *)[magicCookie bytes];
 
             dstTrackId = MP4AddAC3AudioTrack(fileHandle,
                                              timeScale,
@@ -191,12 +210,22 @@
 - (void)work:(MP4FileHandle)fileHandle
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+
     NSMutableArray * trackImportersArray = [[NSMutableArray alloc] init];
+
     for (MP42Track * track in workingTracks) {
         if (![trackImportersArray containsObject:[track trackImporterHelper]]) {
             [trackImportersArray addObject:[track trackImporterHelper]];
         }
     }
+
+
+    CGFloat status = 0;
+    NSUInteger currentNumber = 0;
+    NSInteger tracksNumber = [trackImportersArray count];
+    
+    if (tracksNumber == 0)
+        return;
 
     for (id importerHelper in trackImportersArray) {
         MP42SampleBuffer * sampleBuffer;
@@ -231,11 +260,23 @@
                                sampleBuffer->sampleIsSync);
                 [sampleBuffer release];
             }
+            
+            if (currentNumber == 300) {
+                status = [importerHelper progress] / tracksNumber;
+
+                if ([delegate respondsToSelector:@selector(progressStatus:)]) 
+                    [delegate progressStatus:status];
+                currentNumber = 0;
+            }
+            else {
+                currentNumber++;
+            }
         }
     }
 
     [trackImportersArray release];
     
+    // Write the last samples from the encoder
     for (MP42Track * track in workingTracks) {
         if([track isMemberOfClass:[MP42AudioTrack class]] && track.needConversion) {
             SBAudioConverter * audioConverter = (SBAudioConverter *) track.trackConverterHelper;
@@ -260,6 +301,7 @@
                                        [magicCookie length]);
         }
     }
+
     [pool release];
 }
 

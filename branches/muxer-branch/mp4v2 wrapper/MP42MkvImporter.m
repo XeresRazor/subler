@@ -15,6 +15,8 @@
 
 #include "rational.h"
 
+u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
+
 @interface MatroskaSample : NSObject {
 @public
     unsigned long long startTime;
@@ -87,7 +89,7 @@
 
 - (id)initWithDelegate:(id)del andFile:(NSString *)fileUrl
 {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         delegate = del;
         file = [fileUrl retain];
 
@@ -158,6 +160,10 @@
                 UInt64 scaledDuration = (UInt64)segInfo->Duration / (UInt32)segInfo->TimecodeScale * trackTimecodeScale;
 
                 newTrack.duration = scaledDuration;
+                
+                if (scaledDuration > fileDuration)
+                    fileDuration = scaledDuration;
+
                 newTrack.name = getMatroskaTrackName(mkvTrack);
                 iso639_lang_t *isoLanguage = lang_for_code2(mkvTrack->Language);
                 newTrack.language = [NSString stringWithUTF8String:isoLanguage->eng_name];
@@ -267,7 +273,87 @@ NSString* getMatroskaTrackName(TrackInfo *track)
     if (!matroskaFile)
         return nil;
 
-	TrackInfo *trackInfo = mkv_GetTrackInfo(matroskaFile, [track sourceId]);
+    TrackInfo *trackInfo = mkv_GetTrackInfo(matroskaFile, [track sourceId]);
+
+    if (!strcmp(trackInfo->CodecID, "A_AC3")) {
+        mkv_SetTrackMask(matroskaFile, ~(1 << [track sourceId]));
+
+        uint64_t        StartTime, EndTime, FilePos;
+        uint32_t        rt, FrameSize, FrameFlags;
+        uint32_t        fb = 0;
+        uint8_t         *frame = NULL;
+
+		// read first header to create track
+		int firstFrame = mkv_ReadFrame(matroskaFile, 0, &rt, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags);
+		if (firstFrame != 0)
+		{
+			return MP4_INVALID_TRACK_ID;
+		}
+
+		if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
+            fprintf(stderr,"fseeko(): %s\n", strerror(errno));
+            return MP4_INVALID_TRACK_ID;				
+        } 
+
+        if (fb < FrameSize) {
+            fb = FrameSize;
+            frame = realloc(frame, fb);
+            if (frame == NULL) {
+                fprintf(stderr,"Out of memory\n");
+                return MP4_INVALID_TRACK_ID;		
+            }
+        }
+
+        size_t rd = fread(frame,1,FrameSize,ioStream->fp);
+        if (rd != FrameSize) 
+		{
+            if (rd == 0) 
+			{
+                if (feof(ioStream->fp))
+                    fprintf(stderr,"Unexpected EOF while reading frame\n");
+                else
+                    fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
+            } else
+                fprintf(stderr,"Short read while reading frame\n");
+			return MP4_INVALID_TRACK_ID; // we should be able to read at least one frame
+        }
+
+		// parse AC3 header
+		// collect all the necessary meta information
+		u_int32_t samplesPerSecond;
+		uint32_t fscod, frmsizecod, bsid, bsmod, acmod, lfeon;
+		uint32_t lfe_offset = 4;
+
+		fscod = (*(frame+4) >> 6) & 0x3;
+		frmsizecod = (*(frame+4) & 0x3f) >> 1;
+		bsid =  (*(frame+5) >> 3) & 0x1f;
+		bsmod = (*(frame+5) & 0xf);
+		acmod = (*(frame+6) >> 5) & 0x7;
+		if (acmod == 2)
+			lfe_offset -= 2;
+		else {
+			if ((acmod & 1) && acmod != 1)
+				lfe_offset -= 2;
+			if (acmod & 4)
+				lfe_offset -= 2;
+		}
+		lfeon = (*(frame+6) >> lfe_offset) & 0x1;
+
+		samplesPerSecond = MP4AV_Ac3GetSamplingRate(frame);
+        
+        mkv_Seek(matroskaFile, 0, 0);
+        
+        NSMutableData *ac3Info = [[NSMutableData alloc] init];
+        [ac3Info appendBytes:&fscod length:sizeof(uint64_t)];
+        [ac3Info appendBytes:&bsid length:sizeof(uint64_t)];
+        [ac3Info appendBytes:&bsmod length:sizeof(uint64_t)];
+        [ac3Info appendBytes:&acmod length:sizeof(uint64_t)];
+        [ac3Info appendBytes:&lfeon length:sizeof(uint64_t)];
+        [ac3Info appendBytes:&frmsizecod length:sizeof(uint64_t)];
+        
+        return [ac3Info autorelease];
+    }
+
     NSData * magicCookie = [NSData dataWithBytes:trackInfo->CodecPrivate length:trackInfo->CodecPrivateSize];
 
     if (magicCookie)
@@ -348,6 +434,8 @@ NSString* getMatroskaTrackName(TrackInfo *track)
             @synchronized(trackHelper->samplesBuffer) {
                 [trackHelper->samplesBuffer addObject:sample];
             }
+            
+            progress = fileDuration / StartTime * 100.0f;
         }
         
         if (trackInfo->Type == TT_VIDEO) {
@@ -554,6 +642,9 @@ NSString* getMatroskaTrackName(TrackInfo *track)
         while ([samplesBuffer count] >= 200) {
             usleep(200);
         }
+    
+        progress = (StartTime / fileDuration / 10000);
+
         for (MP42Track* fTrack in activeTracks){
             if (fTrack.sourceId == Track) {
                 trackHelper = fTrack.trackDemuxerHelper;
@@ -841,6 +932,10 @@ NSString* getMatroskaTrackName(TrackInfo *track)
         activeTracks = [[NSMutableArray alloc] init];
     
     [activeTracks addObject:track];
+}
+
+- (CGFloat)progress {
+    return progress;
 }
 
 - (void) dealloc
