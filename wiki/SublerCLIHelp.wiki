@@ -8,11 +8,11 @@ Some information on SublerCLI
 
 * -i set input file
 
-The file to which Subler will add things.
+the file you want to add to your mp4 file.
 
-* -s set subtitle input file
+* -o set output file
 
-the subtitle file (.srt)
+the file where things will be saved
 
 * -c set chapter input file
 
