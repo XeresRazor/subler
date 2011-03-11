@@ -14,10 +14,9 @@ Enable the "Create Preview Images" checkbox in the Preferences, the next time yo
 Even though the text encoding detector should detect the text encoding of your SRT file, it sometimes fails to do so. You'll increase your chances of success by using UTF-8 encoding. You can use Jubler to edit the SRT file before importing in Subler.
 
 
-*Why doesn't QuickTime Player X shows my subtitles ?*
+*AppleTV 2 hangs on movies with AC-3 audio?*
 
-Fixed in Mac OS X 10.6.3.
-(QuickTime X has some known issues with subtitles lines that contains multiple styles. If you want to be compatible with QuickTime X you should remove all the style tags (i.e. <i></i>) from your srt file.)
+It seems the latest ATV2 software needs the file to be properly interleaved. You can make it so by using Subler's Optimize function.
 
 *What's the "Optimize" function ?*
 
