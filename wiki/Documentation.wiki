@@ -2,7 +2,7 @@
 #labels Featured
 
 =Subler Documentation=
-===v 0.99.01===
+===v 0.14===
 
 Subler is a Mac OS X application that opens media containers, allows you to add or remove media tracks inside them, and then saves them out again. In the specialized language of the video world, Subler is a "transcoder" or "demuxer" depending on how you use it. It's dedicated to creating MPEG4 files (.m4v, .mp4) for iDevices.
 
@@ -12,4 +12,4 @@ Subler can do all of these tasks that would normally need separate programs.
 ===Contents===
 1. IntroductoryMaterial<br/>
 2. UsingSubler<br/>
-3. FAQ<br/>
+3. [FAQ]<br/>
