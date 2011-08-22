@@ -4,7 +4,19 @@
 
 Subler is based around the idea of "projects". In the Subler, projects are represented by windows with a track listing at the top, and data from the tracks below. After creating a new project, you associate it with media tracks by Open…ing files from the File menu, or simply dragging and dropping them from the Finder into the project window. As each file is added, you will be asked which tracks you would like to read out of the file, adding them to the track list.
 
-==Opening projects==
+==Opening movies==
+Since Subler is an document-based application (every document represent a file on the computer hard disk), you can either open an existing document, or create a new one from scratch.
+
+Here's the step for opening an existing document you want to work with.
+
+1) Open Subler<br />
+2) Select "Open" from the file menu.<br />
+3) Select the desired file from the panel.<br />
+
+A faster way is to drag the document icon on the Subler icon in the Dock or in the Finder.
+
+
+Subler can even create new documents, for when an empty file is needed.
 Since every task below needs a project, here's the steps for opening a new project and setting it to the media file you want to work with.
 
 1) Open Subler<br/>
