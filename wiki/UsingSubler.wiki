@@ -38,7 +38,7 @@ That's it! The remux only takes a few minutes.
 
 That said, you'll likely want to at least add some metadata while you go, see below for details.
 
-===How do I add a subtitle track?===
+===Adding a subtitle track===
 
 Subler was originally designed to add subtitles and similar "rare" tracks to existing files. It supports the srt format introduced with SubRip, which has become a de-facto standard and widely available from sources like OpenSubtitle.
 
@@ -52,6 +52,24 @@ To add a subtitle track to a movie, follow the steps above to create a project a
 i) You can double click the name to edit it.<br/>
 ii) The language of the subtitles can be changed in the track listing.<br/>
 iii) Selecting the subtitle track in the listing will display an editor allowing you to make changes to the visual appearance of the subtitles.<br/>
+
+===Adding multiple soundtracks===
+QuickTime has the ability, like a DVD, to include multiple soundtracks and let you select the one you want for playback. Subler is an easy way to add these to your existing movies.
+
+To add a new soundtrack to a movie, follow the steps above to create a project and open the file, then...
+
+5) Select Import->File... from the File menu or click the + button above the track listing in the project window.<br/>
+6) Use the Open dialog to find the sound file and Open it.<br /> 
+7) Repeat (5) and (6) for each additional soundtrack you want to add.<br />
+
+8) Click on the first track you added, so that the Sound Settings pane appears at the bottom of the document.<br />
+9) In the upper pane, select the correct language for the track.<br />
+10) In the bottom pane, Select the same "Alternate Group" for each one, typically 1.<br />
+11) Repeat (8) through (10) for each of the tracks you imported.<br />
+
+Hint: The first Sound Track in the track list in the upper pane will define the "default" one when opened in QuickTime Player. 
+
+Another hint: If you're also adding multiple subtitle tracks, assign them to a different Alternate Group, say 2.
 
 ===Using Subler to add and edit metadata===
 
