@@ -30,9 +30,9 @@ Since every task below needs a project, here's the steps for opening a new proje
 
 You have a movie in mkv format that you're pretty sure will work fine in QuickTime. How do you convert the mkv to m4v? Follow the steps above to create a project and open the file, and then…
 
-5) click on the Video track (if there is one). If the H.264 format (bottom of the scree) is High 5.1, you'll likely want to change this to "Main @ 3.1". This makes a minor change to the file that makes QuickTime happy to open the file. The file may not work correctly, but without this bit set it won't even try to open it.</br>
+5) click on the Video track (if there is one). If the H.264 format (bottom of the scree) is High 5.1, you'll likely want to change this to "Main @ 3.1". This makes a minor change to the file that makes QuickTime happy to open the file. The file may not work correctly, but without this bit set it won't even try to open it.<<br />
 
-6) Select Save from the file menu, and give the new file a name.<br/>
+6) Select Save from the file menu, and give the new file a name.<br />
 
 That's it! The remux only takes a few minutes.
 
