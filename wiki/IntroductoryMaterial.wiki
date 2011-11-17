@@ -16,23 +16,29 @@ This wasn't true for multimedia. Multimedia files are highly variable and might 
 
 To support this sort of flexibility, multimedia systems like QuickTime try to separate the file from the media inside, and refer to the file itself as nothing more than a "container". In theory, you shouldn't think of an .mp4 file as a "movie", as it might contain nothing more than a song. But in the real world, different containers quickly became associated with specific media types inside. The video inside a QuickTime file wouldn't work on a PC without installing QuickTime.
 
-But this isn't as true as it was. With the introduction of the H.264 video format, the entire media world has quickly been moving to MP4 media. That means that the video inside that QuickTime file is the same as the video inside an AVI. Audio too is likely to work across platforms. In theory, QuickTime should be the major container format and everyone should be able to read it, as it was accepted as part of the wider MP4 standard. In spite of this, or perhaps because of it, different container formats continue to proliferate. Other major container formats are .avi from the Wintel world, and .mkv, an open-standard developed under the Matroska project.
+But this isn't as true as it was. With the introduction of the H.264 video format, the entire media world has quickly been moving to MP4 media. That means that the video inside that QuickTime file is the same as the video inside an AVI. Audio too is likely to work across platforms. In theory, QuickTime should be the major container format and everyone should be able to read it, as it was accepted as part of the wider MP4 standard. 
+
+In spite of this, or perhaps because of it, different container formats continue to proliferate. Common container formats are .avi from the Wintel world, and .mkv, an open-standard developed under the Matroska project.
 
 ===What is "muxing"?===
 
-Media container files all have the same basic purpose, and generally have the same set of features. All of them have their own advantages and problems. Honestly, there's little technical reason, these days, to pick one format over the other. This is especially true if you consider the media inside the container. Most movies contain a video track, one or more audio tracks, and sometimes a text track for subtitles.
+Media container files all have the same basic purpose, and generally have the same set of features. All of them have their own advantages and problems. Honestly, there's little technical reason, these days, to pick one over the other.
 
-In the past it was unlikely that the formats of the media inside could play on other platforms -- an .avi file from the Wintel world would normally include video that Apple's QuickTime understood. But more recently, the H.264 format has rapidly started taking over the video side of things, and AC-3 is common for sound. So, when you open this variety of containers, you often find the media within would work just fine on your iDevice, if only the container was the right one.
+In the past it was unlikely that the formats of the media inside could play on other platforms -- an .avi file from the Wintel world would normally use video formats that QuickTime could not understand. But today the H.264 format has rapidly started taking over the video side of things, and AC-3 is common for sound. So, when faced by a container format that your iDevice won't open, it's entirely possible that the media inside is just fine.
 
-"Muxing" is the task of changing the container format, taking the media from one container format and then placing it, unchanged, into another container. Thats what Subler does; it takes media out of practically any recent container file, and moves it into a working QuickTime file. If the media inside can be played by your iDevice, and this is increasingly common, Subler can convert the file for you in seconds.
+Subler has the ability to change the container format, taking the media from one container and then placing it, unchanged, into another. The output format is a standard QuickTime file. If the media inside can be played by your iDevice, and this is increasingly common, Subler can convert the file for you in seconds.
 
-'''What's the difference between Subler and Handbrake?'''
+===What's the difference between Subler and Handbrake?===
 
-Subler is a muxer, it takes the media inside a container, adds or removes tracks and makes similar minor changes, and saves out the media in another container. This process is very fast -- remuxing a 1-hour movie takes maybe two to three minutes.
+Subler is a muxer, it takes the media inside a container, adds or removes tracks and makes similar minor changes, and saves out the media in another container. The actual content inside is unchanged. This process is very fast -- remuxing a 1-hour movie takes maybe two to three minutes.
 
 Handbrake is a converter, or "transcoder". It takes the media inside the container, converts it into a new format, and saves it to another container. Converting a movie requires every frame of the video to be decoded and recoded into a new format, which can take hours.
 
-Subler only "works" if the media formats inside the container are something your media device can play. Handbrake can ''change'' that media into something your media device can play. So why would you use Subler at all? Because it's extremely fast. So when the formats are compatible and the stars align, Subler is the way to go. It's so fast, you should just try it to see what happens, and then move on to Handbrake if that doesn't work.
+Subler only works if the media formats inside the container are something your media device can play. If that's not the case, the new Subler movie simply won't work.
+
+Handbrake can ''change'' that media into something your media device can play, practically every time.
+
+So why would you use Subler at all? Because it's extremely fast. If the formats are compatible and the stars align, Subler is the way to go. It's so fast, you should just try it to see what happens, and then move on to Handbrake if that doesn't work.
 
 ===What containers does Subler read?===
 
