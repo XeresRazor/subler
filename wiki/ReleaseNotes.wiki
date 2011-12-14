@@ -1,0 +1,8 @@
+#summary Release NOtes
+
+= Subler 0.15 beta =
+
+ * VobSub OCR to text for subtitles
+ * Per track conversion settings.
+ * ALAC and DTS muxing support.
+ * Queue window for batch operations.
