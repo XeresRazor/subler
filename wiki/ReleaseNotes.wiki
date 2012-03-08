@@ -7,6 +7,6 @@
  * ALAC and DTS muxing support.
  * Queue window for batch operations.
 
-= Subler 0.15 beta =
+= Subler 0.15 beta 3 =
 
  * 1080p tag (iTunes 10.6)
