@@ -1,4 +1,4 @@
-#summary Release NOtes
+#summary Release Notes
 
 = Subler 0.15 beta =
 
@@ -6,3 +6,7 @@
  * Per track conversion settings.
  * ALAC and DTS muxing support.
  * Queue window for batch operations.
+
+= Subler 0.15 beta =
+
+ * 1080p tag (iTunes 10.6)
