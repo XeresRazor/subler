@@ -1,4 +1,5 @@
 #summary Release Notes
+#labels Featured
 
 = Subler 0.15 beta =
 
