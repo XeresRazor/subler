@@ -2,23 +2,25 @@
 
 =What is Subler?=
 
-Subler is a Mac OS X application that opens media containers, allows you to add or remove data inside them, and then saves them out again. In the specialized language of the video world, Subler is a "muxer" (or multiplexer), a muxer dedicated to creating MPEG4 files (.m4v, .mp4) for iDevices.
+Subler is a Mac OS X application that opens media containers like movie files, allows you to add or remove data inside them, and then saves them out again. In the specialized language of the video world, Subler is a "muxer" (or multiplexer), a muxer dedicated to creating MPEG4 files (.m4v, .mp4) for iDevices.
 
 Subler original purpose was to allow you to easily add subtitles to your video files, and thus the name "subler". In time, new features have been added to help Subler solve similar common problems. For instance, with Subler you can open an existing media file, add chapter titles, remove an unwanted commentary track, tag the file, and then save it back out again.
 
-Subler can do all of these tasks that would normally need separate programs, and often finish all of these tasks faster than any one of these utilities.
+There are lots of utilities that handle one of these tasks. Subler handles all of them, and quickly!
 
 ===What is a "media container"?===
 
-In the past, different types of computer data would be stored in a file that contained only that data. For instance, .doc files were Microsoft Word documents, and .txt were text files. Some of these files had the ability to include other types of data, a picture inside a Word document for instance. But since programs did one thing, and the formats they used were tightly bound to the programs, file formats and programs were largely one and the same.
+In the past, computer programs generally worked only with a specific type of data - word processors worked with text, spreadsheets worked with numbers. There was a little variability in data, like adding an image inside a Word document, but invariably there was some sort of "key data" that every program focused on. Each program saved that data in its own private format, so Microsoft Word documents were very different than WordPerfect documents, even though the data inside was essentially the same.
 
-This wasn't true for multimedia. Multimedia files are highly variable and might contain any sort of data. One might have a video track and audio, a typical movie. Another might add several audio tracks to support different languages. Subtitles, producer commentary, all of these might appear or not appear and change from file to file.
+Multimedia changed all this. Multimedia files are highly variable and might contain any sort of data. We are most familiar with movies as the classic multimedia file, files that contain a video track, one more more soundtracks and sometimes other features like subtitles. Another file might include audio and text tracks only, for storing music. In contrast to the older model, in the multimedia world there is no "key data" that the file format can be based on.
 
-To support this sort of flexibility, multimedia systems like QuickTime try to separate the file from the media inside, and refer to the file itself as nothing more than a "container". In theory, you shouldn't think of an .mp4 file as a "movie", as it might contain nothing more than a song. But in the real world, different containers quickly became associated with specific media types inside. The video inside a QuickTime file wouldn't work on a PC without installing QuickTime.
+To support this sort of flexibility, multimedia systems like QuickTime try to separate the file from the media inside, and refer to the file itself as nothing more than a "container". The container holds different "tracks", in any format you might want - in theory you could even store a Word document inside one. The containers try to be completely agnostic about the data inside, and so in theory any one of the formats could hold any sort of multimedia.
 
-But this isn't as true as it was. With the introduction of the H.264 video format, the entire media world has quickly been moving to MP4 media. That means that the video inside that QuickTime file is the same as the video inside an AVI. Audio too is likely to work across platforms. In theory, QuickTime should be the major container format and everyone should be able to read it, as it was accepted as part of the wider MP4 standard. 
+But this isn't a perfect world. Many similar container formats sprung up in the early days, and many of these were tightly bound to a particular type of content. AVI, for instance, almost always contained a movie written using a particular video software, while MOV on the Mac was the same, but different. One platform's software couldn't read another's files, making life difficult for everyone.
 
-In spite of this, or perhaps because of it, different container formats continue to proliferate. Common container formats are .avi from the Wintel world, and .mkv, an open-standard developed under the Matroska project.
+But this isn't as bad as it used to be. With the introduction of the H.264 video format, the entire media world has quickly been moving to MP4 media. That means that the video inside that QuickTime file is the same as the video inside an WMV. Audio too is likely to work across platforms. In theory, QuickTime should be the major container format and everyone should be able to read it, as it was accepted as part of the wider MP4 standard. 
+
+But in spite of this, or perhaps because of it, different container formats continue to proliferate. Common container formats are .avi and .wmv from the Wintel world, and .mkv, an open-standard developed under the Matroska project.
 
 ===What is "muxing"?===
 
