@@ -1,13 +1,10 @@
 #summary Release Notes
 #labels Featured
 
-= Subler 0.15 beta =
+= Subler 0.16 =
 
  * VobSub OCR to text for subtitles
  * Per track conversion settings.
  * ALAC and DTS muxing support.
  * Queue window for batch operations.
-
-= Subler 0.15 beta 3 =
-
- * 1080p tag (iTunes 10.6)
+ * 1080p tag (iTunes 10.6).
