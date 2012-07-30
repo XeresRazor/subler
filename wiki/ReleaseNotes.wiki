@@ -8,3 +8,5 @@
  * ALAC and DTS muxing support.
  * Queue window for batch operations.
  * 1080p tag (iTunes 10.6).
+
+ * 0.16 requires Mac OS X 10.6 or higher.
