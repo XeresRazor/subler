@@ -190,6 +190,19 @@ margin-top: 3px;
 	padding-bottom: -3px
 	}
 
+.red    {
+	background-color: #ffcccc;
+	margin-top: -3px;
+	margin-bottom: -3px;
+	padding-top: -3px;
+	padding-bottom: -3px;
+}
+
+.red h3 {
+	font-size: 1.2em;
+}
+
+
 .rightfloater
 {
     float: right;
