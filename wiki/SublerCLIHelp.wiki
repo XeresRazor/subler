@@ -8,56 +8,62 @@ Some information on SublerCLI
 
 * -source
 
-the file you want to add to your mp4 file.
+ the file you want to add to your mp4 file.
 
 * -dest
 
-the file where things will be saved
+ the file where things will be saved
 
 * -chapters
 
-the .txt files with the chapters (see the chapter help)
+ the .txt files with the chapters (see the chapter help)
 
 * -chapterspreview
 
-an options to create an additional video track with the preview of the chapters, used by iTunes and something else.
+ an options to create an additional video track with the preview of the chapters, used by iTunes and something else.
 
 * -delay
 
-the delay of the subtitle track in ms
+ the delay of the subtitle track in ms
 
 * -height
 
-the height of the subtitle track in pixel
+ the height of the subtitle track in pixel
 
 * -language
 
-the language of the subtitle track (i.e. English)
+ the language of the subtitle track (i.e. English)
 
 * -remove
 
-remove all the existing subtitles tracks
+ remove all the existing subtitles tracks
 
 * -optimize
 
-optimize the file by moving the moov atom at the begin and interleaving the samples
+ optimize the file by moving the moov atom at the begin and interleaving the samples
 
 * -downmix
-Downmix audio (mono, stereo, dolby, pl2)  from the source file
+
+ downmix audio (mono, stereo, dolby, pl2)  from the source file
 
 * -listtracks
-list the tracks of the source file
+
+ list the tracks of the source file
 
 * -listmetadata
-list the metadata of the source file
+
+ list the metadata of the source file
 
 * -help
+
  print this help information
 
 * -version
+
  print version
 
 * -metadata
+
  set tags {Tag Name:Tag Value}*
 || Tag Name || Type ||
 || Name || string ||
