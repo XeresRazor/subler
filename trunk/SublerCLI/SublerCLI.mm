@@ -65,6 +65,7 @@ int main (int argc, const char * argv[]) {
     BOOL removemetadata = false;
 
     BOOL downmixAudio = NO;
+    NSString *downmixArg = nil;
     NSString *downmixType = nil;
 
     if (argc == 1) {
@@ -115,10 +116,11 @@ int main (int argc, const char * argv[]) {
         else if ( ! strcmp ( args, "downmix" ) )
 		{
             downmixAudio = YES;
-            if (strcasecmp( optarg, "mono" ) == 0) downmixType = SBMonoMixdown;
-            else if (strcasecmp( optarg, "stereo" ) == 0) downmixType = SBStereoMixdown;
-            else if (strcasecmp( optarg, "dolby" ) == 0) downmixType = SBDolbyMixdown;
-            else if (strcasecmp( optarg, "pl2" ) == 0) downmixType = SBDolbyPlIIMixdown;
+            downmixArg = [NSString stringWithUTF8String:*argv++];
+            if([downmixArg caseInsensitiveCompare:@"mono"]) downmixType = SBMonoMixdown;
+            else if([downmixArg caseInsensitiveCompare:@"stereo"]) downmixType = SBStereoMixdown;
+            else if([downmixArg caseInsensitiveCompare:@"dolby"]) downmixType = SBDolbyMixdown;
+            else if([downmixArg caseInsensitiveCompare:@"pl2"]) downmixType = SBDolbyPlIIMixdown;
             else {
                 printf( "Error: unsupported downmix type '%s'\n", optarg );
                 printf( "Valid downmix types are: 'mono', 'stereo', 'dolby' and 'pl2'\n" );
