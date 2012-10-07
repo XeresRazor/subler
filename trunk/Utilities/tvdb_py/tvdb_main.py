@@ -56,7 +56,8 @@ if len(sys.argv) >= 2:
 		d['seriesname'] = t[seriesName]['seriesname']
 
 		for actorNum in range(len(t[seriesName]['_actors'])):
-			d['actors'].append(t[seriesName]['_actors'][actorNum]['name'])
+			if type(t[seriesName]['_actors'][actorNum]['name']) != type(None):
+				d['actors'].append(t[seriesName]['_actors'][actorNum]['name'])
 
 		for bannerID in t[seriesName]['_banners']['poster']['680x1000'].iterkeys():
 			d['artwork_posters'].append(t[seriesName]['_banners']['poster']['680x1000'][bannerID]['_bannerpath'])
