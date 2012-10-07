@@ -241,18 +241,23 @@ static unsigned ParseSubTime(const char *time, unsigned secondScale, BOOL hasSig
 	unsigned hour, minute, second, subsecond, timeval;
 	char separator;
 	int sign = 1;
-	
+
 	if (hasSign && *time == '-') {
 		sign = -1;
 		time++;
 	}
-	
+
 	if (sscanf(time,"%u:%u:%u%[,.:]%u",&hour,&minute,&second,&separator,&subsecond) < 5)
 		return 0;
-	
+
+    if (second > 60)
+        second = 0;
+    if (subsecond > secondScale)
+        subsecond = 0;
+
 	timeval = hour * 60 * 60 + minute * 60 + second;
 	timeval = secondScale * timeval + subsecond;
-	
+
 	return timeval * sign;
 }
 
