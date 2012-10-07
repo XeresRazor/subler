@@ -211,7 +211,7 @@ NSString* getTrackName(MP4FileHandle fileHandle, MP4TrackId Id)
     char *trackName;
 
     if (MP4GetTrackName(fileHandle, Id, &trackName)) {
-        NSString * name = [NSString stringWithUTF8String: trackName];
+        NSString * name = [NSString stringWithCString:trackName encoding: NSMacOSRomanStringEncoding];
         free(trackName);
         return name;
     }
