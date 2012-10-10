@@ -15,7 +15,7 @@ void print_help()
     printf("\t\t -language Track language (i.e. English) \n");
     printf("\t\t -remove Remove existing subtitles \n");
     printf("\t\t -optimize Optimize \n");
-    printf("\t\t -metadata set tags {Tag Name:Tag Value}* \n");
+    printf("\t\t -metadata {Tag Name:Tag Value} \n");
     printf("\t\t -removemetadata remove all the tags \n");
     printf("\t\t -downmix Downmix audio (mono, stereo, dolby, pl2) \n");
     printf("\n");
