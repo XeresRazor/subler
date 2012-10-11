@@ -64,7 +64,9 @@ Some information on SublerCLI
 
 * -metadata
 
- set tags {Tag Name:Tag Value}*
+ set tags in the mp4
+ example: -metadata "{TagName:TagValue}"
+
 || Tag Name || Type ||
 || Name || string ||
 || Artist || string ||
