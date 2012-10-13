@@ -172,6 +172,23 @@
         tracksArray = [[NSMutableArray alloc] init];
         NSArray *tracks = [localAsset tracks];
 
+        NSArray *availableChapter = [localAsset availableChapterLocales];
+        MP42ChapterTrack *chapters;
+
+        for (NSLocale *locale in availableChapter) {
+            chapters = [[MP42ChapterTrack alloc] init];
+            NSArray *chapterList = [localAsset chapterMetadataGroupsWithTitleLocale:locale containingItemsWithCommonKeys:nil];
+            for (AVTimedMetadataGroup* chapterData in chapterList) {
+                for (AVMetadataItem *item in [chapterData items]) {
+                    NSLog(@"%@", [item stringValue]);
+                    CMTime duration = [item duration];
+                    CMTime time = [item time];
+                    NSLog(@"%lld %d", duration.value, duration.timescale);
+                    [chapters addChapter:[item stringValue] duration:time.value * time.timescale / 1000];
+                }
+            }
+        }
+
         for (AVAssetTrack *track in tracks) {
             MP42Track *newTrack = nil;
 
@@ -180,7 +197,7 @@
 			if ([formatDescriptions count] > 0)
 				formatDescription = (CMFormatDescriptionRef)[formatDescriptions objectAtIndex:0];
 
-            //NSArray *trackMetadata = [track metadataForFormat:AVMetadataFormatQuickTimeUserData];
+            NSArray *trackMetadata = [track metadataForFormat:AVMetadataFormatQuickTimeUserData];
 
             if ([[track mediaType] isEqualToString:AVMediaTypeVideo]) {
                 newTrack = [[MP42VideoTrack alloc] init];
@@ -222,16 +239,33 @@
             else if ([[track mediaType] isEqualToString:AVMediaTypeSubtitle]) {
                 newTrack = [[MP42SubtitleTrack alloc] init];
             }
+            else if ([[track mediaType] isEqualToString:AVMediaTypeText]) {
+                // It looks like there is no way to know what text track is used for chapters in the original file.
+                if (chapters)
+                    newTrack = chapters;
+                else
+                    newTrack = [[MP42ChapterTrack alloc] init];
+            }
             else {
                 newTrack = [[MP42Track alloc] init];
             }
+
+            /*NSArray *trackUserDataItems = [track metadataForFormat:AVMetadataFormatQuickTimeUserData];
+            NSArray *trackTaggedMediaCharacteristics = [AVMetadataItem metadataItemsFromArray:trackUserDataItems withKey:AVMetadataQuickTimeUserDataKeyTaggedCharacteristic keySpace:AVMetadataKeySpaceQuickTimeUserData];
+
+            for (AVMetadataItem *metadataItem in trackTaggedMediaCharacteristics) {
+                NSString *thisTrackMediaCharacteristic = [metadataItem stringValue];
+                NSLog(@"%@", thisTrackMediaCharacteristic);
+            }*/
 
             newTrack.format = [self formatForTrack:track];
             newTrack.sourceFormat = newTrack.format;
             newTrack.Id = [track trackID];
             newTrack.sourceURL = fileURL;
             newTrack.sourceFileHandle = localAsset;
-            //newTrack.name = [[[AVMetadataItem metadataItemsFromArray:trackMetadata withKey:@"name" keySpace:nil] lastObject] value];
+            NSString* trackName = [[[AVMetadataItem metadataItemsFromArray:trackMetadata withKey:@"name" keySpace:nil] lastObject] value];
+            if (trackName)
+                newTrack.name = trackName;
             newTrack.language = [self langForTrack:track];
 
             CMTimeRange timeRange = [track timeRange];
