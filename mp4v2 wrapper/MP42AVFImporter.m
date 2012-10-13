@@ -180,10 +180,7 @@
             NSArray *chapterList = [localAsset chapterMetadataGroupsWithTitleLocale:locale containingItemsWithCommonKeys:nil];
             for (AVTimedMetadataGroup* chapterData in chapterList) {
                 for (AVMetadataItem *item in [chapterData items]) {
-                    NSLog(@"%@", [item stringValue]);
-                    CMTime duration = [item duration];
                     CMTime time = [item time];
-                    NSLog(@"%lld %d", duration.value, duration.timescale);
                     [chapters addChapter:[item stringValue] duration:time.value * time.timescale / 1000];
                 }
             }
@@ -581,20 +578,21 @@
 {
     for (MP42Track * track in activeTracks) {
         AVAssetTrack *assetTrack = [localAsset trackWithTrackID:track.sourceId];
-        NSLog(@"Track ID: %d", [assetTrack trackID]);
+        //NSLog(@"Track ID: %d", [assetTrack trackID]);
         for (AVAssetTrackSegment *segment in assetTrack.segments) {
             bool empty = NO;
             CMTimeMapping timeMapping = segment.timeMapping;
 
-            NSLog(@"---------------------");
+            /*NSLog(@"---------------------");
 
             NSLog(@"Start: %lld", timeMapping.source.start.value);
             NSLog(@"Duration: %lld", timeMapping.source.duration.value);
             NSLog(@"Start %lld", timeMapping.target.start.value);
             NSLog(@"Duration: %lld", timeMapping.source.duration.value);
+            */
 
             if (segment.empty) {
-                NSLog(@"Empty segment");
+                //NSLog(@"Empty segment");
                 empty = YES;
             }
 

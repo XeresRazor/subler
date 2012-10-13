@@ -316,6 +316,9 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
             return @"SSA";
         else if (!strcmp(track->CodecID, "S_VOBSUB"))
             return @"VobSub";
+        else if (!strcmp(track->CodecID, "S_HDMV/PGS"))
+            return @"PGS";
+
         else
             return [NSString stringWithUTF8String:track->CodecID];
     }
