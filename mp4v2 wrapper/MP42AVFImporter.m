@@ -318,13 +318,16 @@
     if (formatDescription) {
         FourCharCode code = CMFormatDescriptionGetMediaSubType(formatDescription);
         if ([[assetTrack mediaType] isEqualToString:AVMediaTypeVideo]) {
-            if (code == kCMVideoCodecType_H264) {
-                CFDictionaryRef extentions = CMFormatDescriptionGetExtensions(formatDescription);
-                CFDictionaryRef atoms = CFDictionaryGetValue(extentions, kCMFormatDescriptionExtension_SampleDescriptionExtensionAtoms);
-                CFDataRef avcC = CFDictionaryGetValue(atoms, @"avcC");
+            CFDictionaryRef extentions = CMFormatDescriptionGetExtensions(formatDescription);
+            CFDictionaryRef atoms = CFDictionaryGetValue(extentions, kCMFormatDescriptionExtension_SampleDescriptionExtensionAtoms);
+            CFDataRef magicCookie = NULL;
 
-                return (NSData*)avcC;
-            }
+            if (code == kCMVideoCodecType_H264) 
+                magicCookie = CFDictionaryGetValue(atoms, @"avcC");
+            else if (code == kCMVideoCodecType_MPEG4Video)
+                magicCookie = CFDictionaryGetValue(atoms, @"esds");
+
+            return (NSData*)magicCookie;
         }
         else if ([[assetTrack mediaType] isEqualToString:AVMediaTypeAudio]) {
 
