@@ -633,7 +633,6 @@ NSString * const MP42FileTypeM4B = @"m4b";
         MP4RemoveAllTrackReferences(fileHandle, "tref.chap", refTrack);
         MP4AddTrackReference(fileHandle, "tref.chap", [chapterTrack Id], refTrack);
         MP4AddTrackReference(fileHandle, "tref.chap", jpegTrack, refTrack);
-        disableTrack(fileHandle, jpegTrack);
         MP4Close(fileHandle, 0);
     }
 
