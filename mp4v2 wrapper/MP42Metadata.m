@@ -23,7 +23,9 @@ static const mediaKind_t mediaKind_strings[] = {
     {9, @"Movie"},
     {10, @"TV Show"},
     {11, @"Booklet"},
-    {14, @"Ringtone"},  
+    {14, @"Ringtone"},
+    {21, @"Podcast"},
+    {23, @"iTunes U"},
     {0, NULL},
 };
 
@@ -928,6 +930,20 @@ static const genreType_t genreType_strings[] = {
         MP4TagsSetMediaType(tags, &mediaKind);
     else
         MP4TagsSetMediaType(tags, NULL);
+
+    if (mediaKind == 21) {
+        const uint8_t n = 1;
+        MP4TagsSetPodcast(tags, &n);
+    }
+    else
+        MP4TagsSetPodcast(tags, NULL);
+
+    if (mediaKind == 23) {
+        const uint8_t n = 1;
+        MP4TagsSetITunesU(tags, &n);
+    }
+    else
+        MP4TagsSetITunesU(tags, NULL);
 
     if(hdVideo)
         MP4TagsSetHDVideo(tags, &hdVideo);
