@@ -139,6 +139,7 @@ typedef struct MP4Tags_s
     const char* encodedBy;
     const char* purchaseDate;
 
+    const uint8_t* itunesu;
     const uint8_t* podcast;
     const char*    keywords;  /* TODO: Needs testing */
     const char*    category;    
@@ -265,6 +266,7 @@ MP4V2_EXPORT bool MP4TagsSetEncodingTool    ( const MP4Tags*, const char* );
 MP4V2_EXPORT bool MP4TagsSetEncodedBy       ( const MP4Tags*, const char* );
 MP4V2_EXPORT bool MP4TagsSetPurchaseDate    ( const MP4Tags*, const char* );
 
+MP4V2_EXPORT bool MP4TagsSetITunesU         ( const MP4Tags*, const uint8_t* );
 MP4V2_EXPORT bool MP4TagsSetPodcast         ( const MP4Tags*, const uint8_t* );
 MP4V2_EXPORT bool MP4TagsSetKeywords        ( const MP4Tags*, const char* );
 MP4V2_EXPORT bool MP4TagsSetCategory        ( const MP4Tags*, const char* );
