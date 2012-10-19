@@ -117,10 +117,10 @@ int main (int argc, const char * argv[]) {
 		{
             downmixAudio = YES;
             downmixArg = [NSString stringWithUTF8String:*argv++];
-            if([downmixArg caseInsensitiveCompare:@"mono"]) downmixType = SBMonoMixdown;
-            else if([downmixArg caseInsensitiveCompare:@"stereo"]) downmixType = SBStereoMixdown;
-            else if([downmixArg caseInsensitiveCompare:@"dolby"]) downmixType = SBDolbyMixdown;
-            else if([downmixArg caseInsensitiveCompare:@"pl2"]) downmixType = SBDolbyPlIIMixdown;
+            if(![downmixArg caseInsensitiveCompare:@"mono"]) downmixType = SBMonoMixdown;
+            else if(![downmixArg caseInsensitiveCompare:@"stereo"]) downmixType = SBStereoMixdown;
+            else if(![downmixArg caseInsensitiveCompare:@"dolby"]) downmixType = SBDolbyMixdown;
+            else if(![downmixArg caseInsensitiveCompare:@"pl2"]) downmixType = SBDolbyPlIIMixdown;
             else {
                 printf( "Error: unsupported downmix type '%s'\n", optarg );
                 printf( "Valid downmix types are: 'mono', 'stereo', 'dolby' and 'pl2'\n" );
@@ -228,8 +228,8 @@ int main (int argc, const char * argv[]) {
     NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
     if (chapterPreview)
         [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
-
-    if (sourcePath || chaptersPath || removeExisting || metadata || chapterPreview || removemetadata)
+    
+    if ((sourcePath && [[NSFileManager defaultManager] fileExistsAtPath:sourcePath]) || chaptersPath || removeExisting || metadata || chapterPreview || removemetadata)
     {
         NSError *outError;
         MP42File *mp4File;
@@ -279,9 +279,10 @@ int main (int argc, const char * argv[]) {
           [subtitleTrackIndexes release];
         }
 
-        if (sourcePath) {
+        if ((sourcePath && [[NSFileManager defaultManager] fileExistsAtPath:sourcePath])) {
+            NSURL* sourceURL = [NSURL fileURLWithPath:sourcePath];
             MP42FileImporter *fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil
-                                                                                andFile:[NSURL fileURLWithPath:sourcePath]
+                                                                                andFile:sourceURL
                                                                                 error:&outError];
 
             for (MP42Track * track in [fileImporter tracksArray]) {
@@ -302,21 +303,21 @@ int main (int argc, const char * argv[]) {
         if (chaptersPath) {
             MP42Track *oldChapterTrack = NULL;
             MP42ChapterTrack *newChapterTrack = NULL;
-            
+
             MP42Track *track;
             for (track in mp4File.tracks)
               if ([track isMemberOfClass:[MP42ChapterTrack class]]) {
                 oldChapterTrack = track;
                 break;
               }
-          
+
           if(oldChapterTrack != NULL) {
             [mp4File removeTrackAtIndex:[mp4File.tracks indexOfObject:oldChapterTrack]];
             modified = YES;
           }
-          
+
           newChapterTrack = [MP42ChapterTrack chapterTrackFromFile:[NSURL fileURLWithPath:chaptersPath]];
-          
+
           if([newChapterTrack chapterCount] > 0) {
             [mp4File addTrack:newChapterTrack];            
             modified = YES;      
@@ -326,10 +327,10 @@ int main (int argc, const char * argv[]) {
         if (downmixAudio) {
             for (MP42AudioTrack *track in [mp4File tracks]) {
                 if (![track isKindOfClass: [MP42AudioTrack class]]) continue;
-                
+
                 [track setNeedConversion: YES];
                 [track setMixdownType: downmixType];
-                
+
                 modified = YES;
             }
         }
@@ -389,7 +390,7 @@ int main (int argc, const char * argv[]) {
         if (modified && [mp4File hasFileRepresentation])
             success = [mp4File updateMP4FileWithAttributes:attributes error:&outError];
 
-        else if (modified && ![mp4File hasFileRepresentation])
+        else if (modified && ![mp4File hasFileRepresentation] && destinationPath)
             success = [mp4File writeToUrl:[NSURL fileURLWithPath:destinationPath]
                            withAttributes:attributes
                                     error:&outError];

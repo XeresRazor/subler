@@ -248,7 +248,13 @@ NSString * const MP42FileTypeM4B = @"m4b";
 - (BOOL) writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError
 {
     BOOL success = YES;
+    
+    if(!url) {
+        *outError = MP42Error(@"Invalid path.", @"The destination path cannot be empty.", 100);
 
+        return NO;
+    }
+    
     if ([self hasFileRepresentation]) {
         if (![fileURL isEqualTo:url]) {
             __block BOOL done = NO;
