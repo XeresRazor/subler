@@ -1,6 +1,12 @@
 #summary Release Notes
 #labels Featured
 
+= Subler 0.18 =
+
+ * Fixed an issue with thetvdb, results were not returned for some tv series. 
+ * Fixed some regression in the mov importer.
+ * Added "iTunes U" to the media kind list.
+
 = Subler 0.17 =
 
  * Forced subtitles tracks. A new option to set a track as "forced". iDevices will automatically display the right forced track for a given language (does not work with vobsub, only tx3g) 
