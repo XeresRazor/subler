@@ -28,7 +28,9 @@
     BOOL    muxed;
     BOOL    needConversion;
 
-	uint32_t    timescale; 
+    uint64_t _size;
+
+	uint32_t    timescale;
 	uint32_t    bitrate; 
 	MP4Duration duration;
 
@@ -60,6 +62,8 @@
 @property(readwrite) BOOL isEdited;
 @property(readwrite) BOOL muxed;
 @property(readwrite) BOOL needConversion;
+
+@property(readwrite) uint64_t dataLength;
 
 @property(readwrite, assign) MP42FileImporter * trackImporterHelper;
 @property(readwrite, retain) id trackDemuxerHelper;

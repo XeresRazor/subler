@@ -119,6 +119,8 @@ NSString * const MP42FileTypeM4B = @"m4b";
         metadata = [[MP42Metadata alloc] initWithSourceURL:fileURL fileHandle:fileHandle];
         fileImporters = [[NSMutableArray alloc] init];
         MP4Close(fileHandle, 0);
+
+        _size = [[[[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
 	}
 
 	return self;
@@ -417,6 +419,14 @@ NSString * const MP42FileTypeM4B = @"m4b";
 - (void)progressStatus: (CGFloat)progress {
     if ([delegate respondsToSelector:@selector(progressStatus:)]) 
         [delegate progressStatus:progress];
+}
+
+- (uint64_t)estimatedDataLength {
+    uint64_t estimation = 0;
+    for (MP42Track *track in tracks)
+        estimation += track.dataLength;
+
+    return estimation;
 }
 
 - (void) removeMuxedTrack: (MP42Track *)track

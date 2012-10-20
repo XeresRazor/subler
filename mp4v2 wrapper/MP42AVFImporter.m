@@ -173,7 +173,7 @@
         NSArray *tracks = [localAsset tracks];
 
         NSArray *availableChapter = [localAsset availableChapterLocales];
-        MP42ChapterTrack *chapters;
+        MP42ChapterTrack *chapters = nil;
 
         for (NSLocale *locale in availableChapter) {
             chapters = [[MP42ChapterTrack alloc] init];
@@ -260,6 +260,7 @@
             newTrack.Id = [track trackID];
             newTrack.sourceURL = fileURL;
             newTrack.sourceFileHandle = localAsset;
+            newTrack.dataLength = [track totalSampleDataLength];
             NSString* trackName = [[[AVMetadataItem metadataItemsFromArray:trackMetadata withKey:@"name" keySpace:nil] lastObject] value];
             if (trackName)
                 newTrack.name = trackName;
