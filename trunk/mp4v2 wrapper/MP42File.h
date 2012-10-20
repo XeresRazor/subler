@@ -37,6 +37,7 @@ extern NSString * const MP42FileTypeM4A;
     BOOL             hasFileRepresentation;
     BOOL             isCancelled;
 
+    uint64_t _size;
 @protected
     NSMutableArray  *tracks;
     MP42Metadata    *metadata;
@@ -63,6 +64,8 @@ extern NSString * const MP42FileTypeM4A;
 - (void) removeTrackAtIndex:(NSUInteger)index;
 - (void) removeTracksAtIndexes:(NSIndexSet *)indexes;
 - (void) moveTrackAtIndex:(NSUInteger)index toIndex:(NSUInteger)newIndex;
+
+- (uint64_t)estimatedDataLength;
 
 - (BOOL) writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError;
 - (BOOL) updateMP4FileWithAttributes:(NSDictionary *)attributes error:(NSError **)outError;

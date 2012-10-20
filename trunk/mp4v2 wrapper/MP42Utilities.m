@@ -131,7 +131,8 @@ int updateTracksCount(MP4FileHandle fileHandle)
     return MP4SetIntegerProperty(fileHandle, "moov.mvhd.nextTrackId", maxTrackId + 1);
 }
 
-void updateMoovDuration(MP4FileHandle fileHandle) {
+void updateMoovDuration(MP4FileHandle fileHandle)
+{
     MP4TrackId trackId = 0;
     MP4Duration maxTrackDuration = 0, trackDuration = 0;
     unsigned int i;
@@ -142,6 +143,21 @@ void updateMoovDuration(MP4FileHandle fileHandle) {
             maxTrackDuration = trackDuration;
     }
     MP4SetIntegerProperty(fileHandle, "moov.mvhd.duration", maxTrackDuration);
+}
+
+uint64_t getTrackSize(MP4FileHandle fileHandle, MP4TrackId trackId)
+{
+    uint64_t i, sampleNum, dataLength;
+    i = 1;
+    sampleNum = MP4GetTrackNumberOfSamples(fileHandle, trackId);
+    dataLength = 0;
+    
+    while (i <= sampleNum) {
+        dataLength += MP4GetSampleSize(fileHandle, trackId, i);
+        i++;
+    }
+
+    return dataLength;
 }
 
 MP4TrackId findChapterTrackId(MP4FileHandle fileHandle)

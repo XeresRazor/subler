@@ -43,6 +43,8 @@
             timescale = MP4GetTrackTimeScale(fileHandle, Id);
             startOffset = getTrackStartOffset(fileHandle, Id);
 
+            _size = getTrackSize(fileHandle, Id);
+
             uint64_t temp;
             MP4GetTrackIntegerProperty(fileHandle, Id, "tkhd.flags", &temp);
             if (temp & TRACK_ENABLED) enabled = YES;
@@ -258,6 +260,8 @@
 @synthesize needConversion;
 
 @synthesize updatedProperty;
+
+@synthesize dataLength = _size;;
 
 @synthesize trackImporterHelper;
 @synthesize trackDemuxerHelper;

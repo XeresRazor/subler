@@ -108,6 +108,9 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
             return nil;
         }
 
+        //SegmentInfo *info = mkv_GetFileInfo(matroskaFile);
+        uint64_t *trackSizes = [self copyGuessedTrackDataLength];
+
         NSInteger trackCount = mkv_GetNumTracks(matroskaFile);
         tracksArray = [[NSMutableArray alloc] initWithCapacity:trackCount];
 
@@ -123,12 +126,12 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
 
                 [(MP42VideoTrack*)newTrack setWidth:mkvTrack->AV.Video.PixelWidth];
                 [(MP42VideoTrack*)newTrack setHeight:mkvTrack->AV.Video.PixelHeight];
-                
+
                 AVRational dar, invPixelSize, sar;
                 dar			   = (AVRational){mkvTrack->AV.Video.DisplayWidth, mkvTrack->AV.Video.DisplayHeight};
                 invPixelSize   = (AVRational){mkvTrack->AV.Video.PixelHeight, mkvTrack->AV.Video.PixelWidth};
                 sar = av_mul_q(dar, invPixelSize);    
-                
+
                 av_reduce(&sar.num, &sar.den, sar.num, sar.den, fixed1);  
 
                 [(MP42VideoTrack*)newTrack setTrackWidth:mkvTrack->AV.Video.PixelWidth * sar.num / sar.den];
@@ -166,6 +169,7 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
                 newTrack.sourceFormat = [self matroskaCodecIDToHumanReadableName:mkvTrack];
                 newTrack.Id = i;
                 newTrack.sourceURL = fileURL;
+                newTrack.dataLength = trackSizes[i];
                 if (mkvTrack->Type == TT_AUDIO)
                     newTrack.startOffset = [self matroskaTrackStartTime:mkvTrack Id:i];
 
@@ -231,6 +235,9 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
             [newTrack release];
         }
 
+        if (trackSizes)
+            free(trackSizes);
+
         metadata = [[self readMatroskaMetadata] retain];
     }
 
@@ -279,6 +286,46 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
         [mkvMetadata release];
         return nil;
     }
+}
+
+- (uint64_t*)copyGuessedTrackDataLength
+{
+    uint64_t    *trackSizes;
+    uint64_t    *trackStartTimes;
+    uint64_t    StartTime, EndTime, FilePos;
+    uint32_t    Track, FrameSize, FrameFlags;
+    int i = 0;
+
+    SegmentInfo *segInfo = mkv_GetFileInfo(matroskaFile);
+
+    NSInteger trackCount = mkv_GetNumTracks(matroskaFile);
+    trackSizes = (uint64_t *) malloc(sizeof(uint64_t) * trackCount);
+    trackStartTimes = (uint64_t *) malloc(sizeof(uint64_t) * trackCount);
+
+    for (i= 0; i < trackCount; i++) {
+        trackSizes[i] = 0;
+        trackStartTimes[i] = 0;
+    }
+
+    StartTime = 0;
+    i = 0;
+    while (StartTime < (segInfo->Duration / 64)) {
+        mkv_ReadFrame(matroskaFile, 0, &Track, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags);
+        trackSizes[Track] += FrameSize;
+        trackStartTimes[Track] = StartTime;
+
+        i++;
+    }
+
+    for (i= 0; i < trackCount; i++) {
+        if (trackStartTimes[i] > 0)
+            trackSizes[i] = trackSizes[i] * (segInfo->Duration / trackStartTimes[i]);
+    }
+
+    free(trackStartTimes);
+    mkv_Seek(matroskaFile, 0, 0);
+
+    return trackSizes;
 }
 
 - (NSString*) matroskaCodecIDToHumanReadableName:(TrackInfo *)track
