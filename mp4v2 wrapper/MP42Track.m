@@ -249,7 +249,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"Track: %d, %@, %@, %@", [self Id], [self name], [self timeString], [self format]];
+    return [NSString stringWithFormat:@"Track: %d, %@, %@, %llu kbit/s, %@", [self Id], [self name], [self timeString], [self dataLength] / [self duration] * 8, [self format]];
 }
 
 @synthesize timescale;
