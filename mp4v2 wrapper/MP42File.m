@@ -252,7 +252,8 @@ NSString * const MP42FileTypeM4B = @"m4b";
     BOOL success = YES;
     
     if(!url) {
-        *outError = MP42Error(@"Invalid path.", @"The destination path cannot be empty.", 100);
+        if (outError)
+            *outError = MP42Error(@"Invalid path.", @"The destination path cannot be empty.", 100);
 
         return NO;
     }

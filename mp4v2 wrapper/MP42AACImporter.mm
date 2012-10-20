@@ -792,6 +792,7 @@ static bool GetFirstHeader(FILE* inFile)
                                   channelConfig);
 
         [(MP42AudioTrack*) newTrack setChannels:channelConfig];
+        [newTrack setDataLength:[[[[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue]];
 
         aacInfo = [[NSMutableData alloc] init];
         [aacInfo appendBytes:pConfig length:configLength];

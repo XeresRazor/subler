@@ -1381,6 +1381,8 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
             newTrack.origLevel = newTrack.newLevel = level;
         }
 
+        [newTrack setDataLength:[[[[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue]];
+
         [tracksArray addObject:newTrack];
         [newTrack release];
     }
