@@ -252,7 +252,7 @@
         [savePanel performSelector:@selector(setNameFieldStringValue:) withObject:filename];
     }
 
-    if ([mp4File estimatedDataLength] > 4294967296) {
+    if ([mp4File estimatedDataLength] > 4200000000) {
         [_64bit_data setState:NSOnState];
     }
 
