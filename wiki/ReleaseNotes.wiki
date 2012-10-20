@@ -3,7 +3,7 @@
 
 = Subler 0.17 =
 
- * Forced subtitles tracks. A new options to set a track as "forced". iDevices will automatically display the right forced track for a given language.
+ * Forced subtitles tracks. A new option to set a track as "forced". iDevices will automatically display the right forced track for a given language (does not work with vobsub, only tx3g) 
  * Ocr languages. Subler will now check ~/Library/Application Support/Subler/tessdata for Tesseract traineddata files.
  * Fixed an issue with the rating tag.
 
