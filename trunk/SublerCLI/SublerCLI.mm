@@ -24,13 +24,11 @@ void print_help()
     printf("\n");
     printf("\t\t -help Print this help information \n");
     printf("\t\t -version Print version \n");
-
-
 }
 
 void print_version()
 {
-    printf("\t\tversion 0.17\n");
+    printf("\t\tversion 0.18\n");
 }
 
 // ---------------------------------------------------------------------------
@@ -73,7 +71,7 @@ int main (int argc, const char * argv[]) {
         exit(-1);
     }
 
-    printArgs(argc,argv);
+    //printArgs(argc,argv);
 
     argv += 1;
     argc--;
