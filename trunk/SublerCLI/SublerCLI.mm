@@ -390,16 +390,20 @@ int main (int argc, const char * argv[]) {
         if (modified && [mp4File hasFileRepresentation])
             success = [mp4File updateMP4FileWithAttributes:attributes error:&outError];
 
-        else if (modified && ![mp4File hasFileRepresentation] && destinationPath)
+        else if (modified && ![mp4File hasFileRepresentation] && destinationPath) {
+            if ([mp4File estimatedDataLength] > 4200000000)
+                [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitData];
+
             success = [mp4File writeToUrl:[NSURL fileURLWithPath:destinationPath]
                            withAttributes:attributes
                                     error:&outError];
+        }
 
         if (!success) {
             printf("Error: %s\n", [[outError localizedDescription] UTF8String]);
             return -1;
         }
-        
+
         [mp4File release];
     }
     if (optimize) {
