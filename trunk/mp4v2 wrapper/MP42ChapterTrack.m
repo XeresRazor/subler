@@ -162,7 +162,8 @@
 
         for (i = 0; i < chapterCount; i++) {
             SBTextSample * chapter = [chapters objectAtIndex:i];
-            strcpy(fileChapters[i].title, [[chapter title] UTF8String]);
+            if ([[chapter title] UTF8String])
+                strcpy(fileChapters[i].title, [[chapter title] UTF8String]);
 
             if (i+1 < chapterCount && sum < refTrackDuration) {
                 SBTextSample * nextChapter = [chapters objectAtIndex:i+1];
