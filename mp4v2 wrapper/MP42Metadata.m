@@ -507,22 +507,72 @@ static const genreType_t genreType_strings[] = {
         }
         return YES;
     }
+    else if ([key isEqualToString:@"Track #"]) {
+        isEdited = YES;
+        if ([value isKindOfClass:[NSData class]]) {
+            uint8_t* bytes = (uint8_t*)malloc([value length]);
+            memcpy(bytes, [value bytes], [value length]);
+            int index = ((bytes[2]) <<  8)
+                      | ((bytes[3])      );
+            int total = ((bytes[4]) <<  8)
+                      | ((bytes[5])      );
+
+            NSString *trackN = [NSString stringWithFormat:@"%d/%d", index, total];
+            free(bytes);
+            [tagsDict setValue:trackN forKey:key];
+            return YES;
+        }
+        else {
+            [tagsDict setValue:value forKey:key];
+            return YES;
+        }
+    }
+    else if ([key isEqualToString:@"Disk #"]) {
+        isEdited = YES;
+        if ([value isKindOfClass:[NSData class]]) {
+            uint8_t* bytes = (uint8_t*)malloc([value length]);
+            memcpy(bytes, [value bytes], [value length]);
+            int index = ((bytes[2]) <<  8)
+            | ((bytes[3])      );
+            int total = ((bytes[4]) <<  8)
+            | ((bytes[5])      );
+            
+            NSString *diskN = [NSString stringWithFormat:@"%d/%d", index, total];
+            free(bytes);
+            [tagsDict setValue:diskN forKey:key];
+            return YES;
+        }
+        else {
+            [tagsDict setValue:value forKey:key];
+            return YES;
+        }
+    }
     else if ([key isEqualToString:@"Content Rating"]) {
         isEdited = YES;
-        return [self setContentRatingFromString:value];
+        if ([value isKindOfClass:[NSNumber class]]) {
+            contentRating = [value integerValue];
+            return YES;
+        }
+        else
+            return [self setContentRatingFromString:value];
         
     }
     else if ([key isEqualToString:@"Media Kind"]) {
         isEdited = YES;
-        return [self setMediaKindFromString:value];
+        if ([value isKindOfClass:[NSNumber class]]) {
+            mediaKind = [value integerValue];
+            return YES;
+        }
+        else
+            return [self setMediaKindFromString:value];
     }
     else if ([key isEqualToString:@"Artwork"])
         return [self setArtworkFromFilePath:value];
     
-    else if ([key isEqualToString:@"Rating"] && ![[tagsDict valueForKey:key] isEqualTo:value]) {
+    else if ([key isEqualToString:@"Rating"]) {
         if ([value isKindOfClass:[NSNumber class]])
             [tagsDict setValue:value forKey:key];
-        else if ([value length]) {
+        else if ([value length] && ![[tagsDict valueForKey:key] isEqualTo:value]) {
             NSInteger rating_index = [self ratingIndexFromString:value];
             if (rating_index)
                 [tagsDict setValue:[NSNumber numberWithInt:rating_index] forKey:key];
