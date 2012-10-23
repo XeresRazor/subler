@@ -486,7 +486,11 @@ static const genreType_t genreType_strings[] = {
     NSString *regexPositive = @"YES|Yes|yes|1|2";
 
     if ([key isEqualToString:@"HD Video"]) {
-        if( value != nil && [value length] > 0 && [value isMatchedByRegex:regexPositive]) {
+        if ([value isKindOfClass:[NSNumber class]]) {
+            hdVideo = [value integerValue];
+            isEdited = YES;
+        }
+        else if( value != nil && [value length] > 0 && [value isMatchedByRegex:regexPositive]) {
             hdVideo = [value integerValue];
             isEdited = YES;
         }
@@ -497,7 +501,11 @@ static const genreType_t genreType_strings[] = {
             return YES;
     }
     else if ([key isEqualToString:@"Gapless"]) {
-        if( value != nil && [value length] > 0 && [value isMatchedByRegex:regexPositive]) {
+        if ([value isKindOfClass:[NSNumber class]]) {
+            gapless = [value integerValue];
+            isEdited = YES;
+        }
+        else if( value != nil && [value length] > 0 && [value isMatchedByRegex:regexPositive]) {
             gapless = 1;
             isEdited = YES;
         }

@@ -101,6 +101,9 @@
             case kAudioFormatAMR:
                 result = @"AMR Narrow Band";
                 break;
+            case kAudioFormatAppleIMA4:
+                result = @"IMA 4:1";
+                break;
             case kCMTextFormatType_QTText:
                 result = @"Text";
                 break;
@@ -376,6 +379,22 @@
                                             @"Description",         @"desc",
                                             @"Long Description",    @"ldes",
                                             @"Media Kind",          @"stik",
+                                            @"TV Show",             @"tvsh",
+                                            @"TV Episode #",        @"tves",
+                                            @"TV Network",          @"tvnn",
+                                            @"TV Episode ID",       @"tven",
+                                            @"TV Season",           @"tvsn",
+                                            @"HD Video",            @"hdvd",
+                                            @"Gapless",             @"pgap",
+                                            @"Sort Name",           @"sonm",
+                                            @"Sort Artist",         @"soar",
+                                            @"Sort Album Artist",   @"soaa",
+                                            @"Sort Album",          @"soal",
+                                            @"Sort Composer",       @"soco",
+                                            @"Sort TV Show",        @"sosn",
+                                            @"Category",            @"catg",
+                                            @"iTunes U",            @"itnu",
+                                            @"Purchase Date",       @"purd",
                                             @"Director",            AVMetadataiTunesMetadataKeyDirector,
                                             //AVMetadataiTunesMetadataKeyEQ,
                                             //AVMetadataiTunesMetadataKeyLinerNotes,
