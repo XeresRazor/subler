@@ -261,9 +261,17 @@
             newTrack.sourceURL = fileURL;
             newTrack.sourceFileHandle = localAsset;
             newTrack.dataLength = [track totalSampleDataLength];
-            NSString* trackName = [[[AVMetadataItem metadataItemsFromArray:trackMetadata withKey:@"name" keySpace:nil] lastObject] value];
-            if (trackName)
+
+            // "name" is undefinited in AVMetadataFormat.h, so read the official track name "tnam", and then "name". On 10.7, "name" is returned as an NSData
+            id trackName = [[[AVMetadataItem metadataItemsFromArray:trackMetadata withKey:AVMetadataQuickTimeUserDataKeyTrackName keySpace:nil] lastObject] value];
+            id trackName_oldFormat = [[[AVMetadataItem metadataItemsFromArray:trackMetadata withKey:@"name" keySpace:nil] lastObject] value];
+            if (trackName && [trackName isKindOfClass:[NSString class]])
                 newTrack.name = trackName;
+            else if (trackName_oldFormat && [trackName_oldFormat isKindOfClass:[NSString class]])
+                newTrack.name = trackName_oldFormat;
+            else if (trackName_oldFormat && [trackName_oldFormat isKindOfClass:[NSData class]])
+                newTrack.name = [NSString stringWithCString:[trackName_oldFormat bytes] encoding:NSMacOSRomanStringEncoding];
+
             newTrack.language = [self langForTrack:track];
 
             CMTimeRange timeRange = [track timeRange];
@@ -272,9 +280,151 @@
             [tracksArray addObject:newTrack];
             [newTrack release];
         }
+        
+        [self convertMetadata];
     }
 
     return self;
+}
+
+-(MP42Metadata*)convertMetadata
+{
+    NSArray *items = nil;
+    NSDictionary *commonItemsDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Name", AVMetadataCommonKeyTitle,
+                                     //nil, AVMetadataCommonKeyCreator,
+                                     //nil, AVMetadataCommonKeySubject,
+                                     @"Description", AVMetadataCommonKeyDescription,
+                                     //nil, AVMetadataCommonKeyPublisher,
+                                     //nil, AVMetadataCommonKeyContributor,
+                                     @"Release Date", AVMetadataCommonKeyCreationDate,
+                                     //nil, AVMetadataCommonKeyLastModifiedDate,
+                                     @"Genre", AVMetadataCommonKeyType,
+                                     //nil, AVMetadataCommonKeyFormat,
+                                     //nil, AVMetadataCommonKeyIdentifier,
+                                     //nil, AVMetadataCommonKeySource,
+                                     //nil, AVMetadataCommonKeyLanguage,
+                                     //nil, AVMetadataCommonKeyRelation,
+                                     //nil, AVMetadataCommonKeyLocation,
+                                     @"Copyright", AVMetadataCommonKeyCopyrights,
+                                     @"Album", AVMetadataCommonKeyAlbumName,
+                                     //nil, AVMetadataCommonKeyAuthor,
+                                     //nil, AVMetadataCommonKeyArtwork
+                                     @"Artist", AVMetadataCommonKeyArtist,
+                                     //nil, AVMetadataCommonKeyMake,
+                                     //nil, AVMetadataCommonKeyModel,
+                                     @"Encoding Tool", AVMetadataCommonKeySoftware,
+                                     nil];
+
+    metadata = [[MP42Metadata alloc] init];
+
+    for (NSString *commonKey in [commonItemsDict allKeys]) {
+        items = [AVMetadataItem metadataItemsFromArray:localAsset.commonMetadata withKey:commonKey keySpace:AVMetadataKeySpaceCommon];
+        if ([items count])
+            [metadata setTag:[[items lastObject] stringValue] forKey:[commonItemsDict objectForKey:commonKey]];
+    }
+    
+    items = [AVMetadataItem metadataItemsFromArray:localAsset.commonMetadata withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
+    if ([items count]) {
+        id artworkData = [[items lastObject] value];
+        if ([artworkData isKindOfClass:[NSData class]]) {
+            NSImage *image = [[NSImage alloc] initWithData:artworkData];
+            [metadata setArtwork:image];
+            [image release];
+        }
+    }
+
+    NSArray* availableMetadataFormats = [localAsset availableMetadataFormats];
+
+    if ([availableMetadataFormats containsObject:AVMetadataFormatiTunesMetadata]) {
+        NSArray* itunesMetadata = [localAsset metadataForFormat:AVMetadataFormatiTunesMetadata];
+        
+        NSDictionary *itunesMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            @"Album",               AVMetadataiTunesMetadataKeyAlbum,
+                                            @"Artist",              AVMetadataiTunesMetadataKeyArtist,
+                                            @"Comments",            AVMetadataiTunesMetadataKeyUserComment,
+                                            //AVMetadataiTunesMetadataKeyCoverArt,
+                                            @"Copyright",           AVMetadataiTunesMetadataKeyCopyright,
+                                            @"Release Date",        AVMetadataiTunesMetadataKeyReleaseDate,
+                                            @"Encoded By",          AVMetadataiTunesMetadataKeyEncodedBy,
+                                            //AVMetadataiTunesMetadataKeyPredefinedGenre,
+                                            @"Genre",               AVMetadataiTunesMetadataKeyUserGenre,
+                                            @"Name",                AVMetadataiTunesMetadataKeySongName,
+                                            //AVMetadataiTunesMetadataKeyTrackSubTitle,
+                                            @"Encoding Tool",       AVMetadataiTunesMetadataKeyEncodingTool,
+                                            @"Composer",            AVMetadataiTunesMetadataKeyComposer,
+                                            @"Album Artist",        AVMetadataiTunesMetadataKeyAlbumArtist,
+                                            //AVMetadataiTunesMetadataKeyAccountKind,
+                                            @"iTunes Account",      AVMetadataiTunesMetadataKeyAppleID,
+                                            @"artistID",            AVMetadataiTunesMetadataKeyArtistID,
+                                            @"content ID",          AVMetadataiTunesMetadataKeySongID,
+                                            @"Compilation",         AVMetadataiTunesMetadataKeyDiscCompilation,
+                                            @"Disk #",              AVMetadataiTunesMetadataKeyDiscNumber,
+                                            @"genreID",             AVMetadataiTunesMetadataKeyGenreID,
+                                            @"Grouping",            AVMetadataiTunesMetadataKeyGrouping,
+                                            @"playlistID",          AVMetadataiTunesMetadataKeyPlaylistID,
+                                            @"Content Rating",      AVMetadataiTunesMetadataKeyContentRating,
+                                            @"Rating",              @"com.apple.iTunes.iTunEXTC",
+                                            @"Tempo",               AVMetadataiTunesMetadataKeyBeatsPerMin,
+                                            @"Track #",             AVMetadataiTunesMetadataKeyTrackNumber,
+                                            //AVMetadataiTunesMetadataKeyArtDirector,
+                                            //AVMetadataiTunesMetadataKeyArranger,
+                                            //AVMetadataiTunesMetadataKeyAuthor,
+                                            @"Lyrics",              AVMetadataiTunesMetadataKeyLyrics,
+                                            //AVMetadataiTunesMetadataKeyAcknowledgement,
+                                            //AVMetadataiTunesMetadataKeyConductor,
+                                            @"Song Description",    AVMetadataiTunesMetadataKeyDescription,
+                                            @"Description",         @"desc",
+                                            @"Long Description",    @"ldes",
+                                            @"Media Kind",          @"stik",
+                                            @"Director",            AVMetadataiTunesMetadataKeyDirector,
+                                            //AVMetadataiTunesMetadataKeyEQ,
+                                            //AVMetadataiTunesMetadataKeyLinerNotes,
+                                            //AVMetadataiTunesMetadataKeyRecordCompany,
+                                            //AVMetadataiTunesMetadataKeyOriginalArtist,
+                                            //AVMetadataiTunesMetadataKeyPhonogramRights,
+                                            @"Producers",           AVMetadataiTunesMetadataKeyProducer,
+                                            //AVMetadataiTunesMetadataKeyPerformer,
+                                            //AVMetadataiTunesMetadataKeyPublisher,
+                                            //AVMetadataiTunesMetadataKeySoundEngineer,
+                                            //AVMetadataiTunesMetadataKeySoloist,
+                                            //AVMetadataiTunesMetadataKeyCredits,
+                                            //AVMetadataiTunesMetadataKeyThanks,
+                                            //AVMetadataiTunesMetadataKeyOnlineExtras,
+                                            //AVMetadataiTunesMetadataKeyExecProducer,
+                                            nil];
+
+        for (NSString *itunesKey in [itunesMetadataDict allKeys]) {
+            items = [AVMetadataItem metadataItemsFromArray:itunesMetadata withKey:itunesKey keySpace:AVMetadataKeySpaceiTunes];
+            if ([items count]) {
+                [metadata setTag:[[items lastObject] value] forKey:[itunesMetadataDict objectForKey:itunesKey]];
+                //NSLog(@"%@", [[items lastObject] value]);
+            }
+        }
+        
+        items = [AVMetadataItem metadataItemsFromArray:itunesMetadata withKey:AVMetadataiTunesMetadataKeyCoverArt keySpace:AVMetadataKeySpaceiTunes];
+        if ([items count]) {
+            id artworkData = [[items lastObject] value];
+            if ([artworkData isKindOfClass:[NSData class]]) {
+                NSImage *image = [[NSImage alloc] initWithData:artworkData];
+                [metadata setArtwork:image];
+                [image release];
+            }
+        }
+    }
+    if ([availableMetadataFormats containsObject:AVMetadataFormatQuickTimeMetadata]) {
+        NSArray* quicktimeMetadata = [localAsset metadataForFormat:AVMetadataFormatQuickTimeMetadata];
+        
+    }
+    if ([availableMetadataFormats containsObject:AVMetadataFormatQuickTimeUserData]) {
+        NSArray* quicktimeUserDataMetadata = [localAsset metadataForFormat:AVMetadataFormatQuickTimeUserData];
+        
+    }
+    if ([availableMetadataFormats containsObject:AVMetadataFormatID3Metadata]) {
+        NSArray* id3Metadata = [localAsset metadataForFormat:AVMetadataFormatID3Metadata];
+        
+    }
+
+    return metadata;
 }
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track
