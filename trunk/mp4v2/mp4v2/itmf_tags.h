@@ -114,6 +114,28 @@ typedef struct MP4Tags_s
     const uint16_t*    tempo;
     const uint8_t*     compilation;
 
+    const char* trackSubTitle;
+    const char* songDescription;
+    const char* artDirector;
+    const char* arranger;
+    const char* lyricist;
+    const char* acknowledgement;
+    const char* conductor;
+
+    const char* linearNotes;
+    const char* recordCompany;
+    const char* originalArtist;
+    const char* phonogramRights;
+    const char* producer;
+    const char* performer;
+    const char* publisher;
+    const char* soundEngineer;
+    const char* soloist;
+    const char* credits;
+    const char* thanks;
+    const char* onlineExtras;
+    const char* executiveProducer;
+
     const char*     tvShow;
     const char*     tvNetwork;
     const char*     tvEpisodeID;
@@ -239,6 +261,28 @@ MP4V2_EXPORT bool MP4TagsSetTrack           ( const MP4Tags*, const MP4TagTrack*
 MP4V2_EXPORT bool MP4TagsSetDisk            ( const MP4Tags*, const MP4TagDisk* );
 MP4V2_EXPORT bool MP4TagsSetTempo           ( const MP4Tags*, const uint16_t* );
 MP4V2_EXPORT bool MP4TagsSetCompilation     ( const MP4Tags*, const uint8_t* );
+
+MP4V2_EXPORT bool MP4TagsSetTrackSubTitle   ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetSongDescription ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetArtDirector     ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetArranger        ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetLyricist        ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetAcknowledgement ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetConductor       ( const MP4Tags*, const char* );
+
+MP4V2_EXPORT bool MP4TagsSetLinearNotes       ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetRecordCompany     ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetOriginalArtist    ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetPhonogramRights   ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetProducer          ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetPerformer         ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetPublisher         ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetSoundEngineer     ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetSoloist           ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetCredits           ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetThanks            ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetOnlineExtras      ( const MP4Tags*, const char* );
+MP4V2_EXPORT bool MP4TagsSetExecutiveProducer ( const MP4Tags*, const char* );
 
 MP4V2_EXPORT bool MP4TagsSetTVShow          ( const MP4Tags*, const char* );
 MP4V2_EXPORT bool MP4TagsSetTVNetwork       ( const MP4Tags*, const char* );
