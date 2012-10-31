@@ -18,6 +18,7 @@
     {
         enabled = YES;
         updatedProperty = [[NSMutableDictionary alloc] init];
+        name = @"Unknown Track";
     }
     return self;
 }
