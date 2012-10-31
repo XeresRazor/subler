@@ -297,7 +297,7 @@
                                      //nil, AVMetadataCommonKeyCreator,
                                      //nil, AVMetadataCommonKeySubject,
                                      @"Description", AVMetadataCommonKeyDescription,
-                                     //nil, AVMetadataCommonKeyPublisher,
+                                     @"Publisher", AVMetadataCommonKeyPublisher,
                                      //nil, AVMetadataCommonKeyContributor,
                                      @"Release Date", AVMetadataCommonKeyCreationDate,
                                      //nil, AVMetadataCommonKeyLastModifiedDate,
@@ -432,14 +432,71 @@
     if ([availableMetadataFormats containsObject:AVMetadataFormatQuickTimeMetadata]) {
         NSArray* quicktimeMetadata = [localAsset metadataForFormat:AVMetadataFormatQuickTimeMetadata];
         
+        NSDictionary *quicktimeMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                               @"Arist",        AVMetadataQuickTimeMetadataKeyAuthor,
+                                               @"Comments",     AVMetadataQuickTimeMetadataKeyComment,
+                                               @"Copyright",    AVMetadataQuickTimeMetadataKeyCopyright,
+                                               @"Release Date", AVMetadataQuickTimeMetadataKeyCreationDate,
+                                               @"Director",     AVMetadataQuickTimeMetadataKeyDirector,
+                                               @"Name",         AVMetadataQuickTimeMetadataKeyDisplayName,
+                                               @"Description",  AVMetadataQuickTimeMetadataKeyInformation,
+                                               @"Keyworkds",    AVMetadataQuickTimeMetadataKeyKeywords,
+                                               @"Producer",     AVMetadataQuickTimeMetadataKeyProducer,
+                                               @"Publisher",    AVMetadataQuickTimeMetadataKeyPublisher,
+                                               @"Album",        AVMetadataQuickTimeMetadataKeyAlbum,
+                                               @"Artist",       AVMetadataQuickTimeMetadataKeyArtist,
+                                               @"Description",  AVMetadataQuickTimeMetadataKeyDescription,
+                                               @"Encoding Tool",AVMetadataQuickTimeMetadataKeySoftware,
+                                               @"Genre",        AVMetadataQuickTimeMetadataKeyGenre,
+                                               //AVMetadataQuickTimeMetadataKeyiXML,
+                                               @"Arranger",     AVMetadataQuickTimeMetadataKeyArranger,
+                                               @"Encoded By",   AVMetadataQuickTimeMetadataKeyEncodedBy,
+                                               @"Original Artist",  AVMetadataQuickTimeMetadataKeyOriginalArtist,
+                                               @"Performer",    AVMetadataQuickTimeMetadataKeyPerformer,
+                                               @"Composer",     AVMetadataQuickTimeMetadataKeyComposer,
+                                               @"Credits",      AVMetadataQuickTimeMetadataKeyCredits,
+                                               @"Phonogram Rights", AVMetadataQuickTimeMetadataKeyPhonogramRights,
+                                               @"Name",         AVMetadataQuickTimeMetadataKeyTitle, nil];
+        
+        for (NSString *qtKey in [quicktimeMetadataDict allKeys]) {
+            items = [AVMetadataItem metadataItemsFromArray:quicktimeMetadata withKey:qtKey keySpace:AVMetadataKeySpaceQuickTimeUserData];
+            if ([items count]) {
+                [metadata setTag:[[items lastObject] value] forKey:[quicktimeMetadataDict objectForKey:qtKey]];
+            }
+        }
     }
     if ([availableMetadataFormats containsObject:AVMetadataFormatQuickTimeUserData]) {
         NSArray* quicktimeUserDataMetadata = [localAsset metadataForFormat:AVMetadataFormatQuickTimeUserData];
         
-    }
-    if ([availableMetadataFormats containsObject:AVMetadataFormatID3Metadata]) {
-        NSArray* id3Metadata = [localAsset metadataForFormat:AVMetadataFormatID3Metadata];
-        
+        NSDictionary *quicktimeUserDataMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                       @"Album",                AVMetadataQuickTimeUserDataKeyAlbum,
+                                                       @"Arranger",             AVMetadataQuickTimeUserDataKeyArranger,
+                                                       @"Artist",               AVMetadataQuickTimeUserDataKeyArtist,
+                                                       @"Lyricist",             AVMetadataQuickTimeUserDataKeyAuthor,
+                                                       @"Comments",             AVMetadataQuickTimeUserDataKeyComment,
+                                                       @"Composer",             AVMetadataQuickTimeUserDataKeyComposer,
+                                                       @"Copyright",            AVMetadataQuickTimeUserDataKeyCopyright,
+                                                       @"Release Date",         AVMetadataQuickTimeUserDataKeyCreationDate,
+                                                       @"Description",          AVMetadataQuickTimeUserDataKeyDescription,
+                                                       @"Director",             AVMetadataQuickTimeUserDataKeyDirector,
+                                                       @"Encoded By",           AVMetadataQuickTimeUserDataKeyEncodedBy,
+                                                       @"Name",                 AVMetadataQuickTimeUserDataKeyFullName,
+                                                       @"Genre",                AVMetadataQuickTimeUserDataKeyGenre,
+                                                       @"Keywords",             AVMetadataQuickTimeUserDataKeyKeywords,
+                                                       @"Original Artist",      AVMetadataQuickTimeUserDataKeyOriginalArtist,
+                                                       @"Performer",            AVMetadataQuickTimeUserDataKeyPerformers,
+                                                       @"Producer",             AVMetadataQuickTimeUserDataKeyProducer,
+                                                       @"Publisher",            AVMetadataQuickTimeUserDataKeyPublisher,
+                                                       @"Online Extras",        AVMetadataQuickTimeUserDataKeyURLLink,
+                                                       @"Credits",              AVMetadataQuickTimeUserDataKeyCredits,
+                                                       @"Phonogram Rights",     AVMetadataQuickTimeUserDataKeyPhonogramRights, nil];
+
+        for (NSString *qtUserDataKey in [quicktimeUserDataMetadataDict allKeys]) {
+            items = [AVMetadataItem metadataItemsFromArray:quicktimeUserDataMetadata withKey:qtUserDataKey keySpace:AVMetadataKeySpaceQuickTimeUserData];
+            if ([items count]) {
+                [metadata setTag:[[items lastObject] value] forKey:[quicktimeUserDataMetadataDict objectForKey:qtUserDataKey]];
+            }
+        }
     }
 
     return metadata;
@@ -747,30 +804,32 @@
 {
     for (MP42Track * track in activeTracks) {
         AVAssetTrack *assetTrack = [localAsset trackWithTrackID:track.sourceId];
-        //NSLog(@"Track ID: %d", [assetTrack trackID]);
+
         for (AVAssetTrackSegment *segment in assetTrack.segments) {
             bool empty = NO;
             CMTimeMapping timeMapping = segment.timeMapping;
-
-            /*NSLog(@"---------------------");
-
-            NSLog(@"Start: %lld", timeMapping.source.start.value);
-            NSLog(@"Duration: %lld", timeMapping.source.duration.value);
-            NSLog(@"Start %lld", timeMapping.target.start.value);
-            NSLog(@"Duration: %lld", timeMapping.source.duration.value);
-            */
-
-            if (segment.empty) {
-                //NSLog(@"Empty segment");
-                empty = YES;
+            
+            if (timeMapping.source.duration.flags & kCMTimeFlags_Indefinite || timeMapping.target.duration.flags & kCMTimeFlags_Indefinite) {
+                //NSLog(@"Indefinite time mappings");
             }
+            else {
+                /*NSLog(@"Start: %lld", timeMapping.source.start.value);
+                NSLog(@"Duration: %lld", timeMapping.source.duration.value);
+                NSLog(@"Start %lld", timeMapping.target.start.value);
+                NSLog(@"Duration: %lld", timeMapping.source.duration.value);*/
 
-            if (empty)
-                MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, -1,
-                                timeMapping.target.duration.value, 0);
-            else
-                MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, timeMapping.target.start.value,
-                                timeMapping.target.duration.value, 0);
+                if (segment.empty) {
+                    NSLog(@"Empty segment");
+                    empty = YES;
+                }
+
+                if (empty)
+                    MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, -1,
+                                    timeMapping.target.duration.value, 0);
+                else
+                    MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, timeMapping.target.start.value,
+                                    timeMapping.target.duration.value, 0);
+            }
         }
     }
     return YES;
