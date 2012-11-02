@@ -356,8 +356,10 @@ static SBQueueController *sharedController = nil;
             if ([track isKindOfClass:[MP42VideoTrack class]]) {
                 uint64_t tw = (uint64_t) [((MP42VideoTrack *) track) trackWidth];
                 uint64_t th = (uint64_t) [((MP42VideoTrack *) track) trackHeight];
-                if ((tw >= 1024) && (th >= 720))
-                    [metadata setTag:@"YES" forKey:@"HD Video"];
+                if ((tw > 1280) && (th > 720))
+                    [mp4File.metadata setTag:@"2" forKey:@"HD Video"];
+                else if ((tw >= 960) && (th >= 720))
+                    [mp4File.metadata setTag:@"1" forKey:@"HD Video"];
             }
 
         [[mp4File metadata] mergeMetadata:metadata];
