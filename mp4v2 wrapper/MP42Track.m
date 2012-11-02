@@ -191,7 +191,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-    [coder encodeInt:1 forKey:@"MP42TrackVersion"];
+    [coder encodeInt:2 forKey:@"MP42TrackVersion"];
 
     [coder encodeInt64:Id forKey:@"Id"];
     [coder encodeInt64:sourceId forKey:@"sourceId"];
@@ -214,6 +214,8 @@
     [coder encodeInt32:timescale forKey:@"timescale"];
     [coder encodeInt32:bitrate forKey:@"bitrate"];
     [coder encodeInt64:duration forKey:@"duration"];
+    
+    [coder encodeInt64:_size forKey:@"dataLength"];
 
     [coder encodeObject:updatedProperty forKey:@"updatedProperty"];
 }
@@ -221,6 +223,8 @@
 - (id)initWithCoder:(NSCoder *)decoder
 {
     self = [super init];
+
+    NSInteger version = [decoder decodeInt32ForKey:@"MP42TrackVersion"];
 
     Id = [decoder decodeInt64ForKey:@"Id"];
     sourceId = [decoder decodeInt64ForKey:@"sourceId"];
@@ -243,6 +247,9 @@
     timescale = [decoder decodeInt32ForKey:@"timescale"];
     bitrate = [decoder decodeInt32ForKey:@"bitrate"];
     duration = [decoder decodeInt64ForKey:@"duration"];
+    
+    if (version == 2)
+        _size = [decoder decodeInt64ForKey:@"dataLength"];
 
     updatedProperty = [[decoder decodeObjectForKey:@"updatedProperty"] retain];
 
