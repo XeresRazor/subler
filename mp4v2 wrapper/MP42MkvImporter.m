@@ -769,6 +769,8 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
 
                     if (codecData)
                         av_free(codecData);
+
+                    free(frame);
                 }
                 else {
                     nextSample->sampleData = frame;
