@@ -368,7 +368,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
     for (track in tracks)
         if (!(track.muxed) && !isCancelled) {
             // Reopen the file importer is they are not already open, this happens when the object has been unarchived from a file
-            if (![track trackImporterHelper]) {
+            if (![track trackImporterHelper] && ![tracks isKindOfClass:[MP42ChapterTrack class]]) {
                 MP42FileImporter *fileImporter = nil;
                 NSURL *sourceURL = [track sourceURL];
 
@@ -393,6 +393,8 @@ NSString * const MP42FileTypeM4B = @"m4b";
     success = [muxer prepareWork:fileHandle error:outError];
     if ( !success && outError != NULL) {
         [muxer release];
+        [_fileImporters release];
+
         muxer = nil;
 
         return NO;

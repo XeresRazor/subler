@@ -167,6 +167,8 @@
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
 {
     if ((self = [super init])) {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
         delegate = del;
         fileURL = [URL retain];
 
@@ -250,14 +252,6 @@
                 newTrack = [[MP42Track alloc] init];
             }
 
-            /*NSArray *trackUserDataItems = [track metadataForFormat:AVMetadataFormatQuickTimeUserData];
-            NSArray *trackTaggedMediaCharacteristics = [AVMetadataItem metadataItemsFromArray:trackUserDataItems withKey:AVMetadataQuickTimeUserDataKeyTaggedCharacteristic keySpace:AVMetadataKeySpaceQuickTimeUserData];
-
-            for (AVMetadataItem *metadataItem in trackTaggedMediaCharacteristics) {
-                NSString *thisTrackMediaCharacteristic = [metadataItem stringValue];
-                NSLog(@"%@", thisTrackMediaCharacteristic);
-            }*/
-
             newTrack.format = [self formatForTrack:track];
             newTrack.sourceFormat = newTrack.format;
             newTrack.Id = [track trackID];
@@ -285,6 +279,8 @@
         }
         
         [self convertMetadata];
+
+        [pool release];
     }
 
     return self;
@@ -418,7 +414,7 @@
                 [metadata setTag:[[items lastObject] value] forKey:[itunesMetadataDict objectForKey:itunesKey]];
             }
         }
-        
+
         items = [AVMetadataItem metadataItemsFromArray:itunesMetadata withKey:AVMetadataiTunesMetadataKeyCoverArt keySpace:AVMetadataKeySpaceiTunes];
         if ([items count]) {
             id artworkData = [[items lastObject] value];
@@ -621,8 +617,6 @@
             CMSampleBufferRef sampleBuffer = [assetReaderOutput copyNextSampleBuffer];
             if (sampleBuffer) {
                 CMItemCount samplesNum = CMSampleBufferGetNumSamples(sampleBuffer);
-                if (!samplesNum)
-                    continue;
                 if (samplesNum == 1) {
                     // We have only a sample
                     CMTime duration = CMSampleBufferGetDuration(sampleBuffer);
@@ -740,6 +734,7 @@
                     if(sizeArrayOut)
                         free(sizeArrayOut);
                 }
+                CFRelease(sampleBuffer);
             }
             else {
                 AVAssetReaderStatus status = assetReader.status;
@@ -843,15 +838,16 @@
     if (dataReader)
         [dataReader release];
 
-	[fileURL release];
-    [tracksArray release];
+    [localAsset release];
 
     if (activeTracks)
         [activeTracks release];
     if (samplesBuffer)
         [samplesBuffer release];
 
-    [localAsset release];
+    [metadata release];
+	[fileURL release];
+    [tracksArray release];
 
     [super dealloc];
 }
