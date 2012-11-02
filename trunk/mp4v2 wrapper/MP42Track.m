@@ -196,7 +196,24 @@
     [coder encodeInt64:Id forKey:@"Id"];
     [coder encodeInt64:sourceId forKey:@"sourceId"];
 
-    [coder encodeObject:sourceURL forKey:@"sourceURL"];
+    if ([sourceURL respondsToSelector:@selector(startAccessingSecurityScopedResource)]) {
+        NSData *bookmarkData = nil;
+        NSError *error = nil;
+        bookmarkData = [sourceURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
+                         includingResourceValuesForKeys:nil
+                                          relativeToURL:nil // Make it app-scoped
+                                                  error:&error];
+        if (error) {
+            NSLog(@"Error creating bookmark for URL (%@): %@", sourceURL, error);
+        }
+        
+        [coder encodeObject:bookmarkData forKey:@"bookmark"];
+        
+    }
+    else {
+        [coder encodeObject:sourceURL forKey:@"sourceURL"];
+    }
+
     [coder encodeObject:sourceFormat forKey:@"sourceFormat"];
     [coder encodeObject:format forKey:@"format"];
     [coder encodeObject:name forKey:@"name"];
@@ -229,7 +246,21 @@
     Id = [decoder decodeInt64ForKey:@"Id"];
     sourceId = [decoder decodeInt64ForKey:@"sourceId"];
 
-    sourceURL = [[decoder decodeObjectForKey:@"sourceURL"] retain];
+    NSData *bookmarkData = [decoder decodeObjectForKey:@"bookmark"];
+    if (bookmarkData) {
+        BOOL bookmarkDataIsStale;
+        NSError *error;
+        sourceURL = [[NSURL
+                    URLByResolvingBookmarkData:bookmarkData
+                    options:NSURLBookmarkResolutionWithSecurityScope
+                    relativeToURL:nil
+                    bookmarkDataIsStale:&bookmarkDataIsStale
+                    error:&error] retain];
+    }
+    else {
+        sourceURL = [[decoder decodeObjectForKey:@"sourceURL"] retain];
+    }
+
     sourceFormat = [[decoder decodeObjectForKey:@"sourceFormat"] retain];
     format = [[decoder decodeObjectForKey:@"format"] retain];
     name = [[decoder decodeObjectForKey:@"name"] retain];

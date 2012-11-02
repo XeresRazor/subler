@@ -657,17 +657,20 @@
                     }
                 }
                 else {
+                    if (!CMSampleBufferDataIsReady(sampleBuffer))
+                        CMSampleBufferMakeDataReady(sampleBuffer);
+
                     // A CMSampleBufferRef can contains an unknown number of samples, check how many needs to be divided to separated MP42SampleBuffers
                     // First get the array with the timings for each sample
                     CMItemCount timingArrayEntries = 0;
                     CMItemCount timingArrayEntriesNeededOut = 0;
-                    err = CMSampleBufferGetOutputSampleTimingInfoArray(sampleBuffer, timingArrayEntries, NULL, &timingArrayEntriesNeededOut);
+                    err = CMSampleBufferGetSampleTimingInfoArray(sampleBuffer, timingArrayEntries, NULL, &timingArrayEntriesNeededOut);
                     if (err)
                         continue;
 
                     CMSampleTimingInfo *timingArrayOut = malloc(sizeof(CMSampleTimingInfo) * timingArrayEntriesNeededOut);
                     timingArrayEntries = timingArrayEntriesNeededOut;
-                    err = CMSampleBufferGetOutputSampleTimingInfoArray(sampleBuffer, timingArrayEntries, timingArrayOut, &timingArrayEntriesNeededOut);
+                    err = CMSampleBufferGetSampleTimingInfoArray(sampleBuffer, timingArrayEntries, timingArrayOut, &timingArrayEntriesNeededOut);
                     if (err)
                         continue;
 
@@ -691,7 +694,7 @@
                     int i = 0, pos = 0;
                     for (i = 0; i < sizeArrayEntries; i++) {
                         CMSampleTimingInfo sampleTimingInfo = timingArrayOut[i];
-                        // It seems that sometimes only 1 sample timing info is return, check it to avoid reading garbage
+                        // If the size of sample timing array is equal to 1, it means every sample has got the same timing
                         if (timingArrayEntries < i +1)
                             sampleTimingInfo = timingArrayOut[0];
 
@@ -719,7 +722,7 @@
                         sample->sampleData = sampleData;
                         sample->sampleSize = sampleSize;
                         sample->sampleDuration = sampleTimingInfo.duration.value;
-                        //sample->sampleOffset = sampleTimingInfo.decodeTimeStamp.value - sampleTimingInfo.presentationTimeStamp.value;
+                        sample->sampleOffset = -sampleTimingInfo.decodeTimeStamp.value + sampleTimingInfo.presentationTimeStamp.value;
                         sample->sampleTimestamp = sampleTimingInfo.presentationTimeStamp.value;
                         sample->sampleIsSync = sync;
                         sample->sampleTrackId = track.Id;

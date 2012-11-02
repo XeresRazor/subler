@@ -361,30 +361,34 @@ NSString * const MP42FileTypeM4B = @"m4b";
         [self removeMuxedTrack:track];
 
     // Init the muxer and prepare the work
-    NSMutableDictionary *_fileImporters = [[NSMutableDictionary alloc] init];
     muxer = [[MP42Muxer alloc] initWithDelegate:self];
+
+    NSMutableDictionary *_fileImporters = [[NSMutableDictionary alloc] init];
+
     for (track in tracks)
         if (!(track.muxed) && !isCancelled) {
             // Reopen the file importer is they are not already open, this happens when the object has been unarchived from a file
             if (![track trackImporterHelper]) {
                 MP42FileImporter *fileImporter = nil;
                 NSURL *sourceURL = [track sourceURL];
+
                 if ((fileImporter = [_fileImporters valueForKey:[[track sourceURL] path]])) {
                     [track setTrackImporterHelper:fileImporter];
                 }
                 else if (sourceURL) {
+                    if([sourceURL respondsToSelector:@selector(startAccessingSecurityScopedResource)])
+                        [sourceURL startAccessingSecurityScopedResource];
+
                     fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil andFile:[track sourceURL] error:outError];
                     if (fileImporter) {
                         [track setTrackImporterHelper:fileImporter];
                         [_fileImporters setObject:fileImporter forKey:[[track sourceURL] path]];
-                        [fileImporter release];
                     }
                 }
             }
             [muxer addTrack:track];
     }
 
-    [_fileImporters release];
 
     success = [muxer prepareWork:fileHandle error:outError];
     if ( !success && outError != NULL) {
@@ -398,6 +402,23 @@ NSString * const MP42FileTypeM4B = @"m4b";
 
     [muxer release];
     muxer = nil;
+
+    // Stop accessing scoped bookmarks
+    NSString* currentPath = nil;
+    for (track in tracks) {
+        NSURL *sourceURL = [track sourceURL];
+        
+        if ([[sourceURL path] isEqualToString:currentPath])
+            continue;
+        else {
+            if([sourceURL respondsToSelector:@selector(stopAccessingSecurityScopedResource)])
+                [sourceURL stopAccessingSecurityScopedResource];
+
+            currentPath = [sourceURL path];
+        }
+    }
+
+    [_fileImporters release];
 
     // Update modified tracks properties
     for (track in tracks)
@@ -674,9 +695,26 @@ NSString * const MP42FileTypeM4B = @"m4b";
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-    [coder encodeInt:1 forKey:@"MP42FileVersion"];
+    [coder encodeInt:2 forKey:@"MP42FileVersion"];
 
-    [coder encodeObject:fileURL forKey:@"fileUrl"];
+    if ([fileURL respondsToSelector:@selector(startAccessingSecurityScopedResource)]) {
+            NSData *bookmarkData = nil;
+            NSError *error = nil;
+            bookmarkData = [fileURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
+                             includingResourceValuesForKeys:nil
+                                              relativeToURL:nil // Make it app-scoped
+                                                      error:&error];
+        if (error) {
+            NSLog(@"Error creating bookmark for URL (%@): %@", fileURL, error);
+        }
+        
+        [coder encodeObject:bookmarkData forKey:@"bookmark"];
+
+    }
+    else {
+        [coder encodeObject:fileURL forKey:@"fileUrl"];
+    }
+
     [coder encodeObject:tracksToBeDeleted forKey:@"tracksToBeDeleted"];
     [coder encodeBool:hasFileRepresentation forKey:@"hasFileRepresentation"];
 
@@ -688,16 +726,27 @@ NSString * const MP42FileTypeM4B = @"m4b";
 {
     self = [super init];
 
-    fileURL = [[decoder decodeObjectForKey:@"fileUrl"] retain];
+    NSData *bookmarkData = [decoder decodeObjectForKey:@"bookmark"];
+    if (bookmarkData) {
+        BOOL bookmarkDataIsStale;
+        NSError *error;
+        fileURL = [[NSURL
+                    URLByResolvingBookmarkData:bookmarkData
+                    options:NSURLBookmarkResolutionWithSecurityScope
+                    relativeToURL:nil
+                    bookmarkDataIsStale:&bookmarkDataIsStale
+                    error:&error] retain];
+    }
+    else {
+        fileURL = [[decoder decodeObjectForKey:@"fileUrl"] retain];
+    }
+
     tracksToBeDeleted = [[decoder decodeObjectForKey:@"tracksToBeDeleted"] retain];
 
     hasFileRepresentation = [decoder decodeBoolForKey:@"hasFileRepresentation"];
 
     tracks = [[decoder decodeObjectForKey:@"tracks"] retain];
     metadata = [[decoder decodeObjectForKey:@"metadata"] retain];
-
-    /*for (MP42Track *track in tracks)
-        NSLog(@"Track Source URL: %@", [[track sourceURL] absoluteString]);*/
 
     return self;
 }
