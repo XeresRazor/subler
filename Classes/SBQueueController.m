@@ -50,9 +50,8 @@ static SBQueueController *sharedController = nil;
 
 - (id)init
 {
-    self = [super initWithWindowNibName:@"Batch"];
-    if (self) {
-        
+    if (self = [super initWithWindowNibName:@"Batch"])
+    {
         queue = dispatch_queue_create("org.subler.Queue", NULL);
 
         NSURL* queueURL = [self queueURL];
@@ -145,7 +144,6 @@ static SBQueueController *sharedController = nil;
                                                             YES);
     if ([allPaths count]) {
         appSupportURL = [NSURL fileURLWithPath:[[[allPaths lastObject] stringByAppendingPathComponent:@"Subler"] stringByAppendingPathComponent:@"queue.sbqueue"] isDirectory:YES];
-        //appSupportURL = [appSupportURL URLByAppendingPathComponent:@"queue.sbqueue" isDirectory:NO];
         
         return appSupportURL;
     }
@@ -181,6 +179,17 @@ static SBQueueController *sharedController = nil;
         destination = [[NSURL fileURLWithPath:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestination"]] retain];
         if (![[NSFileManager defaultManager] fileExistsAtPath:[destination path] isDirectory:nil])
             destination = nil;
+        else if ([[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestinationBookmark"]) {
+            BOOL bookmarkDataIsStale;
+            NSError *error;
+            NSData *bookmarkData = [[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestinationBookmark"];
+            destination = [[NSURL
+                          URLByResolvingBookmarkData:bookmarkData
+                                             options:NSURLBookmarkResolutionWithSecurityScope
+                                             relativeToURL:nil
+                                             bookmarkDataIsStale:&bookmarkDataIsStale
+                                             error:&error] retain];
+        }
     }
 
     if (!destination) {
@@ -395,6 +404,10 @@ static SBQueueController *sharedController = nil;
     dispatch_async(queue, ^{
         NSError *outError = nil;
         BOOL success = NO;
+
+        if([destination respondsToSelector:@selector(startAccessingSecurityScopedResource)])
+            [destination startAccessingSecurityScopedResource];
+
         for (;;) {
             SBQueueItem *item = [self firstItemInQueue];
             if (item == nil)
@@ -468,6 +481,9 @@ static SBQueueController *sharedController = nil;
             if (status == SBQueueStatusCancelled)
                 break;
         }
+
+        if([destination respondsToSelector:@selector(stopAccessingSecurityScopedResource)])
+            [destination stopAccessingSecurityScopedResource];
 
         dispatch_async(dispatch_get_main_queue(), ^{
             currentItem = nil;
@@ -585,8 +601,20 @@ static SBQueueController *sharedController = nil;
             [destButton selectItem:folderItem];
             customDestination = YES;
 
+            NSData *bookmark = nil;
+            NSError *error = nil;
+            bookmark = [[panel URL] bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
+                     includingResourceValuesForKeys:nil
+                                      relativeToURL:nil // Make it app-scoped
+                                              error:&error];
+            if (error) {
+                NSLog(@"Error creating bookmark for URL (%@): %@", [panel URL], error);
+                [NSApp presentError:error];
+            }
+
             [[NSUserDefaults standardUserDefaults] setValue:[[panel URL] path] forKey:@"SBQueueDestination"];
             [[NSUserDefaults standardUserDefaults] setValue:@"YES" forKey:@"SBQueueDestinationSelected"];
+            [[NSUserDefaults standardUserDefaults] setValue:bookmark forKey:@"SBQueueDestinationBookmark"];
         }
         else
             [destButton selectItemAtIndex:2];
