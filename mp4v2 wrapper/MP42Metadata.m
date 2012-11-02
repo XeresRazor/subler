@@ -608,7 +608,9 @@ static const genreType_t genreType_strings[] = {
 
 - (BOOL) setTag:(id)value forKey:(NSString *)key;
 {
+    BOOL noErr = YES;
     NSString *regexPositive = @"YES|Yes|yes|1|2";
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 
     if ([key isEqualToString:@"HD Video"]) {
         if ([value isKindOfClass:[NSNumber class]]) {
@@ -623,7 +625,6 @@ static const genreType_t genreType_strings[] = {
             hdVideo = 0;
             isEdited = YES;
         }
-            return YES;
     }
     else if ([key isEqualToString:@"Gapless"]) {
         if ([value isKindOfClass:[NSNumber class]]) {
@@ -638,7 +639,6 @@ static const genreType_t genreType_strings[] = {
             gapless = 0;
             isEdited = YES;
         }
-        return YES;
     }
     else if ([key isEqualToString:@"Track #"]) {
         isEdited = YES;
@@ -650,14 +650,12 @@ static const genreType_t genreType_strings[] = {
             int total = ((bytes[4]) <<  8)
                       | ((bytes[5])      );
 
-            NSString *trackN = [NSString stringWithFormat:@"%d/%d", index, total];
             free(bytes);
+            NSString *trackN = [NSString stringWithFormat:@"%d/%d", index, total];
             [tagsDict setValue:trackN forKey:key];
-            return YES;
         }
         else {
             [tagsDict setValue:value forKey:key];
-            return YES;
         }
     }
     else if ([key isEqualToString:@"Disk #"]) {
@@ -669,38 +667,34 @@ static const genreType_t genreType_strings[] = {
             | ((bytes[3])      );
             int total = ((bytes[4]) <<  8)
             | ((bytes[5])      );
-            
-            NSString *diskN = [NSString stringWithFormat:@"%d/%d", index, total];
+
             free(bytes);
+            NSString *diskN = [NSString stringWithFormat:@"%d/%d", index, total];
             [tagsDict setValue:diskN forKey:key];
-            return YES;
         }
         else {
             [tagsDict setValue:value forKey:key];
-            return YES;
         }
     }
     else if ([key isEqualToString:@"Content Rating"]) {
         isEdited = YES;
         if ([value isKindOfClass:[NSNumber class]]) {
             contentRating = [value integerValue];
-            return YES;
         }
         else
-            return [self setContentRatingFromString:value];
+            [self setContentRatingFromString:value];
         
     }
     else if ([key isEqualToString:@"Media Kind"]) {
         isEdited = YES;
         if ([value isKindOfClass:[NSNumber class]]) {
             mediaKind = [value integerValue];
-            return YES;
         }
         else
-            return [self setMediaKindFromString:value];
+            [self setMediaKindFromString:value];
     }
     else if ([key isEqualToString:@"Artwork"])
-        return [self setArtworkFromFilePath:value];
+         [self setArtworkFromFilePath:value];
     
     else if ([key isEqualToString:@"Rating"]) {
         if ([value isKindOfClass:[NSNumber class]])
@@ -716,16 +710,16 @@ static const genreType_t genreType_strings[] = {
             [tagsDict setValue:[NSNumber numberWithInt:MPAA_UNRATED] forKey:key];
 
         isEdited = YES;
-        return YES;
     }
-
     else if (![[tagsDict valueForKey:key] isEqualTo:value]) {
         [tagsDict setValue:value forKey:key];
         isEdited = YES;
-        return YES;
     }
     else
-        return NO;
+        noErr = NO;
+    
+    [pool release];
+    return noErr;
 }
 
 - (NSString *) stringFromMetadata:(const char*)cString {
@@ -1499,6 +1493,7 @@ static const genreType_t genreType_strings[] = {
 
 - (BOOL) mergeMetadata: (MP42Metadata *) newMetadata
 {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     NSString * tagValue;
 
     [newMetadata retain];
@@ -1520,6 +1515,8 @@ static const genreType_t genreType_strings[] = {
     isEdited = YES;
 
     [newMetadata release];
+
+    [pool release];
 
     return YES;
 }

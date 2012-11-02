@@ -62,7 +62,6 @@ static SBQueueController *sharedController = nil;
                 if ([item status] == SBQueueItemStatusWorking)
                     [item setStatus:SBQueueItemStatusFailed];
 
-            //NSLog(@"Queue loaded");
         }
         else
             filesArray = [[NSMutableArray alloc] init];
@@ -177,12 +176,13 @@ static SBQueueController *sharedController = nil;
 
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestination"]) {
         destination = [[NSURL fileURLWithPath:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestination"]] retain];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:[destination path] isDirectory:nil])
-            destination = nil;
-        else if ([[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestinationBookmark"]) {
+
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestinationBookmark"]) {
             BOOL bookmarkDataIsStale;
             NSError *error;
             NSData *bookmarkData = [[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestinationBookmark"];
+
+            [destination release];
             destination = [[NSURL
                           URLByResolvingBookmarkData:bookmarkData
                                              options:NSURLBookmarkResolutionWithSecurityScope
@@ -190,6 +190,8 @@ static SBQueueController *sharedController = nil;
                                              bookmarkDataIsStale:&bookmarkDataIsStale
                                              error:&error] retain];
         }
+        if (![[NSFileManager defaultManager] fileExistsAtPath:[destination path] isDirectory:nil])
+            destination = nil;
     }
 
     if (!destination) {
