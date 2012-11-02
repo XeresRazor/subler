@@ -81,6 +81,9 @@
 
         // H.264 video track
         if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:@"H.264"]) {
+            if ([magicCookie length] < 4)
+                continue;
+
             NSSize size = [[track trackImporterHelper] sizeForTrack:track];
 
             uint8_t* avcCAtom = (uint8_t*)[magicCookie bytes];
@@ -125,9 +128,11 @@
                                           MP4_INVALID_DURATION,
                                           [(MP42VideoTrack*)track width], [(MP42VideoTrack*)track height],
                                           MP4_MPEG4_VIDEO_TYPE);
-            MP4SetTrackESConfiguration(fileHandle, dstTrackId,
-                                       [magicCookie bytes],
-                                       [magicCookie length]);
+            
+            if ([magicCookie length])
+                MP4SetTrackESConfiguration(fileHandle, dstTrackId,
+                                           [magicCookie bytes],
+                                           [magicCookie length]);
 
             [[track trackImporterHelper] setActiveTrack:track];
         }
@@ -147,7 +152,7 @@
                                           timeScale,
                                           1024, MP4_MPEG4_AUDIO_TYPE);
 
-            if (!track.needConversion) {
+            if (!track.needConversion && [magicCookie length]) {
                 MP4SetTrackESConfiguration(fileHandle, dstTrackId,
                                            [magicCookie bytes],
                                            [magicCookie length]);
@@ -158,6 +163,9 @@
 
         // AC-3 audio track
         else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"AC-3"]) {
+            if (![magicCookie length])
+                continue;
+
             const uint64_t * ac3Info = (const uint64_t *)[magicCookie bytes];
 
             dstTrackId = MP4AddAC3AudioTrack(fileHandle,
@@ -167,7 +175,7 @@
                                              ac3Info[2],
                                              ac3Info[3],
                                              ac3Info[4],
-                                             ac3Info[5]);            
+                                             ac3Info[5]);
             [[track trackImporterHelper] setActiveTrack:track];
         }
 
@@ -175,7 +183,8 @@
         else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"ALAC"]) {
             dstTrackId = MP4AddALACAudioTrack(fileHandle,
                                           timeScale);
-            MP4SetTrackBytesProperty(fileHandle, dstTrackId, "mdia.minf.stbl.stsd.alac.alac.AppleLosslessMagicCookie", [magicCookie bytes], [magicCookie length]);
+            if ([magicCookie length])
+                MP4SetTrackBytesProperty(fileHandle, dstTrackId, "mdia.minf.stbl.stsd.alac.alac.AppleLosslessMagicCookie", [magicCookie bytes], [magicCookie length]);
 
             [[track trackImporterHelper] setActiveTrack:track];
         }
@@ -279,6 +288,9 @@
         }
         // VobSub bitmap track
         else if ([track isMemberOfClass:[MP42SubtitleTrack class]] && [track.format isEqualToString:@"VobSub"]) {
+            if (![magicCookie length])
+                continue;
+
             dstTrackId = MP4AddSubpicTrack(fileHandle, timeScale, 640, 480);
 
             uint32_t *subPalette = (uint32_t*) [magicCookie bytes];
