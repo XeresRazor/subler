@@ -222,25 +222,35 @@ NSString * const MP42FileTypeM4B = @"m4b";
 {
     __block BOOL noErr = NO;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSError *error;
+    NSURL *folderURL = [fileURL URLByDeletingLastPathComponent];
 
     NSFileManager *fileManager = [[NSFileManager alloc] init];
-    unsigned long long originalFileSize = [[[fileManager attributesOfItemAtPath:[fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
+    NSURL *tempURL = [fileManager URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:folderURL create:YES error:&error];
 
-    NSString * tempPath = [NSString stringWithFormat:@"%@%@", [fileURL path], @".tmp"];
+    if (tempURL) {
+        tempURL = [tempURL URLByAppendingPathComponent:[fileURL lastPathComponent]];
 
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        noErr = MP4Optimize([[fileURL path] UTF8String], [tempPath UTF8String]);
-    });
+        unsigned long long originalFileSize = [[[fileManager attributesOfItemAtPath:[fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
 
-    while (!noErr) {
-        unsigned long long fileSize = [[[fileManager attributesOfItemAtPath:tempPath error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
-        [self progressStatus:((CGFloat)fileSize / originalFileSize) * 100];
-        usleep(450000);
-    }
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            noErr = MP4Optimize([[fileURL path] UTF8String], [[tempURL path] UTF8String]);
+        });
 
-    if (noErr) {
-        [fileManager removeItemAtURL:fileURL error:nil];
-        [fileManager moveItemAtPath:tempPath toPath:[fileURL path] error:nil];
+        while (!noErr) {
+            unsigned long long fileSize = [[[fileManager attributesOfItemAtPath:[tempURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
+            [self progressStatus:((CGFloat)fileSize / originalFileSize) * 100];
+            usleep(450000);
+        }
+
+        if (noErr) {
+            NSURL *result = nil;
+            noErr = [fileManager replaceItemAtURL:fileURL withItemAtURL:tempURL backupItemName:nil options:0 resultingItemURL:&result error:&error];
+            if (noErr) {
+                [fileURL release];
+                fileURL = [result retain];
+            }
+        }
     }
 
     [fileManager release];
