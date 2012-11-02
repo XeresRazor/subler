@@ -363,6 +363,8 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
             free(imageData);
         }
 
+        avsubtitle_free(&subtitle);
+        av_free_packet(&pkt);
         [inputSamplesBuffer removeObjectAtIndex:0];
     }
 

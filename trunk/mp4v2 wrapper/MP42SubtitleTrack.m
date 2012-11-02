@@ -248,6 +248,7 @@ struct style_record {
 		}
 
         time += sampleDuration;
+        free(pBytes);
     }
 
     return [srtFile writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:error];
