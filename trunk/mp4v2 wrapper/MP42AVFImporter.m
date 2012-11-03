@@ -600,7 +600,7 @@
 
             [assetReader addOutput:assetReaderOutput];
 
-            track.trackDemuxerHelper = [[[AVFTrackHelper alloc] init] autorelease];
+            track.trackDemuxerHelper = [[AVFTrackHelper alloc] init];
             trackHelper = track.trackDemuxerHelper;
             trackHelper->assetReaderOutput = assetReaderOutput;
 

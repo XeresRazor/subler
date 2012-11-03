@@ -61,7 +61,6 @@
             }
 
             track.trackConverterHelper = audioConverter;
-            [audioConverter release];
         }
         if([track isMemberOfClass:[MP42SubtitleTrack class]] && [track.format isEqualToString:@"VobSub"] && track.needConversion) {
             track.format = @"3GPP Text";
@@ -73,7 +72,6 @@
             }
 
             track.trackConverterHelper = subConverter;
-            [subConverter release];
         }
         else if([track isMemberOfClass:[MP42SubtitleTrack class]] && track.needConversion) {
             track.format = @"3GPP Text";
@@ -435,7 +433,7 @@
 
     // Write the last samples from the encoder
     for (MP42Track * track in workingTracks) {
-        if([track isMemberOfClass:[MP42AudioTrack class]] && track.needConversion) {
+        if(track.trackConverterHelper && track.needConversion) {
             id converter = track.trackConverterHelper;
             [converter setDone:YES];
             MP42SampleBuffer *convertedSample;
@@ -452,16 +450,13 @@
                 }
 
             }
-            NSData *magicCookie = [track.trackConverterHelper magicCookie];
-            MP4SetTrackESConfiguration(fileHandle, track.Id,
-                                       [magicCookie bytes],
-                                       [magicCookie length]);
+            if ([track isMemberOfClass:[MP42AudioTrack class]]) {
+                NSData *magicCookie = [track.trackConverterHelper magicCookie];
+                MP4SetTrackESConfiguration(fileHandle, track.Id,
+                                           [magicCookie bytes],
+                                           [magicCookie length]);
+            }
         }
-    }
-
-    for (MP42Track * track in workingTracks) {
-        if (track.trackConverterHelper) 
-            track.trackConverterHelper = nil;
     }
 
     [trackImportersArray release];

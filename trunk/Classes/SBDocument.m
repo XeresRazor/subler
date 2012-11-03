@@ -88,12 +88,17 @@
     return NO;
 }
 
+- (BOOL)isEntireFileLoaded
+{
+    return NO;
+}
+
 #pragma mark Read methods
 
-- (void) reloadFile: (id) sender
+- (void) reloadFile: (NSURL*)absoluteURL
 {
-    if ([self fileURL]) {
-        MP42File *newFile = [[MP42File alloc] initWithExistingFile:[self fileURL] andDelegate:self];
+    if (absoluteURL) {
+        MP42File *newFile = [[MP42File alloc] initWithExistingFile:absoluteURL andDelegate:self];
         if (newFile) {
             [mp4File autorelease];
             mp4File = newFile;
@@ -137,7 +142,7 @@
 
 #pragma mark Save methods
 
-- (void) saveDidComplete: (NSError *)outError
+- (void) saveDidComplete: (NSError *)outError URL:(NSURL*)absoluteURL
 {
     [NSApp endSheet: savingWindow];
     [savingWindow orderOut:self];
@@ -152,7 +157,7 @@
         [outError release];
     }
 
-    [self reloadFile:self];
+    [self reloadFile:absoluteURL];
 }
 
 - (void)saveToURL:(NSURL *)absoluteURL
@@ -185,7 +190,7 @@
             [outError retain];
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self saveDidComplete:outError];
+            [self saveDidComplete:outError URL:absoluteURL];
         });
     });
 }

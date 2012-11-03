@@ -23,6 +23,7 @@ using namespace tesseract;
 class OCRWrapper {
 public:
 OCRWrapper(const char* lang, const char* base_path) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSString *path = nil;
     if (base_path)
         path = [[NSString stringWithUTF8String:base_path] stringByAppendingString:@"/"];
@@ -34,6 +35,8 @@ OCRWrapper(const char* lang, const char* base_path) {
     path = [path stringByAppendingString:@"tessdata/"];
 
     tess_base_api.Init([path UTF8String], lang, OEM_DEFAULT);
+
+    [pool release];
 }
 char* OCRFrame(const unsigned char *image, int bytes_per_pixel, int bytes_per_line, int width, int height) {
     char* text = tess_base_api.TesseractRect(image,
@@ -42,6 +45,11 @@ char* OCRFrame(const unsigned char *image, int bytes_per_pixel, int bytes_per_li
                                              0, 0,
                                              width, height);
     return text;
+}
+
+void End()
+{
+    tess_base_api.End();
 }
 
 protected:
@@ -158,10 +166,10 @@ protected:
 
 - (void) dealloc {
     OCRWrapper *ocr = (OCRWrapper *)tess_base;
+    ocr->End();
     delete ocr;
 
     [_language release];
-    [ocrLock release];
     [super dealloc];
 }
 @end

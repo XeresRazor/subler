@@ -578,8 +578,7 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
         if (track.trackDemuxerHelper == nil) {
             trackHelper = [[MatroskaTrackHelper alloc] init];
             track.trackDemuxerHelper = trackHelper;
-            [trackHelper release];
-        }    
+        }
     }
 
     mkv_SetTrackMask(matroskaFile, TrackMask);

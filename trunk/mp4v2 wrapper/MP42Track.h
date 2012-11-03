@@ -66,8 +66,8 @@
 @property(readwrite) uint64_t dataLength;
 
 @property(readwrite, assign) MP42FileImporter * trackImporterHelper;
-@property(readwrite, retain) id trackDemuxerHelper;
-@property(readwrite, retain) id trackConverterHelper;
+@property(readwrite, assign) id trackDemuxerHelper;
+@property(readwrite, assign) id trackConverterHelper;
 
 @property(readwrite, retain) NSMutableDictionary *updatedProperty;
 
