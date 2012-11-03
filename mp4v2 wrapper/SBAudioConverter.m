@@ -814,7 +814,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
 - (NSData*) magicCookie
 {
-    return outputMagicCookie;
+    return [[outputMagicCookie retain] autorelease];
 }
 
 - (void) dealloc

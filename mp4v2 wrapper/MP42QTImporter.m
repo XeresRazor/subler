@@ -380,7 +380,8 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
         err = QTSoundDescriptionGetProperty(sndDesc, kQTPropertyClass_SoundDescription,
                                             kQTSoundDescriptionPropertyID_AudioStreamBasicDescription,
                                             sizeof(asbd), &asbd, NULL);
-        require_noerr(err, bail);
+        if (err)
+            return nil;
         
         if (asbd.mFormatID == kAudioFormatMPEG4AAC) {
             // Get the magic cookie
@@ -437,14 +438,18 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
             err = QTSoundDescriptionGetPropertyInfo(sndDesc, kQTPropertyClass_SoundDescription,
                                                     kQTSoundDescriptionPropertyID_AudioChannelLayout,
                                                     NULL, &channelLayoutSize, NULL);
-            require_noerr(err, bail);
+            if (err)
+                return nil;
 
             channelLayout = (AudioChannelLayout*)malloc(channelLayoutSize);
 
             err = QTSoundDescriptionGetProperty(sndDesc, kQTPropertyClass_SoundDescription,
                                                 kQTSoundDescriptionPropertyID_AudioChannelLayout,
                                                 channelLayoutSize, channelLayout, NULL);
-            require_noerr(err, bail);
+            if (err) {
+                free(channelLayout);
+                return nil;
+            }
 
             UInt32 bitmapSize = sizeof(AudioChannelLayoutTag);
             UInt32 channelBitmap;
@@ -499,7 +504,6 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
         }
     }
 
-bail:
     return nil;
 }
 
@@ -515,7 +519,7 @@ bail:
 
     for (MP42Track * track in activeTracks) {
         if (track.trackDemuxerHelper == nil) {
-            track.trackDemuxerHelper = [[[MovTrackHelper alloc] init] autorelease];
+            track.trackDemuxerHelper = [[MovTrackHelper alloc] init];
 
             Track qtcTrack = [[[sourceFile tracks] objectAtIndex:[track sourceId]] quickTimeTrack];
             Media media = GetTrackMedia(qtcTrack);

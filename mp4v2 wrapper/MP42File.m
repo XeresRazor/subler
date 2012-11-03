@@ -383,6 +383,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
                     if (fileImporter) {
                         [track setTrackImporterHelper:fileImporter];
                         [_fileImporters setObject:fileImporter forKey:[[track sourceURL] path]];
+                        [fileImporter release];
                     }
                 }
             }

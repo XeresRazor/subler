@@ -213,6 +213,9 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
     while(1) {
         while (![inputSamplesBuffer count] && !fileReaderDone)
             usleep(1000);
+        
+        if (![inputSamplesBuffer count] && fileReaderDone)
+            break;
 
         MP42SampleBuffer* sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
         UInt8 *data = (UInt8 *) sampleBuffer->sampleData;
@@ -393,13 +396,13 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
         outputSamplesBuffer = [[NSMutableArray alloc] init];
         inputSamplesBuffer = [[NSMutableArray alloc] init];
 
-        srcMagicCookie = [[track trackImporterHelper] magicCookieForTrack:track];
+        srcMagicCookie = [[[track trackImporterHelper] magicCookieForTrack:track] retain];
 
         ocr = [[SBOCRWrapper alloc] initWithLanguage:[track language]];
         
         // Launch the decoder thread.
         decoderThread = [[NSThread alloc] initWithTarget:self selector:@selector(DecoderThreadMainRoutine:) object:self];
-        [decoderThread setName:@"Audio Decoder"];
+        [decoderThread setName:@"VobSub Decoder"];
         [decoderThread start];
     }
 
@@ -455,7 +458,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
     int i;
 
     if (codecData) {
-        av_freep(codecData);
+        av_freep(&codecData);
     }
     if (avCodec) {
         avcodec_close(avContext);
@@ -472,6 +475,11 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
         av_freep(&subtitle.rects);
     }
 
+    [srcMagicCookie release];
+    [outputSamplesBuffer release];
+    [inputSamplesBuffer release];
+
+    [decoderThread release];
     [ocr release];
     [super dealloc];
 }
