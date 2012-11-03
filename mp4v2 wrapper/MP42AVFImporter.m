@@ -71,7 +71,7 @@
                 result = @"Apple ProRes";
                 break;
             case kCMVideoCodecType_SorensonVideo3:
-                result = @"Soreson 3";
+                result = @"Sorenson 3";
                 break;
             case 'png ':
                 result = @"PNG";
@@ -579,14 +579,18 @@
 
 - (void) fillMovieSampleBuffer: (id)sender
 {
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	BOOL success = YES;
     OSStatus err = noErr;
 
-    AVFTrackHelper * trackHelper=nil; 
+    uint64_t currentDataLength = 0;
+    uint64_t totalDataLength = 0;
 
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+
+    AVFTrackHelper * trackHelper=nil;
     NSError *localError;
     AVAssetReader *assetReader = [[AVAssetReader alloc] initWithAsset:localAsset error:&localError];
+
 	success = (assetReader != nil);
 	if (success) {
         for (MP42Track * track in activeTracks) {
@@ -597,9 +601,10 @@
             [assetReader addOutput:assetReaderOutput];
 
             track.trackDemuxerHelper = [[[AVFTrackHelper alloc] init] autorelease];
-
             trackHelper = track.trackDemuxerHelper;
             trackHelper->assetReaderOutput = assetReaderOutput;
+
+            totalDataLength += [track dataLength];
         }
     }
 
@@ -649,6 +654,8 @@
                         [samplesBuffer addObject:sample];
                         [sample release];
                     }
+            
+                    currentDataLength += sampleSize;
                 }
                 else {
                     if (!CMSampleBufferDataIsReady(sampleBuffer))
@@ -727,6 +734,8 @@
                             [samplesBuffer addObject:sample];
                             [sample release];
                         }
+
+                        currentDataLength += sampleSize;
                     }
 
                     if(timingArrayOut)
@@ -735,6 +744,9 @@
                         free(sizeArrayOut);
                 }
                 CFRelease(sampleBuffer);
+
+                progress = (((CGFloat) currentDataLength /  totalDataLength ) * 100);
+
             }
             else {
                 AVAssetReaderStatus status = assetReader.status;
