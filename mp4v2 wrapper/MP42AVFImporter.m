@@ -754,7 +754,7 @@
                     int i = 0, pos = 0;
                     for (i = 0; i < samplesNum; i++) {
                         CMSampleTimingInfo sampleTimingInfo;
-                        size_t sampleSize = sizeArrayOut[i];
+                        size_t sampleSize;
 
                         // If the size of sample timing array is equal to 1, it means every sample has got the same timing
                         if (timingArrayEntries == 1)
