@@ -1542,6 +1542,7 @@ static const genreType_t genreType_strings[] = {
     [coder encodeObject:presetName forKey:@"MP42SetName"];
     [coder encodeObject:tagsDict forKey:@"MP42TagsDict"];
     [coder encodeObject:artwork forKey:@"MP42Artwork"];
+    [coder encodeBool:isArtworkEdited forKey:@"MP42ArtworkEdited"];
 
     [coder encodeInt:mediaKind forKey:@"MP42MediaKind"];
     [coder encodeInt:contentRating forKey:@"MP42ContentRating"];
@@ -1560,6 +1561,7 @@ static const genreType_t genreType_strings[] = {
 
     tagsDict = [[decoder decodeObjectForKey:@"MP42TagsDict"] retain];
     artwork = [[decoder decodeObjectForKey:@"MP42Artwork"] retain];
+    isArtworkEdited = [decoder decodeBoolForKey:@"MP42ArtworkEdited"];
 
     mediaKind = [decoder decodeIntForKey:@"MP42MediaKind"];
     contentRating = [decoder decodeIntForKey:@"MP42ContentRating"];
