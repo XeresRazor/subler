@@ -570,6 +570,65 @@
 
                 return [NSData dataWithBytes:magicCookie length:cookieSizeOut];
             }
+            else if (code == kAudioFormatAC3) {
+                OSStatus err = noErr;
+                size_t channelLayoutSize = 0;
+                const AudioStreamBasicDescription *asbd = CMAudioFormatDescriptionGetStreamBasicDescription(formatDescription);
+                const AudioChannelLayout* channelLayout = CMAudioFormatDescriptionGetChannelLayout(formatDescription, &channelLayoutSize);
+
+                UInt32 bitmapSize = sizeof(UInt32);
+                UInt32 channelBitmap;
+                err = AudioFormatGetProperty(kAudioFormatProperty_BitmapForLayoutTag,
+                                               sizeof(AudioChannelLayoutTag), &channelLayout->mChannelLayoutTag,
+                                               &bitmapSize, &channelBitmap);
+                if (err && AudioChannelLayoutTag_GetNumberOfChannels(channelLayout->mChannelLayoutTag) == 6)
+                    channelBitmap = 0x3F;
+
+                uint8_t fscod = 0;
+                uint8_t bsid = 8;
+                uint8_t bsmod = 0;
+                uint8_t acmod = 7;
+                uint8_t lfeon = (channelBitmap & kAudioChannelBit_LFEScreen) ? 1 : 0;
+                uint8_t bit_rate_code = 15;
+
+                switch (AudioChannelLayoutTag_GetNumberOfChannels(channelLayout->mChannelLayoutTag) - lfeon) {
+                    case 1:
+                        acmod = 1;
+                        break;
+                    case 2:
+                        acmod = 2;
+                        break;
+                    case 3:
+                        if (channelBitmap & kAudioChannelBit_CenterSurround) acmod = 3;
+                        else acmod = 4;
+                        break;
+                    case 4:
+                        if (channelBitmap & kAudioChannelBit_CenterSurround) acmod = 5;
+                        else acmod = 6;
+                        break;
+                    case 5:
+                        acmod = 7;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (asbd->mSampleRate == 48000) fscod = 0;
+                else if (asbd->mSampleRate == 44100) fscod = 1;
+                else if (asbd->mSampleRate == 32000) fscod = 2;
+                else fscod = 3;
+
+                NSMutableData *ac3Info = [[NSMutableData alloc] init];
+                [ac3Info appendBytes:&fscod length:sizeof(uint64_t)];
+                [ac3Info appendBytes:&bsid length:sizeof(uint64_t)];
+                [ac3Info appendBytes:&bsmod length:sizeof(uint64_t)];
+                [ac3Info appendBytes:&acmod length:sizeof(uint64_t)];
+                [ac3Info appendBytes:&lfeon length:sizeof(uint64_t)];
+                [ac3Info appendBytes:&bit_rate_code length:sizeof(uint64_t)];
+
+                return [ac3Info autorelease];
+
+            }
             else if (cookieSizeOut)
                 return [NSData dataWithBytes:magicCookie length:cookieSizeOut];
         }
@@ -615,7 +674,7 @@
     for (MP42Track * track in activeTracks) {
         AVAssetReaderOutput *assetReaderOutput = ((AVFTrackHelper*)track.trackDemuxerHelper)->assetReaderOutput;
         while (!isCancelled) {
-            while ([samplesBuffer count] >= 200) {
+            while ([samplesBuffer count] >= 300) {
                 usleep(200);
             }
 
@@ -693,13 +752,22 @@
                     size_t bufferSize = CMBlockBufferGetDataLength(buffer);
 
                     int i = 0, pos = 0;
-                    for (i = 0; i < sizeArrayEntries; i++) {
-                        CMSampleTimingInfo sampleTimingInfo = timingArrayOut[i];
-                        // If the size of sample timing array is equal to 1, it means every sample has got the same timing
-                        if (timingArrayEntries < i +1)
-                            sampleTimingInfo = timingArrayOut[0];
-
+                    for (i = 0; i < samplesNum; i++) {
+                        CMSampleTimingInfo sampleTimingInfo;
                         size_t sampleSize = sizeArrayOut[i];
+
+                        // If the size of sample timing array is equal to 1, it means every sample has got the same timing
+                        if (timingArrayEntries == 1)
+                            sampleTimingInfo = timingArrayOut[0];
+                        else
+                            sampleTimingInfo = timingArrayOut[i];
+
+                        // If the size of sample size array is equal to 1, it means every sample has got the same size
+                        if (sizeArrayEntries ==  1)
+                            sampleSize = sizeArrayOut[0];
+                        else
+                            sampleSize = sizeArrayOut[i];
+
                         if (!sampleSize)
                             continue;
 
@@ -773,6 +841,7 @@
     
     if (!dataReader && !readerStatus) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
+        [dataReader setName:@"AVFoundation Demuxer"];
         [dataReader start];
     }
     
@@ -812,6 +881,8 @@
 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
 {
+    uint32_t timescale = MP4GetTimeScale(fileHandle);
+
     for (MP42Track * track in activeTracks) {
         AVAssetTrack *assetTrack = [localAsset trackWithTrackID:track.sourceId];
 
@@ -823,10 +894,17 @@
                 //NSLog(@"Indefinite time mappings");
             }
             else {
-                /*NSLog(@"Start: %lld", timeMapping.source.start.value);
+                /*NSLog(@"Source --");
+                NSLog(@"Start: %lld", timeMapping.source.start.value);
+                NSLog(@"Timescale: %d", timeMapping.source.start.timescale);
                 NSLog(@"Duration: %lld", timeMapping.source.duration.value);
+                NSLog(@"Timescale: %d", timeMapping.source.duration.timescale);
+
+                NSLog(@"Target --");
                 NSLog(@"Start %lld", timeMapping.target.start.value);
-                NSLog(@"Duration: %lld", timeMapping.source.duration.value);*/
+                NSLog(@"Timescale: %d", timeMapping.target.start.timescale);
+                NSLog(@"Duration: %lld", timeMapping.target.duration.value);
+                NSLog(@"Timescale: %d", timeMapping.target.start.timescale);*/
 
                 if (segment.empty) {
                     NSLog(@"Empty segment");
@@ -835,10 +913,10 @@
 
                 if (empty)
                     MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, -1,
-                                    timeMapping.target.duration.value, 0);
+                                    timeMapping.target.duration.value * ((double) timescale / timeMapping.target.start.timescale), 0);
                 else
                     MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, timeMapping.target.start.value,
-                                    timeMapping.target.duration.value, 0);
+                                    timeMapping.target.duration.value * ((double) timescale / timeMapping.target.start.timescale), 0);
             }
         }
     }
