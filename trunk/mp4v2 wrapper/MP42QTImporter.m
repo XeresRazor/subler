@@ -453,9 +453,13 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
 
             UInt32 bitmapSize = sizeof(AudioChannelLayoutTag);
             UInt32 channelBitmap;
-            AudioFormatGetProperty(kAudioFormatProperty_BitmapForLayoutTag,
+            err = AudioFormatGetProperty(kAudioFormatProperty_BitmapForLayoutTag,
                                    sizeof(AudioChannelLayoutTag), &channelLayout->mChannelLayoutTag,
                                    &bitmapSize, &channelBitmap);
+
+            if (err && AudioChannelLayoutTag_GetNumberOfChannels(channelLayout->mChannelLayoutTag) == 6)
+                channelBitmap = 0x3F;
+
             uint8_t fscod = 0;
             uint8_t bsid = 8;
             uint8_t bsmod = 0;
