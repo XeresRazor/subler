@@ -212,9 +212,12 @@
                 [(MP42VideoTrack*)newTrack setHeight: naturalSize.height];
 
                 if (formatDescription) {
+                    CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
+                    [(MP42VideoTrack*)newTrack setWidth: dimensions.width];
+                    [(MP42VideoTrack*)newTrack setHeight: dimensions.height];
+
                     CFDictionaryRef pixelAspectRatioFromCMFormatDescription = CMFormatDescriptionGetExtension(formatDescription, kCMFormatDescriptionExtension_PixelAspectRatio);
-                    if (pixelAspectRatioFromCMFormatDescription)
-                    {
+                    if (pixelAspectRatioFromCMFormatDescription) {
                         NSInteger hSpacing, vSpacing;
                         CFNumberGetValue(CFDictionaryGetValue(pixelAspectRatioFromCMFormatDescription, kCMFormatDescriptionKey_PixelAspectRatioHorizontalSpacing), kCFNumberIntType, &hSpacing);
                         CFNumberGetValue(CFDictionaryGetValue(pixelAspectRatioFromCMFormatDescription, kCMFormatDescriptionKey_PixelAspectRatioVerticalSpacing), kCFNumberIntType, &vSpacing);
@@ -319,7 +322,7 @@
     for (NSString *commonKey in [commonItemsDict allKeys]) {
         items = [AVMetadataItem metadataItemsFromArray:localAsset.commonMetadata withKey:commonKey keySpace:AVMetadataKeySpaceCommon];
         if ([items count])
-            [metadata setTag:[[items lastObject] stringValue] forKey:[commonItemsDict objectForKey:commonKey]];
+            [metadata setTag:[[items lastObject] value] forKey:[commonItemsDict objectForKey:commonKey]];
     }
     
     items = [AVMetadataItem metadataItemsFromArray:localAsset.commonMetadata withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
@@ -345,7 +348,7 @@
                                             @"Copyright",           AVMetadataiTunesMetadataKeyCopyright,
                                             @"Release Date",        AVMetadataiTunesMetadataKeyReleaseDate,
                                             @"Encoded By",          AVMetadataiTunesMetadataKeyEncodedBy,
-                                            //AVMetadataiTunesMetadataKeyPredefinedGenre,
+                                            //@"Genre",               AVMetadataiTunesMetadataKeyPredefinedGenre,
                                             @"Genre",               AVMetadataiTunesMetadataKeyUserGenre,
                                             @"Name",                AVMetadataiTunesMetadataKeySongName,
                                             @"Track Sub-Title",     AVMetadataiTunesMetadataKeyTrackSubTitle,
@@ -673,11 +676,11 @@
 
     for (MP42Track * track in activeTracks) {
         AVAssetReaderOutput *assetReaderOutput = ((AVFTrackHelper*)track.trackDemuxerHelper)->assetReaderOutput;
+
         while (!isCancelled) {
             while ([samplesBuffer count] >= 300) {
                 usleep(200);
             }
-
             CMSampleBufferRef sampleBuffer = [assetReaderOutput copyNextSampleBuffer];
             if (sampleBuffer) {
                 CMItemCount samplesNum = CMSampleBufferGetNumSamples(sampleBuffer);
@@ -713,7 +716,7 @@
                         [samplesBuffer addObject:sample];
                         [sample release];
                     }
-            
+
                     currentDataLength += sampleSize;
                 }
                 else {
