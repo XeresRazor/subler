@@ -626,6 +626,27 @@ static const genreType_t genreType_strings[] = {
             isEdited = YES;
         }
     }
+    else if ([key isEqualToString:@"Genre"]) {
+        if ([value isKindOfClass:[NSNumber class]]) {
+            [tagsDict setValue:[self genreFromIndex:[value integerValue]] forKey:key];
+            isEdited = YES;
+        }
+        else if ([value isKindOfClass:[NSData class]]) {
+            if ([value length] >= 2) {
+                uint8_t* bytes = (uint8_t*)malloc([value length]);
+                memcpy(bytes, [value bytes], [value length]);
+                int genre = ((bytes[0]) <<  8)
+                            | ((bytes[1])      );
+
+                [tagsDict setValue:[self genreFromIndex:genre] forKey:key];
+                isEdited = YES;
+            }
+        }
+        else {
+            [tagsDict setValue:value forKey:key];
+            isEdited = YES;
+        }
+    }
     else if ([key isEqualToString:@"Gapless"]) {
         if ([value isKindOfClass:[NSNumber class]]) {
             gapless = [value integerValue];
