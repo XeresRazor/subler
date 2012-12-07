@@ -743,9 +743,9 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
                 uint64_t tw = (uint64_t) [((MP42VideoTrack *) track) trackWidth];
                 uint64_t th = (uint64_t) [((MP42VideoTrack *) track) trackHeight];
 
-                if ((tw > 1280) && (th > 720))
+                if ((tw > 1280) || (th > 720))
                     [mp4File.metadata setTag:@"2" forKey:@"HD Video"];
-                else if ((tw >= 960) && (th >= 720))
+                else if ((tw >= 960) || (th >= 720))
                     [mp4File.metadata setTag:@"1" forKey:@"HD Video"];
 
                 [self updateChangeCount:NSChangeDone];
