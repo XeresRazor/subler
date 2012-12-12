@@ -18,40 +18,42 @@
 
 void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
 {
-    /*const char* level;
-    switch (loglevel) {
-        case 0:
-            level = "None";
-            break;
-        case 1:
-            level = "Error";
-            break;
-        case 2:
-            level = "Warning";
-            break;
-        case 3:
-            level = "Info";
-            break;
-        case 4:
-            level = "Verbose1";
-            break;
-        case 5:
-            level = "Verbose2";
-            break;
-        case 6:
-            level = "Verbose3";
-            break;
-        case 7:
-            level = "Verbose4";
-            break;
-        default:
-            level = "Unknown";
-            break;
-    }
+    const char* level;
 
-    printf("%s: ", level);
-    vprintf(fmt, ap);
-    printf("\n");*/
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"Debug"]) {
+        switch (loglevel) {
+            case 0:
+                level = "None";
+                break;
+            case 1:
+                level = "Error";
+                break;
+            case 2:
+                level = "Warning";
+                break;
+            case 3:
+                level = "Info";
+                break;
+            case 4:
+                level = "Verbose1";
+                break;
+            case 5:
+                level = "Verbose2";
+                break;
+            case 6:
+                level = "Verbose3";
+                break;
+            case 7:
+                level = "Verbose4";
+                break;
+            default:
+                level = "Unknown";
+                break;
+        }
+        printf("%s: ", level);
+        vprintf(fmt, ap);
+        printf("\n");
+    }
 }
 
 @implementation AppDelegate
