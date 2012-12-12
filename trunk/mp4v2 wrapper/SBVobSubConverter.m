@@ -207,6 +207,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
 - (void) DecoderThreadMainRoutine: (id) sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    MP42SampleBuffer* subSample;
 
     encoderDone = NO;
 
@@ -223,7 +224,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
 
         if(sampleBuffer->sampleSize < 4)
         {
-            MP42SampleBuffer* subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
+            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];    
             }
@@ -268,7 +269,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
         if (ret < 0 || !got_sub) {
             NSLog(@"Error decoding DVD subtitle %d / %ld", ret, (long)bufferSize);
             
-            MP42SampleBuffer* subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
+            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];
             }
@@ -352,11 +353,16 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
             //[bitmapImage release];
 
             NSString *text = [ocr performOCROnCGImage:cgImage];
+            
+            if (text)
+                subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced);
+            else
+                subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, forced);
 
-            MP42SampleBuffer* subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced);
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];
             }
+
             [subSample release];
 
             CGImageRelease(cgImage);
