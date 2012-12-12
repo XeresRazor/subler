@@ -445,7 +445,7 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
         uint64_t        StartTime, EndTime, FilePos;
         uint32_t        rt, FrameSize, FrameFlags;
         uint32_t        fb = 0;
-        uint8_t         *frame = NULL;
+        uint8_t         *frame = NULL, *temp = NULL;
 
 		// read first header to create track
 		int firstFrame = mkv_ReadFrame(matroskaFile, 0, &rt, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags);
@@ -466,13 +466,16 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
         else
             frame = malloc(FrameSize);
         
-        if (fb < FrameSize) {
+        if (fb < FrameSize && frame) {
             fb = FrameSize;
-            frame = realloc(frame, fb);
-            if (frame == NULL) {
+            temp = realloc(frame, fb);
+            if (temp == NULL) {
                 fprintf(stderr,"Out of memory\n");
-                return nil;		
+                free(frame);
+                return nil;
             }
+            else
+                frame = temp;
         }
 
         size_t rd = fread(frame + trackInfo->CompMethodPrivateSize,1,FrameSize,ioStream->fp);
