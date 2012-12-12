@@ -46,22 +46,20 @@
     else if ([[URL pathExtension] caseInsensitiveCompare: @"264"] == NSOrderedSame ||
              [[URL pathExtension] caseInsensitiveCompare: @"h264"] == NSOrderedSame)
         self = [[MP42H264Importer alloc] initWithDelegate:del andFile:URL error:outError];
-
-//#if __MAC_OS_X_VERSION_MAX_ALLOWED > 1060
-    // If we are on 10.7, use the AVFoundation path
-    else if (NSClassFromString(@"AVAsset")) {
-        if ([[URL pathExtension] caseInsensitiveCompare: @"mov"] == NSOrderedSame ||
-            [[URL pathExtension] caseInsensitiveCompare: @"m2ts"] == NSOrderedSame ||
-            [[URL pathExtension] caseInsensitiveCompare: @"mts"] == NSOrderedSame ) {
-            self = [[MP42AVFImporter alloc] initWithDelegate:del andFile:URL error:outError];
-        }
-    }
-//#endif
 #if !__LP64__
     else if ([[URL pathExtension] caseInsensitiveCompare: @"mov"] == NSOrderedSame) {
         self = [[MP42QTImporter alloc] initWithDelegate:del andFile:URL error:outError];
     }
 #endif
+    // If we are on 10.7 or later, use the AVFoundation path
+    else if (NSClassFromString(@"AVAsset")) {
+        if ([[URL pathExtension] caseInsensitiveCompare: @"m2ts"] == NSOrderedSame ||
+            [[URL pathExtension] caseInsensitiveCompare: @"mts"] == NSOrderedSame ) {
+            self = [[MP42AVFImporter alloc] initWithDelegate:del andFile:URL error:outError];
+        }
+    }
+
+
 
     return self;
 }
