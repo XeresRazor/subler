@@ -16,8 +16,6 @@
 
 #import "SBLanguages.h"
 
-NSLock *ocrLock;
-
 using namespace tesseract;
 
 class OCRWrapper {
@@ -99,9 +97,6 @@ protected:
 {
     if ((self = [super init]))
     {
-        if (ocrLock == nil)
-            ocrLock = [[NSLock alloc] init];
-
         tess_base = (void *)new OCRWrapper(lang_for_english([_language UTF8String])->iso639_2, NULL);
     }
     return self;
@@ -112,8 +107,6 @@ protected:
     if ((self = [super init]))
     {
         _language = [language retain];
-        if (ocrLock == nil)
-            ocrLock = [[NSLock alloc] init];
 
         NSString * lang = [NSString stringWithUTF8String:lang_for_english([_language UTF8String])->iso639_2];
         NSURL *dataURL = [self appSupportUrl];
@@ -140,17 +133,14 @@ protected:
     const UInt8 *imageData = CFDataGetBytePtr(data);
 
     
-    // Tesseract is not multithreaded
-    [ocrLock lock];
     char* string = ocr->OCRFrame(imageData,
                                  bytes_per_pixel,
                                  bytes_per_line,
                                  width,
                                  height);
-    [ocrLock unlock];
     CFRelease(data);
 
-    if (string) {
+    if (string && strlen(string)) {
         text = [NSMutableString stringWithUTF8String:string];
         if ([text characterAtIndex:[text length] -1] == '\n')
             [text replaceOccurrencesOfString:@"\n\n" withString:@"" options:nil range:NSMakeRange(0,[text length])];
