@@ -17,6 +17,7 @@ typedef struct mediaKind_t
 } mediaKind_t;
 
 static const mediaKind_t mediaKind_strings[] = {
+    {0, @"Home Video"},
     {1, @"Music"},
     {2, @"Audiobook"},
     {6, @"Music Video"},
@@ -636,8 +637,9 @@ static const genreType_t genreType_strings[] = {
                 uint8_t* bytes = (uint8_t*)malloc([value length]);
                 memcpy(bytes, [value bytes], [value length]);
                 int genre = ((bytes[0]) <<  8)
-                            | ((bytes[1])      );
+                            | ((bytes[1])    );
 
+                free(bytes);
                 [tagsDict setValue:[self genreFromIndex:genre] forKey:key];
                 isEdited = YES;
             }
