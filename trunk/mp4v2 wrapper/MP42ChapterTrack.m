@@ -141,7 +141,7 @@
     if (isEdited) {
         MP4Chapter_t * fileChapters = 0;
         uint32_t i, refTrackDuration, chapterCount = 0;
-        uint64_t sum = 0;
+        uint64_t sum = 0, moovDuration;
 
         // get the list of chapters
         MP4GetChapters(fileHandle, &fileChapters, &chapterCount, MP4ChapterTypeQt);
@@ -159,6 +159,10 @@
                                                        refTrack,
                                                        MP4GetTrackDuration(fileHandle, refTrack),
                                                        MP4_MSECS_TIME_SCALE);
+        MP4GetIntegerProperty(fileHandle, "moov.mvhd.duration", &moovDuration);
+        moovDuration = (uint64_t) moovDuration * (double) 1000 / MP4GetTimeScale(fileHandle);
+        if (refTrackDuration > moovDuration)
+            refTrackDuration = moovDuration;
 
         for (i = 0; i < chapterCount; i++) {
             SBTextSample * chapter = [chapters objectAtIndex:i];
