@@ -86,7 +86,6 @@
     if (NSClassFromString(@"QTMetadataItem")) //QTMetadataItem is only 10.7+
         [self convertMetadata];
 
-    NSUInteger i = 0;
     for (QTTrack *track in [sourceFile tracks]) {
         NSString* mediaType = [track attributeForKey:QTTrackMediaTypeAttribute];
         MP42Track *newTrack = nil;
@@ -218,7 +217,7 @@
         if (newTrack) {
             newTrack.format = [self formatForTrack:track];
             newTrack.sourceFormat = newTrack.format;
-            newTrack.Id = i++;
+            newTrack.Id = [[track attributeForKey:QTTrackIDAttribute] integerValue];
             newTrack.sourceURL = fileURL;
             newTrack.sourceFileHandle = sourceFile;
             newTrack.name = [track attributeForKey:QTTrackDisplayNameAttribute];
@@ -522,7 +521,7 @@
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track
 {
-    Track qtTrack = [[[sourceFile tracks] objectAtIndex:[track sourceId]] quickTimeTrack];
+    Track qtTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
     Media media = GetTrackMedia(qtTrack);
 
     return GetMediaTimeScale(media);
@@ -539,9 +538,9 @@
 {      
     OSStatus err = noErr;
 
-    QTTrack * qtTrack = [[sourceFile tracks] objectAtIndex:[track sourceId]];
+    QTTrack * qtTrack = [sourceFile trackWithTrackID:[track sourceId]];;
     NSString* mediaType = [qtTrack attributeForKey:QTTrackMediaTypeAttribute];
-    Track qtcTrack = [[[sourceFile tracks] objectAtIndex:[track sourceId]] quickTimeTrack];
+    Track qtcTrack = [qtTrack quickTimeTrack];
     Media media = GetTrackMedia(qtcTrack);
     NSMutableData * magicCookie;
 
@@ -735,7 +734,7 @@
         if (track.trackDemuxerHelper == nil) {
             track.trackDemuxerHelper = [[MovTrackHelper alloc] init];
 
-            Track qtcTrack = [[[sourceFile tracks] objectAtIndex:[track sourceId]] quickTimeTrack];
+            Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
             Media media = GetTrackMedia(qtcTrack);
 
             trackHelper = track.trackDemuxerHelper;
@@ -747,8 +746,9 @@
         if (isCancelled)
             break;
 
-        Track qtcTrack = [[[sourceFile tracks] objectAtIndex:[track sourceId]] quickTimeTrack];
+        Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
         Media media = GetTrackMedia(qtcTrack);
+        trackHelper = track.trackDemuxerHelper;
 
         // Create a QTSampleTable which contains all the informatio of the track samples.
         TimeValue64 sampleTableStartDecodeTime = 0;
@@ -770,9 +770,7 @@
                                        NULL);
         require_noerr(err, bail);
 
-        if (trackHelper) {
-			trackHelper->minDisplayOffset = minDisplayOffset;
-			}
+        trackHelper->minDisplayOffset = minDisplayOffset;
 
         SInt64 sampleIndex, sampleCount;
         sampleCount = QTSampleTableGetNumberOfSamples(sampleTable);
@@ -807,7 +805,6 @@
             GetMediaSample2(media, sampleData, sampleDataSize, NULL, sampleDecodeTime,
                             NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL);
 
-            trackHelper = track.trackDemuxerHelper;
             trackHelper->currentSampleId = trackHelper->currentSampleId + 1;
             trackHelper->currentTime = trackHelper->currentTime + decodeDuration;
 
@@ -889,7 +886,7 @@
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
 {
     for (MP42Track * track in activeTracks) {
-        Track qtcTrack = [[[sourceFile tracks] objectAtIndex:[track sourceId]] quickTimeTrack];
+        Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
 
         TimeValue editTrackStart, editTrackDuration;
         TimeValue64 editDisplayStart, trackDuration = 0;
@@ -908,12 +905,12 @@
                                     &editTrackDuration);
 
         while (editTrackDuration > 0) {
-            editDisplayStart = TrackTimeToMediaDisplayTime(editTrackStart, qtcTrack);
-            editTrackDuration = (editTrackDuration / (float)GetMovieTimeScale([sourceFile quickTimeMovie])) * MP4GetTimeScale(fileHandle);
+            editDisplayStart = TrackTimeToMediaTime(editTrackStart, qtcTrack);
+            editTrackDuration = (editTrackDuration / (double)GetMovieTimeScale([sourceFile quickTimeMovie])) * MP4GetTimeScale(fileHandle);
             editDwell = GetTrackEditRate64(qtcTrack, editTrackStart);
-            
+
             if (trackHelper->minDisplayOffset < 0 && editDisplayStart != -1)
-                MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, editDisplayStart -trackHelper->minDisplayOffset,
+                MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, editDisplayStart - trackHelper->minDisplayOffset,
                                 editTrackDuration, !Fix2X(editDwell));
             else
                 MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, editDisplayStart,
