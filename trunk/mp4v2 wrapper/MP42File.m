@@ -400,8 +400,10 @@ NSString * const MP42FileTypeM4B = @"m4b";
 
         return NO;
     }
-    else
+    else {
         [muxer start:fileHandle];
+        updateMoovDuration(fileHandle);
+    }
 
     [muxer release];
     muxer = nil;
