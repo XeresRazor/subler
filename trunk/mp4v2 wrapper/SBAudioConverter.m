@@ -585,7 +585,12 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
         }
     }
     
-    return NO;
+    if (outError)
+        *outError = MP42Error(@"Unknown Error.",
+                              @"Something went from in the audio converter",
+                              130);
+
+    return YES;
 }
 
 - (id) initWithTrack: (MP42AudioTrack*) track andMixdownType: (NSString*) mixdownType error:(NSError **)outError
@@ -692,7 +697,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
         err = AudioConverterNew( &inputFormat, &outputFormat, &decoderData.converter );
         if ( err != noErr) {
             if (outError)
-                if (![self errorMessageForFormat:track.sourceFileHandle error:outError]) {
+                if (![self errorMessageForFormat:track.sourceFormat error:outError]) {
                 *outError = MP42Error(@"Audio Converter Error.",
                                       @"The Audio Converter can not be initialized",
                                       130);
