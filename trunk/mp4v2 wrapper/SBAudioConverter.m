@@ -392,7 +392,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
     // figure out how much to read
 	if (*ioNumberDataPackets > afio->numPacketsPerRead) *ioNumberDataPackets = afio->numPacketsPerRead;
-    
+
     // read from the buffer    
     while (![afio->inputSamplesBuffer count] && !afio->fileReaderDone)
         usleep(250);
@@ -411,12 +411,12 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
     // advance input file packet position
 	afio->pos += *ioNumberDataPackets;
-    
+
     // put the data pointer into the buffer list
 	ioData->mBuffers[0].mData = afio->sample->sampleData;
 	ioData->mBuffers[0].mDataByteSize = afio->sample->sampleSize;
 	ioData->mBuffers[0].mNumberChannels = afio->srcFormat.mChannelsPerFrame;
-    
+
 	if (outDataPacketDescription) {
 		if (afio->pktDescs) {
             afio->pktDescs->mStartOffset = 0;
@@ -427,7 +427,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 		else
 			*outDataPacketDescription = NULL;
 	}
-    
+
 	return err;
 }
 
@@ -679,7 +679,11 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
                 inputFormat.mFormatID = 'trhd';
             }
             else if ([track.sourceFormat isEqualToString:@"PCM"]) {
-                inputFormat.mFormatID = kAudioFormatLinearPCM;
+                AudioStreamBasicDescription temp = [[track trackImporterHelper] audioDescriptionForTrack:track];
+                if (temp.mFormatID)
+                    inputFormat = temp;
+                else
+                    inputFormat.mFormatID = kAudioFormatLinearPCM;
             }
         }
 

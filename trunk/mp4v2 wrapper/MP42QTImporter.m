@@ -32,18 +32,6 @@
 
 @implementation MovTrackHelper
 
--(id)init
-{
-    if ((self = [super init]))
-    {
-    }
-    return self;
-}
-
-- (void) dealloc {
-    
-    [super dealloc];
-}
 @end
 
 @implementation MP42QTImporter
@@ -151,7 +139,7 @@
 			GetMediaSampleDescription(media, 1, desc);			
 
 			ByteCount           channelLayoutSize;
-            AudioChannelLayout* channelLayout = NULL;
+            AudioChannelLayout *channelLayout = NULL;
 
 			SoundDescriptionHandle sndDesc = (SoundDescriptionHandle) desc;
 
@@ -739,6 +727,46 @@
     return nil;
 }
 
+- (AudioStreamBasicDescription)audioDescriptionForTrack:(MP42Track *)track
+{
+    OSStatus err = noErr;
+    NSString* mediaType = [[sourceFile trackWithTrackID:[track sourceId]] attributeForKey:QTTrackMediaTypeAttribute];
+    
+    Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
+    Media media = GetTrackMedia(qtcTrack);
+
+    // Audio
+    if ([mediaType isEqualToString:QTMediaTypeSound]) {
+        // Get the sample description
+        SampleDescriptionHandle desc = (SampleDescriptionHandle) NewHandle(0);
+        GetMediaSampleDescription(media, 1, desc);
+
+        SoundDescriptionHandle sndDesc = (SoundDescriptionHandle) desc;
+
+        ByteCount           formatDescSize;
+        AudioStreamBasicDescription formatDesc;
+
+        err = QTSoundDescriptionGetPropertyInfo(sndDesc, kQTPropertyClass_SoundDescription,
+                                                kQTSoundDescriptionPropertyID_AudioStreamBasicDescription,
+                                                NULL, &formatDescSize, NULL);
+        require_noerr(err, bail);
+
+        err = QTSoundDescriptionGetProperty(sndDesc, kQTPropertyClass_SoundDescription,
+                                            kQTSoundDescriptionPropertyID_AudioStreamBasicDescription,
+                                            formatDescSize, &formatDesc, NULL);
+        require_noerr(err, bail);
+
+        bail:
+        if (err) {
+            NSLog(@"Error: unable to read the audio stream basic description");
+        }
+
+        return formatDesc;
+    }
+
+    return [super audioDescriptionForTrack:track];
+}
+
 - (void) fillMovieSampleBuffer: (id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -795,7 +823,7 @@
         sampleCount = QTSampleTableGetNumberOfSamples(sampleTable);
 
         for (sampleIndex = 1; sampleIndex <= sampleCount && !isCancelled; sampleIndex++) {
-            while ([samplesBuffer count] >= 200) {
+            while ([samplesBuffer count] >= 300) {
                 usleep(200);
             }
 

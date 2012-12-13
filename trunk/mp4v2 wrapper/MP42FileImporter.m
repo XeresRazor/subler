@@ -64,18 +64,30 @@
     return self;
 }
 
-- (NSUInteger)timescaleForTrack:(MP42Track *)track{
+- (NSUInteger)timescaleForTrack:(MP42Track *)track
+{
     return 0;
 }
-- (NSSize)sizeForTrack:(MP42Track *)track{
+
+- (NSSize)sizeForTrack:(MP42Track *)track
+{
     return NSMakeSize(0,0);
 }
-- (NSData*)magicCookieForTrack:(MP42Track *)track{
+
+- (NSData*)magicCookieForTrack:(MP42Track *)track
+{
     return nil;
+}
+
+- (AudioStreamBasicDescription)audioDescriptionForTrack:(MP42Track *)track
+{
+    AudioStreamBasicDescription desc = {0,0,0,0,0,0,0,0,0};
+    return desc;
 }
 
 - (void)setActiveTrack:(MP42Track *)track
 {
+    
 }
 
 - (MP42SampleBuffer*)copyNextSample
