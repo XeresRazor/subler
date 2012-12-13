@@ -12,9 +12,8 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <QuickTime/QuickTime.h>
 #import "SBLanguages.h"
+#import "QTKitDecrap.h"
 #include "avcodec.h"
-
-extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
 
 @interface MP42QTImporter(Private)
     -(void) movieLoaded;
@@ -83,6 +82,9 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
             chapterTrackId = [[track attributeForKey:QTTrackIDAttribute] integerValue];
 
     tracksArray = [[NSMutableArray alloc] init];
+
+    if (NSClassFromString(@"QTMetadataItem")) //QTMetadataItem is only 10.7+
+        [self convertMetadata];
 
     NSUInteger i = 0;
     for (QTTrack *track in [sourceFile tracks]) {
@@ -308,6 +310,214 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
 {
     return [NSString stringWithUTF8String:lang_for_qtcode(
                 [[track attributeForKey:QTTrackLanguageAttribute] longValue])->eng_name];
+}
+
+-(void)convertMetadata
+{
+    NSArray *items = nil;
+    NSDictionary *commonItemsDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Name", QTMetadataCommonKeyTitle,
+                                     //nil, QTMetadataCommonKeyCreator,
+                                     //nil, QTMetadataCommonKeySubject,
+                                     @"Description", QTMetadataCommonKeyDescription,
+                                     @"Publisher", QTMetadataCommonKeyPublisher,
+                                     //nil, QTMetadataCommonKeyContributor,
+                                     @"Release Date", QTMetadataCommonKeyCreationDate,
+                                     //nil, QTMetadataCommonKeyLastModifiedDate,
+                                     @"Genre", QTMetadataCommonKeyType,
+                                     //nil, QTMetadataCommonKeyFormat,
+                                     //nil, QTMetadataCommonKeyIdentifier,
+                                     //nil, QTMetadataCommonKeySource,
+                                     //nil, QTMetadataCommonKeyLanguage,
+                                     //nil, QTMetadataCommonKeyRelation,
+                                     //nil, QTMetadataCommonKeyLocation,
+                                     @"Copyright", QTMetadataCommonKeyCopyrights,
+                                     @"Album", QTMetadataCommonKeyAlbumName,
+                                     //nil, QTMetadataCommonKeyAuthor,
+                                     //nil, QTMetadataCommonKeyArtwork
+                                     @"Artist", QTMetadataCommonKeyArtist,
+                                     //nil, QTMetadataCommonKeyMake,
+                                     //nil, QTMetadataCommonKeyModel,
+                                     @"Encoding Tool", QTMetadataCommonKeySoftware,
+                                     nil];
+
+    metadata = [[MP42Metadata alloc] init];
+    for (NSString *commonKey in [commonItemsDict allKeys]) {
+        items = [QTMetadataItem metadataItemsFromArray:[sourceFile commonMetadata] withKey:[commonKey stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
+        if ([items count])
+            [metadata setTag:[[items lastObject] value] forKey:[commonItemsDict objectForKey:commonKey]];
+    }
+
+    items = [QTMetadataItem metadataItemsFromArray:[sourceFile commonMetadata] withKey:[QTMetadataCommonKeyArtwork stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
+    if ([items count]) {
+        id artworkData = [[items lastObject] value];
+        if ([artworkData isKindOfClass:[NSData class]]) {
+            NSImage *image = [[NSImage alloc] initWithData:artworkData];
+            [metadata setArtwork:image];
+            [image release];
+        }
+    }
+
+    NSArray* availableMetadataFormats = [sourceFile availableMetadataFormats];
+
+    if ([availableMetadataFormats containsObject:QTMetadataFormatiTunesMetadata]) {
+        NSArray* itunesMetadata = [sourceFile metadataForFormat:QTMetadataFormatiTunesMetadata];
+
+        NSDictionary *itunesMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            @"Album",               QTMetadataiTunesMetadataKeyAlbum,
+                                            @"Artist",              QTMetadataiTunesMetadataKeyArtist,
+                                            @"Comments",            QTMetadataiTunesMetadataKeyUserComment,
+                                            //QTMetadataiTunesMetadataKeyCoverArt,
+                                            @"Copyright",           QTMetadataiTunesMetadataKeyCopyright,
+                                            @"Release Date",        QTMetadataiTunesMetadataKeyReleaseDate,
+                                            @"Encoded By",          QTMetadataiTunesMetadataKeyEncodedBy,
+                                            //@"Genre",             QTMetadataiTunesMetadataKeyPredefinedGenre,
+                                            @"Genre",               QTMetadataiTunesMetadataKeyUserGenre,
+                                            @"Name",                QTMetadataiTunesMetadataKeySongName,
+                                            @"Track Sub-Title",     QTMetadataiTunesMetadataKeyTrackSubTitle,
+                                            @"Encoding Tool",       QTMetadataiTunesMetadataKeyEncodingTool,
+                                            @"Composer",            QTMetadataiTunesMetadataKeyComposer,
+                                            @"Album Artist",        QTMetadataiTunesMetadataKeyAlbumArtist,
+                                            @"iTunes Account Type", QTMetadataiTunesMetadataKeyAccountKind,
+                                            @"iTunes Account",      QTMetadataiTunesMetadataKeyAppleID,
+                                            @"artistID",            QTMetadataiTunesMetadataKeyArtistID,
+                                            @"content ID",          QTMetadataiTunesMetadataKeySongID,
+                                            @"Compilation",         QTMetadataiTunesMetadataKeyDiscCompilation,
+                                            @"Disk #",              QTMetadataiTunesMetadataKeyDiscNumber,
+                                            @"genreID",             QTMetadataiTunesMetadataKeyGenreID,
+                                            @"Grouping",            QTMetadataiTunesMetadataKeyGrouping,
+                                            @"playlistID",          QTMetadataiTunesMetadataKeyPlaylistID,
+                                            @"Content Rating",      QTMetadataiTunesMetadataKeyContentRating,
+                                            @"Rating",              @"com.apple.iTunes.iTunEXTC",
+                                            @"Tempo",               QTMetadataiTunesMetadataKeyBeatsPerMin,
+                                            @"Track #",             QTMetadataiTunesMetadataKeyTrackNumber,
+                                            @"Art Director",        QTMetadataiTunesMetadataKeyArtDirector,
+                                            @"Arranger",            QTMetadataiTunesMetadataKeyArranger,
+                                            @"Lyricist",            QTMetadataiTunesMetadataKeyAuthor,
+                                            @"Lyrics",              QTMetadataiTunesMetadataKeyLyrics,
+                                            @"Acknowledgement",     QTMetadataiTunesMetadataKeyAcknowledgement,
+                                            @"Conductor",           QTMetadataiTunesMetadataKeyConductor,
+                                            @"Song Description",    QTMetadataiTunesMetadataKeyDescription,
+                                            @"Description",         @"desc",
+                                            @"Long Description",    @"ldes",
+                                            @"Media Kind",          @"stik",
+                                            @"TV Show",             @"tvsh",
+                                            @"TV Episode #",        @"tves",
+                                            @"TV Network",          @"tvnn",
+                                            @"TV Episode ID",       @"tven",
+                                            @"TV Season",           @"tvsn",
+                                            @"HD Video",            @"hdvd",
+                                            @"Gapless",             @"pgap",
+                                            @"Sort Name",           @"sonm",
+                                            @"Sort Artist",         @"soar",
+                                            @"Sort Album Artist",   @"soaa",
+                                            @"Sort Album",          @"soal",
+                                            @"Sort Composer",       @"soco",
+                                            @"Sort TV Show",        @"sosn",
+                                            @"Category",            @"catg",
+                                            @"iTunes U",            @"itnu",
+                                            @"Purchase Date",       @"purd",
+                                            @"Director",            QTMetadataiTunesMetadataKeyDirector,
+                                            //QTMetadataiTunesMetadataKeyEQ,
+                                            @"Linear Notes",        QTMetadataiTunesMetadataKeyLinerNotes,
+                                            @"Record Company",      QTMetadataiTunesMetadataKeyRecordCompany,
+                                            @"Original Artist",     QTMetadataiTunesMetadataKeyOriginalArtist,
+                                            @"Phonogram Rights",    QTMetadataiTunesMetadataKeyPhonogramRights,
+                                            @"Producer",            QTMetadataiTunesMetadataKeyProducer,
+                                            @"Performer",           QTMetadataiTunesMetadataKeyPerformer,
+                                            @"Publisher",           QTMetadataiTunesMetadataKeyPublisher,
+                                            @"Sound Engineer",      QTMetadataiTunesMetadataKeySoundEngineer,
+                                            @"Soloist",             QTMetadataiTunesMetadataKeySoloist,
+                                            @"Credits",             QTMetadataiTunesMetadataKeyCredits,
+                                            @"Thanks",              QTMetadataiTunesMetadataKeyThanks,
+                                            @"Online Extras",       QTMetadataiTunesMetadataKeyOnlineExtras,
+                                            @"Executive Producer",  QTMetadataiTunesMetadataKeyExecProducer,
+                                            nil];
+
+        for (NSString *itunesKey in [itunesMetadataDict allKeys]) {
+            items = [QTMetadataItem metadataItemsFromArray:itunesMetadata withKey:[itunesKey stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
+            if ([items count]) {
+                [metadata setTag:[[items lastObject] value] forKey:[itunesMetadataDict objectForKey:itunesKey]];
+            }
+        }
+
+        items = [QTMetadataItem metadataItemsFromArray:itunesMetadata withKey:[QTMetadataiTunesMetadataKeyCoverArt stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
+        if ([items count]) {
+            id artworkData = [[items lastObject] value];
+            if ([artworkData isKindOfClass:[NSData class]]) {
+                NSImage *image = [[NSImage alloc] initWithData:artworkData];
+                [metadata setArtwork:image];
+                [image release];
+            }
+        }
+    }
+    if ([availableMetadataFormats containsObject:QTMetadataFormatQuickTimeMetadata]) {
+        NSArray* quicktimeMetadata = [sourceFile metadataForFormat:QTMetadataFormatQuickTimeMetadata];
+
+        NSDictionary *quicktimeMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                               @"Arist",        QTMetadataQuickTimeMetadataKeyAuthor,
+                                               @"Comments",     QTMetadataQuickTimeMetadataKeyComment,
+                                               @"Copyright",    QTMetadataQuickTimeMetadataKeyCopyright,
+                                               @"Release Date", QTMetadataQuickTimeMetadataKeyCreationDate,
+                                               @"Director",     QTMetadataQuickTimeMetadataKeyDirector,
+                                               @"Name",         QTMetadataQuickTimeMetadataKeyDisplayName,
+                                               @"Description",  QTMetadataQuickTimeMetadataKeyInformation,
+                                               @"Keyworkds",    QTMetadataQuickTimeMetadataKeyKeywords,
+                                               @"Producer",     QTMetadataQuickTimeMetadataKeyProducer,
+                                               @"Publisher",    QTMetadataQuickTimeMetadataKeyPublisher,
+                                               @"Album",        QTMetadataQuickTimeMetadataKeyAlbum,
+                                               @"Artist",       QTMetadataQuickTimeMetadataKeyArtist,
+                                               @"Description",  QTMetadataQuickTimeMetadataKeyDescription,
+                                               @"Encoding Tool",QTMetadataQuickTimeMetadataKeySoftware,
+                                               @"Genre",        QTMetadataQuickTimeMetadataKeyGenre,
+                                               //QTMetadataQuickTimeMetadataKeyiXML,
+                                               @"Arranger",     QTMetadataQuickTimeMetadataKeyArranger,
+                                               @"Encoded By",   QTMetadataQuickTimeMetadataKeyEncodedBy,
+                                               @"Original Artist",  QTMetadataQuickTimeMetadataKeyOriginalArtist,
+                                               @"Performer",    QTMetadataQuickTimeMetadataKeyPerformer,
+                                               @"Composer",     QTMetadataQuickTimeMetadataKeyComposer,
+                                               @"Credits",      QTMetadataQuickTimeMetadataKeyCredits,
+                                               @"Phonogram Rights", QTMetadataQuickTimeMetadataKeyPhonogramRights, nil];
+        
+        for (NSString *qtKey in [quicktimeMetadataDict allKeys]) {
+            items = [QTMetadataItem metadataItemsFromArray:quicktimeMetadata withKey:[qtKey stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
+            if ([items count]) {
+                [metadata setTag:[[items lastObject] value] forKey:[quicktimeMetadataDict objectForKey:qtKey]];
+            }
+        }
+    }
+    if ([availableMetadataFormats containsObject:QTMetadataFormatQuickTimeUserData]) {
+        NSArray* quicktimeUserDataMetadata = [sourceFile metadataForFormat:QTMetadataFormatQuickTimeUserData];
+        
+        NSDictionary *quicktimeUserDataMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                       @"Album",                QTMetadataQuickTimeUserDataKeyAlbum,
+                                                       @"Arranger",             QTMetadataQuickTimeUserDataKeyArranger,
+                                                       @"Artist",               QTMetadataQuickTimeUserDataKeyArtist,
+                                                       @"Lyricist",             QTMetadataQuickTimeUserDataKeyAuthor,
+                                                       @"Comments",             QTMetadataQuickTimeUserDataKeyComment,
+                                                       @"Composer",             QTMetadataQuickTimeUserDataKeyComposer,
+                                                       @"Copyright",            QTMetadataQuickTimeUserDataKeyCopyright,
+                                                       @"Release Date",         QTMetadataQuickTimeUserDataKeyCreationDate,
+                                                       @"Description",          QTMetadataQuickTimeUserDataKeyDescription,
+                                                       @"Director",             QTMetadataQuickTimeUserDataKeyDirector,
+                                                       @"Encoded By",           QTMetadataQuickTimeUserDataKeyEncodedBy,
+                                                       @"Name",                 QTMetadataQuickTimeUserDataKeyFullName,
+                                                       @"Genre",                QTMetadataQuickTimeUserDataKeyGenre,
+                                                       @"Keywords",             QTMetadataQuickTimeUserDataKeyKeywords,
+                                                       @"Original Artist",      QTMetadataQuickTimeUserDataKeyOriginalArtist,
+                                                       @"Performer",            QTMetadataQuickTimeUserDataKeyPerformers,
+                                                       @"Producer",             QTMetadataQuickTimeUserDataKeyProducer,
+                                                       @"Publisher",            QTMetadataQuickTimeUserDataKeyPublisher,
+                                                       @"Online Extras",        QTMetadataQuickTimeUserDataKeyURLLink,
+                                                       @"Credits",              QTMetadataQuickTimeUserDataKeyCredits,
+                                                       @"Phonogram Rights",     QTMetadataQuickTimeUserDataKeyPhonogramRights, nil];
+        
+        for (NSString *qtUserDataKey in [quicktimeUserDataMetadataDict allKeys]) {
+            items = [QTMetadataItem metadataItemsFromArray:quicktimeUserDataMetadata withKey:[qtUserDataKey stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
+            if ([items count]) {
+                [metadata setTag:[[items lastObject] value] forKey:[quicktimeUserDataMetadataDict objectForKey:qtUserDataKey]];
+            }
+        }
+    }
 }
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track
@@ -708,7 +918,7 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
             else
                 MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, editDisplayStart,
                                 editTrackDuration, !Fix2X(editDwell));
-            
+
             trackDuration += editTrackDuration;
             // Find the next edit
             GetTrackNextInterestingTime(qtcTrack,
@@ -718,7 +928,7 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
                                         &editTrackStart,
                                         &editTrackDuration);
         }
-        
+
         MP4SetTrackIntegerProperty(fileHandle, [track Id], "tkhd.duration", trackDuration);
     }
     
@@ -738,6 +948,7 @@ extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
     if (samplesBuffer)
         [samplesBuffer release];
 
+    [metadata release];
     [sourceFile release];
 
     [super dealloc];
