@@ -10,6 +10,24 @@
 
 extern NSString * const QTTrackLanguageAttribute;	// NSNumber (long)
 
+@interface QTMovie (QTMovieSublerExtras)
+
+- (QTTrack*) trackWithTrackID:(NSInteger)trackID;
+
+@end
+
+@implementation QTMovie (QTMovieSublerExtras)
+
+- (QTTrack*) trackWithTrackID:(NSInteger)trackID
+{
+    for (QTTrack *track in [self tracks])
+        if (trackID == [[track attributeForKey:QTTrackIDAttribute] integerValue])
+            return track;
+    return nil;
+}
+
+@end
+
 @interface QTMovie (QTMovie_MetadataReading_10_6_Fix)
 
 #if (defined(MAC_OS_X_VERSION_10_7))
