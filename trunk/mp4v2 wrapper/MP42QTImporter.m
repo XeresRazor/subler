@@ -237,12 +237,24 @@
         case kMPEG4VisualCodecType:
             result = @"MPEG-4 Visual";
             break;
+        case kSorensonCodecType:
+            result = @"Sorenson Video";
+            break;
+        case kSorenson3CodecType:
+            result = @"Sorenson Video 3";
+            break;
         case 'ap4h':
         case 'apch':
         case 'apcn':
         case 'apcs':
         case 'apco':
             result = @"ProRes";
+            break;
+        case 'png ':
+            result = @"PNG";
+            break;
+        case kAnimationCodecType:
+            result = @"Animation";
             break;
         case kAudioFormatMPEG4AAC:
         case 'mp4a':
@@ -255,6 +267,7 @@
         case kAudioFormatLinearPCM:
         case kRawCodecType:
         case 'twos':
+        case 'sowt':
             result = @"PCM";
             break;
         case kAudioFormatAppleLossless:
@@ -263,6 +276,12 @@
         case kAudioFormatAC3:
         case 'ms \0':
             result = @"AC-3";
+            break;
+        case kAudioFormatMPEGLayer1:
+        case kAudioFormatMPEGLayer2:
+        case kAudioFormatMPEGLayer3:
+        case 'ms\0U':
+            result = @"MP3";
             break;
         case kAudioFormatAMR:
             result = @"AMR Narrow Band";
@@ -281,6 +300,17 @@
             break;
         case 'c608':
             result = @"CEA-608";
+            break;
+        case kDVCNTSCCodecType:
+        case kDVCPALCodecType:
+            result = @"DV";
+            break;
+        case 'm2v1':
+            result = @"MPEG-2";
+            break;
+        case kMotionJPEGACodecType:
+        case kMotionJPEGBCodecType:
+            result = @"Motion JPEG";
             break;
         case TimeCodeMediaType:
             result = @"Timecode";
