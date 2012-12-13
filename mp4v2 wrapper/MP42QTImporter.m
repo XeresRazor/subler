@@ -167,18 +167,20 @@
                                                 channelLayoutSize, channelLayout, NULL);
             require_noerr(err, bail);
 
-            UInt32 bitmapSize = sizeof(AudioChannelLayoutTag);
-            UInt32 channelBitmap;
-            AudioFormatGetProperty(kAudioFormatProperty_BitmapForLayoutTag,
-                                   sizeof(AudioChannelLayoutTag), &channelLayout->mChannelLayoutTag,
-                                   &bitmapSize, &channelBitmap);
+            UInt32 channelNumber = AudioChannelLayoutTag_GetNumberOfChannels(channelLayout->mChannelLayoutTag);
+            if (!channelNumber)
+                channelNumber = channelLayout->mNumberChannelDescriptions;
 
-			[(MP42AudioTrack*)newTrack setChannels: AudioChannelLayoutTag_GetNumberOfChannels(channelLayout->mChannelLayoutTag)];
-			[(MP42AudioTrack*)newTrack setChannelLayoutTag: channelLayout->mChannelLayoutTag];
+            [(MP42AudioTrack*)newTrack setChannelLayoutTag: channelLayout->mChannelLayoutTag];
 
 			bail:
-			if (err)
-				printf("Error: unable to read the sound description");
+			if (err) {
+				NSLog(@"Error: unable to read the sound description, guessing 1 channel");
+                channelNumber = 1;
+            }
+
+            [(MP42AudioTrack*)newTrack setChannels: channelNumber];
+
 			if (channelLayout)
 				free(channelLayout);
 		}
@@ -263,6 +265,8 @@
             result = @"HE-AAC";
             break;
         case kAudioFormatLinearPCM:
+        case kRawCodecType:
+        case 'twos':
             result = @"PCM";
             break;
         case kAudioFormatAppleLossless:
