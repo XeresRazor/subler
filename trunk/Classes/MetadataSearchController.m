@@ -601,8 +601,8 @@ static NSInteger sortFunction (id ldict, id rdict, void *context) {
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification {
-    if ([aNotification object] == resultsTable) {
-        if (resultsArray && [resultsArray count] > 0) {
+    if ([aNotification object] == resultsTable || [aNotification object] ==  metadataTable) {
+        if (/*resultsArray && */[resultsArray count] > 0) {
             selectedResult = [resultsArray objectAtIndex:[resultsTable selectedRow]];
             selectedResultTags = selectedResult.tagsDict;
             if (selectedResultTagsArray) [selectedResultTagsArray release];
