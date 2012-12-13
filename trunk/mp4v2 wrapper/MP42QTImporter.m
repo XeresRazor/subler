@@ -307,8 +307,23 @@
 
 - (NSString*)langForTrack: (QTTrack *)track
 {
-    return [NSString stringWithUTF8String:lang_for_qtcode(
-                [[track attributeForKey:QTTrackLanguageAttribute] longValue])->eng_name];
+    long data = [[track attributeForKey:QTTrackLanguageAttribute] longValue];
+    char code[4];
+    NSString *language;
+
+    language = [NSString stringWithUTF8String:lang_for_qtcode(data)->eng_name];
+
+    if ([language isEqualToString:@"Unknown"])
+    {
+        code[0] = ((data & 0x7c00) >> 10) + 0x60;
+        code[1] = ((data & 0x03e0) >>  5) + 0x60;
+        code[2] = ((data & 0x001f)      ) + 0x60;
+        code[3] = '\0';
+
+        language = [NSString stringWithFormat:@"%s", lang_for_code2(code)->eng_name];
+    }
+
+    return language;
 }
 
 -(void)convertMetadata
