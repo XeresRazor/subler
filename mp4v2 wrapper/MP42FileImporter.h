@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 #import "MP42Sample.h"
 #import "mp4v2.h"
 
@@ -30,6 +31,7 @@
 - (NSUInteger)timescaleForTrack:(MP42Track *)track;
 - (NSSize)sizeForTrack:(MP42Track *)track;
 - (NSData*)magicCookieForTrack:(MP42Track *)track;
+- (AudioStreamBasicDescription)audioDescriptionForTrack:(MP42Track *)track;
 - (void)setActiveTrack:(MP42Track *)track;
 
 - (MP42SampleBuffer*)copyNextSample;
