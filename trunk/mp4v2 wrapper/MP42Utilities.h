@@ -35,6 +35,7 @@ int updateTracksCount(MP4FileHandle fileHandle);
 void updateMoovDuration(MP4FileHandle fileHandle);
 
 uint64_t getTrackSize(MP4FileHandle fileHandle, MP4TrackId trackId);
+int isHdVideo(uint64_t width, uint64_t height);
 
 MP4TrackId findChapterTrackId(MP4FileHandle fileHandle);
 void removeAllChapterTrackReferences(MP4FileHandle fileHandle);
