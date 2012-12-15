@@ -26,7 +26,7 @@ typedef NSInteger SBQueueStatus;
     IBOutlet NSButton *open;
 
     IBOutlet NSTextField *countLabel;
-    IBOutlet NSProgressIndicator *spinningIndicator;
+    IBOutlet NSProgressIndicator *progressIndicator;
 
     IBOutlet NSButton *OptimizeOption;
     IBOutlet NSButton *MetadataOption;

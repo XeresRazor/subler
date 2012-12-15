@@ -308,14 +308,10 @@
 #pragma mark Interface validation
 
 - (void)progressStatus: (CGFloat)progress {
-    [self performSelectorOnMainThread:@selector(updateProgressBar:)
-                           withObject:[NSNumber numberWithDouble:progress] waitUntilDone: NO];
-
-}
-
-- (void)updateProgressBar: (NSNumber *)progress {
-    [optBar setIndeterminate:NO];
-    [optBar setDoubleValue:[progress doubleValue]];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [optBar setIndeterminate:NO];
+        [optBar setDoubleValue:progress];
+    });
 }
 
 - (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem

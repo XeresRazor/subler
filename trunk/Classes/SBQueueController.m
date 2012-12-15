@@ -99,7 +99,7 @@ static SBQueueController *sharedController = nil;
 
 - (void)awakeFromNib
 {
-    [spinningIndicator setHidden:YES];
+    [progressIndicator setHidden:YES];
     [countLabel setStringValue:@"Empty"];
 
     NSRect frame = [[self window] frame];
@@ -396,8 +396,8 @@ static SBQueueController *sharedController = nil;
 
     [start setTitle:@"Stop"];
     [countLabel setStringValue:@"Working."];
-    [spinningIndicator setHidden:NO];
-    [spinningIndicator startAnimation:self];
+    [progressIndicator setHidden:NO];
+    [progressIndicator startAnimation:self];
 
     NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"chaptersPreviewTrack"] boolValue])
@@ -462,8 +462,15 @@ static SBQueueController *sharedController = nil;
                 status = SBQueueStatusCancelled;
             }
             else if (success) {
-                if ([OptimizeOption state])
+                if ([OptimizeOption state]) {
+                    // Update the UI
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSInteger itemIndex = [filesArray indexOfObject:item];
+                        [countLabel setStringValue:[NSString stringWithFormat:@"Optimizing file %d of %d.",itemIndex + 1, [filesArray count]]];
+                    });
+
                     [mp4File optimize];
+                }
                 [item setStatus:SBQueueItemStatusCompleted];
             }
             else {
@@ -500,8 +507,9 @@ static SBQueueController *sharedController = nil;
                 status = SBQueueStatusCompleted;
             }
 
-            [spinningIndicator setHidden:YES];
-            [spinningIndicator stopAnimation:self];
+            [progressIndicator setHidden:YES];
+            [progressIndicator stopAnimation:self];
+            [progressIndicator setDoubleValue:0];
             [start setTitle:@"Start"];
 
             [self updateDockTile];
@@ -509,6 +517,13 @@ static SBQueueController *sharedController = nil;
     });
 
     [attributes release];
+}
+
+- (void)progressStatus: (CGFloat)progress {
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [progressIndicator setIndeterminate:NO];
+        [progressIndicator setDoubleValue:progress];
+    });
 }
 
 - (void)stop:(id)sender
