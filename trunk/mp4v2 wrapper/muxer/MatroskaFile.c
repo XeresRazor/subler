@@ -48,23 +48,23 @@ longlong StdIoScan(StdIoStream *st, uint64_t start, uint32_t signature) {
 	uint32_t         c; 
 	uint32_t    cmp = 0; 
 	FILE              *fp = st->fp; 
-	
+
 	if (fseeko(fp, start, SEEK_SET)) 
 		return -1; 
-	
+
 	while ((c = getc(fp)) != EOF) { 
 		cmp = ((cmp << 8) | c) & 0xffffffff; 
 		if (cmp == signature) 
 			return ftell(fp) - 4; 
 	} 
-	
+
 	return -1; 
 } 
 
 /* return cache size, this is used to limit readahead */ 
 unsigned StdIoGetCacheSize(StdIoStream *st) { 
 	return CACHESIZE; 
-} 
+}
 
 /* return last error message */ 
 const char *StdIoGetLastError(StdIoStream *st) { 
@@ -93,39 +93,39 @@ int StdIoProgress(StdIoStream *st, uint64_t cur, uint64_t max) {
 
 MatroskaFile *openMatroskaFile(char *filePath, StdIoStream *ioStream)
 {
-	char err_msg[256]; 
-	
+	char err_msg[256];
+
 	/* fill in I/O object */ 
-	ioStream->base.read = StdIoRead; 
-	ioStream->base.scan = StdIoScan; 
-	ioStream->base.getcachesize = StdIoGetCacheSize; 
-	ioStream->base.geterror = StdIoGetLastError; 
-	ioStream->base.memalloc = StdIoMalloc; 
-	ioStream->base.memrealloc = StdIoRealloc; 
-	ioStream->base.memfree = StdIoFree; 
-	ioStream->base.progress = StdIoProgress; 
-	
+	ioStream->base.read = (int(*)(struct InputStream *, ulonglong, void *, int))StdIoRead;
+	ioStream->base.scan = (longlong(*)(struct InputStream *, ulonglong, unsigned int))StdIoScan;
+	ioStream->base.getcachesize = (unsigned int (*)(struct InputStream *))StdIoGetCacheSize; 
+	ioStream->base.geterror = (const char *(*)(struct InputStream *))StdIoGetLastError;
+	ioStream->base.memalloc = (void *(*)(struct InputStream *, size_t))StdIoMalloc;
+	ioStream->base.memrealloc = (void *(*)(struct InputStream *, void *, size_t))StdIoRealloc;
+	ioStream->base.memfree = (void(*)(struct InputStream *, void *))StdIoFree;
+	ioStream->base.progress = (int (*)(struct InputStream *, uint64_t, uint64_t))StdIoProgress;
+
 	/* open source file */ 
 	ioStream->fp = fopen(filePath,"r"); 
 	if (ioStream->fp == NULL) { 
 		fprintf(stderr, "Can't open '%s': %s\n", filePath, strerror(errno)); 
 		return NULL; 
 	} 
-	
+
 	setvbuf(ioStream->fp, NULL, _IOFBF, CACHESIZE); 
-	
+
 	/* initialize matroska parser */ 
 	MatroskaFile *mf = mkv_Open(&ioStream->base, /* pointer to I/O object */ 
 					   //		  0, /* starting position in the file */ 
 					   //		  0,
 					   		  err_msg, sizeof(err_msg)); /* error message is returned here */ 
-	
+
 	if (mf == NULL) 
 	{ 
 		fclose(ioStream->fp); 
 		fprintf(stderr, "Can't parse Matroska file: %s\n", err_msg); 
 		return NULL; 
 	} 
-	
+
 	return mf;	
 }
