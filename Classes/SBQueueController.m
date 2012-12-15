@@ -349,7 +349,9 @@ static SBQueueController *sharedController = nil;
                 track.needConversion = YES;
 
             [track setTrackImporterHelper:fileImporter];
-            [mp4File addTrack:track];
+
+            if (isTrackMuxable(track.format) || trackNeedConversion(track.format))
+                [mp4File addTrack:track];
         }
         [fileImporter release];
     }
