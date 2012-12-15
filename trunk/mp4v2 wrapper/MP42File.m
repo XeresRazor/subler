@@ -585,8 +585,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
         else {
             __block QTMovie * qtMovie;
             // QTMovie objects must always be create on the main thread.
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                NSDictionary *movieAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+            NSDictionary *movieAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                                  fileURL, QTMovieURLAttribute,
                                                  [NSNumber numberWithBool:NO], QTMovieAskUnresolvedDataRefsAttribute,
                                                  [NSNumber numberWithBool:YES], @"QTMovieOpenForPlaybackAttribute",
@@ -594,8 +593,14 @@ NSString * const MP42FileTypeM4B = @"m4b";
                                                  [NSNumber numberWithBool:NO], @"QTMovieOpenAsyncOKAttribute",
                                                  QTMovieApertureModeClean, QTMovieApertureModeAttribute,
                                                  nil];
+            if (dispatch_get_current_queue() != dispatch_get_main_queue()) {
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    qtMovie = [[QTMovie alloc] initWithAttributes:movieAttributes error:nil];
+                });
+            }
+            else
                 qtMovie = [[QTMovie alloc] initWithAttributes:movieAttributes error:nil];
-            });
+
 
             if (!qtMovie)
                 return NO;
@@ -624,9 +629,13 @@ NSString * const MP42FileTypeM4B = @"m4b";
 
             // Release the movie, we don't want to keep it open while we are writing in it using another library.
             // I am not sure if it is safe to release a QTMovie from a background thread, let's do it on the main just to be sure.
-            dispatch_sync(dispatch_get_main_queue(), ^{
+            if (dispatch_get_current_queue() != dispatch_get_main_queue()) {
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    [qtMovie release];
+                });
+            }
+            else
                 [qtMovie release];
-            });
         }
         // If we haven't got enought images, return.
         if (([previewImages count] < [[chapterTrack chapters] count]) || [previewImages count] == 0 ) {
