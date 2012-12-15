@@ -486,6 +486,47 @@ NSString * const MP42FileTypeM4B = @"m4b";
     if ([track isMemberOfClass:[MP42SubtitleTrack class]])
         enableFirstSubtitleTrack(fileHandle);
 }
+/* Create a set of alternate group the way iTunes and Apple devices want:
+   one alternate group for sound, one for subtitles, a disabled photo-jpeg track,
+   a disabled chapter track, and a video track with no alternate group */
+- (void) iTunesFriendlyTrackGroups
+{
+    NSInteger firstAudioTrack = 0, firstSubtitleTrack = 0, firstVideoTrack = 0;
+
+    for (MP42Track * track in tracks) {
+        if ([track isMemberOfClass:[MP42ChapterTrack class]])
+            track.enabled = NO;
+        else if ([track isMemberOfClass:[MP42AudioTrack class]]) {
+            if (!firstAudioTrack)
+                track.enabled = YES;
+            else
+                track.enabled = NO;
+            
+            track.alternate_group = 1;
+            firstAudioTrack++;
+        }
+        else if ([track isMemberOfClass:[MP42SubtitleTrack class]]) {
+            if (!firstSubtitleTrack)
+                track.enabled = YES;
+            else
+                track.enabled = NO;
+            
+            track.alternate_group = 2;
+            firstSubtitleTrack++;
+        }
+        else if ([track isMemberOfClass:[MP42VideoTrack class]]) {
+            track.alternate_group = 0;
+            if ([track.format isEqualToString:@"Photo - JPEG"])
+                track.enabled = NO;
+            else {
+                if (!firstVideoTrack) {
+                    track.enabled = YES;
+                    firstVideoTrack++;
+                }
+            }
+        }
+    }
+}
 
 - (BOOL) createChaptersPreview {
     NSError *error;

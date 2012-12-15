@@ -16,6 +16,7 @@ void print_help()
     printf("\t\t -optimize Optimize \n");
     printf("\t\t -metadata {Tag Name:Tag Value} \n");
     printf("\t\t -removemetadata remove all the tags \n");
+    printf("\t\t -itunesfriendly enable tracks and create altenate groups in the iTunes friendly way\n");
     printf("\n");
     printf("\t\t -listtracks For source file only, lists the tracks in the source movie. \n");
     printf("\t\t -listmetadata For source file only, lists the metadata in the source movie. \n");
@@ -69,6 +70,8 @@ int main (int argc, const char * argv[]) {
     BOOL listtracks = false;
     BOOL listmetadata = false;
     BOOL removemetadata = false;
+
+    BOOL itunesfriendly = NO;
 
     BOOL _64bitchunk = NO;
     BOOL downmixAudio = NO;
@@ -178,6 +181,10 @@ int main (int argc, const char * argv[]) {
 		{
 			removemetadata = YES;
 		}
+        else if ( ! strcmp ( args, "itunesfriendly" ) )
+		{
+			itunesfriendly = YES;
+		}
 		else {
 			printf("Invalid input parameter: %s\n", args );
 			print_help();
@@ -245,7 +252,7 @@ int main (int argc, const char * argv[]) {
     if (chapterPreview)
         [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
     
-    if ((sourcePath && [[NSFileManager defaultManager] fileExistsAtPath:sourcePath]) || chaptersPath || removeExisting || metadata || chapterPreview || removemetadata)
+    if ((sourcePath && [[NSFileManager defaultManager] fileExistsAtPath:sourcePath]) || itunesfriendly || chaptersPath || removeExisting || metadata || chapterPreview || removemetadata)
     {
         NSError *outError;
         MP42File *mp4File;
@@ -398,10 +405,15 @@ int main (int argc, const char * argv[]) {
                 }
             }
         }
-        
+
         if (chapterPreview)
             modified = YES;
 
+        if (itunesfriendly) {
+            [mp4File iTunesFriendlyTrackGroups];
+            modified = YES;
+        }
+    
         BOOL success;
         if (modified && [mp4File hasFileRepresentation])
             success = [mp4File updateMP4FileWithAttributes:attributes error:&outError];
@@ -422,6 +434,7 @@ int main (int argc, const char * argv[]) {
 
         [mp4File release];
     }
+
     if (optimize) {
         MP42File *mp4File;
         mp4File = [[MP42File alloc] initWithExistingFile:[NSURL fileURLWithPath:destinationPath]
