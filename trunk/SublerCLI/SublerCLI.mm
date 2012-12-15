@@ -6,24 +6,32 @@
 void print_help()
 {
     printf("usage:\n");
-    printf("\t\t -dest <destination file> \n");
-    printf("\t\t -source <source file> \n");
+
+    printf("\t -dest <destination file> \n");
+    printf("\t -dest options:\n");
+
     printf("\t\t -chapters <chapters file> \n");
     printf("\t\t -chapterspreview Create chapters preview images \n");
-    printf("\t\t -delay Delay in ms \n");
-    printf("\t\t -height Height in pixel \n");
-    printf("\t\t -language Track language (i.e. English) \n");
     printf("\t\t -remove Remove existing subtitles \n");
     printf("\t\t -optimize Optimize \n");
     printf("\t\t -metadata {Tag Name:Tag Value} \n");
     printf("\t\t -removemetadata remove all the tags \n");
-    printf("\t\t -downmix Downmix audio (mono, stereo, dolby, pl2) \n");
     printf("\n");
     printf("\t\t -listtracks For source file only, lists the tracks in the source movie. \n");
     printf("\t\t -listmetadata For source file only, lists the metadata in the source movie. \n");
     printf("\n");
-    printf("\t\t -help Print this help information \n");
-    printf("\t\t -version Print version \n");
+
+    printf("\t -source <source file> \n");
+    printf("\t -source options:\n");
+    printf("\t\t -delay Delay in ms \n");
+    printf("\t\t -height Height in pixel \n");
+    printf("\t\t -language Track language (i.e. English) \n");
+    printf("\t\t -downmix Downmix audio (mono, stereo, dolby, pl2) \n");
+    printf("\t\t -64bitchunk 64bit file (only when -dest isn't an existing file) \n");
+    printf("\n");
+
+    printf("\t -help Print this help information \n");
+    printf("\t -version Print version \n");
 }
 
 void print_version()
@@ -62,6 +70,7 @@ int main (int argc, const char * argv[]) {
     BOOL listmetadata = false;
     BOOL removemetadata = false;
 
+    BOOL _64bitchunk = NO;
     BOOL downmixAudio = NO;
     NSString *downmixArg = nil;
     NSString *downmixType = nil;
@@ -126,6 +135,10 @@ int main (int argc, const char * argv[]) {
             }
             argc--;
 		}
+        else if ( ! strcmp ( args, "64bitchunk" ) )
+        {
+            _64bitchunk = YES;
+        }
         else if ( ! strcmp ( args, "delay" ) )
 		{
 			delay = atoi(*argv++);
@@ -172,6 +185,11 @@ int main (int argc, const char * argv[]) {
 		}
 	}
 
+    if ([sourcePath isEqualToString:destinationPath]) {
+        printf("The destination path need to be different from the source path\n");
+        exit(1);
+    }
+    
     if (sourcePath && (listtracks || listmetadata)) {
         MP42File *mp4File;
 
@@ -389,7 +407,7 @@ int main (int argc, const char * argv[]) {
             success = [mp4File updateMP4FileWithAttributes:attributes error:&outError];
 
         else if (modified && ![mp4File hasFileRepresentation] && destinationPath) {
-            if ([mp4File estimatedDataLength] > 4200000000)
+            if ([mp4File estimatedDataLength] > 4200000000 || _64bitchunk)
                 [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitData];
 
             success = [mp4File writeToUrl:[NSURL fileURLWithPath:destinationPath]
