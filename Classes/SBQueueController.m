@@ -365,12 +365,10 @@ static SBQueueController *sharedController = nil;
 
         for (MP42Track *track in mp4File.tracks)
             if ([track isKindOfClass:[MP42VideoTrack class]]) {
-                uint64_t tw = (uint64_t) [((MP42VideoTrack *) track) trackWidth];
-                uint64_t th = (uint64_t) [((MP42VideoTrack *) track) trackHeight];
-                if ((tw > 1280) && (th > 720))
-                    [mp4File.metadata setTag:@"2" forKey:@"HD Video"];
-                else if ((tw >= 960) && (th >= 720))
-                    [mp4File.metadata setTag:@"1" forKey:@"HD Video"];
+                int hdVideo = isHdVideo([((MP42VideoTrack *) track) trackWidth], [((MP42VideoTrack *) track) trackHeight]);
+
+                if (hdVideo)
+                    [mp4File.metadata setTag:[NSNumber numberWithInt:hdVideo] forKey:@"HD Video"];
             }
 
         [[mp4File metadata] mergeMetadata:metadata];

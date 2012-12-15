@@ -160,6 +160,16 @@ uint64_t getTrackSize(MP4FileHandle fileHandle, MP4TrackId trackId)
     return dataLength;
 }
 
+int isHdVideo(uint64_t width, uint64_t height)
+{
+    if ((width > 1280) || (height > 720))
+        return 2;
+    else if (((width >= 960) && (height >= 720)) || width >= 1280)
+        return 1;
+
+    return 0;
+}
+
 MP4TrackId findChapterTrackId(MP4FileHandle fileHandle)
 {
     MP4TrackId trackId = 0;

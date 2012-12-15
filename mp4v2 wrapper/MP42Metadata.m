@@ -614,18 +614,14 @@ static const genreType_t genreType_strings[] = {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 
     if ([key isEqualToString:@"HD Video"]) {
-        if ([value isKindOfClass:[NSNumber class]]) {
+        if ([value isKindOfClass:[NSNumber class]])
             hdVideo = [value integerValue];
-            isEdited = YES;
-        }
-        else if( value != nil && [value length] > 0 && [value isMatchedByRegex:regexPositive]) {
+        else if( value != nil && [value length] > 0 && [value isMatchedByRegex:regexPositive])
             hdVideo = [value integerValue];
-            isEdited = YES;
-        }
-        else {
+        else
             hdVideo = 0;
-            isEdited = YES;
-        }
+
+        isEdited = YES;
     }
     else if ([key isEqualToString:@"Genre"]) {
         if ([value isKindOfClass:[NSNumber class]]) {
