@@ -67,6 +67,8 @@ extern NSString * const MP42FileTypeM4A;
 
 - (uint64_t)estimatedDataLength;
 
+- (void) iTunesFriendlyTrackGroups;
+
 - (BOOL) writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError;
 - (BOOL) updateMP4FileWithAttributes:(NSDictionary *)attributes error:(NSError **)outError;
 - (void) optimize;
