@@ -18,12 +18,12 @@ void print_help()
     printf("\t\t -removemetadata remove all the tags \n");
     printf("\t\t -itunesfriendly enable tracks and create altenate groups in the iTunes friendly way\n");
     printf("\n");
-    printf("\t\t -listtracks For source file only, lists the tracks in the source movie. \n");
-    printf("\t\t -listmetadata For source file only, lists the metadata in the source movie. \n");
-    printf("\n");
 
     printf("\t -source <source file> \n");
     printf("\t -source options:\n");
+    printf("\t\t -listtracks For source file only, lists the tracks in the source movie. \n");
+    printf("\t\t -listmetadata For source file only, lists the metadata in the source movie. \n");
+    printf("\n");
     printf("\t\t -delay Delay in ms \n");
     printf("\t\t -height Height in pixel \n");
     printf("\t\t -language Track language (i.e. English) \n");
@@ -38,17 +38,6 @@ void print_help()
 void print_version()
 {
     printf("\t\tversion 0.18\n");
-}
-
-// ---------------------------------------------------------------------------
-//		printArgs
-// ---------------------------------------------------------------------------
-static void printArgs(int argc, const char **argv)
-{
-	int i;
-	for( i = 0; i < argc; i++ )
-		printf("%s ", argv[i]);
-	printf("\n");
 }
 
 int main (int argc, const char * argv[]) {
@@ -82,8 +71,6 @@ int main (int argc, const char * argv[]) {
         print_help();
         exit(-1);
     }
-
-    //printArgs(argc,argv);
 
     argv += 1;
     argc--;
@@ -192,11 +179,12 @@ int main (int argc, const char * argv[]) {
 		}
 	}
 
+    // Don't let the user mux a file to the file itself
     if ([sourcePath isEqualToString:destinationPath]) {
         printf("The destination path need to be different from the source path\n");
         exit(1);
     }
-    
+
     if (sourcePath && (listtracks || listmetadata)) {
         MP42File *mp4File;
 
@@ -413,7 +401,7 @@ int main (int argc, const char * argv[]) {
             [mp4File iTunesFriendlyTrackGroups];
             modified = YES;
         }
-    
+
         BOOL success;
         if (modified && [mp4File hasFileRepresentation])
             success = [mp4File updateMP4FileWithAttributes:attributes error:&outError];
