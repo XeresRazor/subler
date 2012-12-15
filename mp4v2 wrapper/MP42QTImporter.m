@@ -48,8 +48,10 @@
 							   [NSNumber numberWithBool:NO], @"QTMovieOpenAsyncOKAttribute",
 							   nil];
 
-        sourceFile = [[QTMovie alloc] initWithAttributes:dict 
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            sourceFile = [[QTMovie alloc] initWithAttributes:dict
 												   error:outError];
+        });
 
 		if (sourceFile)
 			[self movieLoaded];
