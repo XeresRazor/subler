@@ -218,7 +218,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
     [track release];
 }
 
-- (void) optimize
+- (BOOL) optimize
 {
     __block BOOL noErr = NO;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -255,6 +255,8 @@ NSString * const MP42FileTypeM4B = @"m4b";
 
     [fileManager release];
     [pool release];
+
+    return noErr;
 }
 
 - (BOOL) writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError
