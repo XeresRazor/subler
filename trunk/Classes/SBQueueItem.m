@@ -15,7 +15,7 @@
 @synthesize URL = fileURL;
 @synthesize destURL;
 @synthesize mp4File;
-@synthesize status;
+
 - (id)init
 {
     self = [super init];
@@ -92,6 +92,22 @@
 + (id)itemWithMP4:(MP42File*)MP4 url:(NSURL*)URL attributes:(NSDictionary*)dict
 {
     return [[[SBQueueItem alloc] initWithMP4:MP4 url:URL attributes:dict] autorelease];
+}
+
+- (SBQueueItemStatus)status
+{
+    return status;
+}
+
+- (void) setStatus:(SBQueueItemStatus)itemStatus
+{
+    status = itemStatus;
+    if (status == SBQueueItemStatusCompleted) {
+        if (mp4File) {
+            [mp4File release];
+            mp4File = nil;
+        }
+    }
 }
 
 - (void)dealloc

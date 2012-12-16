@@ -411,13 +411,15 @@ static SBQueueController *sharedController = nil;
             [destination startAccessingSecurityScopedResource];
 
         for (;;) {
+            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
             SBQueueItem *item = [self firstItemInQueue];
             if (item == nil)
                 break;
 
             NSURL * url = [item URL];
             NSURL * destURL = nil;
-            MP42File *mp4File = [[item mp4File] retain];
+            MP42File *mp4File = [item mp4File];
             [mp4File setDelegate:self];
 
             [item setStatus:SBQueueItemStatusWorking];
@@ -440,7 +442,7 @@ static SBQueueController *sharedController = nil;
 
             // The file has been added directly to the queue
             if (!mp4File && url) {
-                mp4File = [[self prepareQueueItem:url error:&outError] retain];
+                mp4File = [self prepareQueueItem:url error:&outError];
             }
 
             currentItem = mp4File;
@@ -469,24 +471,25 @@ static SBQueueController *sharedController = nil;
                         [countLabel setStringValue:[NSString stringWithFormat:@"Optimizing file %d of %d.",itemIndex + 1, [filesArray count]]];
                     });
 
-                    [mp4File optimize];
+                    success = [mp4File optimize];
                 }
-                [item setStatus:SBQueueItemStatusCompleted];
             }
+            if (success)
+                [item setStatus:SBQueueItemStatusCompleted];
             else {
                 [item setStatus:SBQueueItemStatusFailed];
                 if (outError)
                     NSLog(@"Error: %@", [outError localizedDescription]);
             }
 
-            [mp4File release];
-
             // Update the UI
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSInteger itemIndex = [filesArray indexOfObject:item];
                 [tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
             });
-            
+
+            [pool release];
+
             if (status == SBQueueStatusCancelled)
                 break;
         }
