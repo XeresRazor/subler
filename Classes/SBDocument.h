@@ -65,6 +65,7 @@
 
 - (IBAction) selectMetadataFile: (id) sender;
 - (IBAction) addChaptersEvery: (id) sender;
+- (IBAction) iTunesFriendlyTrackGroups: (id) sender;
 
 - (IBAction) export: (id) sender;
 
