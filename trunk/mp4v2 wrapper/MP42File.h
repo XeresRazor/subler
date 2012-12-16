@@ -71,7 +71,7 @@ extern NSString * const MP42FileTypeM4A;
 
 - (BOOL) writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError;
 - (BOOL) updateMP4FileWithAttributes:(NSDictionary *)attributes error:(NSError **)outError;
-- (void) optimize;
+- (BOOL) optimize;
 
 - (void) cancel;
 
