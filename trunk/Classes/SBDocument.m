@@ -362,6 +362,9 @@
 
     if (action == @selector(addChaptersEvery:))
         return YES;
+    
+    if (action == @selector(iTunesFriendlyTrackGroups:))
+        return YES;
 
 	if (action == @selector(export:) && [fileTracksTable selectedRow] != -1)
 		if ([[mp4File trackAtIndex:[fileTracksTable selectedRow]] respondsToSelector:@selector(exportToURL:error:)] &&
@@ -716,7 +719,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         [self updateChangeCount:NSChangeDone];
         [fileTracksTable reloadData];
     }
-    
+
     if (metadata) {
         [mp4File.metadata mergeMetadata:metadata];
         [self tableViewSelectionDidChange:nil];
@@ -840,6 +843,14 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
     [fileTracksTable reloadData];
     [self tableViewSelectionDidChange:nil];
+    [self updateChangeCount:NSChangeDone];
+}
+
+- (IBAction) iTunesFriendlyTrackGroups: (id) sender
+{
+    [mp4File iTunesFriendlyTrackGroups];
+    [fileTracksTable reloadData];
+    [self tableViewSelectionDidChange:nill];
     [self updateChangeCount:NSChangeDone];
 }
 
