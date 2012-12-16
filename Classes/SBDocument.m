@@ -850,7 +850,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 {
     [mp4File iTunesFriendlyTrackGroups];
     [fileTracksTable reloadData];
-    [self tableViewSelectionDidChange:nill];
+    [self tableViewSelectionDidChange:nil];
     [self updateChangeCount:NSChangeDone];
 }
 
