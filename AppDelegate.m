@@ -68,7 +68,7 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
         [[SBQueueController sharedController] showWindow:self];
 
     MP4SetLogCallback(logCallback);
-    MP4LogSetLevel(MP4_LOG_ERROR);
+    MP4LogSetLevel(MP4_LOG_INFO);
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -79,11 +79,13 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
         [[NSUserDefaults standardUserDefaults] setValue:@"YES" forKey:@"SBShowQueueWindow"];
     else
         [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"SBShowQueueWindow"];
-    
-    if ([[SBQueueController sharedController] saveQueueToDisk])
-        NSLog(@"Queue saved.");
-    else
-        NSLog(@"Failed to save queue to disk!");
+
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"Debug"]) {
+        if ([[SBQueueController sharedController] saveQueueToDisk])
+            NSLog(@"Queue saved.");
+        else
+            NSLog(@"Failed to save queue to disk!");
+    }
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)app
