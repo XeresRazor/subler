@@ -16,7 +16,16 @@
 
 @interface AVFTrackHelper : NSObject {
 @public
+    BOOL                countFrames;
+    int64_t             correctionValue;
+    int64_t             disTimeStamp;
+    CMTimeRange         *discontinuity;
+    uint64_t            discontinuityCount;
+    BOOL                doNotDisplay;
     CMTime              currentTime;
+    CMTime              segmentEndTimestamp;
+    CMTime              segmentDuration;
+    CMTime              segmentStarTime;
     AVAssetReaderOutput *assetReaderOutput;
     int64_t             minDisplayOffset;
 }
@@ -71,7 +80,7 @@
                 result = @"Apple ProRes";
                 break;
             case kCMVideoCodecType_SorensonVideo3:
-                result = @"Sorenson 3";
+                result = @"Sorenson Video 3";
                 break;
             case 'png ':
                 result = @"PNG";
@@ -289,7 +298,7 @@
     return self;
 }
 
--(MP42Metadata*)convertMetadata
+-(void)convertMetadata
 {
     NSArray *items = nil;
     NSDictionary *commonItemsDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Name", AVMetadataCommonKeyTitle,
@@ -497,8 +506,6 @@
             }
         }
     }
-
-    return metadata;
 }
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track
@@ -674,8 +681,9 @@
 	if (!success)
 		localError = [assetReader error];
 
-    for (MP42Track * track in activeTracks) {
-        AVAssetReaderOutput *assetReaderOutput = ((AVFTrackHelper*)track.trackDemuxerHelper)->assetReaderOutput;
+    for (MP42Track * track in activeTracks) {        
+        trackHelper = track.trackDemuxerHelper;
+        AVAssetReaderOutput *assetReaderOutput = trackHelper->assetReaderOutput;
 
         while (!isCancelled) {
             while ([samplesBuffer count] >= 300) {
@@ -689,20 +697,60 @@
                     CMTime duration = CMSampleBufferGetDuration(sampleBuffer);
                     CMTime decodeTimeStamp = CMSampleBufferGetDecodeTimeStamp(sampleBuffer);
                     CMTime presentationTimeStamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+                    CMTime presentationOutputTimeStamp = CMSampleBufferGetOutputPresentationTimeStamp(sampleBuffer);
 
                     CMBlockBufferRef buffer = CMSampleBufferGetDataBuffer(sampleBuffer);
                     size_t sampleSize = CMBlockBufferGetDataLength(buffer);
                     void *sampleData = malloc(sampleSize);
                     CMBlockBufferCopyDataBytes(buffer, 0, sampleSize, sampleData);
 
+                    // Read sample attachment, sync to mark the frame as sync, do not display to create a new edit list
                     BOOL sync = 1;
+                    BOOL doNotDisplay = 0;
                     CFArrayRef attachmentsArray = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, NO);
                     if (attachmentsArray) {
                         for (NSDictionary *dict in (NSArray*)attachmentsArray) {
                             if ([dict valueForKey:(NSString*)kCMSampleAttachmentKey_NotSync])
                                 sync = 0;
+                            if ([dict valueForKey:(NSString*)kCMSampleAttachmentKey_DoNotDisplay]) {
+                                doNotDisplay = 1;
+                            }
                         }
                     }
+
+                    if ((presentationTimeStamp.value + trackHelper->correctionValue) != presentationOutputTimeStamp.value) {
+                        if (!trackHelper->discontinuity)
+                            trackHelper->discontinuity = (CMTimeRange *) malloc(sizeof(CMTimeRange) * 100);
+
+                        NSLog(@"We found a timestamp discontinuity");
+                        NSLog(@"Current presentationTimeStamp: %lld", presentationTimeStamp.value);
+                        trackHelper->correctionValue =  -presentationTimeStamp.value + presentationOutputTimeStamp.value;
+                        //trackHelper->disTimeStamp = presentationOutputTimeStamp.value;
+                        NSLog(@"Making an adjustment of %lld", -trackHelper->correctionValue);
+                        NSLog(@"Timestamp of discontinuity %lld", presentationOutputTimeStamp.value);
+
+                        trackHelper->discontinuity[trackHelper->discontinuityCount].start = presentationTimeStamp;
+                        trackHelper->discontinuity[trackHelper->discontinuityCount].duration.value = -trackHelper->correctionValue; //presentationTimeStamp.value;
+                        trackHelper->discontinuity[trackHelper->discontinuityCount].duration.timescale = presentationTimeStamp.timescale;
+
+                        trackHelper->discontinuityCount++;
+                        trackHelper->countFrames = YES;
+                    }
+                    if (trackHelper->countFrames) {
+                        trackHelper->disTimeStamp +=  duration.value;
+                    }
+                    
+                    if (presentationOutputTimeStamp.value >= trackHelper->currentTime.value) {
+                        trackHelper->currentTime = presentationOutputTimeStamp;
+                        if (trackHelper->countFrames) {
+                            trackHelper->discontinuity[trackHelper->discontinuityCount-1].duration.value -= trackHelper->disTimeStamp;
+                            NSLog(@"Corrected decode time stamp: %lld", trackHelper->disTimeStamp);
+                            }
+                        trackHelper->countFrames = NO;
+                    }
+
+                    //NSLog(@"D: %lld, P: %lld, PO: %lld Display: %d", decodeTimeStamp.value, presentationTimeStamp.value, presentationOutputTimeStamp.value, doNotDisplay);
+
                     MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
                     sample->sampleData = sampleData;
                     sample->sampleSize = sampleSize;
@@ -757,13 +805,29 @@
                     int i = 0, pos = 0;
                     for (i = 0; i < samplesNum; i++) {
                         CMSampleTimingInfo sampleTimingInfo;
+                        CMTime decodeTimeStamp = {0,0,0,0};
+                        CMTime presentationTimeStamp = {0,0,0,0};
+                        CMTime presentationOutputTimeStamp = CMSampleBufferGetOutputPresentationTimeStamp(sampleBuffer);
+
                         size_t sampleSize;
 
                         // If the size of sample timing array is equal to 1, it means every sample has got the same timing
-                        if (timingArrayEntries == 1)
+                        if (timingArrayEntries == 1) {
                             sampleTimingInfo = timingArrayOut[0];
-                        else
+                            decodeTimeStamp = sampleTimingInfo.decodeTimeStamp;
+                            decodeTimeStamp.value = decodeTimeStamp.value + ( sampleTimingInfo.duration.value * i);
+                            
+                            presentationTimeStamp = sampleTimingInfo.presentationTimeStamp;
+                            presentationTimeStamp.value = presentationTimeStamp.value + ( sampleTimingInfo.duration.value * i);
+
+                        }
+                        else {
                             sampleTimingInfo = timingArrayOut[i];
+                            decodeTimeStamp = sampleTimingInfo.decodeTimeStamp;
+                            presentationTimeStamp = sampleTimingInfo.presentationTimeStamp;
+                        }
+
+                        presentationOutputTimeStamp.value = presentationOutputTimeStamp.value + ( sampleTimingInfo.duration.value * i / ( (double) sampleTimingInfo.duration.timescale / presentationOutputTimeStamp.timescale));
 
                         // If the size of sample size array is equal to 1, it means every sample has got the same size
                         if (sizeArrayEntries ==  1)
@@ -782,19 +846,55 @@
                         }
 
                         BOOL sync = 1;
+                        BOOL doNotDisplay = 0;
                         CFArrayRef attachmentsArray = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, NO);
                         if (attachmentsArray) {
                             for (NSDictionary *dict in (NSArray*)attachmentsArray) {
                                 if ([dict valueForKey:(NSString*)kCMSampleAttachmentKey_NotSync])
                                     sync = 0;
+                                if ([dict valueForKey:(NSString*)kCMSampleAttachmentKey_DoNotDisplay])
+                                    doNotDisplay = 1;
                             }
                         }
 
+                        if ((presentationTimeStamp.value + trackHelper->correctionValue) != presentationOutputTimeStamp.value) {
+                            if (!trackHelper->discontinuity)
+                                trackHelper->discontinuity = (CMTimeRange *) malloc(sizeof(CMTimeRange) * 100);
+                            
+                            NSLog(@"We found a timestamp discontinuity");
+                            NSLog(@"Current presentationTimeStamp: %lld", presentationTimeStamp.value);
+                            trackHelper->correctionValue =  -presentationTimeStamp.value + presentationOutputTimeStamp.value;
+                            //trackHelper->disTimeStamp = presentationOutputTimeStamp.value;
+                            NSLog(@"Making an adjustment of %lld", -trackHelper->correctionValue);
+                            NSLog(@"Timestamp of discontinuity %lld", presentationOutputTimeStamp.value);
+                            
+                            trackHelper->discontinuity[trackHelper->discontinuityCount].start = presentationTimeStamp;
+                            trackHelper->discontinuity[trackHelper->discontinuityCount].duration.value = -trackHelper->correctionValue; //presentationTimeStamp.value;
+                            trackHelper->discontinuity[trackHelper->discontinuityCount].duration.timescale = presentationTimeStamp.timescale;
+                            
+                            trackHelper->discontinuityCount++;
+                            trackHelper->countFrames = YES;
+                        }
+                        if (trackHelper->countFrames) {
+                            trackHelper->disTimeStamp +=  sampleTimingInfo.duration.value;
+                        }
+                        
+                        if (presentationOutputTimeStamp.value >= trackHelper->currentTime.value) {
+                            trackHelper->currentTime = presentationOutputTimeStamp;
+                            if (trackHelper->countFrames) {
+                                trackHelper->discontinuity[trackHelper->discontinuityCount-1].duration.value -= trackHelper->disTimeStamp;
+                                NSLog(@"Corrected decode time stamp: %lld", trackHelper->disTimeStamp);
+                            }
+                            trackHelper->countFrames = NO;
+                        }
+
+                        //NSLog(@"D: %lld, P: %lld, PO: %lld", decodeTimeStamp.value, presentationTimeStamp.value, presentationOutputTimeStamp.value);
+                        
                         MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
                         sample->sampleData = sampleData;
                         sample->sampleSize = sampleSize;
                         sample->sampleDuration = sampleTimingInfo.duration.value;
-                        sample->sampleOffset = -sampleTimingInfo.decodeTimeStamp.value + sampleTimingInfo.presentationTimeStamp.value;
+                        sample->sampleOffset = 0; //-sampleTimingInfo.decodeTimeStamp.value + sampleTimingInfo.presentationTimeStamp.value;
                         sample->sampleTimestamp = sampleTimingInfo.presentationTimeStamp.value;
                         sample->sampleIsSync = sync;
                         sample->sampleTrackId = track.Id;
@@ -885,19 +985,40 @@
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
 {
     uint32_t timescale = MP4GetTimeScale(fileHandle);
+    int i;
 
     for (MP42Track * track in activeTracks) {
         AVAssetTrack *assetTrack = [localAsset trackWithTrackID:track.sourceId];
+        MP4Duration trackDuration = 0;
+        MP4Timestamp editDuration;
+
+        AVFTrackHelper* trackHelper = track.trackDemuxerHelper;
 
         for (AVAssetTrackSegment *segment in assetTrack.segments) {
             bool empty = NO;
             CMTimeMapping timeMapping = segment.timeMapping;
-            
+            CMTimeValue correction = 0;
+
+            for (i = trackHelper->discontinuityCount - 1; i >= 0; i--) {
+                CMTimeRange timeRange = trackHelper->discontinuity[i];
+
+                if (timeMapping.source.start.value > timeRange.start.value) {
+                    correction = timeRange.duration.value;
+                    NSLog(@"Discontinuity --");
+                    NSLog(@"Presentation Time: %lld", timeRange.start.value);
+                    NSLog(@"Timescale: %d", timeRange.start.timescale);
+                    NSLog(@"Correction: %lld", timeRange.duration.value);
+
+                    break;
+                }
+
+            }
+
             if (timeMapping.source.duration.flags & kCMTimeFlags_Indefinite || timeMapping.target.duration.flags & kCMTimeFlags_Indefinite) {
-                //NSLog(@"Indefinite time mappings");
+                NSLog(@"Indefinite time mappings");
             }
             else {
-                /*NSLog(@"Source --");
+                NSLog(@"Source --");
                 NSLog(@"Start: %lld", timeMapping.source.start.value);
                 NSLog(@"Timescale: %d", timeMapping.source.start.timescale);
                 NSLog(@"Duration: %lld", timeMapping.source.duration.value);
@@ -907,21 +1028,28 @@
                 NSLog(@"Start %lld", timeMapping.target.start.value);
                 NSLog(@"Timescale: %d", timeMapping.target.start.timescale);
                 NSLog(@"Duration: %lld", timeMapping.target.duration.value);
-                NSLog(@"Timescale: %d", timeMapping.target.start.timescale);*/
+                NSLog(@"Timescale: %d", timeMapping.target.start.timescale);
 
                 if (segment.empty) {
                     NSLog(@"Empty segment");
                     empty = YES;
                 }
-
+                
+                editDuration = timeMapping.target.duration.value * ((double) timescale / timeMapping.target.duration.timescale);
+                
                 if (empty)
                     MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, -1,
-                                    timeMapping.target.duration.value * ((double) timescale / timeMapping.target.start.timescale), 0);
+                                    editDuration, 0);
                 else
-                    MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, timeMapping.target.start.value,
-                                    timeMapping.target.duration.value * ((double) timescale / timeMapping.target.start.timescale), 0);
+                    MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, timeMapping.source.start.value - correction,
+                                    editDuration, 0);
+
+                trackDuration = trackDuration + editDuration;
+
             }
         }
+        if (trackDuration)
+            MP4SetTrackIntegerProperty(fileHandle, [track Id], "tkhd.duration", trackDuration);
     }
     return YES;
 }
