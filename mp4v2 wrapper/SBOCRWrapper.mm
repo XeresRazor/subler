@@ -7,14 +7,10 @@
 //
 
 #import "SBOCRWrapper.h"
+#import "SBLanguages.h"
 
 // Tesseract OCR
 #include "tesseract/baseapi.h"
-#include <iostream>
-#include <string>
-#include <cstdio>
-
-#import "SBLanguages.h"
 
 using namespace tesseract;
 

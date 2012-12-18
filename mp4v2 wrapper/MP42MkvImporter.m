@@ -13,7 +13,7 @@
 #import "SBLanguages.h"
 #import "MP42File.h"
 
-#include "avcodec.h"
+#include "avutil.h"
 
 u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
 
@@ -44,7 +44,7 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
     unsigned int buffer, samplesWritten, bufferFlush;
 
     NSInteger fileFormat;
-    SBSubSerializer *ss; 
+    SBSubSerializer *ss;
 }
 @end
 
@@ -659,8 +659,7 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
         }
 
         if (trackInfo->Type == TT_SUB) {
-            int vobsub = !strcmp(trackInfo->CodecID, "S_VOBSUB");
-            if (!vobsub) {
+            if (strcmp(trackInfo->CodecID, "S_VOBSUB") && strcmp(trackInfo->CodecID, "S_HDMV/PGS")) {
                 if (!trackHelper->ss)
                     trackHelper->ss = [[SBSubSerializer alloc] init];
                 trackHelper->samplesWritten++;
@@ -706,7 +705,7 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
                         compressed = YES;
 
                 trackHelper->samplesWritten++;
-                
+
                 if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
                     fprintf(stderr,"fseeko(): %s\n", strerror(errno));
                     break;				

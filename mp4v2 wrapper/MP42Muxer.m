@@ -62,7 +62,7 @@
 
             track.trackConverterHelper = audioConverter;
         }
-        if([track isMemberOfClass:[MP42SubtitleTrack class]] && [track.format isEqualToString:@"VobSub"] && track.needConversion) {
+        if([track isMemberOfClass:[MP42SubtitleTrack class]] && ([track.format isEqualToString:@"VobSub"] || [track.format isEqualToString:@"PGS"]) && track.needConversion) {
             track.format = @"3GPP Text";
             SBVobSubConverter *subConverter = [[SBVobSubConverter alloc] initWithTrack:(MP42SubtitleTrack*)track
                                                                                  error:outError];

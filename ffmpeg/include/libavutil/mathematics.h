@@ -1,5 +1,5 @@
 /*
- * copyright (c) 2005 Michael Niedermayer <michaelni@gmx.at>
+ * copyright (c) 2005-2012 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
  *
@@ -25,6 +25,7 @@
 #include <math.h>
 #include "attributes.h"
 #include "rational.h"
+#include "intfloat.h"
 
 #ifndef M_E
 #define M_E            2.7182818284590452354   /* e */
@@ -51,11 +52,17 @@
 #define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
 #endif
 #ifndef NAN
-#define NAN            (0.0/0.0)
+#define NAN            av_int2float(0x7fc00000)
 #endif
 #ifndef INFINITY
-#define INFINITY       (1.0/0.0)
+#define INFINITY       av_int2float(0x7f800000)
 #endif
+
+/**
+ * @addtogroup lavu_math
+ * @{
+ */
+
 
 enum AVRounding {
     AV_ROUND_ZERO     = 0, ///< Round toward zero.
@@ -90,6 +97,12 @@ int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding) av_cons
 int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq) av_const;
 
 /**
+ * Rescale a 64-bit integer by 2 rational numbers with specified rounding.
+ */
+int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
+                         enum AVRounding) av_const;
+
+/**
  * Compare 2 timestamps each in its own timebases.
  * The result of the function is undefined if one of the timestamps
  * is outside the int64_t range when represented in the others timebase.
@@ -108,5 +121,20 @@ int av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b);
  *         0                if a equals          b
  */
 int64_t av_compare_mod(uint64_t a, uint64_t b, uint64_t mod);
+
+/**
+ * Rescale a timestamp while preserving known durations.
+ *
+ * @param in_ts Input timestamp
+ * @param in_tb Input timesbase
+ * @param fs_tb Duration and *last timebase
+ * @param duration duration till the next call
+ * @param out_tb Output timesbase
+ */
+int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, int duration, int64_t *last, AVRational out_tb);
+
+/**
+ * @}
+ */
 
 #endif /* AVUTIL_MATHEMATICS_H */
