@@ -14,28 +14,18 @@
 #import "SubUtilities.h"
 #import "SBOCRWrapper.h"
 
-#include "intreadwrite.h"
-
 #define REGISTER_DECODER(x) { \
-extern AVCodec x##_decoder; \
-avcodec_register(&x##_decoder); }
+extern AVCodec ff_##x##_decoder; \
+avcodec_register(&ff_##x##_decoder); }
 
 void FFInitFFmpeg()
 {
-	/* This one is used because Global variables are initialized ONE time
-     * until the application quits. Thus, we have to make sure we're initialize
-     * the libavformat only once or we get an endlos loop when registering the same
-     * element twice!! */
-	static Boolean inited = FALSE;
-	
-	/* Register the Parser of ffmpeg, needed because we do no proper setup of the libraries */
-	if(!inited) {
-		inited = TRUE;
-		avcodec_init();
-		
+	static dispatch_once_t once;
+
+	dispatch_once(&once, ^{
 		REGISTER_DECODER(dvdsub);
-		
-	}
+        REGISTER_DECODER(pgssub);
+	});
 }
 
 typedef struct {
@@ -204,7 +194,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
 
 @implementation SBVobSubConverter
 
-- (void) DecoderThreadMainRoutine: (id) sender
+- (void) VobSubDecoderThreadMainRoutine: (id) sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     MP42SampleBuffer* subSample;
@@ -214,7 +204,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
     while(1) {
         while (![inputSamplesBuffer count] && !fileReaderDone)
             usleep(1000);
-        
+
         if (![inputSamplesBuffer count] && fileReaderDone)
             break;
 
@@ -332,7 +322,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
  
             }
             CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaFirst;
-            CFDataRef imgData = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, imageData, w*h*4,kCFAllocatorNull);
+            CFDataRef imgData = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, imageData, w*h*4, kCFAllocatorNull);
             CGDataProviderRef provider = CGDataProviderCreateWithCFData(imgData);
             CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
             CGImageRef cgImage = CGImageCreate(w,
@@ -384,17 +374,165 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
 	return;
 }
 
+- (void) PGSDecoderThreadMainRoutine: (id) sender
+{
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    MP42SampleBuffer* subSample;
+
+    encoderDone = NO;
+
+    while(1) {
+        while (![inputSamplesBuffer count] && !fileReaderDone)
+            usleep(1000);
+
+        if (![inputSamplesBuffer count] && fileReaderDone)
+            break;
+
+        MP42SampleBuffer* sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
+
+        int ret, got_sub;
+
+        if(sampleBuffer->sampleSize < 4) {
+            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
+            @synchronized(outputSamplesBuffer) {
+                [outputSamplesBuffer addObject:subSample];
+            }
+
+            [subSample release];
+            [inputSamplesBuffer removeObjectAtIndex:0];
+
+            continue;
+        }
+
+        AVPacket pkt;
+        av_init_packet(&pkt);
+        pkt.data = sampleBuffer->sampleData;
+        pkt.size = sampleBuffer->sampleSize;
+
+        ret = avcodec_decode_subtitle2(avContext, &subtitle, &got_sub, &pkt);
+
+        if (ret < 0 || !got_sub) {
+            NSLog(@"Error decoding PGS subtitle %d / %ld", ret, (long)bufferSize);
+
+            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
+
+            @synchronized(outputSamplesBuffer) {
+                [outputSamplesBuffer addObject:subSample];
+            }
+
+            [subSample release];
+            [inputSamplesBuffer removeObjectAtIndex:0];
+            
+            continue;
+        }
+
+        unsigned int i;
+        uint32_t *imageData;
+
+        BOOL forced = NO;
+
+        for (i = 0; i < subtitle.num_rects; i++) {
+            AVSubtitleRect *rect = subtitle.rects[i];
+
+            imageData = malloc(sizeof(uint32_t) * rect->w * rect->h * 4);
+            memset(imageData, 0, rect->w * rect->h * 4);
+
+            unsigned int w = rect->w;
+            unsigned int h = rect->h;
+
+            int xx, yy;
+            for (yy = 0; yy < rect->h; yy++)
+            {
+                for (xx = 0; xx < rect->w; xx++)
+                {
+                    uint32_t argb;
+                    int pixel;
+                    uint8_t color;
+
+                    pixel = yy * rect->w + xx;
+                    color = rect->pict.data[0][pixel];
+                    argb = ((uint32_t*)rect->pict.data[1])[color];
+
+                    imageData[yy * rect->w + xx] = argb;
+                }
+            }
+
+            size_t length = sizeof(uint8_t) * rect->w * rect->h * 4;
+            uint8_t* imgData2 = (uint8_t*)imageData;
+            for (i = 0; i < length; i +=4) {
+                imgData2[i] = 255;
+                
+            }
+
+            CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaFirst;
+            CFDataRef imgData = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, (uint8_t*)imageData, w*h*4, kCFAllocatorNull);
+            CGDataProviderRef provider = CGDataProviderCreateWithCFData(imgData);
+            CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+            CGImageRef cgImage = CGImageCreate(w,
+                                               h,
+                                               8,
+                                               32,
+                                               w*4,
+                                               colorSpace,
+                                               bitmapInfo,
+                                               provider,
+                                               NULL,
+                                               NO,
+                                               kCGRenderingIntentDefault);
+            CGColorSpaceRelease(colorSpace);
+
+            //NSBitmapImageRep *bitmapImage = [[NSBitmapImageRep alloc]initWithCGImage:(CGImageRef)cgImage];
+            //[[bitmapImage representationUsingType:NSTIFFFileType properties:nil] writeToFile:@"/tmp/foo.tif" atomically:YES];
+            //[bitmapImage release];
+
+            NSString *text = [ocr performOCROnCGImage:cgImage];
+
+            if (text)
+                subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced);
+            else
+                subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, forced);
+
+            @synchronized(outputSamplesBuffer) {
+                [outputSamplesBuffer addObject:subSample];
+            }
+
+            [subSample release];
+
+            CGImageRelease(cgImage);
+            CGDataProviderRelease(provider);
+            CFRelease(imgData);
+
+            free(imageData);
+        }
+
+        avsubtitle_free(&subtitle);
+        av_free_packet(&pkt);
+        [inputSamplesBuffer removeObjectAtIndex:0];
+    }
+
+    encoderDone = YES;
+
+    [pool drain];
+
+	return;
+}
+
 - (id) initWithTrack: (MP42SubtitleTrack*) track error:(NSError **)outError
 {
     if ((self = [super init])) {
         if (!avCodec) {
             FFInitFFmpeg();
 
-            avCodec = avcodec_find_decoder(CODEC_ID_DVD_SUBTITLE);
-            avContext = avcodec_alloc_context();
+            if (([track.sourceFormat isEqualToString:@"VobSub"]))
+                avCodec = avcodec_find_decoder(AV_CODEC_ID_DVD_SUBTITLE);
+            else if (([track.sourceFormat isEqualToString:@"PGS"]))
+                avCodec = avcodec_find_decoder(AV_CODEC_ID_HDMV_PGS_SUBTITLE);
 
-            if (avcodec_open(avContext, avCodec)) {
-                NSLog(@"Error opening DVD subtitle decoder");
+            avContext = avcodec_alloc_context3(NULL);
+
+            if (avcodec_open2(avContext, avCodec, NULL)) {
+                NSLog(@"Error opening subtitle decoder");
+                av_freep(&avContext);
                 return nil;
             }
         }
@@ -405,11 +543,20 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
         srcMagicCookie = [[[track trackImporterHelper] magicCookieForTrack:track] retain];
 
         ocr = [[SBOCRWrapper alloc] initWithLanguage:[track language]];
-        
-        // Launch the decoder thread.
-        decoderThread = [[NSThread alloc] initWithTarget:self selector:@selector(DecoderThreadMainRoutine:) object:self];
-        [decoderThread setName:@"VobSub Decoder"];
-        [decoderThread start];
+
+        if (([track.sourceFormat isEqualToString:@"VobSub"])) {
+            // Launch the vobsub decoder thread.
+            decoderThread = [[NSThread alloc] initWithTarget:self selector:@selector(VobSubDecoderThreadMainRoutine:) object:self];
+            [decoderThread setName:@"VobSub Decoder"];
+            [decoderThread start];
+        }
+        else if (([track.sourceFormat isEqualToString:@"PGS"])) {
+            // Launch the pgs decoder thread.
+            decoderThread = [[NSThread alloc] initWithTarget:self selector:@selector(PGSDecoderThreadMainRoutine:) object:self];
+            [decoderThread setName:@"PGS Decoder"];
+            [decoderThread start];
+        }
+
     }
 
     return self;

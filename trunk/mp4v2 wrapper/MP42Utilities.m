@@ -712,7 +712,7 @@ BOOL isTrackMuxable(NSString * formatName)
 }
 
 BOOL trackNeedConversion(NSString * formatName) {
-    NSArray* supportedConversionFormats = [NSArray arrayWithObjects:@"Vorbis", @"Flac", @"Mp3", @"True HD", @"ASS", @"SSA", @"Plain Text", nil];
+    NSArray* supportedConversionFormats = [NSArray arrayWithObjects:@"Vorbis", @"Flac", @"Mp3", @"True HD", @"ASS", @"SSA", @"Plain Text", @"PGS", nil];
 
     for (NSString* type in supportedConversionFormats)
         if ([formatName isEqualToString:type])

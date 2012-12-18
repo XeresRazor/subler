@@ -31,11 +31,6 @@
 		A940E0FF13F130FB007AB5C6 /* MP42AVFImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A940E0FE13F130FB007AB5C6 /* MP42AVFImporter.m */; };
 		A9569CEB0F616926002F79F8 /* MP42VideoTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9569CEA0F616926002F79F8 /* MP42VideoTrack.m */; };
 		A95C881D0F827BFB00F51A22 /* ToolbarRemoveTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = A95C881C0F827BFB00F51A22 /* ToolbarRemoveTemplate.png */; };
-		A95FE301133E3DCB00D35687 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95FE2FC133E3DCB00D35687 /* libavcodec.a */; };
-		A95FE302133E3DCB00D35687 /* libavcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95FE2FD133E3DCB00D35687 /* libavcore.a */; };
-		A95FE303133E3DCB00D35687 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95FE2FE133E3DCB00D35687 /* libavdevice.a */; };
-		A95FE304133E3DCB00D35687 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95FE2FF133E3DCB00D35687 /* libavformat.a */; };
-		A95FE305133E3DCB00D35687 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95FE300133E3DCB00D35687 /* libavutil.a */; };
 		A961476313F567E10068F161 /* SBQueueController.m in Sources */ = {isa = PBXBuildFile; fileRef = A961476013F567E10068F161 /* SBQueueController.m */; };
 		A961476413F567E10068F161 /* SBPresetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A961476213F567E10068F161 /* SBPresetManager.m */; };
 		A961476713F568210068F161 /* Batch.xib in Resources */ = {isa = PBXBuildFile; fileRef = A961476513F568210068F161 /* Batch.xib */; };
@@ -51,6 +46,11 @@
 		A975644D132A325C0051ED08 /* info.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A975644A132A325C0051ED08 /* info.pdf */; };
 		A975644E132A325C0051ED08 /* info-over.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A975644B132A325C0051ED08 /* info-over.pdf */; };
 		A975644F132A325C0051ED08 /* info-pressed.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A975644C132A325C0051ED08 /* info-pressed.pdf */; };
+		A97C78DA167F5F6100A7AD32 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95FE2FC133E3DCB00D35687 /* libavcodec.a */; };
+		A97C78DB167F5F6100A7AD32 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95FE2FE133E3DCB00D35687 /* libavdevice.a */; };
+		A97C78DC167F5F6100A7AD32 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95FE2FF133E3DCB00D35687 /* libavformat.a */; };
+		A97C78DD167F5F6100A7AD32 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95FE300133E3DCB00D35687 /* libavutil.a */; };
+		A97C78DF167F5F6100A7AD32 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A97C78DE167F5F6100A7AD32 /* libswresample.a */; };
 		A982D0C0140AB66400B92357 /* SBQueueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A982D0BF140AB66400B92357 /* SBQueueItem.m */; };
 		A984DB4B0F52D644001A20B2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A984DB4A0F52D644001A20B2 /* Sparkle.framework */; };
 		A984DB530F52D679001A20B2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A984DB4A0F52D644001A20B2 /* Sparkle.framework */; };
@@ -237,7 +237,6 @@
 		A95A60470F4422DB00767D87 /* mp4v2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mp4v2.h; path = mp4v2/mp4v2.h; sourceTree = "<group>"; };
 		A95C881C0F827BFB00F51A22 /* ToolbarRemoveTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ToolbarRemoveTemplate.png; path = images/ToolbarRemoveTemplate.png; sourceTree = "<group>"; };
 		A95FE2FC133E3DCB00D35687 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = ffmpeg/lib/libavcodec.a; sourceTree = "<group>"; };
-		A95FE2FD133E3DCB00D35687 /* libavcore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcore.a; path = ffmpeg/lib/libavcore.a; sourceTree = "<group>"; };
 		A95FE2FE133E3DCB00D35687 /* libavdevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavdevice.a; path = ffmpeg/lib/libavdevice.a; sourceTree = "<group>"; };
 		A95FE2FF133E3DCB00D35687 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ffmpeg/lib/libavformat.a; sourceTree = "<group>"; };
 		A95FE300133E3DCB00D35687 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ffmpeg/lib/libavutil.a; sourceTree = "<group>"; };
@@ -266,6 +265,7 @@
 		A975644B132A325C0051ED08 /* info-over.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "info-over.pdf"; path = "images/info-over.pdf"; sourceTree = "<group>"; };
 		A975644C132A325C0051ED08 /* info-pressed.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "info-pressed.pdf"; path = "images/info-pressed.pdf"; sourceTree = "<group>"; };
 		A97BE36E0F73D72E00652CBD /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		A97C78DE167F5F6100A7AD32 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = ffmpeg/lib/libswresample.a; sourceTree = "<group>"; };
 		A982D0BE140AB66400B92357 /* SBQueueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBQueueItem.h; path = Classes/SBQueueItem.h; sourceTree = "<group>"; };
 		A982D0BF140AB66400B92357 /* SBQueueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBQueueItem.m; path = Classes/SBQueueItem.m; sourceTree = "<group>"; };
 		A984DB4A0F52D644001A20B2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
@@ -388,6 +388,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A97C78DF167F5F6100A7AD32 /* libswresample.a in Frameworks */,
+				A97C78DA167F5F6100A7AD32 /* libavcodec.a in Frameworks */,
+				A97C78DB167F5F6100A7AD32 /* libavdevice.a in Frameworks */,
+				A97C78DC167F5F6100A7AD32 /* libavformat.a in Frameworks */,
+				A97C78DD167F5F6100A7AD32 /* libavutil.a in Frameworks */,
 				A9B3411C1679CA3E00E6EE0C /* QTKit.framework in Frameworks */,
 				A991319C13F0668300DCAA12 /* CoreMedia.framework in Frameworks */,
 				A991319A13F0615700DCAA12 /* AVFoundation.framework in Frameworks */,
@@ -400,13 +405,8 @@
 				A9C095800F7B6C8C00170CAF /* AudioToolbox.framework in Frameworks */,
 				A91F622D0FB0A56F00B96B33 /* libicucore.dylib in Frameworks */,
 				948058B6106E07990037A911 /* libz.dylib in Frameworks */,
-				A95FE301133E3DCB00D35687 /* libavcodec.a in Frameworks */,
-				A95FE302133E3DCB00D35687 /* libavcore.a in Frameworks */,
-				A95FE303133E3DCB00D35687 /* libavdevice.a in Frameworks */,
-				A95FE304133E3DCB00D35687 /* libavformat.a in Frameworks */,
 				A916F42F1678D8DA003920D6 /* libtesseract.a in Frameworks */,
 				A916F4311678DD07003920D6 /* libjpeg.a in Frameworks */,
-				A95FE305133E3DCB00D35687 /* libavutil.a in Frameworks */,
 				A9BAD447140505CB00F3F4AE /* liblept.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -436,11 +436,11 @@
 		1058C7A8FEA54F5311CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A97C78DE167F5F6100A7AD32 /* libswresample.a */,
 				A9BAD446140505CB00F3F4AE /* liblept.a */,
 				A916F42D1678D89F003920D6 /* libtesseract.a */,
 				A916F4301678DD07003920D6 /* libjpeg.a */,
 				A95FE2FC133E3DCB00D35687 /* libavcodec.a */,
-				A95FE2FD133E3DCB00D35687 /* libavcore.a */,
 				A95FE2FE133E3DCB00D35687 /* libavdevice.a */,
 				A95FE2FF133E3DCB00D35687 /* libavformat.a */,
 				A95FE300133E3DCB00D35687 /* libavutil.a */,
