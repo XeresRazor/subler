@@ -128,7 +128,6 @@ protected:
     CFDataRef data = CGDataProviderCopyData(CGImageGetDataProvider(cgImage));
     const UInt8 *imageData = CFDataGetBytePtr(data);
 
-    
     char* string = ocr->OCRFrame(imageData,
                                  bytes_per_pixel,
                                  bytes_per_line,
