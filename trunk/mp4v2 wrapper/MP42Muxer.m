@@ -11,7 +11,7 @@
 #import "MP42FileImporter.h"
 #import "MP42Sample.h"
 #import "SBAudioConverter.h"
-#import "SBVobSubConverter.h"
+#import "SBBitmapSubConverter.h"
 
 @implementation MP42Muxer
 
@@ -64,8 +64,8 @@
         }
         if([track isMemberOfClass:[MP42SubtitleTrack class]] && ([track.format isEqualToString:@"VobSub"] || [track.format isEqualToString:@"PGS"]) && track.needConversion) {
             track.format = @"3GPP Text";
-            SBVobSubConverter *subConverter = [[SBVobSubConverter alloc] initWithTrack:(MP42SubtitleTrack*)track
-                                                                                 error:outError];
+            SBBitmapSubConverter *subConverter = [[SBBitmapSubConverter alloc] initWithTrack:(MP42SubtitleTrack*)track
+                                                                                       error:outError];
 
             if (subConverter == nil) {
                 noErr = NO;

@@ -7,7 +7,7 @@
 //  Copyright 2011 Damiano Galassi. All rights reserved.
 //
 
-#import "SBVobSubConverter.h"
+#import "SBBitmapSubConverter.h"
 #import "MP42File.h"
 #import "MP42FileImporter.h"
 #import "MP42Sample.h"
@@ -192,14 +192,12 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
 	return noErr;
 }
 
-@implementation SBVobSubConverter
+@implementation SBBitmapSubConverter
 
 - (void) VobSubDecoderThreadMainRoutine: (id) sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     MP42SampleBuffer* subSample;
-
-    encoderDone = NO;
 
     while(1) {
         while (![inputSamplesBuffer count] && !fileReaderDone)
@@ -321,6 +319,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
                 imgData2[i] = 255;
  
             }
+
             CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaFirst;
             CFDataRef imgData = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, imageData, w*h*4, kCFAllocatorNull);
             CGDataProviderRef provider = CGDataProviderCreateWithCFData(imgData);
@@ -343,7 +342,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
             //[bitmapImage release];
 
             NSString *text = [ocr performOCROnCGImage:cgImage];
-            
+
             if (text)
                 subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced);
             else
@@ -379,8 +378,6 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     MP42SampleBuffer* subSample;
 
-    encoderDone = NO;
-
     while(1) {
         while (![inputSamplesBuffer count] && !fileReaderDone)
             usleep(1000);
@@ -389,20 +386,9 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
             break;
 
         MP42SampleBuffer* sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
-
-        int ret, got_sub;
-
-        if(sampleBuffer->sampleSize < 4) {
-            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
-            @synchronized(outputSamplesBuffer) {
-                [outputSamplesBuffer addObject:subSample];
-            }
-
-            [subSample release];
-            [inputSamplesBuffer removeObjectAtIndex:0];
-
-            continue;
-        }
+        int ret, got_sub, i;
+        uint32_t *imageData;
+        BOOL forced = NO;
 
         AVPacket pkt;
         av_init_packet(&pkt);
@@ -411,9 +397,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
 
         ret = avcodec_decode_subtitle2(avContext, &subtitle, &got_sub, &pkt);
 
-        if (ret < 0 || !got_sub) {
-            NSLog(@"Error decoding PGS subtitle %d / %ld", ret, (long)bufferSize);
-
+        if (ret < 0 || !got_sub || !subtitle.num_rects) {
             subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
 
             @synchronized(outputSamplesBuffer) {
@@ -422,23 +406,16 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
 
             [subSample release];
             [inputSamplesBuffer removeObjectAtIndex:0];
-            
+
             continue;
         }
 
-        unsigned int i;
-        uint32_t *imageData;
-
-        BOOL forced = NO;
-
         for (i = 0; i < subtitle.num_rects; i++) {
             AVSubtitleRect *rect = subtitle.rects[i];
+            NSString *text;
 
             imageData = malloc(sizeof(uint32_t) * rect->w * rect->h * 4);
             memset(imageData, 0, rect->w * rect->h * 4);
-
-            unsigned int w = rect->w;
-            unsigned int h = rect->h;
 
             int xx, yy;
             for (yy = 0; yy < rect->h; yy++)
@@ -453,26 +430,23 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
                     color = rect->pict.data[0][pixel];
                     argb = ((uint32_t*)rect->pict.data[1])[color];
 
-                    imageData[yy * rect->w + xx] = argb;
+                    imageData[yy * rect->w + xx] = EndianU32_BtoN(argb);
+                    imageData[yy * rect->w + xx] = (imageData[yy * rect->w + xx] & 0xFFFFFF00) + 0xFF; // Kill the alpha
                 }
             }
 
-            size_t length = sizeof(uint8_t) * rect->w * rect->h * 4;
-            uint8_t* imgData2 = (uint8_t*)imageData;
-            for (i = 0; i < length; i +=4) {
-                imgData2[i] = 255;
-                
-            }
+            if (rect->flags & AV_SUBTITLE_FLAG_FORCED)
+                forced = YES;
 
             CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaFirst;
-            CFDataRef imgData = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, (uint8_t*)imageData, w*h*4, kCFAllocatorNull);
+            CFDataRef imgData = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, (uint8_t*)imageData,rect->w * rect->h * 4, kCFAllocatorNull);
             CGDataProviderRef provider = CGDataProviderCreateWithCFData(imgData);
             CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-            CGImageRef cgImage = CGImageCreate(w,
-                                               h,
+            CGImageRef cgImage = CGImageCreate(rect->w,
+                                               rect->h,
                                                8,
                                                32,
-                                               w*4,
+                                               rect->w * 4,
                                                colorSpace,
                                                bitmapInfo,
                                                provider,
@@ -481,13 +455,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
                                                kCGRenderingIntentDefault);
             CGColorSpaceRelease(colorSpace);
 
-            //NSBitmapImageRep *bitmapImage = [[NSBitmapImageRep alloc]initWithCGImage:(CGImageRef)cgImage];
-            //[[bitmapImage representationUsingType:NSTIFFFileType properties:nil] writeToFile:@"/tmp/foo.tif" atomically:YES];
-            //[bitmapImage release];
-
-            NSString *text = [ocr performOCROnCGImage:cgImage];
-
-            if (text)
+            if ((text = [ocr performOCROnCGImage:cgImage]))
                 subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced);
             else
                 subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, forced);

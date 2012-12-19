@@ -13,7 +13,7 @@
 @class MP42SubtitleTrack;
 @class SBOCRWrapper;
 
-@interface SBVobSubConverter : NSObject {
+@interface SBBitmapSubConverter : NSObject {
     NSThread *decoderThread;
     NSThread *encoderThread;
 
