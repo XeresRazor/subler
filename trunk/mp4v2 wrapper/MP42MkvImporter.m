@@ -778,6 +778,9 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
                     if (StartTime > trackHelper->current_time) {
                         MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
                         sample->sampleDuration = (StartTime - trackHelper->current_time) / 1000000;
+                        sample->sampleSize = 2;
+                        sample->sampleData = calloc(1, 2);
+                        sample->sampleIsSync = YES;
                         sample->sampleTrackId = track.Id;
                         if(track.needConversion)
                             sample->sampleSourceTrack = track;
