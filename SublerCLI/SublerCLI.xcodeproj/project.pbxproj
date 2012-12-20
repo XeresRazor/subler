@@ -23,7 +23,6 @@
 		A98ED3FC0F59E24A00885A49 /* libuniversaldetector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A98ED3550F59E17A00885A49 /* libuniversaldetector.a */; };
 		A98ED4030F59E28300885A49 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98ED4020F59E28300885A49 /* Cocoa.framework */; };
 		A991318A13F0044B00DCAA12 /* SBOCRWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A991318713F0044B00DCAA12 /* SBOCRWrapper.mm */; };
-		A991318B13F0044B00DCAA12 /* SBVobSubConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A991318913F0044B00DCAA12 /* SBVobSubConverter.m */; };
 		A9A9551513F11365002CDC85 /* MP42QTImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9A9551413F11365002CDC85 /* MP42QTImporter.m */; };
 		A9AEF826167C7CAF00FDDBB3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AEF825167C7CAF00FDDBB3 /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A9AEF828167C7CB900FDDBB3 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AEF827167C7CB900FDDBB3 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -55,8 +54,9 @@
 		A9B46B1D12B79EC60040517A /* sfifo.c in Sources */ = {isa = PBXBuildFile; fileRef = A9B46AFF12B79EC60040517A /* sfifo.c */; };
 		A9B46B1E12B79EC60040517A /* SubUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46B0212B79EC60040517A /* SubUtilities.m */; };
 		A9BAABD315D930D400A59EAB /* SBLanguages.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BAABD215D930AD00A59EAB /* SBLanguages.m */; };
+		A9C0605216831CBE00FE3D98 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C0605116831CBE00FE3D98 /* libbz2.dylib */; };
+		A9C0605316831D0500FE3D98 /* SBBitmapSubConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C0605016831C8D00FE3D98 /* SBBitmapSubConverter.m */; };
 		A9E96D0413892BE400D4B7F0 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E96CF313892BE300D4B7F0 /* libavcodec.a */; };
-		A9E96D0513892BE400D4B7F0 /* libavcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E96CF413892BE300D4B7F0 /* libavcore.a */; };
 		A9E96D0613892BE400D4B7F0 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E96CF513892BE300D4B7F0 /* libavdevice.a */; };
 		A9E96D0713892BE400D4B7F0 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E96CF613892BE300D4B7F0 /* libavformat.a */; };
 		A9E96D0813892BE400D4B7F0 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E96CF713892BE300D4B7F0 /* libavutil.a */; };
@@ -129,8 +129,6 @@
 		A98ED4020F59E28300885A49 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		A991318613F0044B00DCAA12 /* SBOCRWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBOCRWrapper.h; path = ../SBOCRWrapper.h; sourceTree = "<group>"; };
 		A991318713F0044B00DCAA12 /* SBOCRWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SBOCRWrapper.mm; path = ../SBOCRWrapper.mm; sourceTree = "<group>"; };
-		A991318813F0044B00DCAA12 /* SBVobSubConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBVobSubConverter.h; path = ../SBVobSubConverter.h; sourceTree = "<group>"; };
-		A991318913F0044B00DCAA12 /* SBVobSubConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBVobSubConverter.m; path = ../SBVobSubConverter.m; sourceTree = "<group>"; };
 		A9A9551313F11365002CDC85 /* MP42QTImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42QTImporter.h; path = ../MP42QTImporter.h; sourceTree = "<group>"; };
 		A9A9551413F11365002CDC85 /* MP42QTImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42QTImporter.m; path = ../MP42QTImporter.m; sourceTree = "<group>"; };
 		A9AC785512FE96E100A72A1E /* SublerCLI_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SublerCLI_Prefix.pch; sourceTree = "<group>"; };
@@ -192,8 +190,10 @@
 		A9B46B0212B79EC60040517A /* SubUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubUtilities.m; sourceTree = "<group>"; };
 		A9BAABD115D930AD00A59EAB /* SBLanguages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SBLanguages.h; path = ../Classes/SBLanguages.h; sourceTree = "<group>"; };
 		A9BAABD215D930AD00A59EAB /* SBLanguages.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SBLanguages.m; path = ../Classes/SBLanguages.m; sourceTree = "<group>"; };
+		A9C0604F16831C8D00FE3D98 /* SBBitmapSubConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SBBitmapSubConverter.h; path = ../SBBitmapSubConverter.h; sourceTree = "<group>"; };
+		A9C0605016831C8D00FE3D98 /* SBBitmapSubConverter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SBBitmapSubConverter.m; path = ../SBBitmapSubConverter.m; sourceTree = "<group>"; };
+		A9C0605116831CBE00FE3D98 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		A9E96CF313892BE300D4B7F0 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = ../ffmpeg/lib/libavcodec.a; sourceTree = SOURCE_ROOT; };
-		A9E96CF413892BE300D4B7F0 /* libavcore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcore.a; path = ../ffmpeg/lib/libavcore.a; sourceTree = SOURCE_ROOT; };
 		A9E96CF513892BE300D4B7F0 /* libavdevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavdevice.a; path = ../ffmpeg/lib/libavdevice.a; sourceTree = SOURCE_ROOT; };
 		A9E96CF613892BE300D4B7F0 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../ffmpeg/lib/libavformat.a; sourceTree = SOURCE_ROOT; };
 		A9E96CF713892BE300D4B7F0 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ../ffmpeg/lib/libavutil.a; sourceTree = SOURCE_ROOT; };
@@ -224,8 +224,8 @@
 				A9726A270F7B89F0008A828C /* AudioToolbox.framework in Frameworks */,
 				A91F634A0FB0C70100B96B33 /* libicucore.dylib in Frameworks */,
 				A90C277110AF32AF00991030 /* libz.dylib in Frameworks */,
+				A9C0605216831CBE00FE3D98 /* libbz2.dylib in Frameworks */,
 				A9E96D0413892BE400D4B7F0 /* libavcodec.a in Frameworks */,
-				A9E96D0513892BE400D4B7F0 /* libavcore.a in Frameworks */,
 				A9E96D0613892BE400D4B7F0 /* libavdevice.a in Frameworks */,
 				A9E96D0713892BE400D4B7F0 /* libavformat.a in Frameworks */,
 				A9E96D0813892BE400D4B7F0 /* libavutil.a in Frameworks */,
@@ -260,12 +260,13 @@
 		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				A9C0605116831CBE00FE3D98 /* libbz2.dylib */,
+				A91F63490FB0C70100B96B33 /* libicucore.dylib */,
 				A942AF631679197000780565 /* libjpeg.a */,
 				A942AF641679197000780565 /* libtesseract.a */,
 				A9AEF827167C7CB900FDDBB3 /* CoreMedia.framework */,
 				A9AEF825167C7CAF00FDDBB3 /* AVFoundation.framework */,
 				A9AEF829167C7CC600FDDBB3 /* CoreVideo.framework */,
-				A91F63490FB0C70100B96B33 /* libicucore.dylib */,
 				A9726A260F7B89F0008A828C /* AudioToolbox.framework */,
 				A94871D60F7914E7008DBC94 /* QuickTime.framework */,
 				A94871D10F7914D2008DBC94 /* QTKit.framework */,
@@ -276,7 +277,6 @@
 				A90C277010AF32AF00991030 /* libz.dylib */,
 				A95F07BE148BA07600D663E5 /* liblept.a */,
 				A9E96CF313892BE300D4B7F0 /* libavcodec.a */,
-				A9E96CF413892BE300D4B7F0 /* libavcore.a */,
 				A9E96CF513892BE300D4B7F0 /* libavdevice.a */,
 				A9E96CF613892BE300D4B7F0 /* libavformat.a */,
 				A9E96CF713892BE300D4B7F0 /* libavutil.a */,
@@ -386,10 +386,10 @@
 				A9B46AE612B79EC60040517A /* MP42Sample.m */,
 				A9B46AE712B79EC60040517A /* MP42SrtImporter.h */,
 				A9B46AE812B79EC60040517A /* MP42SrtImporter.m */,
+				A9C0604F16831C8D00FE3D98 /* SBBitmapSubConverter.h */,
+				A9C0605016831C8D00FE3D98 /* SBBitmapSubConverter.m */,
 				A991318613F0044B00DCAA12 /* SBOCRWrapper.h */,
 				A991318713F0044B00DCAA12 /* SBOCRWrapper.mm */,
-				A991318813F0044B00DCAA12 /* SBVobSubConverter.h */,
-				A991318913F0044B00DCAA12 /* SBVobSubConverter.m */,
 				A9B46AF412B79EC60040517A /* MatroskaFile.c */,
 				A9B46AF512B79EC60040517A /* MatroskaFile.h */,
 				A9B46AF612B79EC60040517A /* MatroskaParser.c */,
@@ -495,6 +495,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9C0605316831D0500FE3D98 /* SBBitmapSubConverter.m in Sources */,
 				A9BAABD315D930D400A59EAB /* SBLanguages.m in Sources */,
 				A9B46B0A12B79EC60040517A /* MP42FileImporter.m in Sources */,
 				A9B46B0312B79EC60040517A /* MP42AACImporter.mm in Sources */,
@@ -525,7 +526,6 @@
 				CBE9463B12FC5350007E656A /* RegexKitLite.m in Sources */,
 				CBE9467C12FC5510007E656A /* SublerCLI.mm in Sources */,
 				A991318A13F0044B00DCAA12 /* SBOCRWrapper.mm in Sources */,
-				A991318B13F0044B00DCAA12 /* SBVobSubConverter.m in Sources */,
 				A9A9551513F11365002CDC85 /* MP42QTImporter.m in Sources */,
 				A91CBA4014039F8F00B53F5A /* MP42AVFImporter.m in Sources */,
 				A9AEF82D167C7D6500FDDBB3 /* QTKitDecrap.m in Sources */,
@@ -612,6 +612,7 @@
 					"\"$(SRCROOT)/ffmpeg\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../mp4v2\"/**";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx10.7;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../mp4v2\"/** \"$(SRCROOT)/Tesseract\"/** \"$(SRCROOT)/ffmpeg\"/**";
@@ -633,6 +634,7 @@
 					"\"$(SRCROOT)/ffmpeg\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../mp4v2\"/**";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx10.7;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../mp4v2\"/** \"$(SRCROOT)/Tesseract\"/** \"$(SRCROOT)/ffmpeg\"/**";
 				VALID_ARCHS = "i386 x86_64";
