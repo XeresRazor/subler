@@ -310,7 +310,6 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
             uint8_t* imgData2 = (uint8_t*)imageData;
             for (i = 0; i < length; i +=4) {
                 imgData2[i] = 255;
- 
             }
 
             CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaFirst;
@@ -360,10 +359,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
     }
 
     encoderDone = YES;
-
     [pool drain];
-
-	return;
 }
 
 - (void) PGSDecoderThreadMainRoutine: (id) sender
@@ -424,10 +420,12 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
                     argb = ((uint32_t*)rect->pict.data[1])[color];
 
                     imageData[yy * rect->w + xx] = EndianU32_BtoN(argb);
+                    /* Remove the alpha channel, and set fully transparent pixel to black
+                       TODO: real compositing on a black background */
                     if (!(imageData[yy * rect->w + xx] & 0xFF))
                         imageData[yy * rect->w + xx] = 0x000000FF;
                     else
-                        imageData[yy * rect->w + xx] = (imageData[yy * rect->w + xx] & 0xFFFFFF00) + 0xFF; // Kill the alpha
+                        imageData[yy * rect->w + xx] = (imageData[yy * rect->w + xx] & 0xFFFFFF00) + 0xFF;
                 }
             }
 
