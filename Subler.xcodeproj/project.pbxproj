@@ -87,6 +87,7 @@
 		A9BAD447140505CB00F3F4AE /* liblept.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BAD446140505CB00F3F4AE /* liblept.a */; };
 		A9BB60D80F834E0A005CD0BB /* mbs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9BB60D70F834E0A005CD0BB /* mbs.cpp */; };
 		A9C055370F6D395B00AF15B5 /* FileImport.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C055360F6D395B00AF15B5 /* FileImport.xib */; };
+		A9C06040168315C500FE3D98 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C0603F168315C500FE3D98 /* libbz2.dylib */; };
 		A9C095800F7B6C8C00170CAF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C0957F0F7B6C8C00170CAF /* AudioToolbox.framework */; };
 		A9C1E8560F31F395003A08F3 /* libmp4v2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C1E8550F31F395003A08F3 /* libmp4v2.a */; };
 		A9C4ECF712AE562A00BDBB7D /* MP42AACImporter.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9C4ECF612AE562A00BDBB7D /* MP42AACImporter.mm */; };
@@ -327,6 +328,7 @@
 		A9BB60D60F834E0A005CD0BB /* mbs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mbs.h; path = "mp4v2 wrapper/muxer/mbs.h"; sourceTree = "<group>"; };
 		A9BB60D70F834E0A005CD0BB /* mbs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mbs.cpp; path = "mp4v2 wrapper/muxer/mbs.cpp"; sourceTree = "<group>"; };
 		A9C055330F6D394F00AF15B5 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FileImport.xib; sourceTree = "<group>"; };
+		A9C0603F168315C500FE3D98 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		A9C0957F0F7B6C8C00170CAF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		A9C1E8550F31F395003A08F3 /* libmp4v2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmp4v2.a; path = mp4v2/libmp4v2.a; sourceTree = "<group>"; };
 		A9C4ECF512AE562A00BDBB7D /* MP42AACImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AACImporter.h; path = "mp4v2 wrapper/MP42AACImporter.h"; sourceTree = "<group>"; };
@@ -403,6 +405,7 @@
 				A9C095800F7B6C8C00170CAF /* AudioToolbox.framework in Frameworks */,
 				A91F622D0FB0A56F00B96B33 /* libicucore.dylib in Frameworks */,
 				948058B6106E07990037A911 /* libz.dylib in Frameworks */,
+				A9C06040168315C500FE3D98 /* libbz2.dylib in Frameworks */,
 				A916F42F1678D8DA003920D6 /* libtesseract.a in Frameworks */,
 				A916F4311678DD07003920D6 /* libjpeg.a in Frameworks */,
 				A9BAD447140505CB00F3F4AE /* liblept.a in Frameworks */,
@@ -415,18 +418,19 @@
 		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A9C0603F168315C500FE3D98 /* libbz2.dylib */,
+				948058B5106E07990037A911 /* libz.dylib */,
+				A91F622C0FB0A56F00B96B33 /* libicucore.dylib */,
 				A9B3411B1679CA3E00E6EE0C /* QTKit.framework */,
 				A9A7C02D15C67D2F0022921C /* Quartz.framework */,
 				A991319B13F0668300DCAA12 /* CoreMedia.framework */,
 				A991319913F0615700DCAA12 /* AVFoundation.framework */,
 				CD56966E12FAAFA90029FADB /* Quartz.framework */,
-				A91F622C0FB0A56F00B96B33 /* libicucore.dylib */,
 				A9C0957F0F7B6C8C00170CAF /* AudioToolbox.framework */,
 				A9C8182C0F74D6E300019BFF /* QuickTime.framework */,
 				A97BE36E0F73D72E00652CBD /* QTKit.framework */,
 				A984DB4A0F52D644001A20B2 /* Sparkle.framework */,
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
-				948058B5106E07990037A911 /* libz.dylib */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";

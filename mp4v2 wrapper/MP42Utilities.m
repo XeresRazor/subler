@@ -11,6 +11,7 @@
 #import <string.h>
 #import <CoreAudio/CoreAudio.h>
 #include <zlib.h>
+#include <bzlib.h>
 
 #import "SBLanguages.h"
 #include "intreadwrite.h"
@@ -998,7 +999,7 @@ int DecompressZlib(uint8_t **sampleData, uint32_t *sampleSize)
 
     z_stream zstream = {0};
     if (inflateInit(&zstream) != Z_OK)
-        return -1;
+        return 0;
     zstream.next_in = *sampleData;
     zstream.avail_in = *sampleSize;
     do {
@@ -1020,9 +1021,9 @@ int DecompressZlib(uint8_t **sampleData, uint32_t *sampleSize)
     inflateEnd(&zstream);
     if (result != Z_STREAM_END) {
         if (result == Z_MEM_ERROR)
-            result = -1;
+            result = 0;
         else
-            result = -1;
+            result = 0;
         goto failed;
     }
 
@@ -1031,10 +1032,58 @@ int DecompressZlib(uint8_t **sampleData, uint32_t *sampleSize)
 
     *sampleData = pkt_data;
     *sampleSize = pkt_size;
-    return 0;
+    return 1;
 
 failed:
     av_free(pkt_data);
     return result;
 }
 
+int DecompressBzlib(uint8_t **sampleData, uint32_t *sampleSize)
+{
+    uint8_t* pkt_data = NULL;
+    uint8_t av_unused *newpktdata;
+    int pkt_size = *sampleSize;
+    int result = 0;
+
+    bz_stream bzstream = {0};
+    if (BZ2_bzDecompressInit(&bzstream, 0, 0) != BZ_OK)
+        return 0;
+    bzstream.next_in = (char *) *sampleData;
+    bzstream.avail_in = *sampleSize;
+    do {
+        pkt_size *= 3;
+        newpktdata = av_realloc(pkt_data, pkt_size);
+        if (!newpktdata) {
+            BZ2_bzDecompressEnd(&bzstream);
+            goto failed;
+        }
+        pkt_data = newpktdata;
+        bzstream.avail_out = pkt_size - bzstream.total_out_lo32;
+        bzstream.next_out = (char *) pkt_data + bzstream.total_out_lo32;
+        if (pkt_data) {
+            result = BZ2_bzDecompress(&bzstream);
+        } else
+            result = BZ_MEM_ERROR;
+    } while (result==BZ_OK && pkt_size<10000000);
+    pkt_size = bzstream.total_out_lo32;
+    BZ2_bzDecompressEnd(&bzstream);
+    if (result != BZ_STREAM_END) {
+        if (result == BZ_MEM_ERROR)
+            result = 0;
+        else
+            result = 0;
+        goto failed;
+    }
+
+    if (*sampleData)
+        free(*sampleData);
+
+    *sampleData = pkt_data;
+    *sampleSize = pkt_size;
+    return 1;
+
+failed:
+    av_free(pkt_data);
+    return result;
+}

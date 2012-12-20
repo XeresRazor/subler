@@ -1435,6 +1435,9 @@ static void parseTrackEntry(MatroskaFile *mf,ulonglong toplen) {
 		    case 0: // Zlib
 		      t.CompMethod = COMP_ZLIB;
 		      break;
+            case 1: // BZlib
+		      t.CompMethod = COMP_BZIP;
+		      break;
 		    case 3: // prepend fixed data
 		      t.CompMethod = COMP_PREPEND;
 		      break;
