@@ -23,7 +23,12 @@ It seems the latest ATV2 software needs the file to be properly interleaved. You
 It interleaves the audio and video samples, and puts the "MooV" atom at the begining of the file, restoring the Quicktime "fast-start" (also known as "pseudo-streaming") ability of the file.
 
 *How to improve VobSub and PGS ocr *
+
 If you are trying to OCR a non English subtitle track, you can download from https://code.google.com/p/tesseract-ocr/downloads/list the Tesseract 3.02 language files for the language you want, and copy the .tessdata file inside ~/Library/Application Support/Subler/tessdata/ (the library folder inside your home folder, it might be hidden, you can select the Go menu in Finder, press all and select "Library"). Subler will load the new .tessdata file automatically when needed.
+
+*Perian issue on Mountain Lion*
+
+See http://code.google.com/p/subler/issues/detail?id=404#c12
 
 *Why can't I mux file larger than 4GB?*
 
