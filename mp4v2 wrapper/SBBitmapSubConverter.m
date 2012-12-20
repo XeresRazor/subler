@@ -232,16 +232,9 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
         // make sure we have enough space to store the packet
         codecData = fast_realloc_with_padding(codecData, &bufferSize, sampleBuffer->sampleSize + 2);
 
-        if (sampleBuffer->sampleIsCompressed)
-        {
-            DecompressZlib(&codecData, &bufferSize, sampleBuffer->sampleData, sampleBuffer->sampleSize);
-            
-            codecData[0] = (bufferSize >> 8) & 0xff;
-            codecData[1] = bufferSize & 0xff;
-
-            // the header of a spu PS packet starts 0x000001bd
-            // if it's raw spu data, the 1st 2 bytes are the length of the data
-        } else if (data[0] + data[1] == 0) {
+        // the header of a spu PS packet starts 0x000001bd
+        // if it's raw spu data, the 1st 2 bytes are the length of the data
+        if (data[0] + data[1] == 0) {
             // remove the MPEG framing
             sampleBuffer->sampleSize = ExtractVobSubPacket(codecData, data, bufferSize, NULL, -1);
         } else {
@@ -431,7 +424,10 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
                     argb = ((uint32_t*)rect->pict.data[1])[color];
 
                     imageData[yy * rect->w + xx] = EndianU32_BtoN(argb);
-                    imageData[yy * rect->w + xx] = (imageData[yy * rect->w + xx] & 0xFFFFFF00) + 0xFF; // Kill the alpha
+                    if (!(imageData[yy * rect->w + xx] & 0xFF))
+                        imageData[yy * rect->w + xx] = 0x000000FF;
+                    else
+                        imageData[yy * rect->w + xx] = (imageData[yy * rect->w + xx] & 0xFFFFFF00) + 0xFF; // Kill the alpha
                 }
             }
 
@@ -479,10 +475,7 @@ static ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], Pac
     }
 
     encoderDone = YES;
-
     [pool drain];
-
-	return;
 }
 
 - (id) initWithTrack: (MP42SubtitleTrack*) track error:(NSError **)outError

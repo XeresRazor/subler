@@ -81,6 +81,66 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
 
 @end
 
+int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t FilePos, uint8_t** frame, uint32_t *FrameSize)
+{
+    uint8_t *packet = NULL;
+    uint32_t iSize = *FrameSize;
+
+    if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
+        fprintf(stderr,"fseeko(): %s\n", strerror(errno));
+        return 0;
+    }
+
+    if (trackInfo->CompMethodPrivateSize != 0) {
+        packet = malloc(iSize + trackInfo->CompMethodPrivateSize);
+        memcpy(packet, trackInfo->CompMethodPrivate, trackInfo->CompMethodPrivateSize);
+    }
+    else
+        packet = malloc(iSize);
+
+    if (packet == NULL) {
+        fprintf(stderr,"Out of memory\n");
+        return 0;
+    }
+
+    size_t rd = fread(packet + trackInfo->CompMethodPrivateSize, 1, iSize, ioStream->fp);
+    if (rd != iSize) {
+        if (rd == 0) {
+            if (feof(ioStream->fp))
+                fprintf(stderr,"Unexpected EOF while reading frame\n");
+            else
+                fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
+        } else
+            fprintf(stderr,"Short read while reading audio frame\n");
+
+        free(packet);
+        return 0;
+    }
+
+    iSize += trackInfo->CompMethodPrivateSize;
+
+    if (trackInfo->CompEnabled) {
+        switch (trackInfo->CompMethod) {
+            case COMP_ZLIB:
+                DecompressZlib(&packet, &iSize);
+                break;
+
+            // Not Implemented yet
+            case COMP_BZIP: 
+            case COMP_LZO1X:
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    *frame = packet;
+    *FrameSize = iSize;
+
+    return 1;
+}
+
 @interface MP42MkvImporter (Private)
     - (MP42Metadata*) readMatroskaMetadata;
     - (NSString*) matroskaCodecIDToHumanReadableName:(TrackInfo *)track;
@@ -100,9 +160,8 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
         matroskaFile = openMatroskaFile((char *)[[fileURL path] UTF8String], ioStream);
 
         if(!matroskaFile) {
-            if (outError) {
+            if (outError)
                 *outError = MP42Error(@"The movie could not be opened.", @"The file is not a matroska file.", 100);
-            }
 
             [self release];
             return nil;
@@ -444,90 +503,53 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
 
         uint64_t        StartTime, EndTime, FilePos;
         uint32_t        rt, FrameSize, FrameFlags;
-        uint32_t        fb = 0;
-        uint8_t         *frame = NULL, *temp = NULL;
+        uint8_t         *frame = NULL;
 
 		// read first header to create track
 		int firstFrame = mkv_ReadFrame(matroskaFile, 0, &rt, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags);
 		if (firstFrame != 0)
-		{
 			return nil;
-		}
+        
+        if (readMkvPacket(ioStream, trackInfo, FilePos, &frame, &FrameSize)) {
+            // parse AC3 header
+            // collect all the necessary meta information
+            // u_int32_t samplesPerSecond;
+            uint32_t fscod, frmsizecod, bsid, bsmod, acmod, lfeon;
+            uint32_t lfe_offset = 4;
 
-		if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
-            fprintf(stderr,"fseeko(): %s\n", strerror(errno));
-            return nil;				
-        } 
+            fscod = (*(frame+4) >> 6) & 0x3;
+            frmsizecod = (*(frame+4) & 0x3f) >> 1;
+            bsid =  (*(frame+5) >> 3) & 0x1f;
+            bsmod = (*(frame+5) & 0xf);
+            acmod = (*(frame+6) >> 5) & 0x7;
+            if (acmod == 2)
+                lfe_offset -= 2;
+            else {
+                if ((acmod & 1) && acmod != 1)
+                    lfe_offset -= 2;
+                if (acmod & 4)
+                    lfe_offset -= 2;
+            }
+            lfeon = (*(frame+6) >> lfe_offset) & 0x1;
 
-        if (trackInfo->CompMethodPrivateSize != 0) {
-            frame = malloc(FrameSize + trackInfo->CompMethodPrivateSize);
-            memcpy(frame, trackInfo->CompMethodPrivate, trackInfo->CompMethodPrivateSize);
+            // samplesPerSecond = MP4AV_Ac3GetSamplingRate(frame);
+
+            mkv_Seek(matroskaFile, 0, 0);
+
+            NSMutableData *ac3Info = [[NSMutableData alloc] init];
+            [ac3Info appendBytes:&fscod length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&bsid length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&bsmod length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&acmod length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&lfeon length:sizeof(uint64_t)];
+            [ac3Info appendBytes:&frmsizecod length:sizeof(uint64_t)];
+
+            free(frame);
+
+            return [ac3Info autorelease];
         }
         else
-            frame = malloc(FrameSize);
-        
-        if (fb < FrameSize && frame) {
-            fb = FrameSize;
-            temp = realloc(frame, fb);
-            if (temp == NULL) {
-                fprintf(stderr,"Out of memory\n");
-                free(frame);
-                return nil;
-            }
-            else
-                frame = temp;
-        }
-
-        size_t rd = fread(frame + trackInfo->CompMethodPrivateSize,1,FrameSize,ioStream->fp);
-        if (rd != FrameSize || !frame) 
-		{
-            if (rd == 0)
-			{
-                if (feof(ioStream->fp))
-                    fprintf(stderr,"Unexpected EOF while reading frame\n");
-                else
-                    fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
-            } else
-                fprintf(stderr,"Short read while reading frame\n");
-			return nil; // we should be able to read at least one frame
-        }
-
-		// parse AC3 header
-		// collect all the necessary meta information
-		// u_int32_t samplesPerSecond;
-		uint32_t fscod, frmsizecod, bsid, bsmod, acmod, lfeon;
-		uint32_t lfe_offset = 4;
-
-		fscod = (*(frame+4) >> 6) & 0x3;
-		frmsizecod = (*(frame+4) & 0x3f) >> 1;
-		bsid =  (*(frame+5) >> 3) & 0x1f;
-		bsmod = (*(frame+5) & 0xf);
-		acmod = (*(frame+6) >> 5) & 0x7;
-		if (acmod == 2)
-			lfe_offset -= 2;
-		else {
-			if ((acmod & 1) && acmod != 1)
-				lfe_offset -= 2;
-			if (acmod & 4)
-				lfe_offset -= 2;
-		}
-		lfeon = (*(frame+6) >> lfe_offset) & 0x1;
-
-		// samplesPerSecond = MP4AV_Ac3GetSamplingRate(frame);
-
-        mkv_Seek(matroskaFile, 0, 0);
-
-        NSMutableData *ac3Info = [[NSMutableData alloc] init];
-        [ac3Info appendBytes:&fscod length:sizeof(uint64_t)];
-        [ac3Info appendBytes:&bsid length:sizeof(uint64_t)];
-        [ac3Info appendBytes:&bsmod length:sizeof(uint64_t)];
-        [ac3Info appendBytes:&acmod length:sizeof(uint64_t)];
-        [ac3Info appendBytes:&lfeon length:sizeof(uint64_t)];
-        [ac3Info appendBytes:&frmsizecod length:sizeof(uint64_t)];
-
-        free(frame);
-
-        return [ac3Info autorelease];
+            return nil;
     }
     else if (!strcmp(trackInfo->CodecID, "S_VOBSUB")) {
         char *string = (char *) trackInfo->CodecPrivate;
@@ -610,195 +632,110 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
         if (trackInfo->Type == TT_AUDIO) {
             trackHelper->samplesWritten++;
 
-            if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
-                fprintf(stderr,"fseeko(): %s\n", strerror(errno));
-                break;				
-            }
+            if (readMkvPacket(ioStream, trackInfo, FilePos, &frame, &FrameSize)) {
+                MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
+                sample->sampleData = frame;
+                sample->sampleSize = FrameSize;
+                sample->sampleDuration = MP4_INVALID_DURATION;
+                sample->sampleOffset = 0;
+                sample->sampleTimestamp = StartTime;
+                sample->sampleIsSync = YES;
+                sample->sampleTrackId = track.Id;
+                if(track.needConversion)
+                    sample->sampleSourceTrack = track;
 
-            if (trackInfo->CompMethodPrivateSize != 0) {
-                frame = malloc(FrameSize + trackInfo->CompMethodPrivateSize);
-                memcpy(frame, trackInfo->CompMethodPrivate, trackInfo->CompMethodPrivateSize);
-            }
-            else
-                frame = malloc(FrameSize);
-
-            if (frame == NULL) {
-                fprintf(stderr,"Out of memory\n");
-                break;		
-            }
-
-            size_t rd = fread(frame + trackInfo->CompMethodPrivateSize,1,FrameSize,ioStream->fp);
-            if (rd != FrameSize) {
-                if (rd == 0) {
-                    if (feof(ioStream->fp))
-                        fprintf(stderr,"Unexpected EOF while reading frame\n");
-                    else
-                        fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
-                } else
-                    fprintf(stderr,"Short read while reading audio frame\n");
-				
-				free(frame);
-				continue;
-            }
-
-            MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-            sample->sampleData = frame;
-            sample->sampleSize = FrameSize + trackInfo->CompMethodPrivateSize;
-            sample->sampleDuration = MP4_INVALID_DURATION;
-            sample->sampleOffset = 0;
-            sample->sampleTimestamp = StartTime;
-            sample->sampleIsSync = YES;
-            sample->sampleTrackId = track.Id;
-            if(track.needConversion)
-                sample->sampleSourceTrack = track;
-
-            @synchronized(samplesBuffer) {
-                [samplesBuffer addObject:sample];
-                [sample release];
+                @synchronized(samplesBuffer) {
+                    [samplesBuffer addObject:sample];
+                    [sample release];
+                }
             }
         }
 
         if (trackInfo->Type == TT_SUB) {
-            BOOL compressed = NO;
-            if (trackInfo->CompEnabled)
-                compressed = YES;
-            
-            if (fseeko(ioStream->fp, FilePos, SEEK_SET)) {
-                fprintf(stderr,"fseeko(): %s\n", strerror(errno));
-                break;
-            }
-            
-            if (trackInfo->CompMethodPrivateSize != 0) {
-                frame = malloc(FrameSize + trackInfo->CompMethodPrivateSize);
-                memcpy(frame, trackInfo->CompMethodPrivate, trackInfo->CompMethodPrivateSize);
-            }
-            else
-                frame = malloc(FrameSize);
-            
-            if (frame == NULL) {
-                fprintf(stderr,"Out of memory\n");
-                break;
-            }
-            
-            size_t rd = fread(frame + trackInfo->CompMethodPrivateSize,1,FrameSize,ioStream->fp);
-            if (rd != FrameSize) {
-                if (rd == 0) {
-                    if (feof(ioStream->fp))
-                        fprintf(stderr,"Unexpected EOF while reading frame\n");
-                    else
-                        fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
-                } else
-                    fprintf(stderr,"Short read while reading vobsub frame\n");
-                
-                free(frame);
-                continue;
-            }
-
-            if (strcmp(trackInfo->CodecID, "S_VOBSUB") && strcmp(trackInfo->CodecID, "S_HDMV/PGS")) {
-                if (!trackHelper->ss)
-                    trackHelper->ss = [[SBSubSerializer alloc] init];
-
-                NSString *string = [[[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding] autorelease];
-                if (!strcmp(trackInfo->CodecID, "S_TEXT/ASS") || !strcmp(trackInfo->CodecID, "S_TEXT/SSA"))
-                    string = StripSSALine(string);
-
-                if ([string length]) {
-                    SBSubLine *sl = [[SBSubLine alloc] initWithLine:string start:StartTime/1000000 end:EndTime/1000000];
-                    [trackHelper->ss addLine:[sl autorelease]];
-                }
-                trackHelper->samplesWritten++;
-                free(frame);
-            }
-            else {
-                MP42SampleBuffer *nextSample = [[MP42SampleBuffer alloc] init];
-
-                if (FrameSize + trackInfo->CompMethodPrivateSize && compressed) {
-                    uint8_t                 *codecData = NULL;
-                    unsigned int            bufferSize2 = 0;
-
-                    codecData = av_malloc(FrameSize + trackInfo->CompMethodPrivateSize + 2);
-                    bufferSize2 = FrameSize + trackInfo->CompMethodPrivateSize + 2;
-
-                    DecompressZlib(&codecData, &bufferSize2, frame, FrameSize + trackInfo->CompMethodPrivateSize + 2);
-
-                    codecData[0] = (bufferSize2 >> 8) & 0xff;
-                    codecData[1] = bufferSize2 & 0xff;
-
-                    nextSample->sampleData = malloc(bufferSize2);
-                    memcpy(nextSample->sampleData, codecData, bufferSize2);
-                    nextSample->sampleSize = bufferSize2;
-
-                    if (codecData)
-                        av_free(codecData);
+            if (readMkvPacket(ioStream, trackInfo, FilePos, &frame, &FrameSize)) {
+                if (strcmp(trackInfo->CodecID, "S_VOBSUB") && strcmp(trackInfo->CodecID, "S_HDMV/PGS")) {
+                    if (!trackHelper->ss)
+                        trackHelper->ss = [[SBSubSerializer alloc] init];
+                    
+                    NSString *string = [[[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding] autorelease];
+                    if (!strcmp(trackInfo->CodecID, "S_TEXT/ASS") || !strcmp(trackInfo->CodecID, "S_TEXT/SSA"))
+                        string = StripSSALine(string);
+                    
+                    if ([string length]) {
+                        SBSubLine *sl = [[SBSubLine alloc] initWithLine:string start:StartTime/1000000 end:EndTime/1000000];
+                        [trackHelper->ss addLine:[sl autorelease]];
+                    }
+                    trackHelper->samplesWritten++;
                     free(frame);
                 }
                 else {
+                    MP42SampleBuffer *nextSample = [[MP42SampleBuffer alloc] init];
+                    
+                    nextSample->sampleDuration = 0;
+                    nextSample->sampleOffset = 0;
+                    nextSample->sampleTimestamp = StartTime;
                     nextSample->sampleData = frame;
-                    nextSample->sampleSize = FrameSize + trackInfo->CompMethodPrivateSize;
-                }
-
-                nextSample->sampleDuration = 0;
-                nextSample->sampleOffset = 0;
-                nextSample->sampleTimestamp = StartTime;
-                nextSample->sampleIsSync = YES;
-                nextSample->sampleTrackId = track.Id;
-                if(track.needConversion)
-                    nextSample->sampleSourceTrack = track;
-
-                // PGS are usually stored with just the start time, and blank samples to fill the gaps
-                if (!strcmp(trackInfo->CodecID, "S_HDMV/PGS")) {
-                    if (!trackHelper->previousSample) {
-                        trackHelper->previousSample = [[MP42SampleBuffer alloc] init];
-                        trackHelper->previousSample.sampleDuration = StartTime / 1000000;
-                        trackHelper->previousSample.sampleOffset = 0;
-                        trackHelper->previousSample.sampleTimestamp = 0;
-                        trackHelper->previousSample.sampleIsSync = YES;
-                        trackHelper->previousSample.sampleTrackId = track.Id;
-                        if(track.needConversion)
-                            trackHelper->previousSample.sampleSourceTrack = track;
-
-                        @synchronized(samplesBuffer) {
-                            [samplesBuffer addObject:trackHelper->previousSample];
-                            [trackHelper->previousSample release];
+                    nextSample->sampleSize = FrameSize;
+                    nextSample->sampleIsSync = YES;
+                    nextSample->sampleTrackId = track.Id;
+                    if(track.needConversion)
+                        nextSample->sampleSourceTrack = track;
+                    
+                    // PGS are usually stored with just the start time, and blank samples to fill the gaps
+                    if (!strcmp(trackInfo->CodecID, "S_HDMV/PGS")) {
+                        if (!trackHelper->previousSample) {
+                            trackHelper->previousSample = [[MP42SampleBuffer alloc] init];
+                            trackHelper->previousSample.sampleDuration = StartTime / 1000000;
+                            trackHelper->previousSample.sampleOffset = 0;
+                            trackHelper->previousSample.sampleTimestamp = 0;
+                            trackHelper->previousSample.sampleIsSync = YES;
+                            trackHelper->previousSample.sampleTrackId = track.Id;
+                            if(track.needConversion)
+                                trackHelper->previousSample.sampleSourceTrack = track;
+                            
+                            @synchronized(samplesBuffer) {
+                                [samplesBuffer addObject:trackHelper->previousSample];
+                                [trackHelper->previousSample release];
+                            }
                         }
-                    }
-                    else {
-                        trackHelper->previousSample.sampleDuration = (nextSample->sampleTimestamp - trackHelper->previousSample.sampleTimestamp) / 1000000;
-                        @synchronized(samplesBuffer) {
-                            [samplesBuffer addObject:trackHelper->previousSample];
-                            [trackHelper->previousSample release];
+                        else {
+                            trackHelper->previousSample.sampleDuration = (nextSample->sampleTimestamp - trackHelper->previousSample.sampleTimestamp) / 1000000;
+                            @synchronized(samplesBuffer) {
+                                [samplesBuffer addObject:trackHelper->previousSample];
+                                [trackHelper->previousSample release];
+                            }
                         }
+                        
+                        trackHelper->previousSample = nextSample;
+                        trackHelper->samplesWritten++;
                     }
-
-                    trackHelper->previousSample = nextSample;
-                    trackHelper->samplesWritten++;
-                }
-                // VobSub seems to have an end duration, and no blank samples, so create a new one each time to fill the gaps
-                else if (!strcmp(trackInfo->CodecID, "S_VOBSUB")) {
-                    if (StartTime > trackHelper->current_time) {
-                        MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-                        sample->sampleDuration = (StartTime - trackHelper->current_time) / 1000000;
-                        sample->sampleSize = 2;
-                        sample->sampleData = calloc(1, 2);
-                        sample->sampleIsSync = YES;
-                        sample->sampleTrackId = track.Id;
-                        if(track.needConversion)
-                            sample->sampleSourceTrack = track;
-
-                        @synchronized(samplesBuffer) {
-                            [samplesBuffer addObject:sample];
-                            [sample release];
+                    // VobSub seems to have an end duration, and no blank samples, so create a new one each time to fill the gaps
+                    else if (!strcmp(trackInfo->CodecID, "S_VOBSUB")) {
+                        if (StartTime > trackHelper->current_time) {
+                            MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
+                            sample->sampleDuration = (StartTime - trackHelper->current_time) / 1000000;
+                            sample->sampleSize = 2;
+                            sample->sampleData = calloc(1, 2);
+                            sample->sampleIsSync = YES;
+                            sample->sampleTrackId = track.Id;
+                            if(track.needConversion)
+                                sample->sampleSourceTrack = track;
+                            
+                            @synchronized(samplesBuffer) {
+                                [samplesBuffer addObject:sample];
+                                [sample release];
+                            }
                         }
+                        
+                        nextSample->sampleDuration = (EndTime - StartTime ) / 1000000;
+                        
+                        @synchronized(samplesBuffer) {
+                            [samplesBuffer addObject:nextSample];
+                            [nextSample release];
+                        }
+                        
+                        trackHelper->current_time = EndTime;
                     }
-
-                    nextSample->sampleDuration = (EndTime - StartTime ) / 1000000;
-
-                    @synchronized(samplesBuffer) {
-                        [samplesBuffer addObject:nextSample];
-                        [nextSample release];
-                    }
-
-                    trackHelper->current_time = EndTime;
                 }
             }
         }
@@ -840,61 +777,33 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
 
                 trackHelper->current_time += duration;
 
-                if (fseeko(ioStream->fp, currentSample->filePos, SEEK_SET)) {
-                    fprintf(stderr,"fseeko(): %s\n", strerror(errno));
-                    break;				
-                } 
+                if (readMkvPacket(ioStream, trackInfo, currentSample->filePos, &frame, &currentSample->frameSize)) {
+                    MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
+                    sample->sampleData = frame;
+                    sample->sampleSize = currentSample->frameSize;
+                    sample->sampleDuration = duration / 10000.0f;
+                    sample->sampleOffset = offset / 10000.0f;
+                    sample->sampleTimestamp = StartTime;
+                    sample->sampleIsSync = currentSample->frameFlags & FRAME_KF;
+                    sample->sampleTrackId = track.Id;
 
-                if (trackInfo->CompMethodPrivateSize != 0) {
-                    frame = malloc(currentSample->frameSize + trackInfo->CompMethodPrivateSize);
-                    memcpy(frame, trackInfo->CompMethodPrivate, trackInfo->CompMethodPrivateSize);
+                    trackHelper->samplesWritten++;
+
+                    if (sample->sampleOffset < trackHelper->minDisplayOffset)
+                        trackHelper->minDisplayOffset = sample->sampleOffset;
+
+                    if (trackHelper->buffer >= bufferSize)
+                        [trackHelper->queue removeObjectAtIndex:0];
+                    if (trackHelper->buffer < bufferSize)
+                        trackHelper->buffer++;
+
+                    @synchronized(samplesBuffer) {
+                        [samplesBuffer addObject:sample];
+                        [sample release];
+                    }
                 }
                 else
-                    frame = malloc(currentSample->frameSize);
-
-                if (frame == NULL) {
-                    fprintf(stderr,"Out of memory\n");
-                    break;		
-                }
-
-                size_t rd = fread(frame + trackInfo->CompMethodPrivateSize,1,currentSample->frameSize,ioStream->fp);
-                if (rd != currentSample->frameSize) {
-                    if (rd == 0) {
-                        if (feof(ioStream->fp))
-                            fprintf(stderr,"Unexpected EOF while reading frame\n");
-                        else
-                            fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
-                    } else
-                        fprintf(stderr,"Short read while reading video frame\n");
-                    break;
-
-					free(frame);
-					continue;
-                }
-
-                MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-                sample->sampleData = frame;
-                sample->sampleSize = currentSample->frameSize + trackInfo->CompMethodPrivateSize;
-                sample->sampleDuration = duration / 10000.0f;
-                sample->sampleOffset = offset / 10000.0f;
-                sample->sampleTimestamp = StartTime;
-                sample->sampleIsSync = currentSample->frameFlags & FRAME_KF;
-                sample->sampleTrackId = track.Id;
-
-                trackHelper->samplesWritten++;
-
-                if (sample->sampleOffset < trackHelper->minDisplayOffset)
-                    trackHelper->minDisplayOffset = sample->sampleOffset;
-
-                if (trackHelper->buffer >= bufferSize)
-                    [trackHelper->queue removeObjectAtIndex:0];
-                if (trackHelper->buffer < bufferSize)
-                    trackHelper->buffer++;
-
-                @synchronized(samplesBuffer) {
-                    [samplesBuffer addObject:sample];
-                    [sample release];
-                }
+                    continue;
             }
         }        
     }
@@ -940,64 +849,36 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
 
                 trackHelper->current_time += duration;
 
-                if (fseeko(ioStream->fp, currentSample->filePos, SEEK_SET)) {
-                    fprintf(stderr,"fseeko(): %s\n", strerror(errno));
-                    break;			
-                }
+                if (readMkvPacket(ioStream, trackInfo, currentSample->filePos, &frame, &currentSample->frameSize)) {
+                    MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
+                    sample->sampleData = frame;
+                    sample->sampleSize = currentSample->frameSize;
+                    sample->sampleDuration = duration / 10000.0f;
+                    sample->sampleOffset = offset / 10000.0f;
+                    sample->sampleTimestamp = StartTime;
+                    sample->sampleIsSync = currentSample->frameFlags & FRAME_KF;
+                    sample->sampleTrackId = track.Id;
 
-                if (trackInfo->CompMethodPrivateSize != 0) {
-                    frame = malloc(currentSample->frameSize + trackInfo->CompMethodPrivateSize);
-                    memcpy(frame, trackInfo->CompMethodPrivate, trackInfo->CompMethodPrivateSize);
-                }
-                else
-                    frame = malloc(currentSample->frameSize);
+                    trackHelper->samplesWritten++;
 
-                if (frame == NULL) {
-                    fprintf(stderr,"Out of memory\n");
-                    break;		
-                }
+                    if (sample->sampleOffset < trackHelper->minDisplayOffset)
+                        trackHelper->minDisplayOffset = sample->sampleOffset;
 
-                size_t rd = fread(frame + trackInfo->CompMethodPrivateSize,1,currentSample->frameSize,ioStream->fp);
-                if (rd != currentSample->frameSize) {
-                    if (rd == 0) {
-                        if (feof(ioStream->fp))
-                            fprintf(stderr,"Unexpected EOF while reading frame\n");
-                        else
-                            fprintf(stderr,"Error reading frame: %s\n",strerror(errno));
-                    } else {
-                        fprintf(stderr,"Short read while reading frame\n");
+                    if (trackHelper->buffer >= bufferSize)
+                        [trackHelper->queue removeObjectAtIndex:0];
+
+                    @synchronized(samplesBuffer) {
+                        [samplesBuffer addObject:sample];
+                        [sample release];
+                    }
+
+                    trackHelper->bufferFlush++;
+                    if (trackHelper->bufferFlush >= bufferSize - 1) {
                         break;
                     }
-					free(frame);
-					continue;
                 }
-
-                MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-                sample->sampleData = frame;
-                sample->sampleSize = currentSample->frameSize + trackInfo->CompMethodPrivateSize;
-                sample->sampleDuration = duration / 10000.0f;
-                sample->sampleOffset = offset / 10000.0f;
-                sample->sampleTimestamp = StartTime;
-                sample->sampleIsSync = currentSample->frameFlags & FRAME_KF;
-                sample->sampleTrackId = track.Id;
-
-                trackHelper->samplesWritten++;
-
-                if (sample->sampleOffset < trackHelper->minDisplayOffset)
-                    trackHelper->minDisplayOffset = sample->sampleOffset;
-
-                if (trackHelper->buffer >= bufferSize)
-                    [trackHelper->queue removeObjectAtIndex:0];
-
-                @synchronized(samplesBuffer) {
-                    [samplesBuffer addObject:sample];
-                    [sample release];
-                }
-
-                trackHelper->bufferFlush++;
-                if (trackHelper->bufferFlush >= bufferSize - 1) {
-                    break;
-                }
+                else
+                    continue;
             }
         }
 

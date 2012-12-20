@@ -989,42 +989,52 @@ void *fast_realloc_with_padding(void *ptr, unsigned int *size, unsigned int min_
 	return res;
 }
 
-void DecompressZlib(uint8_t **codecData, unsigned int *bufferSize, uint8_t *sampleData, uint64_t sampleSize)
+int DecompressZlib(uint8_t **sampleData, uint32_t *sampleSize)
 {
-    unsigned int bufferSizeDec = 0;
-	ComponentResult err = noErr;
-	z_stream strm;
-	strm.zalloc = Z_NULL;
-	strm.zfree = Z_NULL;
-	strm.opaque = Z_NULL;
-	strm.avail_in = 0;
-	strm.next_in = Z_NULL;
-	err = inflateInit(&strm);
-	if (err != Z_OK) return;
-    
-	strm.avail_in = sampleSize;
-	strm.next_in = sampleData;
-    
-	// first, get the size of the decompressed data
-	strm.avail_out = 2;
-	strm.next_out = *codecData;
-    
-	err = inflate(&strm, Z_SYNC_FLUSH);
-	if (err < Z_OK) goto bail;
-	if (strm.avail_out != 0) goto bail;
-    
-	// reallocate our buffer to be big enough to store the decompressed packet
-	bufferSizeDec = AV_RB16(*codecData);
-	*codecData = fast_realloc_with_padding(*codecData, bufferSize, bufferSizeDec);
-    
-	// then decompress the rest of it
-	strm.avail_out = *bufferSize - 2;
-	strm.next_out = *codecData + 2;
-    
-	inflate(&strm, Z_SYNC_FLUSH);
-bail:
-	inflateEnd(&strm);
-    
-    *bufferSize = bufferSizeDec;
+    uint8_t* pkt_data = NULL;
+    uint8_t av_unused *newpktdata;
+    int pkt_size = *sampleSize;
+    int result = 0;
+
+    z_stream zstream = {0};
+    if (inflateInit(&zstream) != Z_OK)
+        return -1;
+    zstream.next_in = *sampleData;
+    zstream.avail_in = *sampleSize;
+    do {
+        pkt_size *= 3;
+        newpktdata = av_realloc(pkt_data, pkt_size);
+        if (!newpktdata) {
+            inflateEnd(&zstream);
+            goto failed;
+        }
+        pkt_data = newpktdata;
+        zstream.avail_out = pkt_size - zstream.total_out;
+        zstream.next_out = pkt_data + zstream.total_out;
+        if (pkt_data) {
+            result = inflate(&zstream, Z_NO_FLUSH);
+        } else
+            result = Z_MEM_ERROR;
+    } while (result==Z_OK && pkt_size<10000000);
+    pkt_size = zstream.total_out;
+    inflateEnd(&zstream);
+    if (result != Z_STREAM_END) {
+        if (result == Z_MEM_ERROR)
+            result = -1;
+        else
+            result = -1;
+        goto failed;
+    }
+
+    if (*sampleData)
+        free(*sampleData);
+
+    *sampleData = pkt_data;
+    *sampleSize = pkt_size;
+    return 0;
+
+failed:
+    av_free(pkt_data);
+    return result;
 }
 
