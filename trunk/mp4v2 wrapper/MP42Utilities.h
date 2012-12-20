@@ -68,3 +68,4 @@ int rgb2yuv(int rgb);
 
 void *fast_realloc_with_padding(void *ptr, unsigned int *size, unsigned int min_size);
 int DecompressZlib(uint8_t **sampleData, uint32_t *sampleSize);
+int DecompressBzlib(uint8_t **sampleData, uint32_t *sampleSize);
