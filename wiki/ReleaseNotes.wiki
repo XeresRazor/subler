@@ -1,6 +1,12 @@
 #summary Release Notes
 #labels Featured
 
+= Subler 0.19 =
+
+ * HDMV / PGS OCR.
+ * Fixed an issue that caused the save operation to take a long time. 
+ * Added "Home Video" to the media kind list.
+
 = Subler 0.18 =
 
  * Fixed an issue with thetvdb, results were not returned for some tv series. 
