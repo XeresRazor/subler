@@ -359,7 +359,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 - (uint64_t*)copyGuessedTrackDataLength
 {
     uint64_t    *trackSizes = NULL;
-    uint64_t    *trackStartTimes;
+    uint64_t    *trackTimestamp;
     uint64_t    StartTime, EndTime, FilePos;
     uint32_t    Track, FrameSize, FrameFlags;
     int i = 0;
@@ -367,35 +367,32 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     SegmentInfo *segInfo = mkv_GetFileInfo(matroskaFile);
     NSInteger trackCount = mkv_GetNumTracks(matroskaFile);
 
-    if (trackCount)
-    {
+    if (trackCount) {
         trackSizes = (uint64_t *) malloc(sizeof(uint64_t) * trackCount);
-        trackStartTimes = (uint64_t *) malloc(sizeof(uint64_t) * trackCount);
+        trackTimestamp = (uint64_t *) malloc(sizeof(uint64_t) * trackCount);
 
         for (i= 0; i < trackCount; i++) {
             trackSizes[i] = 0;
-            trackStartTimes[i] = 0;
+            trackTimestamp[i] = 0;
         }
 
         StartTime = 0;
         i = 0;
         while (StartTime < (segInfo->Duration / 64)) {
-            if (mkv_ReadFrame(matroskaFile, 0, &Track, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags)) {
+            if (!mkv_ReadFrame(matroskaFile, 0, &Track, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags)) {
                 trackSizes[Track] += FrameSize;
-                trackStartTimes[Track] = StartTime;
-
+                trackTimestamp[Track] = StartTime;
                 i++;
             }
             else
                 break;
         }
 
-        for (i= 0; i < trackCount; i++) {
-            if (trackStartTimes[i] > 0)
-                trackSizes[i] = trackSizes[i] * (segInfo->Duration / trackStartTimes[i]);
-        }
+        for (i= 0; i < trackCount; i++)
+            if (trackTimestamp[i] > 0)
+                trackSizes[i] = trackSizes[i] * (segInfo->Duration / trackTimestamp[i]);
 
-        free(trackStartTimes);
+        free(trackTimestamp);
         mkv_Seek(matroskaFile, 0, 0);
     }
 
@@ -707,20 +704,27 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                             trackHelper->previousSample.sampleTrackId = track.Id;
                             if(track.needConversion)
                                 trackHelper->previousSample.sampleSourceTrack = track;
-                            
+
                             @synchronized(samplesBuffer) {
                                 [samplesBuffer addObject:trackHelper->previousSample];
                                 [trackHelper->previousSample release];
                             }
                         }
                         else {
+                            if (nextSample->sampleTimestamp < trackHelper->previousSample.sampleTimestamp) {
+                                // Out of order samples? swap the next with the previous
+                                MP42SampleBuffer *temp = nextSample;
+                                nextSample = trackHelper->previousSample;
+                                trackHelper->previousSample = temp;
+                            }
+
                             trackHelper->previousSample.sampleDuration = (nextSample->sampleTimestamp - trackHelper->previousSample.sampleTimestamp) / 1000000;
                             @synchronized(samplesBuffer) {
                                 [samplesBuffer addObject:trackHelper->previousSample];
                                 [trackHelper->previousSample release];
                             }
                         }
-                        
+
                         trackHelper->previousSample = nextSample;
                         trackHelper->samplesWritten++;
                     }
