@@ -20,7 +20,7 @@
         delegate = del;
         fileURL = [URL retain];
 
-        NSInteger trackCount =1;
+        NSInteger trackCount = 1;
         tracksArray = [[NSMutableArray alloc] initWithCapacity:trackCount];
 
         NSInteger success = 0;
