@@ -15,6 +15,7 @@
 		948058B6106E07990037A911 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 948058B5106E07990037A911 /* libz.dylib */; };
 		A90327E4133F68C5004E0D41 /* SBOCRWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A90327E3133F68C5004E0D41 /* SBOCRWrapper.mm */; };
 		A905E58A0FB05A8100B926FF /* MP42ClosedCaptionTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A905E5880FB05A8100B926FF /* MP42ClosedCaptionTrack.m */; };
+		A906213B16839AB00057EA0B /* MP42VobSubImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A906213A16839AB00057EA0B /* MP42VobSubImporter.m */; };
 		A90B023B10F3290A000416F3 /* Prefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90B023910F3290A000416F3 /* Prefs.xib */; };
 		A91103E40F321DBA0013D1E0 /* libuniversaldetector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A91103930F321CF60013D1E0 /* libuniversaldetector.a */; };
 		A911064B0F323D450013D1E0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A911064A0F323D450013D1E0 /* AppDelegate.m */; };
@@ -211,6 +212,8 @@
 		A90327E3133F68C5004E0D41 /* SBOCRWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SBOCRWrapper.mm; path = "mp4v2 wrapper/SBOCRWrapper.mm"; sourceTree = "<group>"; };
 		A905E5880FB05A8100B926FF /* MP42ClosedCaptionTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42ClosedCaptionTrack.m; path = "mp4v2 wrapper/MP42ClosedCaptionTrack.m"; sourceTree = "<group>"; };
 		A905E5890FB05A8100B926FF /* MP42ClosedCaptionTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42ClosedCaptionTrack.h; path = "mp4v2 wrapper/MP42ClosedCaptionTrack.h"; sourceTree = "<group>"; };
+		A906213916839AB00057EA0B /* MP42VobSubImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42VobSubImporter.h; path = "mp4v2 wrapper/MP42VobSubImporter.h"; sourceTree = "<group>"; };
+		A906213A16839AB00057EA0B /* MP42VobSubImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42VobSubImporter.m; path = "mp4v2 wrapper/MP42VobSubImporter.m"; sourceTree = "<group>"; };
 		A90B023A10F3290A000416F3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Prefs.xib; sourceTree = "<group>"; };
 		A91103850F321CF60013D1E0 /* UniversalDetector.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UniversalDetector.xcodeproj; path = UniversalDetector/UniversalDetector.xcodeproj; sourceTree = "<group>"; };
 		A911049C0F321DFC0013D1E0 /* UniversalDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UniversalDetector.h; path = UniversalDetector/UniversalDetector.h; sourceTree = "<group>"; };
@@ -654,6 +657,8 @@
 				A9EBA68812AE28DF0092D645 /* MP42AC3Importer.m */,
 				A937137312B76EAD00940FEC /* MP42H264Importer.h */,
 				A937137412B76EAD00940FEC /* MP42H264Importer.mm */,
+				A906213916839AB00057EA0B /* MP42VobSubImporter.h */,
+				A906213A16839AB00057EA0B /* MP42VobSubImporter.m */,
 				A9B46AA512B79BD00040517A /* SBAudioConverter.h */,
 				A9B46AA612B79BD00040517A /* SBAudioConverter.m */,
 				A936DAFC1682057700D19BDB /* SBBitmapSubConverter.h */,
@@ -985,6 +990,7 @@
 				A98F421A15D9343000113CDE /* SBLanguages.m in Sources */,
 				A9AEF83B167C808600FDDBB3 /* QTKitDecrap.m in Sources */,
 				A936DAFE1682057700D19BDB /* SBBitmapSubConverter.m in Sources */,
+				A906213B16839AB00057EA0B /* MP42VobSubImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

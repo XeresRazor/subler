@@ -24,6 +24,7 @@ extern "C" {
 #endif
     /* find language associated with ISO-639-1 language code */
     iso639_lang_t * lang_for_code( int code );
+    iso639_lang_t * lang_for_code_s( const char *code );
     
     /* find language associated with ISO-639-2 language code */
     iso639_lang_t * lang_for_code2( const char *code2 );

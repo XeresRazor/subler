@@ -54,7 +54,19 @@ int LoadChaptersFromPath(NSString *path, NSMutableArray *ss);
 int ParseSSAHeader(NSString *header);
 NSString *StripSSALine(NSString *line);
 
+unsigned ParseSubTime(const char *time, unsigned secondScale, BOOL hasSign);
+
 @class MP42SampleBuffer;
 
 MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced);
 MP42SampleBuffer* copyEmptySubtitleSample(MP4TrackId subtitleTrackId, MP4Duration duration, BOOL forced);
+
+typedef struct {
+	// color format is 32-bit ARGB
+	UInt32  pixelColor[16];
+	UInt32  duration;
+} PacketControlData;
+
+int ExtractVobSubPacket(UInt8 *dest, UInt8 *framedSrc, int srcSize, int *usedSrcBytes, int index);
+ComponentResult ReadPacketControls(UInt8 *packet, UInt32 palette[16], PacketControlData *controlDataOut,BOOL *forced);
+Boolean ReadPacketTimes(uint8_t *packet, uint32_t length, uint16_t *startTime, uint16_t *endTime, uint8_t *forced);
