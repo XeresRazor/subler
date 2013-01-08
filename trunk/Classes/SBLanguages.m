@@ -517,6 +517,26 @@ iso639_lang_t * lang_for_code( int code )
     return (iso639_lang_t*) languages;
 }
 
+iso639_lang_t * lang_for_code_s( const char *code )
+{
+    char code_string[3];
+    iso639_lang_t * lang;
+    
+    code_string[0] = tolower( code[0] );
+    code_string[1] = tolower( code[1] );
+    code_string[2] = 0;
+
+    for( lang = (iso639_lang_t*) languages; lang->eng_name; lang++ )
+    {
+        if( !strncmp( lang->iso639_1, code_string, 2 ) )
+        {
+            return lang;
+        }
+    }
+    
+    return (iso639_lang_t*) languages;
+}
+
 iso639_lang_t * lang_for_code2( const char *code )
 {
     char code_string[4];

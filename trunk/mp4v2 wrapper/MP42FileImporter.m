@@ -14,6 +14,7 @@
 #import "MP42AC3Importer.h"
 #import "MP42AACImporter.h"
 #import "MP42H264Importer.h"
+#import "MP42VobSubImporter.h"
 
 #if !__LP64__
 #import "MP42QTImporter.h"
@@ -46,6 +47,9 @@
     else if ([[URL pathExtension] caseInsensitiveCompare: @"264"] == NSOrderedSame ||
              [[URL pathExtension] caseInsensitiveCompare: @"h264"] == NSOrderedSame)
         self = [[MP42H264Importer alloc] initWithDelegate:del andFile:URL error:outError];
+    else if ([[URL pathExtension] caseInsensitiveCompare: @"idx"] == NSOrderedSame ||
+             [[URL pathExtension] caseInsensitiveCompare: @"idx"] == NSOrderedSame)
+        self = [[MP42VobSubImporter alloc] initWithDelegate:del andFile:URL error:outError];
 #if !__LP64__
     else if ([[URL pathExtension] caseInsensitiveCompare: @"mov"] == NSOrderedSame) {
         self = [[MP42QTImporter alloc] initWithDelegate:del andFile:URL error:outError];

@@ -152,7 +152,7 @@ uint64_t getTrackSize(MP4FileHandle fileHandle, MP4TrackId trackId)
     i = 1;
     sampleNum = MP4GetTrackNumberOfSamples(fileHandle, trackId);
     dataLength = 0;
-    
+
     while (i <= sampleNum) {
         dataLength += MP4GetSampleSize(fileHandle, trackId, i);
         i++;
@@ -364,7 +364,7 @@ NSString* getFilenameLanguage(CFStringRef filename)
 
 		langStr = CFStringCreateWithSubstring(NULL, baseName, findResult);
 		CFStringGetCString(langStr, langCStr, 3, kCFStringEncodingASCII);
-        lang = [NSString stringWithFormat:@"%s", lang_for_code2(langCStr)->eng_name];
+        lang = [NSString stringWithFormat:@"%s", lang_for_code_s(langCStr)->eng_name];
 
 		CFRelease(langStr);
 	}
