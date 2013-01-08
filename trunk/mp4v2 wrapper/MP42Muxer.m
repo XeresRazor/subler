@@ -17,8 +17,7 @@
 
 - (id)init
 {
-    if ((self = [super init]))
-    {
+    if ((self = [super init])) {
         workingTracks = [[NSMutableArray alloc] init];
     }
     return self;
@@ -354,7 +353,6 @@
 - (void)start:(MP4FileHandle)fileHandle
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
     NSMutableArray * trackImportersArray = [[NSMutableArray alloc] init];
 
     for (MP42Track * track in workingTracks) {
@@ -402,11 +400,13 @@
 
             // Write the sample directly to the file
             else {
-                MP4WriteSample(fileHandle, sampleBuffer->sampleTrackId,
+                if (!MP4WriteSample(fileHandle, sampleBuffer->sampleTrackId,
                                sampleBuffer->sampleData, sampleBuffer->sampleSize,
                                sampleBuffer->sampleDuration, sampleBuffer->sampleOffset,
-                               sampleBuffer->sampleIsSync);
-                [sampleBuffer release];
+                               sampleBuffer->sampleIsSync))
+                    isCancelled = YES;
+                else
+                    [sampleBuffer release];
             }
 
             if (currentNumber == 150) {
