@@ -488,6 +488,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
     if ([track isMemberOfClass:[MP42SubtitleTrack class]])
         enableFirstSubtitleTrack(fileHandle);
 }
+
 /* Create a set of alternate group the way iTunes and Apple devices want:
    one alternate group for sound, one for subtitles, a disabled photo-jpeg track,
    a disabled chapter track, and a video track with no alternate group */
