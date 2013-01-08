@@ -141,9 +141,9 @@
     joined = [self nodes:node forXPath:@"./categories/category[@type='genre']/@name" joinedBy:@","];
     if (joined) [metadata setTag:joined forKey:@"Genre"];
     joined = [self nodes:node forXPath:@"./cast/person[@job='Actor']/@name" joinedBy:@","];
-    if (joined) {[metadata setTag:joined forKey:@"Cast"]; [metadata setTag:joined forKey:@"Artist"]; }
+    if (joined) [metadata setTag:joined forKey:@"Cast"];
     joined = [self nodes:node forXPath:@"./cast/person[@job='Director']/@name" joinedBy:@","];
-    if (joined) [metadata setTag:joined forKey:@"Director"];
+    if (joined) {[metadata setTag:joined forKey:@"Director"]; [metadata setTag:joined forKey:@"Artist"];}
     joined = [self nodes:node forXPath:@"./cast/person[@department='Writing']/@name" joinedBy:@","];
     if (joined) [metadata setTag:joined forKey:@"Screenwriters"];
     joined = [self nodes:node forXPath:@"./cast/person[@department='Production']/@name" joinedBy:@","];

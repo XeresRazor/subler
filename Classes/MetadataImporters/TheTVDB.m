@@ -139,6 +139,7 @@
         [metadata setTag:[episodeDict valueForKey:@"overview"] forKey:@"Description"];
         [metadata setTag:[episodeDict valueForKey:@"overview"] forKey:@"Long Description"];
         [metadata setTag:[self cleanPeopleList:[episodeDict valueForKey:@"director"]] forKey:@"Director"];
+        [metadata setTag:[self cleanPeopleList:[episodeDict valueForKey:@"director"]] forKey:@"Artist"];
         [metadata setTag:[self cleanPeopleList:[episodeDict valueForKey:@"writer"]] forKey:@"Screenwriters"];
         [metadata setTag:[episodeDict valueForKey:@"episodenumber"] forKey:@"Track #"];
         // artwork
