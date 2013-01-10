@@ -251,7 +251,10 @@ static SBQueueController *sharedController = nil;
 {
     NSError *outError;
     NSMutableArray *tracksArray = [[NSMutableArray alloc] init];
-    NSArray *directory = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[url URLByDeletingLastPathComponent] includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles | NSDirectoryEnumerationSkipsPackageDescendants error:nil];
+    NSArray *directory = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[url URLByDeletingLastPathComponent]
+                                                       includingPropertiesForKeys:nil
+                                                                          options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles | NSDirectoryEnumerationSkipsPackageDescendants
+                                                                            error:nil];
 
     for (NSURL *dirUrl in directory) {
         if ([[dirUrl pathExtension] isEqualToString:@"srt"]) {
@@ -260,18 +263,20 @@ static SBQueueController *sharedController = nil;
             NSString *subtitleFilename = [[dirUrl URLByDeletingPathExtension] lastPathComponent];
             NSRange range = { 0, [movieFilename length] };
 
-            result = [subtitleFilename compare:movieFilename options:kCFCompareCaseInsensitive range:range];
+            if ([movieFilename length] <= [subtitleFilename length]) {
+                result = [subtitleFilename compare:movieFilename options:kCFCompareCaseInsensitive range:range];
 
-            if (result == NSOrderedSame) {
-                MP42FileImporter *fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil
-                                                                                    andFile:dirUrl
-                                                                                      error:&outError];
+                if (result == NSOrderedSame) {
+                    MP42FileImporter *fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil
+                                                                                        andFile:dirUrl
+                                                                                          error:&outError];
 
-                for (MP42Track *track in [fileImporter tracksArray]) {
-                    [track setTrackImporterHelper:fileImporter];
-                    [tracksArray addObject:track];                    
+                    for (MP42Track *track in [fileImporter tracksArray]) {
+                        [track setTrackImporterHelper:fileImporter];
+                        [tracksArray addObject:track];                    
+                    }
+                    [fileImporter release];
                 }
-                [fileImporter release];
             }
         }
     }
@@ -345,7 +350,7 @@ static SBQueueController *sharedController = nil;
                                                                               error:outError];
 
         for (MP42Track *track in [fileImporter tracksArray]) {
-            if ([track.format isEqualToString:@"AC-3"] && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue])
+            if (([track.format isEqualToString:@"AC-3"] || [track.format isEqualToString:@"DTS"]) && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue])
                 track.needConversion = YES;
 
             [track setTrackImporterHelper:fileImporter];
