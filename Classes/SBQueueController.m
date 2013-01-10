@@ -483,8 +483,11 @@ static SBQueueController *sharedController = nil;
                 [item setStatus:SBQueueItemStatusCompleted];
             else {
                 [item setStatus:SBQueueItemStatusFailed];
-                if (outError)
-                    NSLog(@"Error: %@", [outError localizedDescription]);
+                if (outError) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [NSApp presentError:outError];
+                    });
+                }
             }
 
             // Update the UI
