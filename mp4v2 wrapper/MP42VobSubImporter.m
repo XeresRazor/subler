@@ -307,6 +307,11 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
                 uint32_t endTime = currentSample->timeStamp + endTimestamp;
 
                 int duration = endTimestamp - startTimestamp;
+                if(duration <= 0 && i <= sampleCount - 1) {
+                    //Sample with no end duration, use the duration of the next one
+                    endTime = ((SBVobSubSample *)[vobTrack->samples objectAtIndex:i+1])->timeStamp;
+                    duration = endTime - startTime;
+                }
                 if(duration <= 0) {
                     //Skip samples which are broken
                     free(extracted);
