@@ -154,6 +154,20 @@
             refTrack = 1;
 
         chapterCount = [chapters count];
+        
+        // Insert a chapter at time 0 if there isn't one
+        if (chapterCount) {
+            SBTextSample * chapter = [chapters objectAtIndex:0];
+            if (chapter.timestamp != 0) {
+                SBTextSample *st = [[SBTextSample alloc] init];
+                st.timestamp = 0;
+                st.title = @"Chapter 0";
+                [chapters insertObject:st atIndex:0];
+                [st release];
+                chapterCount++;
+            }
+        }
+
         fileChapters = malloc(sizeof(MP4Chapter_t)*chapterCount);
         refTrackDuration = MP4ConvertFromTrackDuration(fileHandle,
                                                        refTrack,
@@ -169,7 +183,7 @@
             if ([[chapter title] UTF8String])
                 strcpy(fileChapters[i].title, [[chapter title] UTF8String]);
 
-            if (i+1 < chapterCount && sum < refTrackDuration) {
+            if (i + 1 < chapterCount && sum < refTrackDuration) {
                 SBTextSample * nextChapter = [chapters objectAtIndex:i+1];
                 fileChapters[i].duration = nextChapter.timestamp - chapter.timestamp;
                 sum = nextChapter.timestamp;
