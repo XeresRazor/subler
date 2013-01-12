@@ -251,6 +251,8 @@ struct style_record {
         free(pBytes);
     }
 
+    MP4Close(fileHandle, 0);
+
     return [srtFile writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:error];
 }
 
