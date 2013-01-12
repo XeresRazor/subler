@@ -1401,6 +1401,7 @@ static const genreType_t genreType_strings[] = {
         memcpy( data->value, [ratingString UTF8String], data->valueSize );
 
         MP4ItmfAddItem(fileHandle, newItem);
+        MP4ItmfItemFree(newItem);
     }
     else {
         MP4ItmfItemList* list = MP4ItmfGetItemsByMeaning(fileHandle, "com.apple.iTunes", "iTunEXTC");
@@ -1411,6 +1412,7 @@ static const genreType_t genreType_strings[] = {
                 MP4ItmfRemoveItem(fileHandle, item);
             }
         }
+        MP4ItmfItemListFree(list);
     }
 
     MP4ItmfItemList* list = MP4ItmfGetItemsByMeaning(fileHandle, "com.apple.iTunes", "iTunMOVI");
@@ -1492,6 +1494,7 @@ static const genreType_t genreType_strings[] = {
             memcpy( data->value, [serializedPlist bytes], data->valueSize );
 
             MP4ItmfAddItem(fileHandle, newItem);
+            MP4ItmfItemFree(newItem);
         }
         else {
             MP4ItmfItemList* list = MP4ItmfGetItemsByMeaning(fileHandle, "com.apple.iTunes", "iTunMOVI");
@@ -1502,6 +1505,7 @@ static const genreType_t genreType_strings[] = {
                     MP4ItmfRemoveItem(fileHandle, item);
                 }
             }
+            MP4ItmfItemListFree(list);
         }
     }
 
