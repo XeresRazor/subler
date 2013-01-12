@@ -273,7 +273,8 @@ static SBQueueController *sharedController = nil;
 
                     for (MP42Track *track in [fileImporter tracksArray]) {
                         [track setTrackImporterHelper:fileImporter];
-                        [tracksArray addObject:track];                    
+                        [fileImporter retain];
+                        [tracksArray addObject:track];
                     }
                     [fileImporter release];
                 }
@@ -363,8 +364,10 @@ static SBQueueController *sharedController = nil;
 
     // Search for external subtitles files
     NSArray *subtitles = [self loadSubtitles:url];
-    for (MP42SubtitleTrack *subTrack in subtitles)
+    for (MP42SubtitleTrack *subTrack in subtitles) {
         [mp4File addTrack:subTrack];
+        [subTrack.trackImporterHelper release];
+    }
 
     // Search for metadata
     if ([MetadataOption state]) {
