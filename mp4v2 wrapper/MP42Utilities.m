@@ -206,7 +206,7 @@ MP4TrackId findFirstVideoTrack(MP4FileHandle fileHandle)
     int i, trackNumber = MP4GetNumberOfTracks( fileHandle, 0, 0);
     if (!trackNumber)
         return 0;
-    for (i = 0; i <= trackNumber; i++) {
+    for (i = 0; i < trackNumber; i++) {
         videoTrack = MP4FindTrackId( fileHandle, i, 0, 0);
         const char* trackType = MP4GetTrackType(fileHandle, videoTrack);
         if (trackType)
