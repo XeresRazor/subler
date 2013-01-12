@@ -334,7 +334,6 @@ static bool GetFirstHeader(FILE* inFile)
 
 - (NSData*)magicCookieForTrack:(MP42Track *)track
 {
-    
     return ac3Info;
 }
 

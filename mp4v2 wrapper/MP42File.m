@@ -189,9 +189,8 @@ NSString * const MP42FileTypeM4B = @"m4b";
         }
     }
 
-    if (trackNeedConversion(track.format)) {
+    if (trackNeedConversion(track.format))
         track.needConversion = YES;
-    }
 
     if (track.trackImporterHelper)
         [fileImporters addObject:track.trackImporterHelper];

@@ -43,11 +43,17 @@
 {
     BOOL noErr = YES;
 
-    for (MP42Track * track in workingTracks)
-    {
+    for (MP42Track * track in workingTracks) {
         MP4TrackId dstTrackId = 0;
-        NSData *magicCookie = [[track trackImporterHelper] magicCookieForTrack:track];
-        NSInteger timeScale = [[track trackImporterHelper] timescaleForTrack:track];
+        NSData *magicCookie;
+        NSInteger timeScale;
+
+        if ([track trackImporterHelper]) {
+            magicCookie = [[track trackImporterHelper] magicCookieForTrack:track];
+            timeScale = [[track trackImporterHelper] timescaleForTrack:track];
+        }
+        else
+            continue;
 
         if([track isMemberOfClass:[MP42AudioTrack class]] && track.needConversion) {
             track.format = @"AAC";
@@ -55,9 +61,8 @@
                                                                         andMixdownType:[(MP42AudioTrack*)track mixdownType]
                                                                                  error:outError];
 
-            if (audioConverter == nil) {
+            if (audioConverter == nil)
                 noErr = NO;
-            }
 
             track.trackConverterHelper = audioConverter;
         }
@@ -66,19 +71,17 @@
             SBBitmapSubConverter *subConverter = [[SBBitmapSubConverter alloc] initWithTrack:(MP42SubtitleTrack*)track
                                                                                        error:outError];
 
-            if (subConverter == nil) {
+            if (subConverter == nil)
                 noErr = NO;
-            }
 
             track.trackConverterHelper = subConverter;
         }
-        else if([track isMemberOfClass:[MP42SubtitleTrack class]] && track.needConversion) {
+        else if([track isMemberOfClass:[MP42SubtitleTrack class]] && track.needConversion)
             track.format = @"3GPP Text";
-        }
 
         // H.264 video track
         if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:@"H.264"]) {
-            if ([magicCookie length] < 4)
+            if ([magicCookie length] < sizeof(uint8_t) * 6)
                 continue;
 
             NSSize size = [[track trackImporterHelper] sizeForTrack:track];
@@ -125,7 +128,7 @@
                                           MP4_INVALID_DURATION,
                                           [(MP42VideoTrack*)track width], [(MP42VideoTrack*)track height],
                                           MP4_MPEG4_VIDEO_TYPE);
-            
+
             if ([magicCookie length])
                 MP4SetTrackESConfiguration(fileHandle, dstTrackId,
                                            [magicCookie bytes],
@@ -160,7 +163,7 @@
 
         // AC-3 audio track
         else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"AC-3"]) {
-            if (![magicCookie length])
+            if ([magicCookie length] < sizeof(uint64_t) * 6)
                 continue;
 
             const uint64_t * ac3Info = (const uint64_t *)[magicCookie bytes];
@@ -173,6 +176,7 @@
                                              ac3Info[3],
                                              ac3Info[4],
                                              ac3Info[5]);
+
             [[track trackImporterHelper] setActiveTrack:track];
         }
 
@@ -202,7 +206,7 @@
             NSSize videoSize = NSMakeSize(0, 0);
 
             NSInteger vPlacement = [(MP42SubtitleTrack*)track verticalPlacement];
-            
+
             for (id track in workingTracks)
                 if ([track isMemberOfClass:[MP42VideoTrack class]]) {
                     videoSize.width  = [track trackWidth];
@@ -217,8 +221,8 @@
                     videoSize.height = MP4GetTrackVideoHeight(fileHandle, videoTrack);
                 }
                 else {
-                videoSize.width = 640;
-                videoSize.height = 480;
+                    videoSize.width = 640;
+                    videoSize.height = 480;
                 }
             }
             if (!vPlacement) {
@@ -229,7 +233,6 @@
             }
             else
                 subSize.height = videoSize.height;
-
 
             const uint8_t textColor[4] = { 255,255,255,255 };
             dstTrackId = MP4AddSubtitleTrack(fileHandle, timeScale, videoSize.width, subSize.height);
@@ -285,7 +288,7 @@
         }
         // VobSub bitmap track
         else if ([track isMemberOfClass:[MP42SubtitleTrack class]] && [track.format isEqualToString:@"VobSub"]) {
-            if (![magicCookie length])
+            if ([magicCookie length] < sizeof(uint32_t) * 16)
                 continue;
 
             dstTrackId = MP4AddSubpicTrack(fileHandle, timeScale, 640, 480);
@@ -296,8 +299,7 @@
                 subPalette[ii] = rgb2yuv(subPalette[ii]);
 
             uint8_t palette[16][4];
-            for ( ii = 0; ii < 16; ii++ )
-            {
+            for ( ii = 0; ii < 16; ii++ ) {
                 palette[ii][0] = 0;
                 palette[ii][1] = (subPalette[ii] >> 16) & 0xff;
                 palette[ii][2] = (subPalette[ii] >> 8) & 0xff;

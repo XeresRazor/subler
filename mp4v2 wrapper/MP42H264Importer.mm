@@ -1411,7 +1411,6 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 
 - (NSData*)magicCookieForTrack:(MP42Track *)track
 {
-    
     return avcC;
 }
 
