@@ -254,7 +254,7 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
                        &colorPalette[ 8], &colorPalette[ 9], &colorPalette[10], &colorPalette[11],
                        &colorPalette[12], &colorPalette[13], &colorPalette[14], &colorPalette[15]);
             }
-            magicCookie = [[NSData dataWithBytes:colorPalette length:sizeof(UInt32)*16] retain];
+            magicCookie = [NSData dataWithBytes:colorPalette length:sizeof(UInt32)*16];
         }
     }
 

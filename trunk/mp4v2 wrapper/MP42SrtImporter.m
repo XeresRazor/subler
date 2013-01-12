@@ -117,6 +117,7 @@
     [ss release];
 	[fileURL release];
     [tracksArray release];
+    [activeTracks release];
 
     [super dealloc];
 }

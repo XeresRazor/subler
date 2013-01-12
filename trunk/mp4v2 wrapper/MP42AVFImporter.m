@@ -189,13 +189,15 @@
         NSArray *availableChapter = [localAsset availableChapterLocales];
         MP42ChapterTrack *chapters = nil;
 
-        for (NSLocale *locale in availableChapter) {
-            chapters = [[MP42ChapterTrack alloc] init];
-            NSArray *chapterList = [localAsset chapterMetadataGroupsWithTitleLocale:locale containingItemsWithCommonKeys:nil];
-            for (AVTimedMetadataGroup* chapterData in chapterList) {
-                for (AVMetadataItem *item in [chapterData items]) {
-                    CMTime time = [item time];
-                    [chapters addChapter:[item stringValue] duration:time.value * time.timescale / 1000];
+        if ([tracks count]) {
+            for (NSLocale *locale in availableChapter) {
+                chapters = [[MP42ChapterTrack alloc] init];
+                NSArray *chapterList = [localAsset chapterMetadataGroupsWithTitleLocale:locale containingItemsWithCommonKeys:nil];
+                for (AVTimedMetadataGroup* chapterData in chapterList) {
+                    for (AVMetadataItem *item in [chapterData items]) {
+                        CMTime time = [item time];
+                        [chapters addChapter:[item stringValue] duration:time.value * time.timescale / 1000];
+                    }
                 }
             }
         }
@@ -289,7 +291,7 @@
             [tracksArray addObject:newTrack];
             [newTrack release];
         }
-        
+
         [self convertMetadata];
 
         [pool release];
