@@ -43,25 +43,25 @@
 
     MP42File *mp4File = [((SBDocument *) delegate) mp4File];
 
-    NSString *language = [[NSUserDefaults standardUserDefaults] valueForKey:@"SBNativeLanguage"];
-    if (!language)
-        language = @"English";
-    
     // construct movie language menu
     [movieLanguage removeAllItems];
     for (NSString *lang in [(SBDocument *) delegate languages]) {
         if ([lang isEqualToString:@"Unknown"]) continue;
         [movieLanguage addItemWithTitle:lang];
     }
-    [movieLanguage selectItemWithTitle:language];
-    for (MP42Track *track in [mp4File tracks]) {
-        if (![[track language] isEqualToString:@"Unknown"]) {
-            if ([movieLanguage indexOfItemWithTitle:[track language]] >= 0) {
-                [movieLanguage selectItemWithTitle:[track language]];
-                break;
-            }
-        }
+
+    NSString *language = [[NSUserDefaults standardUserDefaults] valueForKey:@"SBNativeLanguage"];
+    if (!language || [language isEqualToString:@"Default"]) {
+        language = @"English";
+        for (MP42Track *track in [mp4File tracks])
+            if (![[track language] isEqualToString:@"Unknown"])
+                language = [track language];
     }
+
+    if ([movieLanguage indexOfItemWithTitle:language] >= 0)
+        [movieLanguage selectItemWithTitle:language];
+    else
+        [movieLanguage selectItemWithTitle:@"English"];
 
     // construct tv language menu
     [tvLanguage removeAllItems];
@@ -69,16 +69,12 @@
     for (NSString *lang in tvLanguages) {
         [tvLanguage addItemWithTitle:lang];
     }
-    [tvLanguage selectItemWithTitle:language];
-    for (MP42Track *track in [mp4File tracks]) {
-        if (![[track language] isEqualToString:@"Unknown"]) {
-            if ([tvLanguage indexOfItemWithTitle:[track language]] >= 0) {
-                [tvLanguage selectItemWithTitle:[track language]];
-                break;
-            }
-        }
-    }
-    
+
+    if ([tvLanguage indexOfItemWithTitle:language] >= 0)
+        [tvLanguage selectItemWithTitle:language];
+    else
+        [tvLanguage selectItemWithTitle:@"English"];
+
     NSString *filename = nil;
     for (NSUInteger i = 0; i < [mp4File tracksCount]; i++) {
         MP42Track *track = [mp4File trackAtIndex:i];
