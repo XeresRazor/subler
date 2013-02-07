@@ -30,6 +30,7 @@
 		A936DAFE1682057700D19BDB /* SBBitmapSubConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A936DAFD1682057700D19BDB /* SBBitmapSubConverter.m */; };
 		A936E03E130BE10200CA5527 /* MAAttachedWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = A936E03D130BE10200CA5527 /* MAAttachedWindow.m */; };
 		A937137512B76EAD00940FEC /* MP42H264Importer.mm in Sources */ = {isa = PBXBuildFile; fileRef = A937137412B76EAD00940FEC /* MP42H264Importer.mm */; };
+		A93F873116B2C8DA009B8303 /* MP42XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = A93F873016B2C8DA009B8303 /* MP42XMLReader.m */; };
 		A940E0FF13F130FB007AB5C6 /* MP42AVFImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A940E0FE13F130FB007AB5C6 /* MP42AVFImporter.m */; };
 		A9569CEB0F616926002F79F8 /* MP42VideoTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9569CEA0F616926002F79F8 /* MP42VideoTrack.m */; };
 		A95C881D0F827BFB00F51A22 /* ToolbarRemoveTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = A95C881C0F827BFB00F51A22 /* ToolbarRemoveTemplate.png */; };
@@ -233,6 +234,8 @@
 		A936E03D130BE10200CA5527 /* MAAttachedWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MAAttachedWindow.m; path = Others/MAAttachedWindow.m; sourceTree = "<group>"; };
 		A937137312B76EAD00940FEC /* MP42H264Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42H264Importer.h; path = "mp4v2 wrapper/MP42H264Importer.h"; sourceTree = "<group>"; };
 		A937137412B76EAD00940FEC /* MP42H264Importer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MP42H264Importer.mm; path = "mp4v2 wrapper/MP42H264Importer.mm"; sourceTree = "<group>"; };
+		A93F872F16B2C8DA009B8303 /* MP42XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42XMLReader.h; path = "mp4v2 wrapper/MP42XMLReader.h"; sourceTree = "<group>"; };
+		A93F873016B2C8DA009B8303 /* MP42XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42XMLReader.m; path = "mp4v2 wrapper/MP42XMLReader.m"; sourceTree = "<group>"; };
 		A940E0FD13F130FB007AB5C6 /* MP42AVFImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AVFImporter.h; path = "mp4v2 wrapper/MP42AVFImporter.h"; sourceTree = "<group>"; };
 		A940E0FE13F130FB007AB5C6 /* MP42AVFImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42AVFImporter.m; path = "mp4v2 wrapper/MP42AVFImporter.m"; sourceTree = "<group>"; };
 		A941B4D7134A52B600E22F45 /* eng.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; path = eng.traineddata; sourceTree = "<group>"; };
@@ -711,6 +714,8 @@
 				A905E5880FB05A8100B926FF /* MP42ClosedCaptionTrack.m */,
 				A9629C850F56F7B6001D6A75 /* MP42Metadata.h */,
 				A9629C860F56F7B6001D6A75 /* MP42Metadata.m */,
+				A93F872F16B2C8DA009B8303 /* MP42XMLReader.h */,
+				A93F873016B2C8DA009B8303 /* MP42XMLReader.m */,
 				A9629C8B0F56F7B6001D6A75 /* MP42Utilities.h */,
 				A9629C8C0F56F7B6001D6A75 /* MP42Utilities.m */,
 				A9C03EB41116DFE700DA6FF6 /* Muxer */,
@@ -991,6 +996,7 @@
 				A9AEF83B167C808600FDDBB3 /* QTKitDecrap.m in Sources */,
 				A936DAFE1682057700D19BDB /* SBBitmapSubConverter.m in Sources */,
 				A906213B16839AB00057EA0B /* MP42VobSubImporter.m in Sources */,
+				A93F873116B2C8DA009B8303 /* MP42XMLReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
