@@ -621,7 +621,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     mkv_SetTrackMask(matroskaFile, TrackMask);
 
     while (!mkv_ReadFrame(matroskaFile, 0, &Track, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags) && !isCancelled) {
-        while ([samplesBuffer count] >= 200) {
+        while ([samplesBuffer count] >= 400) {
             usleep(200);
         }
 
@@ -1025,13 +1025,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 	[fileURL release], fileURL = nil;
 
 	/* close matroska parser */ 
-	mkv_Close(matroskaFile); 
-
-	/* close file */
-    if (ioStream) {
-        fclose(ioStream->fp);
-        free(ioStream);
-    }
+    closeMatroskaFile(matroskaFile, ioStream);
 
     [super dealloc];
 }
