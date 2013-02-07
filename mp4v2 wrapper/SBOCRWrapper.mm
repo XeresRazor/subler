@@ -41,8 +41,7 @@ char* OCRFrame(const unsigned char *image, int bytes_per_pixel, int bytes_per_li
     return text;
 }
 
-void End()
-{
+void End() {
     tess_base_api.End();
 }
 

@@ -186,7 +186,7 @@ class CBitstream {
       uint8_t readval;
       readval = PeekBits(8);
       if (readval == 0x7f) {
-	readval = GetBits(8);
+	 GetBits(8);
       }
     }
     return (temp);
