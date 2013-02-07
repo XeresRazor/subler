@@ -12,13 +12,14 @@
 #include <errno.h>
 #include <stdint.h>
 #include <string.h>
+#include <fcntl.h>
 
 #include "MatroskaParser.h"
 #include "MatroskaFile.h"
 
 #pragma mark Parser callbacks
 
-#define CACHESIZE 65536
+#define CACHESIZE 0xFFFFFFF
 
 /* StdIoStream methods */ 
 
@@ -106,26 +107,37 @@ MatroskaFile *openMatroskaFile(char *filePath, StdIoStream *ioStream)
 	ioStream->base.progress = (int (*)(struct InputStream *, uint64_t, uint64_t))StdIoProgress;
 
 	/* open source file */ 
-	ioStream->fp = fopen(filePath,"r"); 
+	ioStream->fp = fopen(filePath,"r");
 	if (ioStream->fp == NULL) { 
 		fprintf(stderr, "Can't open '%s': %s\n", filePath, strerror(errno)); 
 		return NULL; 
-	} 
+	}
 
-	setvbuf(ioStream->fp, NULL, _IOFBF, CACHESIZE); 
+    /* Disable ram cache */
+    fcntl (ioStream->fp->_file, F_RDAHEAD, 1);
+    fcntl (ioStream->fp->_file, F_NOCACHE, 1);
 
 	/* initialize matroska parser */ 
 	MatroskaFile *mf = mkv_Open(&ioStream->base, /* pointer to I/O object */ 
-					   //		  0, /* starting position in the file */ 
-					   //		  0,
-					   		  err_msg, sizeof(err_msg)); /* error message is returned here */ 
+                                err_msg, sizeof(err_msg)); /* error message is returned here */ 
 
-	if (mf == NULL) 
-	{ 
+	if (mf == NULL) {
 		fclose(ioStream->fp); 
 		fprintf(stderr, "Can't parse Matroska file: %s\n", err_msg); 
 		return NULL; 
 	} 
 
 	return mf;	
+}
+
+void closeMatroskaFile(MatroskaFile *matroskaFile, StdIoStream *ioStream)
+{
+    /* close matroska parser */
+	mkv_Close(matroskaFile);
+    
+	/* close file */
+    if (ioStream) {
+        fclose(ioStream->fp);
+        free(ioStream);
+    }
 }
