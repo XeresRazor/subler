@@ -30,6 +30,7 @@ typedef NSInteger SBQueueStatus;
 
     IBOutlet NSButton *OptimizeOption;
     IBOutlet NSButton *MetadataOption;
+    IBOutlet NSButton *ITunesGroupsOption;
     IBOutlet NSButton *AutoStartOption;
     IBOutlet NSBox    *optionsBox;
     BOOL optionsStatus;

@@ -311,7 +311,7 @@
 												<reference key="NSSupport" ref="30606313"/>
 												<string key="NSCellIdentifier">_NS:161</string>
 												<reference key="NSControlView" ref="314357961"/>
-												<int key="NSButtonFlags">-2038153216</int>
+												<int key="NSButtonFlags">-2038022144</int>
 												<int key="NSButtonFlags2">129</int>
 												<string key="NSAlternateContents"/>
 												<string key="NSKeyEquivalent"/>
@@ -400,7 +400,7 @@
 															<string key="NSFrame">{{116, 83}, {118, 18}}</string>
 															<reference key="NSSuperview" ref="841742986"/>
 															<reference key="NSWindow"/>
-															<reference key="NSNextKeyView" ref="98555484"/>
+															<reference key="NSNextKeyView" ref="801299103"/>
 															<string key="NSReuseIdentifierKey">_NS:239</string>
 															<bool key="NSEnabled">YES</bool>
 															<object class="NSButtonCell" key="NSCell" id="129389119">
@@ -424,7 +424,7 @@
 														<object class="NSButton" id="98555484">
 															<reference key="NSNextResponder" ref="841742986"/>
 															<int key="NSvFlags">268</int>
-															<string key="NSFrame">{{238, 83}, {134, 18}}</string>
+															<string key="NSFrame">{{355, 83}, {89, 18}}</string>
 															<reference key="NSSuperview" ref="841742986"/>
 															<reference key="NSWindow"/>
 															<reference key="NSNextKeyView" ref="979235387"/>
@@ -433,10 +433,37 @@
 															<object class="NSButtonCell" key="NSCell" id="627983718">
 																<int key="NSCellFlags">-2080374784</int>
 																<int key="NSCellFlags2">0</int>
-																<string key="NSContents">Auto-Start Queue</string>
+																<string key="NSContents">Auto-Start</string>
 																<reference key="NSSupport" ref="30606313"/>
 																<string key="NSCellIdentifier">_NS:239</string>
 																<reference key="NSControlView" ref="98555484"/>
+																<int key="NSButtonFlags">1211912448</int>
+																<int key="NSButtonFlags2">2</int>
+																<reference key="NSNormalImage" ref="428732416"/>
+																<reference key="NSAlternateImage" ref="448509423"/>
+																<string key="NSAlternateContents"/>
+																<string key="NSKeyEquivalent"/>
+																<int key="NSPeriodicDelay">200</int>
+																<int key="NSPeriodicInterval">25</int>
+															</object>
+															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+														</object>
+														<object class="NSButton" id="801299103">
+															<reference key="NSNextResponder" ref="841742986"/>
+															<int key="NSvFlags">268</int>
+															<string key="NSFrame">{{238, 83}, {113, 18}}</string>
+															<reference key="NSSuperview" ref="841742986"/>
+															<reference key="NSWindow"/>
+															<reference key="NSNextKeyView" ref="98555484"/>
+															<string key="NSReuseIdentifierKey">_NS:239</string>
+															<bool key="NSEnabled">YES</bool>
+															<object class="NSButtonCell" key="NSCell" id="723841052">
+																<int key="NSCellFlags">-2080374784</int>
+																<int key="NSCellFlags2">0</int>
+																<string key="NSContents">iTunes groups</string>
+																<reference key="NSSupport" ref="30606313"/>
+																<string key="NSCellIdentifier">_NS:239</string>
+																<reference key="NSControlView" ref="801299103"/>
 																<int key="NSButtonFlags">1211912448</int>
 																<int key="NSButtonFlags2">2</int>
 																<reference key="NSNormalImage" ref="428732416"/>
@@ -843,6 +870,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
+						<string key="label">ITunesGroupsOption</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="801299103"/>
+					</object>
+					<int key="connectionID">98</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
 						<string key="label">dataSource</string>
 						<reference key="source" ref="791590002"/>
 						<reference key="destination" ref="1001"/>
@@ -920,6 +955,22 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">84</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: values.SBQueueITunesGroups</string>
+						<reference key="source" ref="801299103"/>
+						<reference key="destination" ref="983247719"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="801299103"/>
+							<reference key="NSDestination" ref="983247719"/>
+							<string key="NSLabel">value: values.SBQueueITunesGroups</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">values.SBQueueITunesGroups</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">96</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1061,11 +1112,12 @@
 						<int key="objectID">34</int>
 						<reference key="object" ref="912708293"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="98555484"/>
 							<reference ref="244190331"/>
 							<reference ref="1042068027"/>
 							<reference ref="205639305"/>
 							<reference ref="979235387"/>
+							<reference ref="801299103"/>
+							<reference ref="98555484"/>
 						</array>
 						<reference key="parent" ref="428686001"/>
 					</object>
@@ -1219,6 +1271,19 @@
 						<reference key="object" ref="345300038"/>
 						<reference key="parent" ref="355138311"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">93</int>
+						<reference key="object" ref="801299103"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="723841052"/>
+						</array>
+						<reference key="parent" ref="912708293"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">94</int>
+						<reference key="object" ref="723841052"/>
+						<reference key="parent" ref="801299103"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1267,12 +1332,14 @@
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="86.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="91.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="93.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="94.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">92</int>
+			<int key="maxID">98</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1320,6 +1387,7 @@
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="AutoStartOption">NSButton</string>
+						<string key="ITunesGroupsOption">NSButton</string>
 						<string key="MetadataOption">NSButton</string>
 						<string key="OptimizeOption">NSButton</string>
 						<string key="countLabel">NSTextField</string>
@@ -1334,6 +1402,10 @@
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="AutoStartOption">
 							<string key="name">AutoStartOption</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="ITunesGroupsOption">
+							<string key="name">ITunesGroupsOption</string>
 							<string key="candidateClassName">NSButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="MetadataOption">
