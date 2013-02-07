@@ -757,12 +757,23 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (void) addMetadata: (NSURL *) URL
 {
-    MP42File *file = [[MP42File alloc] initWithExistingFile:URL andDelegate:self];
-    [mp4File.metadata mergeMetadata:file.metadata];
+    if ([[URL pathExtension] isEqualToString:@"xml"] || [[URL pathExtension] isEqualToString:@"nfo"])
+    {
+        MP42Metadata *xmlMetadata = [[MP42Metadata alloc] initWithFileURL:URL];
+        [mp4File.metadata mergeMetadata:xmlMetadata];
+        [xmlMetadata release];
+    }
+    else
+    {
+        MP42File *file = nil;
+        if ((file = [[MP42File alloc] initWithExistingFile:URL andDelegate:self])) {
+            [mp4File.metadata mergeMetadata:file.metadata];
+            [file release];
+        }
+    }
 
     [self tableViewSelectionDidChange:nil];
     [self updateChangeCount:NSChangeDone];
-    [file release];
 }
 
 - (IBAction) selectMetadataFile: (id) sender
@@ -771,7 +782,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     panel.allowsMultipleSelection = NO;
     panel.canChooseFiles = YES;
     panel.canChooseDirectories = NO;
-    [panel setAllowedFileTypes:[NSArray arrayWithObjects:@"mp4", @"m4v", @"m4a", nil]];
+    [panel setAllowedFileTypes:[NSArray arrayWithObjects:@"mp4", @"m4v", @"m4a", @"xml", @"nfo", nil]];
     
     [panel beginSheetModalForWindow:documentWindow completionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {
@@ -900,6 +911,10 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
             else if ([[file pathExtension] caseInsensitiveCompare: @"aac"] == NSOrderedSame ||
                      [[file pathExtension] caseInsensitiveCompare: @"ac3"] == NSOrderedSame)
                 [self showImportSheet:file];
+            else if ([[file pathExtension] caseInsensitiveCompare: @"xml"] == NSOrderedSame ||
+                     [[file pathExtension] caseInsensitiveCompare: @"nfo"] == NSOrderedSame)
+                [self addMetadata:file];
+
             break;
 
         }

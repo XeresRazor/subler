@@ -8,6 +8,7 @@
 
 #import "MP42Metadata.h"
 #import "MP42Utilities.h"
+#import "MP42XMLReader.h"
 #import "RegexKitLite.h"
 
 typedef struct mediaKind_t
@@ -326,6 +327,24 @@ static const genreType_t genreType_strings[] = {
     return self;
 }
 
+- (id) initWithFileURL:(NSURL *)URL;
+{
+    if ((self = [super init]))
+	{
+		sourceURL = URL;
+        tagsDict = [[NSMutableDictionary alloc] init];        
+        isEdited = NO;
+        isArtworkEdited = NO;
+
+        NSError *error;
+        MP42XMLReader *xmlReader = [[MP42XMLReader alloc] initWithURL:URL error:&error];
+        [self mergeMetadata:[xmlReader mMetadata]];
+        [xmlReader release];
+	}
+    
+    return self;
+}
+
 - (NSString*) stringFromArray:(NSArray *)array
 {
     NSString *result = [NSString string];
@@ -339,7 +358,7 @@ static const genreType_t genreType_strings[] = {
 
 - (NSArray *) dictArrayFromString:(NSString *)data
 {
-    NSString *splitElements  = @",\\s+";
+    NSString *splitElements  = @",\\s*+";
     NSArray *stringArray = [data componentsSeparatedByRegex:splitElements];
     NSMutableArray *dictElements = [[[NSMutableArray alloc] init] autorelease];
     for (NSString *name in stringArray) {
