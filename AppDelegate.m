@@ -68,7 +68,7 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
         [[SBQueueController sharedController] showWindow:self];
 
     MP4SetLogCallback(logCallback);
-    MP4LogSetLevel(MP4_LOG_INFO);
+    MP4LogSetLevel(MP4_LOG_ERROR);
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -92,8 +92,7 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
 {
     SBQueueStatus status= [[SBQueueController sharedController] status];
     NSInteger result;
-    if (status == SBQueueStatusWorking)
-    {
+    if (status == SBQueueStatusWorking) {
         result = NSRunCriticalAlertPanel(
                                          NSLocalizedString(@"Are you sure you want to quit Subler?", nil),
                                          NSLocalizedString(@"Your current queue will be lost. Do you want to quit anyway?", nil),
