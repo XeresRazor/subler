@@ -929,7 +929,7 @@ NSError* MP42Error(NSString *description, NSString* recoverySuggestion, NSIntege
                    forKey:NSLocalizedRecoverySuggestionErrorKey];
 
     return [NSError errorWithDomain:@"MP42Error"
-                                code:100
+                                code:code
                             userInfo:errorDetail];
 }
 
