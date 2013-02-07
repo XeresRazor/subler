@@ -53,7 +53,7 @@ typedef struct MP4FileProvider_s
  *          @li #MP4_CLOSE_DO_NOT_COMPUTE_BITRATE
  */
 MP4V2_EXPORT
-void MP4Close(
+bool MP4Close(
     MP4FileHandle hFile,
     uint32_t    flags DEFAULT(0) );
 
