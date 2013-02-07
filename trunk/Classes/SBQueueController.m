@@ -273,7 +273,7 @@ static SBQueueController *sharedController = nil;
 
                     for (MP42Track *track in [fileImporter tracksArray]) {
                         [track setTrackImporterHelper:fileImporter];
-                        [fileImporter retain];
+                        [[fileImporter retain] autorelease];
                         [tracksArray addObject:track];
                     }
                     [fileImporter release];
@@ -364,10 +364,8 @@ static SBQueueController *sharedController = nil;
 
     // Search for external subtitles files
     NSArray *subtitles = [self loadSubtitles:url];
-    for (MP42SubtitleTrack *subTrack in subtitles) {
+    for (MP42SubtitleTrack *subTrack in subtitles)
         [mp4File addTrack:subTrack];
-        [subTrack.trackImporterHelper release];
-    }
 
     // Search for metadata
     if ([MetadataOption state]) {
@@ -384,14 +382,20 @@ static SBQueueController *sharedController = nil;
         [[mp4File metadata] mergeMetadata:metadata];
     }
 
+     if ([ITunesGroupsOption state])
+        [mp4File iTunesFriendlyTrackGroups];
+
     return [mp4File autorelease];
 }
 
 - (SBQueueItem*)firstItemInQueue
 {
-    for (SBQueueItem *item in filesArray)
-        if (([item status] != SBQueueItemStatusCompleted) && ([item status] != SBQueueItemStatusFailed))
-            return item;
+    @synchronized(filesArray) {
+        for (SBQueueItem *item in filesArray)
+            if (([item status] != SBQueueItemStatusCompleted) && ([item status] != SBQueueItemStatusFailed))
+                return item;
+    }
+
     return nil;
 }
 
