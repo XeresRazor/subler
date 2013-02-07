@@ -113,6 +113,7 @@ enum rating_type {
 }
 
 - (id) initWithSourceURL:(NSURL *)URL fileHandle:(MP4FileHandle)fileHandle;
+- (id) initWithFileURL:(NSURL *)URL;
 - (NSArray *) availableMetadata;
 - (NSArray *) writableMetadata;
 
