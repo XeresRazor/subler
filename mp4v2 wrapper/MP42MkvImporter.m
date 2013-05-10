@@ -190,6 +190,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 
             // Video
             if (mkvTrack->Type == TT_VIDEO)  {
+                float trackWidth = 0;
                 newTrack = [[MP42VideoTrack alloc] init];
 
                 [(MP42VideoTrack*)newTrack setWidth:mkvTrack->AV.Video.PixelWidth];
@@ -200,9 +201,14 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 invPixelSize   = (AVRational){mkvTrack->AV.Video.PixelHeight, mkvTrack->AV.Video.PixelWidth};
                 sar = av_mul_q(dar, invPixelSize);    
 
-                av_reduce(&sar.num, &sar.den, sar.num, sar.den, fixed1);  
+                av_reduce(&sar.num, &sar.den, sar.num, sar.den, fixed1);
+                
+                if (sar.num && sar.den)
+                    trackWidth = mkvTrack->AV.Video.PixelWidth * sar.num / sar.den;
+                else
+                    trackWidth = mkvTrack->AV.Video.PixelWidth;
 
-                [(MP42VideoTrack*)newTrack setTrackWidth:mkvTrack->AV.Video.PixelWidth * sar.num / sar.den];
+                [(MP42VideoTrack*)newTrack setTrackWidth:trackWidth];
                 [(MP42VideoTrack*)newTrack setTrackHeight:mkvTrack->AV.Video.PixelHeight];
 
                 [(MP42VideoTrack*)newTrack setHSpacing:sar.num];
@@ -414,6 +420,8 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
             return @"MPEG-4 Visual";
         else if (!strcmp(track->CodecID, "V_MPEG4/ISO/ASP"))
             return @"MPEG-4 Visual";
+        else if (!strcmp(track->CodecID, "V_MPEG2"))
+            return @"MPEG-2";
         else if (!strcmp(track->CodecID, "A_DTS"))
             return @"DTS";
         else if (!strcmp(track->CodecID, "A_VORBIS"))
@@ -525,7 +533,6 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
         if (readMkvPacket(ioStream, trackInfo, FilePos, &frame, &FrameSize)) {
             // parse AC3 header
             // collect all the necessary meta information
-            // u_int32_t samplesPerSecond;
             uint32_t fscod, frmsizecod, bsid, bsmod, acmod, lfeon;
             uint32_t lfe_offset = 4;
 
@@ -543,8 +550,6 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     lfe_offset -= 2;
             }
             lfeon = (*(frame+6) >> lfe_offset) & 0x1;
-
-            // samplesPerSecond = MP4AV_Ac3GetSamplingRate(frame);
 
             mkv_Seek(matroskaFile, 0, 0);
 
@@ -788,7 +793,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 
                 // offset calculation
                 offset = currentSample->startTime - trackHelper->current_time;
-                // save the minimum offset, used later to keep the all the offset values positive
+                // save the minimum offset, used later to keep all the offset values positive
                 if (offset < minOffset)
                     minOffset = offset;
 
