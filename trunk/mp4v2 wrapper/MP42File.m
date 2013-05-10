@@ -440,7 +440,8 @@ NSString * const MP42FileTypeM4B = @"m4b";
 
     // Close the mp4 file handle
     if (!MP4Close(fileHandle, 0)) {
-        *outError = MP42Error(@"File excedes 4 GB.", @"The file is bigger than 4 GB, but it was created with 32bit data chunk offset.\n Select 64bit data chunk offset in the save panel.", 100);
+        if (outError)
+            *outError = MP42Error(@"File excedes 4 GB.", @"The file is bigger than 4 GB, but it was created with 32bit data chunk offset.\n Select 64bit data chunk offset in the save panel.", 100);
         return NO;
     }
 
