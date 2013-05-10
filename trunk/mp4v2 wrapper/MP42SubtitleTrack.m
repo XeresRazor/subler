@@ -210,22 +210,26 @@ struct style_record {
                         uint8_t insertedChars = 0;
                         uint8_t insertedStartChars = 0;
 
-                        if (record.fontStyleFlags & 0x1) {
-                            [sampleText insertString:@"<b>" atIndex:record.startChar + numberOfInsertedChars];
-                            [sampleText insertString:@"</b>" atIndex:record.endChar + numberOfInsertedChars + 3];
-                            insertedChars += 7;
-                            insertedStartChars += 3;
-                        }
-                        if (record.fontStyleFlags & 0x2) {
-                            [sampleText insertString:@"<i>" atIndex:record.startChar + numberOfInsertedChars + insertedStartChars];
-                            [sampleText insertString:@"</i>" atIndex:record.endChar + numberOfInsertedChars + insertedStartChars + 3];
-                            insertedChars += 7;
-                            insertedStartChars += 3;
-                        }
-                        if (record.fontStyleFlags & 0x4) {
-                            [sampleText insertString:@"<u>" atIndex:record.startChar + numberOfInsertedChars + insertedStartChars];
-                            [sampleText insertString:@"</u>" atIndex:record.endChar + numberOfInsertedChars + insertedStartChars + 3];
-                            insertedChars += 7;
+                        NSUInteger len = [sampleText length];
+
+                        if (record.startChar <= len && record.endChar <= len) {
+                            if (record.fontStyleFlags & 0x1) {
+                                [sampleText insertString:@"<b>" atIndex:record.startChar + numberOfInsertedChars];
+                                [sampleText insertString:@"</b>" atIndex:record.endChar + numberOfInsertedChars + 3];
+                                insertedChars += 7;
+                                insertedStartChars += 3;
+                            }
+                            if (record.fontStyleFlags & 0x2) {
+                                [sampleText insertString:@"<i>" atIndex:record.startChar + numberOfInsertedChars + insertedStartChars];
+                                [sampleText insertString:@"</i>" atIndex:record.endChar + numberOfInsertedChars + insertedStartChars + 3];
+                                insertedChars += 7;
+                                insertedStartChars += 3;
+                            }
+                            if (record.fontStyleFlags & 0x4) {
+                                [sampleText insertString:@"<u>" atIndex:record.startChar + numberOfInsertedChars + insertedStartChars];
+                                [sampleText insertString:@"</u>" atIndex:record.endChar + numberOfInsertedChars + insertedStartChars + 3];
+                                insertedChars += 7;
+                            }
                         }
 
                         numberOfInsertedChars += insertedChars;
