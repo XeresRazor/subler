@@ -145,8 +145,15 @@ static const iTMF_rating_t rating_strings[] = {
     {"ch-movie|14|325|", "14"},
     {"ch-movie|16|375|", "16"},
     {"ch-movie|18|400|", "18"},
+    {"--", "-- Italy"},
+    {"it-movie|T|100|", "Film per Tutti"},     // 101
+    {"it-movie|VPA|125|", "Visione in presenza di un adulto"},
+    {"it-movie|VM10|150|", "Vietato ai minori di 10 Anni"},
+    {"it-movie|VM12|200|", "Vietato ai minori di 12 Anni"},
+    {"it-movie|VM14|325|", "Vietato ai minori di 14 Anni"},
+    {"it-movie|VM18|400|", "Vietato ai minori di 18 Anni"},
     {"--", ""},
-    {"--", "Unknown"},                      // 95
+    {"--", "Unknown"},                      // 111
     {NULL, NULL},
 };
 
