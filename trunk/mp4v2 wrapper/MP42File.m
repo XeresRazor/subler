@@ -579,8 +579,6 @@ NSString * const MP42FileTypeM4B = @"m4b";
                         [previewImages addObject:previewImage];
                         [previewImage release];
                     }
-                    else
-                        NSLog(@"code: %d, domain: %@, userInfo: %@", [error code], [error domain], [error userInfo]);
 
                     CGImageRelease(imgRef);
                 }
@@ -624,13 +622,9 @@ NSString * const MP42FileTypeM4B = @"m4b";
                 };
 
                 NSImage *previewImage = [qtMovie frameImageAtTime:chapterTime withAttributes:attributes error:&error];
+
                 if (previewImage)
                     [previewImages addObject:previewImage];
-                else {
-                    NSLog(@"code: %d, domain: %@, userInfo: %@", [error code], [error domain], [error userInfo]);
-
-                    [previewImages addObject:[NSNull null]];
-                }
             }
 
             // Release the movie, we don't want to keep it open while we are writing in it using another library.
