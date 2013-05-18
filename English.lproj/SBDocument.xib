@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">12D38</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2844</string>
-		<string key="IBDocument.AppKitVersion">1187.37</string>
+		<string key="IBDocument.SystemVersion">12E52</string>
+		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
+		<string key="IBDocument.AppKitVersion">1187.39</string>
 		<string key="IBDocument.HIToolboxVersion">626.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">2844</string>
+			<string key="NS.object.0">3084</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSButton</string>
@@ -55,7 +55,7 @@
 			<object class="NSWindowTemplate" id="275939982">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{83, 364}, {620, 450}}</string>
+				<string key="NSWindowRect">{{120, 866}, {620, 450}}</string>
 				<int key="NSWTFlags">1886912512</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -79,11 +79,9 @@
 							<string key="NSToolbarItemPaletteLabel">Delete Track</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="1014421854">
-								<reference key="NSNextResponder"/>
+								<nil key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{20, 14}, {34, 25}}</string>
-								<reference key="NSSuperview"/>
-								<reference key="NSNextKeyView"/>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSButtonCell" key="NSCell" id="343767794">
 									<int key="NSCellFlags">67108864</int>
@@ -127,11 +125,9 @@
 							<string key="NSToolbarItemPaletteLabel">Add Track</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="729416343">
-								<reference key="NSNextResponder"/>
+								<nil key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{14, 14}, {34, 25}}</string>
-								<reference key="NSSuperview"/>
-								<reference key="NSNextKeyView"/>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSButtonCell" key="NSCell" id="602077902">
 									<int key="NSCellFlags">67108864</int>
@@ -171,11 +167,9 @@
 							<string key="NSToolbarItemPaletteLabel">Search</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="828062765">
-								<reference key="NSNextResponder"/>
+								<nil key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{5, 14}, {34, 25}}</string>
-								<reference key="NSSuperview"/>
-								<reference key="NSNextKeyView"/>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSButtonCell" key="NSCell" id="636734161">
 									<int key="NSCellFlags">67108864</int>
@@ -215,11 +209,9 @@
 							<string key="NSToolbarItemPaletteLabel">Send to Queue</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="12886043">
-								<reference key="NSNextResponder"/>
+								<nil key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{26, 14}, {34, 25}}</string>
-								<reference key="NSSuperview"/>
-								<reference key="NSNextKeyView"/>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSButtonCell" key="NSCell" id="562614755">
 									<int key="NSCellFlags">67108864</int>
@@ -259,11 +251,9 @@
 							<string key="NSToolbarItemPaletteLabel">Action</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSPopUpButton" key="NSToolbarItemView" id="1052946619">
-								<reference key="NSNextResponder"/>
+								<nil key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{2, 14}, {38, 25}}</string>
-								<reference key="NSSuperview"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSPopUpButtonCell" key="NSCell" id="311388311">
@@ -324,7 +314,9 @@
 															<int key="NSMnemonicLoc">2147483647</int>
 															<reference key="NSOnImage" ref="864626314"/>
 															<reference key="NSMixedImage" ref="54752457"/>
+															<string key="NSAction">_popUpItemAction:</string>
 															<int key="NSTag">1</int>
+															<reference key="NSTarget" ref="311388311"/>
 														</object>
 														<object class="NSMenuItem" id="455267948">
 															<reference key="NSMenu" ref="655619761"/>
@@ -333,7 +325,9 @@
 															<int key="NSMnemonicLoc">2147483647</int>
 															<reference key="NSOnImage" ref="864626314"/>
 															<reference key="NSMixedImage" ref="54752457"/>
+															<string key="NSAction">_popUpItemAction:</string>
 															<int key="NSTag">2</int>
+															<reference key="NSTarget" ref="311388311"/>
 														</object>
 														<object class="NSMenuItem" id="983761350">
 															<reference key="NSMenu" ref="655619761"/>
@@ -342,7 +336,9 @@
 															<int key="NSMnemonicLoc">2147483647</int>
 															<reference key="NSOnImage" ref="864626314"/>
 															<reference key="NSMixedImage" ref="54752457"/>
+															<string key="NSAction">_popUpItemAction:</string>
 															<int key="NSTag">5</int>
+															<reference key="NSTarget" ref="311388311"/>
 														</object>
 														<object class="NSMenuItem" id="416327259">
 															<reference key="NSMenu" ref="655619761"/>
@@ -351,7 +347,9 @@
 															<int key="NSMnemonicLoc">2147483647</int>
 															<reference key="NSOnImage" ref="864626314"/>
 															<reference key="NSMixedImage" ref="54752457"/>
+															<string key="NSAction">_popUpItemAction:</string>
 															<int key="NSTag">10</int>
+															<reference key="NSTarget" ref="311388311"/>
 														</object>
 														<object class="NSMenuItem" id="308185948">
 															<reference key="NSMenu" ref="655619761"/>
@@ -360,7 +358,9 @@
 															<int key="NSMnemonicLoc">2147483647</int>
 															<reference key="NSOnImage" ref="864626314"/>
 															<reference key="NSMixedImage" ref="54752457"/>
+															<string key="NSAction">_popUpItemAction:</string>
 															<int key="NSTag">15</int>
+															<reference key="NSTarget" ref="311388311"/>
 														</object>
 														<object class="NSMenuItem" id="425228559">
 															<reference key="NSMenu" ref="655619761"/>
@@ -369,7 +369,9 @@
 															<int key="NSMnemonicLoc">2147483647</int>
 															<reference key="NSOnImage" ref="864626314"/>
 															<reference key="NSMixedImage" ref="54752457"/>
+															<string key="NSAction">_popUpItemAction:</string>
 															<int key="NSTag">20</int>
+															<reference key="NSTarget" ref="311388311"/>
 														</object>
 														<object class="NSMenuItem" id="14580989">
 															<reference key="NSMenu" ref="655619761"/>
@@ -378,7 +380,9 @@
 															<int key="NSMnemonicLoc">2147483647</int>
 															<reference key="NSOnImage" ref="864626314"/>
 															<reference key="NSMixedImage" ref="54752457"/>
+															<string key="NSAction">_popUpItemAction:</string>
 															<int key="NSTag">30</int>
+															<reference key="NSTarget" ref="311388311"/>
 														</object>
 													</array>
 												</object>
@@ -992,7 +996,7 @@
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="838636882">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSTextField" id="664835239">
@@ -1045,7 +1049,6 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{297, 121}</string>
-					<reference key="NSSuperview"/>
 					<reference key="NSNextKeyView" ref="664835239"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
@@ -2524,6 +2527,47 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/ButtonToolbarItem.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSDocument</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="printDocument:">id</string>
+						<string key="revertDocumentToSaved:">id</string>
+						<string key="runPageLayout:">id</string>
+						<string key="saveDocument:">id</string>
+						<string key="saveDocumentAs:">id</string>
+						<string key="saveDocumentTo:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="printDocument:">
+							<string key="name">printDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="revertDocumentToSaved:">
+							<string key="name">revertDocumentToSaved:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="runPageLayout:">
+							<string key="name">runPageLayout:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveDocument:">
+							<string key="name">saveDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveDocumentAs:">
+							<string key="name">saveDocumentAs:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveDocumentTo:">
+							<string key="name">saveDocumentTo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/NSDocument.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
