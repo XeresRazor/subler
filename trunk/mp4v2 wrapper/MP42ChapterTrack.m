@@ -155,8 +155,8 @@
 
         chapterCount = [chapters count];
         
-        // Insert a chapter at time 0 if there isn't one
         if (chapterCount) {
+            // Insert a chapter at time 0 if there isn't one
             SBTextSample * chapter = [chapters objectAtIndex:0];
             if (chapter.timestamp != 0) {
                 SBTextSample *st = [[SBTextSample alloc] init];
@@ -166,43 +166,43 @@
                 [st release];
                 chapterCount++;
             }
-        }
 
-        fileChapters = malloc(sizeof(MP4Chapter_t)*chapterCount);
-        refTrackDuration = MP4ConvertFromTrackDuration(fileHandle,
-                                                       refTrack,
-                                                       MP4GetTrackDuration(fileHandle, refTrack),
-                                                       MP4_MSECS_TIME_SCALE);
-        MP4GetIntegerProperty(fileHandle, "moov.mvhd.duration", &moovDuration);
-        moovDuration = (uint64_t) moovDuration * (double) 1000 / MP4GetTimeScale(fileHandle);
-        if (refTrackDuration > moovDuration)
-            refTrackDuration = moovDuration;
+            fileChapters = malloc(sizeof(MP4Chapter_t)*chapterCount);
+            refTrackDuration = MP4ConvertFromTrackDuration(fileHandle,
+                                                           refTrack,
+                                                           MP4GetTrackDuration(fileHandle, refTrack),
+                                                           MP4_MSECS_TIME_SCALE);
+            MP4GetIntegerProperty(fileHandle, "moov.mvhd.duration", &moovDuration);
+            moovDuration = (uint64_t) moovDuration * (double) 1000 / MP4GetTimeScale(fileHandle);
+            if (refTrackDuration > moovDuration)
+                refTrackDuration = moovDuration;
 
-        for (i = 0; i < chapterCount; i++) {
-            SBTextSample * chapter = [chapters objectAtIndex:i];
-            if ([[chapter title] UTF8String])
-                strcpy(fileChapters[i].title, [[chapter title] UTF8String]);
+            for (i = 0; i < chapterCount; i++) {
+                SBTextSample * chapter = [chapters objectAtIndex:i];
+                if ([[chapter title] UTF8String])
+                    strcpy(fileChapters[i].title, [[chapter title] UTF8String]);
 
-            if (i + 1 < chapterCount && sum < refTrackDuration) {
-                SBTextSample * nextChapter = [chapters objectAtIndex:i+1];
-                fileChapters[i].duration = nextChapter.timestamp - chapter.timestamp;
-                sum = nextChapter.timestamp;
-            }
-            else
-                fileChapters[i].duration = refTrackDuration - chapter.timestamp;
+                if (i + 1 < chapterCount && sum < refTrackDuration) {
+                    SBTextSample * nextChapter = [chapters objectAtIndex:i+1];
+                    fileChapters[i].duration = nextChapter.timestamp - chapter.timestamp;
+                    sum = nextChapter.timestamp;
+                }
+                else
+                    fileChapters[i].duration = refTrackDuration - chapter.timestamp;
 
-            if (sum > refTrackDuration) {
-                fileChapters[i].duration = refTrackDuration - chapter.timestamp;
-                i++;
+                if (sum > refTrackDuration) {
+                    fileChapters[i].duration = refTrackDuration - chapter.timestamp;
+                    i++;
                 break;
+                }
             }
+
+            removeAllChapterTrackReferences(fileHandle);
+            MP4SetChapters(fileHandle, fileChapters, i, MP4ChapterTypeAny);
+
+            free(fileChapters);
+            success = Id = findChapterTrackId(fileHandle);
         }
-
-        removeAllChapterTrackReferences(fileHandle);
-        MP4SetChapters(fileHandle, fileChapters, i, MP4ChapterTypeAny);
-
-        free(fileChapters);
-        success = Id = findChapterTrackId(fileHandle);
     }
     if (!success) {
         if ( outError != NULL)
