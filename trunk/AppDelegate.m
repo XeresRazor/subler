@@ -80,12 +80,9 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
     else
         [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"SBShowQueueWindow"];
 
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"Debug"]) {
-        if ([[SBQueueController sharedController] saveQueueToDisk])
-            NSLog(@"Queue saved.");
-        else
+    if (![[SBQueueController sharedController] saveQueueToDisk])
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"Debug"])
             NSLog(@"Failed to save queue to disk!");
-    }
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)app

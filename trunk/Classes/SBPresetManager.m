@@ -116,7 +116,13 @@ static SBPresetManager *sharedPresetManager = nil;
     {
         if ([[file pathExtension] isEqualToString: @"sbpreset"])
         {
+            @try {
             newPreset = [NSKeyedUnarchiver unarchiveObjectWithFile:[appSupportPath stringByAppendingPathComponent:file]];
+            }
+            @catch ( NSException *exception) {
+                continue;
+            }
+
             [presets addObject:newPreset];
         }
     }
