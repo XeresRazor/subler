@@ -57,7 +57,14 @@ static SBQueueController *sharedController = nil;
         NSURL* queueURL = [self queueURL];
 
         if ([[NSFileManager defaultManager] fileExistsAtPath:[queueURL path]]) {
-            filesArray = [[NSKeyedUnarchiver unarchiveObjectWithFile:[queueURL path]] retain];
+            @try {
+                filesArray = [[NSKeyedUnarchiver unarchiveObjectWithFile:[queueURL path]] retain];
+            }
+            @catch (NSException *exception) {
+                [[NSFileManager defaultManager] removeItemAtURL:queueURL error:nil];
+                filesArray = nil;
+            }
+
             for (SBQueueItem *item in filesArray)
                 if ([item status] == SBQueueItemStatusWorking)
                     [item setStatus:SBQueueItemStatusFailed];
