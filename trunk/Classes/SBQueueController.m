@@ -65,7 +65,8 @@
                     [item setStatus:SBQueueItemStatusFailed];
 
         }
-        else
+
+        if (!filesArray)
             filesArray = [[NSMutableArray alloc] init];
 
         [self updateDockTile];
