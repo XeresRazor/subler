@@ -11,8 +11,6 @@
 #include <string.h>
 #include <ctype.h>
 
-static SBLanguages *defaultManager = nil;
-
 static const iso639_lang_t languages[] =
 { { "Unknown", "", "", "und", "", 32767 },
     { "Abkhazian", "Аҧсуа", "ab", "abk", "", -1 },
@@ -606,40 +604,11 @@ iso639_lang_t * lang_for_english( const char * english )
 
 + (SBLanguages*)defaultManager
 {
-    if (defaultManager == nil) {
-        defaultManager = [[super allocWithZone:NULL] init];
-    }
-    return defaultManager;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self defaultManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
+    static dispatch_once_t pred;
+    static SBLanguages *sharedLanguagesManager = nil;
+    
+    dispatch_once(&pred, ^{ sharedLanguagesManager = [[self alloc] init]; });
+    return sharedLanguagesManager;
 }
 
 - (NSArray*) languages {

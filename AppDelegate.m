@@ -65,7 +65,7 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
     [PrefsController registerUserDefaults];
 
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"SBShowQueueWindow"])
-        [[SBQueueController sharedController] showWindow:self];
+        [[SBQueueController sharedManager] showWindow:self];
 
     MP4SetLogCallback(logCallback);
     MP4LogSetLevel(MP4_LOG_ERROR);
@@ -75,19 +75,19 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
     SBPresetManager *presetManager = [SBPresetManager sharedManager];
     [presetManager savePresets];
     
-    if ([[[SBQueueController sharedController] window] isVisible])
+    if ([[[SBQueueController sharedManager] window] isVisible])
         [[NSUserDefaults standardUserDefaults] setValue:@"YES" forKey:@"SBShowQueueWindow"];
     else
         [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"SBShowQueueWindow"];
 
-    if (![[SBQueueController sharedController] saveQueueToDisk])
+    if (![[SBQueueController sharedManager] saveQueueToDisk])
         if ([[NSUserDefaults standardUserDefaults] valueForKey:@"Debug"])
             NSLog(@"Failed to save queue to disk!");
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)app
 {
-    SBQueueStatus status= [[SBQueueController sharedController] status];
+    SBQueueStatus status= [[SBQueueController sharedManager] status];
     NSInteger result;
     if (status == SBQueueStatusWorking) {
         result = NSRunCriticalAlertPanel(
@@ -159,7 +159,7 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
 
 - (IBAction) showBatchWindow: (id) sender
 {
-    [[SBQueueController sharedController] showWindow:self];
+    [[SBQueueController sharedManager] showWindow:self];
 }
 
 - (IBAction) showPrefsWindow: (id) sender

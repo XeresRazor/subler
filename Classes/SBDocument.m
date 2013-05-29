@@ -584,7 +584,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (IBAction) sendToQueue:(id)sender
 {
-    SBQueueController *queue =  [SBQueueController sharedController];
+    SBQueueController *queue =  [SBQueueController sharedManager];
     if ([mp4File hasFileRepresentation]) {
         SBQueueItem *item = [SBQueueItem itemWithMP4:mp4File];
         [queue addItem:item];
