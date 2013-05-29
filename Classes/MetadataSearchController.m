@@ -12,6 +12,7 @@
 #import "ArtworkSelector.h"
 #import "RegexKitLite.h"
 #import "SBLanguages.h"
+#import <CommonCrypto/CommonDigest.h>
 
 @implementation MetadataSearchController
 
@@ -41,40 +42,14 @@
 
     [[self window] makeFirstResponder:movieName];
 
+	// metadata provider preferences
+	[movieMetadataProvider selectItemWithTitle:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBMetadataPreference|Movie"]];
+	[tvMetadataProvider selectItemWithTitle:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBMetadataPreference|TV"]];
+	[self metadataProviderSelected:movieMetadataProvider];
+	[self metadataProviderSelected:tvMetadataProvider];
+
     MP42File *mp4File = [((SBDocument *) delegate) mp4File];
-
-    // construct movie language menu
-    [movieLanguage removeAllItems];
-    for (NSString *lang in [(SBDocument *) delegate languages]) {
-        if ([lang isEqualToString:@"Unknown"]) continue;
-        [movieLanguage addItemWithTitle:lang];
-    }
-
-    NSString *language = [[NSUserDefaults standardUserDefaults] valueForKey:@"SBNativeLanguage"];
-    if (!language || [language isEqualToString:@"Default"]) {
-        language = @"English";
-        for (MP42Track *track in [mp4File tracks])
-            if (![[track language] isEqualToString:@"Unknown"])
-                language = [track language];
-    }
-
-    if ([movieLanguage indexOfItemWithTitle:language] >= 0)
-        [movieLanguage selectItemWithTitle:language];
-    else
-        [movieLanguage selectItemWithTitle:@"English"];
-
-    // construct tv language menu
-    [tvLanguage removeAllItems];
-    NSArray *tvLanguages = [NSArray arrayWithObjects:@"Chinese", @"Croatian", @"Czech", @"Danish", @"Dutch", @"English", @"Finnish", @"French", @"German", @"Greek, Modern", @"Hebrew", @"Hungarian", @"Italian", @"Japanese", @"Korean", @"Norwegian", @"Polish", @"Portuguese", @"Russian", @"Slovenian", @"Spanish", @"Swedish", @"Turkish", nil];
-    for (NSString *lang in tvLanguages) {
-        [tvLanguage addItemWithTitle:lang];
-    }
-
-    if ([tvLanguage indexOfItemWithTitle:language] >= 0)
-        [tvLanguage selectItemWithTitle:language];
-    else
-        [tvLanguage selectItemWithTitle:@"English"];
-
+	
     NSString *filename = nil;
     for (NSUInteger i = 0; i < [mp4File tracksCount]; i++) {
         MP42Track *track = [mp4File trackAtIndex:i];
@@ -127,7 +102,7 @@
         [results setValue:@"tv" forKey:@"type"];
         [results setValue:seriesName forKey:@"seriesName"];
         [results setValue:@"1" forKey:@"seasonNum"];
-        [results setValue:[NSString stringWithFormat:@"%d", episodeNumber] forKey:@"episodeNum"];
+        [results setValue:[NSString stringWithFormat:@"%ld", (long) episodeNumber] forKey:@"episodeNum"];
 
         return [results autorelease];
     }
@@ -191,6 +166,63 @@
     return [results autorelease];
 }
 
+#pragma mark Metadata provider
+
+- (void) createLanguageMenus {
+	[movieLanguage removeAllItems];
+	if ([[[movieMetadataProvider selectedItem] title] isEqualToString:@"iTunes Store"]) {
+		NSArray *iTunesLanguages = [iTunesStore languages];
+		for (NSString *lang in iTunesLanguages) {
+			[movieLanguage addItemWithTitle:lang];
+		}
+		[iTunesLanguages release];
+	} else { // TheMovieDB
+		// construct movie language menu
+		for (NSString *lang in [(SBDocument *) delegate languages]) {
+			if ([lang isEqualToString:@"Unknown"]) continue;
+			[movieLanguage addItemWithTitle:lang];
+		}
+	}
+	[tvLanguage removeAllItems];
+	if ([[[tvMetadataProvider selectedItem] title] isEqualToString:@"iTunes Store"]) {
+		NSArray *iTunesLanguages = [iTunesStore languages];
+		for (NSString *lang in iTunesLanguages) {
+			[tvLanguage addItemWithTitle:lang];
+		}
+		[iTunesLanguages release];
+	} else { // TheTVDB
+		// construct tv language menu
+		NSArray *tvLanguages = [NSArray arrayWithObjects:@"Chinese", @"Croatian", @"Czech", @"Danish", @"Dutch", @"English", @"Finnish", @"French", @"German", @"Greek, Modern", @"Hebrew", @"Hungarian", @"Italian", @"Japanese", @"Korean", @"Norwegian", @"Polish", @"Portuguese", @"Russian", @"Slovenian", @"Spanish", @"Swedish", @"Turkish", nil];
+		for (NSString *lang in tvLanguages) {
+			[tvLanguage addItemWithTitle:lang];
+		}
+		
+	}
+}
+
+- (void) metadataProvidersSelectDefaultLanguage {
+	[movieLanguage selectItemWithTitle:[[NSUserDefaults standardUserDefaults] valueForKey:[NSString stringWithFormat:@"SBMetadataPreference|Movie|%@|Langauge", [[movieMetadataProvider selectedItem] title]]]];
+	[tvLanguage selectItemWithTitle:[[NSUserDefaults standardUserDefaults] valueForKey:[NSString stringWithFormat:@"SBMetadataPreference|TV|%@|Langauge", [[tvMetadataProvider selectedItem] title]]]];
+}
+
+- (IBAction) metadataProviderLanguageSelected:(id)sender {
+	if (sender == movieLanguage) {
+		[[NSUserDefaults standardUserDefaults] setValue:[[movieLanguage selectedItem] title] forKey:[NSString stringWithFormat:@"SBMetadataPreference|Movie|%@|Langauge", [[movieMetadataProvider selectedItem] title]]];
+	} else if (sender == tvLanguage) {
+		[[NSUserDefaults standardUserDefaults] setValue:[[tvLanguage selectedItem] title] forKey:[NSString stringWithFormat:@"SBMetadataPreference|TV|%@|Langauge", [[tvMetadataProvider selectedItem] title]]];
+	}
+}
+
+- (IBAction) metadataProviderSelected:(id)sender {
+	if (sender == movieMetadataProvider) {
+		[[NSUserDefaults standardUserDefaults] setValue:[[movieMetadataProvider selectedItem] title] forKey:@"SBMetadataPreference|Movie"];
+	} else if (sender == tvMetadataProvider) {
+		[[NSUserDefaults standardUserDefaults] setValue:[[tvMetadataProvider selectedItem] title] forKey:@"SBMetadataPreference|TV"];
+	}
+	[self createLanguageMenus];
+	[self metadataProvidersSelectDefaultLanguage];
+}
+
 #pragma mark Search input fields
 
 - (void)updateSearchButtonVisibility {
@@ -251,24 +283,44 @@
     if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"Movie"]) {
         [progress startAnimation:self];
         [progress setHidden:NO];
-        [progressText setStringValue:@"Searching TheMovieDB for movies…"];
-        [progressText setHidden:NO];
-        currentSearcher = [[TheMovieDB alloc] init];
-        [((TheMovieDB *) currentSearcher) searchForResults:[movieName stringValue] 
-                                            mMovieLanguage:[MetadataSearchController langCodeFor:[movieLanguage titleOfSelectedItem]] 
-                                                  callback:self];
+		if ([[[movieMetadataProvider selectedItem] title] isEqualToString:@"TheMovieDB"]) {
+			[progressText setStringValue:@"Searching TheMovieDB for movie information…"];
+			[progressText setHidden:NO];
+			currentSearcher = [[TheMovieDB alloc] init];
+			[((TheMovieDB *) currentSearcher) searchForResults:[movieName stringValue]
+												mMovieLanguage:[MetadataSearchController langCodeFor:[movieLanguage titleOfSelectedItem]]
+													  callback:self];
+		} else if ([[[movieMetadataProvider selectedItem] title] isEqualToString:@"iTunes Store"]) {
+			[progressText setStringValue:@"Searching the iTunes Store for movie information…"];
+			[progressText setHidden:NO];
+			currentSearcher = [[iTunesStore alloc] init];
+			[((iTunesStore *) currentSearcher) searchForResults:[movieName stringValue]
+												  movieLanguage:[movieLanguage titleOfSelectedItem]
+													   callback:self];
+		}
     } else if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"TV Episode"]) {
         [progress startAnimation:self];
         [progress setHidden:NO];
-        [progressText setStringValue:@"Searching TheTVDB for episode information…"];
-        [progressText setHidden:NO];
-        currentSearcher = [[TheTVDB alloc] init];
-        [((TheTVDB *) currentSearcher) searchForResults:[tvSeriesName stringValue]
-                                         seriesLanguage:[MetadataSearchController langCodeFor:[tvLanguage titleOfSelectedItem]] 
-                                              seasonNum:[tvSeasonNum stringValue]
-                                             episodeNum:[tvEpisodeNum stringValue]
-                                               callback:self];        
-    } 
+		if ([[[tvMetadataProvider selectedItem] title] isEqualToString:@"TheTVDB"]) {
+			[progressText setStringValue:@"Searching TheTVDB for episode information…"];
+			[progressText setHidden:NO];
+			currentSearcher = [[TheTVDB alloc] init];
+			[((TheTVDB *) currentSearcher) searchForResults:[tvSeriesName stringValue]
+											 seriesLanguage:[MetadataSearchController langCodeFor:[tvLanguage titleOfSelectedItem]]
+												  seasonNum:[tvSeasonNum stringValue]
+												 episodeNum:[tvEpisodeNum stringValue]
+												   callback:self];
+		} else if ([[[tvMetadataProvider selectedItem] title] isEqualToString:@"iTunes Store"]) {
+			[progressText setStringValue:@"Searching the iTunes Store for episode information…"];
+			[progressText setHidden:NO];
+			currentSearcher = [[iTunesStore alloc] init];
+			[((iTunesStore *) currentSearcher) searchForResults:[tvSeriesName stringValue]
+												 seriesLanguage:[tvLanguage titleOfSelectedItem]
+													  seasonNum:[tvSeasonNum stringValue]
+													 episodeNum:[tvEpisodeNum stringValue]
+													   callback:self];
+		}
+    }
 }
 
 - (void) searchForResultsDone:(NSArray *)_resultsArray {
@@ -299,12 +351,19 @@
     if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"Movie"]) {
         [progress startAnimation:self];
         [progress setHidden:NO];
-        [progressText setStringValue:@"Downloading additional metadata from TheMovieDB…"];
+        [progressText setStringValue:@"Downloading additional metadata…"];
         [progressText setHidden:NO];
-        currentSearcher = [[TheMovieDB alloc] init];
-        [((TheMovieDB *) currentSearcher) loadAdditionalMetadata:selectedResult 
-                                                  mMovieLanguage:[MetadataSearchController langCodeFor:[movieLanguage titleOfSelectedItem]] 
-                                                        callback:self];
+		if ([[[movieMetadataProvider selectedItem] title] isEqualToString:@"TheMovieDB"]) {
+			currentSearcher = [[TheMovieDB alloc] init];
+			[((TheMovieDB *) currentSearcher) loadAdditionalMetadata:selectedResult 
+													  mMovieLanguage:[MetadataSearchController langCodeFor:[movieLanguage titleOfSelectedItem]] 
+															callback:self];
+		} else if ([[[movieMetadataProvider selectedItem] title] isEqualToString:@"iTunes Store"]) {
+			currentSearcher = [[iTunesStore alloc] init];
+			[((iTunesStore *) currentSearcher) loadAdditionalMetadata:selectedResult
+														movieLanguage:[[movieLanguage selectedItem] title]
+															 callback:self];
+		}
     } else if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"TV Episode"]) {
         [self loadAdditionalMetadataDone:selectedResult];
     }
@@ -362,7 +421,7 @@
         [metadataTable setEnabled:NO];
 
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            artworkData = [[NSData dataWithContentsOfURL:selectedResult.artworkURL] retain];
+			artworkData = [[MetadataSearchController downloadDataOrGetFromCache:selectedResult.artworkURL] retain];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (artworkData && [artworkData length]) {
@@ -446,6 +505,16 @@
 
 + (void) deleteCachedMetadata {
     [TheTVDB deleteCachedMetadata];
+	NSString *path = nil;
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+	if ([paths count]) {
+		NSString *bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+		path = [[paths objectAtIndex:0] stringByAppendingPathComponent:bundleName];
+	}
+	NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+	for (NSString *filename in contents) {
+		[[NSFileManager defaultManager] removeItemAtPath:[path stringByAppendingPathComponent:filename] error:nil];
+	}
 }
 
 #pragma mark Miscellaneous
@@ -464,14 +533,39 @@
     return [(NSString *)urlString autorelease];
 }
 
-#pragma mark Logos
-
-- (IBAction) loadTMDbWebsite:(id)sender {
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://www.themoviedb.org/"]];
++ (NSString *) md5String:(NSString *) s {
+	const char *cStr = [s UTF8String];
+	unsigned char result[CC_MD5_DIGEST_LENGTH];
+	CC_MD5(cStr, strlen(cStr), result);
+	NSMutableString *r = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+	for(int i = 0; i < CC_MD5_DIGEST_LENGTH; ++i) {
+		[r appendFormat:@"%02x", result[i]];
+	}
+	return [NSString stringWithString:r];
 }
 
-- (IBAction) loadTVDBWebsite:(id)sender {
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://thetvdb.com/"]];
++ (NSData *)downloadDataOrGetFromCache:(NSURL *)url {
+	NSString *path = nil;
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+	if ([paths count]) {
+		NSString *bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+		path = [[paths objectAtIndex:0] stringByAppendingPathComponent:bundleName];
+	}
+	NSString *filename = [path stringByAppendingPathComponent:[MetadataSearchController md5String:[url absoluteString]]];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:filename]) {
+		NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filename error:nil];
+		if (attrs) {
+			NSDate *date = [attrs fileCreationDate];
+			NSTimeInterval oldness = [date timeIntervalSinceNow];
+			// if less than 2 hours old
+			if (oldness > -1000 * 60 * 60 * 2) {
+				return [[NSData alloc] initWithContentsOfFile:filename];
+			}
+		}
+	}
+	NSData *r = [[NSData alloc] initWithContentsOfURL:url];
+	[r writeToFile:filename atomically:NO];
+	return r;
 }
 
 #pragma mark -

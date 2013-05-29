@@ -125,6 +125,9 @@
 		CD89361112F34F9D0085C2B5 /* tvdb_exceptions.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD89360512F34F500085C2B5 /* tvdb_exceptions.py */; };
 		CD89361312F34F9D0085C2B5 /* tvdb_main.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD89360712F34F500085C2B5 /* tvdb_main.py */; };
 		CD89361412F34F9D0085C2B5 /* tvdb_ui.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD89360812F34F500085C2B5 /* tvdb_ui.py */; };
+		CDC06FCE1747494D003C1D0A /* iTunesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC06FCD1747494D003C1D0A /* iTunesStore.m */; };
+		CDC06FD117475181003C1D0A /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC06FD017475181003C1D0A /* JSONKit.m */; };
+		CDE8E452174CBBD4009410B5 /* iTunesStores.json in Resources */ = {isa = PBXBuildFile; fileRef = CDE8E451174CBBD4009410B5 /* iTunesStores.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -388,6 +391,11 @@
 		CD89360512F34F500085C2B5 /* tvdb_exceptions.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tvdb_exceptions.py; sourceTree = "<group>"; };
 		CD89360712F34F500085C2B5 /* tvdb_main.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tvdb_main.py; sourceTree = "<group>"; };
 		CD89360812F34F500085C2B5 /* tvdb_ui.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tvdb_ui.py; sourceTree = "<group>"; };
+		CDC06FCC1747494D003C1D0A /* iTunesStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunesStore.h; path = Classes/MetadataImporters/iTunesStore.h; sourceTree = "<group>"; };
+		CDC06FCD1747494D003C1D0A /* iTunesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iTunesStore.m; path = Classes/MetadataImporters/iTunesStore.m; sourceTree = "<group>"; };
+		CDC06FCF17475181003C1D0A /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		CDC06FD017475181003C1D0A /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		CDE8E451174CBBD4009410B5 /* iTunesStores.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = iTunesStores.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -516,6 +524,8 @@
 		2A37F4AFFDCFA73011CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				CDC06FCF17475181003C1D0A /* JSONKit.h */,
+				CDC06FD017475181003C1D0A /* JSONKit.m */,
 				A9B3411D1679D2E000E6EE0C /* QTKitDecrap.h */,
 				A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */,
 				A98F421815D9343000113CDE /* SBLanguages.h */,
@@ -561,6 +571,7 @@
 				A941B4D6134A52B600E22F45 /* tessdata */,
 				CD4A86A71234AFA10054970A /* ParseFilename */,
 				CD8935FF12F34F500085C2B5 /* tvdb_py */,
+				CDE8E451174CBBD4009410B5 /* iTunesStores.json */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -774,6 +785,8 @@
 				CD71FF1C12F1C4A900F0A98D /* TheTVDB.m */,
 				CD1894F112F3757D00582CBC /* TheMovieDB.h */,
 				CD1894F212F3757D00582CBC /* TheMovieDB.m */,
+				CDC06FCC1747494D003C1D0A /* iTunesStore.h */,
+				CDC06FCD1747494D003C1D0A /* iTunesStore.m */,
 			);
 			name = MetadataImporters;
 			sourceTree = "<group>";
@@ -824,7 +837,7 @@
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "Subler" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -913,6 +926,7 @@
 				A9C9E34413FBC1EB00CA3B4E /* EncodeWorking.png in Resources */,
 				A91D3FA015B15D2100627DD0 /* tvdb_cache.py in Resources */,
 				A96371B8164695070083BB80 /* ToolbarRemoveTemplate@2x.png in Resources */,
+				CDE8E452174CBBD4009410B5 /* iTunesStores.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -997,6 +1011,8 @@
 				A936DAFE1682057700D19BDB /* SBBitmapSubConverter.m in Sources */,
 				A906213B16839AB00057EA0B /* MP42VobSubImporter.m in Sources */,
 				A93F873116B2C8DA009B8303 /* MP42XMLReader.m in Sources */,
+				CDC06FCE1747494D003C1D0A /* iTunesStore.m in Sources */,
+				CDC06FD117475181003C1D0A /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1138,7 +1154,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Subler.entitlements;
 				CODE_SIGN_IDENTITY = "Subler Sandbox";
 				COPY_PHASE_STRIP = NO;
@@ -1163,8 +1179,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Subler;
-				PROVISIONING_PROFILE = "";
-				SDKROOT = macosx10.7;
+				SDKROOT = "";
 			};
 			name = Debug;
 		};
@@ -1172,6 +1187,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Subler.entitlements;
 				CODE_SIGN_IDENTITY = "Subler Sandbox";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1195,15 +1211,18 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Subler;
-				PROVISIONING_PROFILE = "";
-				SDKROOT = macosx10.7;
+				SDKROOT = "";
 			};
 			name = Release;
 		};
 		C05733CC08A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "Subler Sandbox";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1224,9 +1243,8 @@
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/mp4v2\"/**";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
-				SDKROOT = macosx10.7;
+				SDKROOT = "";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Tesseract\"/** \"$(SRCROOT)/mp4v2\"/** \"$(SRCROOT)/ffmpeg\"/**";
@@ -1236,7 +1254,11 @@
 		C05733CD08A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "Subler Sandbox";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1262,9 +1284,8 @@
 				);
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/mp4v2\"/**";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
-				SDKROOT = macosx10.7;
+				SDKROOT = "";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Tesseract\"/** \"$(SRCROOT)/mp4v2\"/** \"$(SRCROOT)/ffmpeg\"/**";
 			};
