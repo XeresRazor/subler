@@ -22,6 +22,10 @@
 - (NSArray*) searchForResults:(NSString *)aSeriesName seriesLanguage:(NSString *)aSeriesLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)episodeNum;
 - (void) searchForResults:(NSString *)aSeriesName seriesLanguage:(NSString *)aSeriesLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum callback:(MetadataSearchController *)aCallback;
 
+#pragma mark Quick iTunes search for metadata
++ (MP42Metadata *) quickiTunesSearchTV:(NSString *)aSeriesName episodeTitle:(NSString *)aEpisodeTitle;
++ (MP42Metadata *) quickiTunesSearchMovie:(NSString *)aMovieName;
+
 #pragma mark Search for movie metadata
 - (NSArray*) searchForResults:(NSString *)movieTitle movieLanguage:(NSString *)aMovieLanguage;
 - (void) searchForResults:(NSString *)movieTitle movieLanguage:(NSString *)aMovieLanguage callback:(MetadataSearchController *)aCallback;
@@ -29,7 +33,7 @@
 - (void) loadAdditionalMetadata:(MP42Metadata *)metadata movieLanguage:(NSString *)aMovieLanguage callback:(MetadataSearchController *)callback;
 
 #pragma mark Parse results
-- (NSArray *) metadataForResults:(NSDictionary *)dict store:(NSDictionary *)store;
++ (NSArray *) metadataForResults:(NSDictionary *)dict store:(NSDictionary *)store;
 
 - (void) cancel;
 

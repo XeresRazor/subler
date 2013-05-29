@@ -385,7 +385,7 @@
             selectedResult.artworkURL = [selectedResult.artworkFullsizeURLs objectAtIndex:0];
             [self loadArtwork];
         } else {
-            artworkSelectorWindow = [[ArtworkSelector alloc] initWithDelegate:self imageURLs:selectedResult.artworkThumbURLs];
+            artworkSelectorWindow = [[ArtworkSelector alloc] initWithDelegate:self imageURLs:selectedResult.artworkThumbURLs artworkProviderNames:selectedResult.artworkProviderNames];
             [NSApp beginSheet:[artworkSelectorWindow window] modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:nil];
         }
     } else {

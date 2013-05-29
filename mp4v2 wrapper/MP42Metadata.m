@@ -1578,6 +1578,7 @@ static const genreType_t genreType_strings[] = {
 @synthesize artworkURL;
 @synthesize artworkThumbURLs;
 @synthesize artworkFullsizeURLs;
+@synthesize artworkProviderNames;
 @synthesize mediaKind;
 @synthesize contentRating;
 @synthesize hdVideo;

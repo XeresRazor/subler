@@ -18,10 +18,11 @@
     IBOutlet NSButton               *loadMoreArtworkButton;
     NSMutableArray                  *imageURLsUnloaded;
     NSMutableArray                  *images;
+	NSArray							*artworkProviderNames;
 }
 
 #pragma mark Initialization
-- (id)initWithDelegate:(id)del imageURLs:(NSArray *)imageURLs;
+- (id)initWithDelegate:(id)del imageURLs:(NSArray *)imageURLs artworkProviderNames:(NSArray *)artworkProviderNames;
 
 #pragma mark Load images
 - (IBAction) loadMoreArtwork:(id)sender;

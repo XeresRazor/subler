@@ -13,6 +13,7 @@
 @interface myImageObject : NSObject{
     NSURL *_url;
     NSString *_urlString;
+	NSString *_artworkProviderName;
 }
 @end
 
@@ -21,6 +22,7 @@
 - (void) dealloc {
     [_url release];
     [_urlString release];
+	[_artworkProviderName release];
     [super dealloc];
 }
 
@@ -37,6 +39,10 @@
     return _url;
 }
 
+- (void) setArtworkProviderName:(NSString *)artworkProviderName {
+	_artworkProviderName = [artworkProviderName retain];
+}
+
 - (NSString *) imageRepresentationType {
     return IKImageBrowserNSURLRepresentationType;
 }
@@ -49,6 +55,22 @@
     return _urlString;
 }
 
+- (NSString *) imageTitle {
+	NSArray *a = [_artworkProviderName componentsSeparatedByString:@"|"];
+	if ([a count] > 0) {
+		return [a objectAtIndex:0];
+	}
+	return nil;
+}
+
+- (NSString *) imageSubtitle {
+	NSArray *a = [_artworkProviderName componentsSeparatedByString:@"|"];
+	if ([a count] > 1) {
+		return [a objectAtIndex:1];
+	}
+	return nil;
+}
+
 @end
 
 #pragma mark -
@@ -57,10 +79,11 @@
 
 #pragma mark Initialization
 
-- (id)initWithDelegate:(id)del imageURLs:(NSArray *)imageURLs {
+- (id)initWithDelegate:(id)del imageURLs:(NSArray *)imageURLs artworkProviderNames:(NSArray *)aArtworkProviderNames {
 	if ((self = [super initWithWindowNibName:@"ArtworkSelector"])) {        
 		delegate = del;
         imageURLsUnloaded = [[NSMutableArray alloc] initWithArray:imageURLs];
+		artworkProviderNames = [aArtworkProviderNames retain];
     }
     return self;
 }
@@ -73,6 +96,7 @@
     for (int i = 0; (i < 10) && ([imageURLsUnloaded count] > 0); i++) {
         m = [[myImageObject alloc] init];
         [m setURL:[imageURLsUnloaded objectAtIndex:0]];
+		[m setArtworkProviderName:[artworkProviderNames objectAtIndex:[images count]]];
         [imageURLsUnloaded removeObjectAtIndex:0];
         [images addObject:m];
         [m release];
@@ -87,6 +111,7 @@
     for (int i = 0; (i < 10) && ([imageURLsUnloaded count] > 0); i++) {
         m = [[myImageObject alloc] init];
         [m setURL:[imageURLsUnloaded objectAtIndex:0]];
+		[m setArtworkProviderName:[artworkProviderNames objectAtIndex:[images count]]];
         [imageURLsUnloaded removeObjectAtIndex:0];
         [images addObject:m];
         [m release];
@@ -120,6 +145,7 @@
 - (void) dealloc {
     [images release];
     [imageURLsUnloaded release];
+	[artworkProviderNames release];
     [super dealloc];
 }
 
