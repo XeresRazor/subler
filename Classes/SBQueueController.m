@@ -271,7 +271,7 @@ static SBQueueController *sharedController = nil;
             NSRange range = { 0, [movieFilename length] };
 
             if ([movieFilename length] <= [subtitleFilename length]) {
-                result = [subtitleFilename compare:movieFilename options:kCFCompareCaseInsensitive range:range];
+                result = [subtitleFilename compare:movieFilename options:NSCaseInsensitiveSearch range:range];
 
                 if (result == NSOrderedSame) {
                     MP42FileImporter *fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil
