@@ -150,6 +150,8 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
 
     if (firstLaunch)
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"FirstLaunch"];
+    
+    [SBQueueController sharedManager];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
