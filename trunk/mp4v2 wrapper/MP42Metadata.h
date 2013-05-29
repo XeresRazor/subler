@@ -106,6 +106,7 @@ enum rating_type {
     NSURL                   *artworkURL;
     NSArray                 *artworkThumbURLs;
     NSArray                 *artworkFullsizeURLs;
+    NSArray                 *artworkProviderNames;
 
     NSString *rating;
 
@@ -146,6 +147,7 @@ enum rating_type {
 @property(readwrite, retain) NSURL      *artworkURL;
 @property(readwrite, retain) NSArray    *artworkThumbURLs;
 @property(readwrite, retain) NSArray    *artworkFullsizeURLs;
+@property(readwrite, retain) NSArray    *artworkProviderNames;
 @property(readwrite) uint8_t    mediaKind;
 @property(readwrite) uint8_t    contentRating;
 @property(readwrite) uint8_t    hdVideo;

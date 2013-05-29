@@ -74,7 +74,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
-		NSArray *results = [self metadataForResults:d store:store];
+		NSArray *results = [iTunesStore metadataForResults:d store:store];
 		if (([results count] == 0) && aSeriesLanguage) {
 			return [self searchForResults:aSeriesName seriesLanguage:nil seasonNum:aSeasonNum episodeNum:aEpisodeNum];
 		}
@@ -112,6 +112,48 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
     });
 }
 
+#pragma mark Quick iTunes search for metadata
+
++ (MP42Metadata *) quickiTunesSearchTV:(NSString *)aSeriesName episodeTitle:(NSString *)aEpisodeTitle {
+	NSDictionary *store = [iTunesStore getStoreFor:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBMetadataPreference|TV|iTunes Store|Language"]];
+	if (!store) {
+		return nil;
+	}
+	NSString *country = [store valueForKey:@"country2"];
+	NSString *language = [store valueForKey:@"language2"];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&entity=tvEpisode", country, [language lowercaseString], [MetadataSearchController urlEncoded:[NSString stringWithFormat:@"%@ %@", aSeriesName, aEpisodeTitle]]]];
+	NSData *jsonData = [MetadataSearchController downloadDataOrGetFromCache:url];
+	if (jsonData) {
+		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
+		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
+		NSArray *results = [iTunesStore metadataForResults:d store:store];
+		if ([results count] > 0) {
+			return [results objectAtIndex:0];
+		}
+	}
+	return nil;
+}
+
++ (MP42Metadata *) quickiTunesSearchMovie:(NSString *)aMovieName {
+	NSDictionary *store = [iTunesStore getStoreFor:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBMetadataPreference|Movie|iTunes Store|Language"]];
+	if (!store) {
+		return nil;
+	}
+	NSString *country = [store valueForKey:@"country2"];
+	NSString *language = [store valueForKey:@"language2"];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&entity=movie", country, [language lowercaseString], [MetadataSearchController urlEncoded:aMovieName]]];
+	NSData *jsonData = [MetadataSearchController downloadDataOrGetFromCache:url];
+	if (jsonData) {
+		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
+		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
+		NSArray *results = [iTunesStore metadataForResults:d store:store];
+		if ([results count] > 0) {
+			return [results objectAtIndex:0];
+		}
+	}
+	return nil;
+}
+
 #pragma mark Search for movie metadata
 
 - (NSArray*) searchForResults:(NSString *)aMovieTitle movieLanguage:(NSString *)aMovieLanguage
@@ -129,7 +171,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
-		return [self metadataForResults:d store:store];
+		return [iTunesStore metadataForResults:d store:store];
 	}
 	return nil;
 }
@@ -216,7 +258,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 
 #pragma mark Parse results
 
-- (NSArray *) metadataForResults:(NSDictionary *)dict store:(NSDictionary *)store {
++ (NSArray *) metadataForResults:(NSDictionary *)dict store:(NSDictionary *)store {
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:[[dict valueForKey:@"resultCount"] integerValue]];
 	NSArray *resultsArray = [dict valueForKey:@"results"];
 	for (int i = 0; i < [resultsArray count]; i++) {
@@ -272,6 +314,10 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 		[artworkFullsizeURLs addObject:[NSURL URLWithString:artworkString]];
 		[metadata setArtworkFullsizeURLs: artworkFullsizeURLs];
 		[artworkFullsizeURLs release];
+		NSMutableArray *artworkProviderNames = [[NSMutableArray alloc] initWithCapacity:1];
+		[artworkProviderNames addObject:@"iTunes"];
+		[metadata setArtworkProviderNames:artworkProviderNames];
+		[artworkProviderNames release];
 		// add to array
         [returnArray addObject:metadata];
         [metadata release];

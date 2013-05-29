@@ -9,6 +9,7 @@
 #import "TheMovieDB.h"
 #import "MetadataSearchController.h"
 #import "MP42File.h"
+#import "iTunesStore.h"
 
 @interface TheMovieDB (Private)
 - (NSString *) nodes:(NSXMLElement *)node forXPath:(NSString *)query joinedBy:(NSString *)joiner;
@@ -27,7 +28,6 @@
     NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:1];
     NSString *url = [NSString stringWithFormat:@"http://api.themoviedb.org/2.1/Movie.search/en/xml/b0073bafb08b4f68df101eb2325f27dc/%@", [MetadataSearchController urlEncoded:mMovieTitle]];
 	url = [url stringByReplacingOccurrencesOfString:@"/en/" withString:[NSString stringWithFormat:@"/%@/", mMovieLanguage]];
-	NSLog(@"Nachher 1: %@", url);
 	NSXMLDocument *xml = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL URLWithString:url] options:0 error:NULL];
     if (xml) {
         NSError *err;
@@ -155,8 +155,18 @@
     // "Copyright" "Artist"
     tag = [node nodesForXPath:@"./images/image[@type='poster'][@size='thumb']" error:&err];
 
-    NSMutableArray *artworkThumbURLs = [[NSMutableArray alloc] init], *artworkFullsizeURLs = [[NSMutableArray alloc] init];
-    
+    NSMutableArray *artworkThumbURLs = [[NSMutableArray alloc] init];
+	NSMutableArray *artworkFullsizeURLs = [[NSMutableArray alloc] init];
+	NSMutableArray *artworkProviderNames = [[NSMutableArray alloc] init];
+	
+	// add iTunes artwork
+	MP42Metadata *iTunesMetadata = [iTunesStore quickiTunesSearchMovie:[[metadata tagsDict] valueForKey:@"Name"]];
+	if (iTunesMetadata && [iTunesMetadata artworkThumbURLs] && [iTunesMetadata artworkFullsizeURLs] && ([[iTunesMetadata artworkThumbURLs] count] == [[iTunesMetadata artworkFullsizeURLs] count])) {
+		[artworkThumbURLs addObjectsFromArray:[iTunesMetadata artworkThumbURLs]];
+		[artworkFullsizeURLs addObjectsFromArray:[iTunesMetadata artworkFullsizeURLs]];
+		[artworkProviderNames addObjectsFromArray:[iTunesMetadata artworkProviderNames]];
+	}
+
     if ([tag count]) {
         for (int i = 0; i < [tag count]; i++) {
             NSArray *idtag = [[tag objectAtIndex:i] nodesForXPath:@"./@id" error:&err];
@@ -168,6 +178,7 @@
             NSArray *fullsizeURLtag = [node nodesForXPath:[NSString stringWithFormat:@"./images/image[@type='poster'][@size='original'][@id='%@']/@url", artworkID] error:&err];
             if (![fullsizeURLtag count]) continue;
             [artworkFullsizeURLs addObject:[NSURL URLWithString:[[fullsizeURLtag objectAtIndex:0] stringValue]]];
+			[artworkProviderNames addObject:@"TheMovieDB|poster"];
         }
 
     }
@@ -183,6 +194,7 @@
             NSArray *fullsizeURLtag = [node nodesForXPath:[NSString stringWithFormat:@"./images/image[@type='backdrop'][@size='original'][@id='%@']/@url", artworkID] error:&err];
             if (![fullsizeURLtag count]) continue;
             [artworkFullsizeURLs addObject:[NSURL URLWithString:[[fullsizeURLtag objectAtIndex:0] stringValue]]];
+			[artworkProviderNames addObject:@"TheMovieDB|backdrop"];
         }
 
     }
@@ -190,10 +202,12 @@
     if ([artworkThumbURLs count]) {
         [metadata setArtworkThumbURLs:artworkThumbURLs];
         [metadata setArtworkFullsizeURLs:artworkFullsizeURLs];
+		[metadata setArtworkProviderNames:artworkProviderNames];
     }
 
     [artworkThumbURLs release];
     [artworkFullsizeURLs release];
+	[artworkProviderNames release];
 
     return [metadata autorelease];
 }

@@ -9,6 +9,7 @@
 #import "TheTVDB.h"
 #import "MetadataSearchController.h"
 #import "MP42File.h"
+#import "iTunesStore.h"
 
 @interface TheTVDB (Private)
 #pragma mark Parse metadata
@@ -145,12 +146,21 @@
         // artwork
         NSMutableArray *artworkThumbURLs = [[NSMutableArray alloc] initWithCapacity:10];
         NSMutableArray *artworkFullsizeURLs = [[NSMutableArray alloc] initWithCapacity:10];
+        NSMutableArray *artworkProviderNames = [[NSMutableArray alloc] initWithCapacity:10];
         NSURL *u;
         if ([episodeDict valueForKey:@"filename"]) {
             u = [NSURL URLWithString:[episodeDict valueForKey:@"filename"]];
             [artworkThumbURLs addObject:u];
             [artworkFullsizeURLs addObject:u];
+            [artworkProviderNames addObject:@"TheTVDB|episode"];
         }
+		// add iTunes artwork
+		MP42Metadata *iTunesMetadata = [iTunesStore quickiTunesSearchTV:[dict valueForKey:@"seriesname"] episodeTitle:[episodeDict valueForKey:@"episodename"]];
+		if (iTunesMetadata && [iTunesMetadata artworkThumbURLs] && [iTunesMetadata artworkFullsizeURLs] && ([[iTunesMetadata artworkThumbURLs] count] == [[iTunesMetadata artworkFullsizeURLs] count])) {
+			[artworkThumbURLs addObjectsFromArray:[iTunesMetadata artworkThumbURLs]];
+			[artworkFullsizeURLs addObjectsFromArray:[iTunesMetadata artworkFullsizeURLs]];
+            [artworkProviderNames addObjectsFromArray:[iTunesMetadata artworkProviderNames]];
+		}
         if ([dict valueForKey:@"artwork_season"]) {
             NSString *s;
             NSEnumerator *e = [((NSArray *) [dict valueForKey:@"artwork_season"]) objectEnumerator];
@@ -158,6 +168,7 @@
                 u = [NSURL URLWithString:s];
                 [artworkThumbURLs addObject:u];
                 [artworkFullsizeURLs addObject:u];
+				[artworkProviderNames addObject:@"TheTVDB|season"];
             }
         }
         if ([dict valueForKey:@"artwork_posters"]) {
@@ -167,13 +178,16 @@
                 u = [NSURL URLWithString:s];
                 [artworkThumbURLs addObject:u];
                 [artworkFullsizeURLs addObject:u];
+				[artworkProviderNames addObject:@"TheTVDB|poster"];
             }
         }
         [metadata setArtworkThumbURLs: artworkThumbURLs];
         [metadata setArtworkFullsizeURLs: artworkFullsizeURLs];
+		[metadata setArtworkProviderNames:artworkProviderNames];
         
         [artworkThumbURLs release];
         [artworkFullsizeURLs release];
+		[artworkProviderNames release];
 
         // cast
         NSString *actors = [((NSArray *) [dict valueForKey:@"actors"]) componentsJoinedByString:@", "];
