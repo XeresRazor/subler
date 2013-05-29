@@ -53,7 +53,7 @@ typedef NSInteger SBQueueStatus;
 
 @property (readonly) SBQueueStatus status;
 
-+ (SBQueueController*)sharedController;
++ (SBQueueController*)sharedManager;
 
 - (void)start:(id)sender;
 - (void)stop:(id)sender;
