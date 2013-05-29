@@ -13,6 +13,7 @@
 
 #import "TheMovieDB.h"
 #import "TheTVDB.h"
+#import "iTunesStore.h"
 
 @interface MetadataSearchController : NSWindowController<NSTableViewDelegate> {
     id                            delegate;
@@ -22,12 +23,14 @@
     
     IBOutlet NSTextField         *movieName;
     IBOutlet NSPopUpButton       *movieLanguage;
+	IBOutlet NSPopUpButton       *movieMetadataProvider;
     
     IBOutlet NSComboBox          *tvSeriesName;
     NSMutableArray               *tvSeriesNameSearchArray;
     IBOutlet NSTextField         *tvSeasonNum;
     IBOutlet NSTextField         *tvEpisodeNum;
     IBOutlet NSPopUpButton       *tvLanguage;
+	IBOutlet NSPopUpButton       *tvMetadataProvider;
     
     IBOutlet NSButton            *searchButton;
     id                            currentSearcher;
@@ -53,6 +56,12 @@
 - (id)initWithDelegate:(id)del;
 + (NSDictionary *) parseFilename: (NSString *) filename;
 + (NSString *)langCodeFor:(NSString *)language;
+
+#pragma mark Metadata provider
+- (void) createLanguageMenus;
+- (void) metadataProvidersSelectDefaultLanguage;
+- (IBAction) metadataProviderLanguageSelected:(id)sender;
+- (IBAction) metadataProviderSelected:(id)sender;
 
 #pragma mark Search input fields
 - (void) updateSearchButtonVisibility;
@@ -80,10 +89,7 @@
 #pragma mark Miscellaneous
 - (NSAttributedString *) boldString: (NSString *) string;
 + (NSString *) urlEncoded:(NSString *)s;
-
-#pragma mark Logos
-- (IBAction) loadTMDbWebsite:(id)sender;
-- (IBAction) loadTVDBWebsite:(id)sender;
++ (NSData *) downloadDataOrGetFromCache:(NSURL *)url;
 
 #pragma mark Static methods
 + (void) clearRecentSearches;
