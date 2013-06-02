@@ -11,6 +11,7 @@ NSString *MetadataPBoardType = @"MetadataPBoardType";
 #import "MovieViewController.h"
 #import "SBTableView.h"
 #import "SBPresetManager.h"
+#import "SBRatings.h"
 
 @interface MovieViewController (Private)
 - (void) updateSetsMenu: (id)sender;
@@ -51,22 +52,9 @@ static NSInteger sortFunction (id ldict, id rdict, void *context)
     [ratingCell setFont:[NSFont systemFontOfSize:11]];
     [ratingCell setControlSize:NSSmallControlSize];
     [ratingCell setBordered:NO];
-    for (NSString *rating in [metadata availableRatings]) {
-        if ([rating length]) {
-            NSMenuItem *item;
-            if ([rating hasPrefix:@"--"]) {
-                item = [[[NSMenuItem alloc] initWithTitle:[rating substringFromIndex:3] action:NULL keyEquivalent:@""] autorelease];
-                [item setEnabled:NO];
-                [[ratingCell menu] addItem:item];
-            }
-            else {
-                item = [[[NSMenuItem alloc] initWithTitle:rating action:NULL keyEquivalent:@""] autorelease];
-                [item setIndentationLevel:1];
-                [[ratingCell menu] addItem:item];
-            }
-        }
-        else
-            [[ratingCell menu] addItem:[NSMenuItem separatorItem]];
+	NSArray *ratings = [[SBRatings defaultManager] ratings];
+    for (NSString *rating in ratings) {
+		[[ratingCell menu] addItem:[[[NSMenuItem alloc] initWithTitle:rating action:NULL keyEquivalent:@""] autorelease]];
     }
 
     genreCell = [[NSComboBoxCell alloc] init];
@@ -466,8 +454,9 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     NSString *tagName = [tagsArray objectAtIndex:rowIndex];
     [dct removeAllObjects];
 
-    if ([tableColumn.identifier isEqualToString:@"value"])
-        [self updateMetadata:anObject forKey:tagName];
+    if ([tableColumn.identifier isEqualToString:@"value"]) {
+		[self updateMetadata:anObject forKey:tagName];
+	}
 }
 
 - (CGFloat) tableView: (NSTableView *) tableView

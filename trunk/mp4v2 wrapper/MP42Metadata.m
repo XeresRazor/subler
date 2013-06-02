@@ -10,6 +10,7 @@
 #import "MP42Utilities.h"
 #import "MP42XMLReader.h"
 #import "RegexKitLite.h"
+#import "SBRatings.h"
 
 typedef struct mediaKind_t
 {
@@ -42,119 +43,6 @@ static const contentRating_t contentRating_strings[] = {
     {2, @"Clean"},
     {4, @"Explicit"},
     {0, NULL},
-};
-
-typedef struct iTMF_rating_t
-{
-    const char * rating;
-    const char * english_name;
-} iTMF_rating_t;
-
-static const iTMF_rating_t rating_strings[] = {
-    {"--", "-- United States"},
-    {"mpaa|NR|000|", "Not Rated"},          // 1
-    {"mpaa|G|100|", "G"},
-    {"mpaa|PG|200|", "PG"},
-    {"mpaa|PG-13|300|", "PG-13"},
-    {"mpaa|R|400|", "R" },
-    {"mpaa|NC-17|500|", "NC-17"},
-    {"mpaa|Unrated|???|", "Unrated"},
-    {"--", ""},
-    {"us-tv|TV-Y|100|", "TV-Y"},            // 9
-    {"us-tv|TV-Y7|200|", "TV-Y7"},
-    {"us-tv|TV-G|300|", "TV-G"},
-    {"us-tv|TV-PG|400|", "TV-PG"},
-    {"us-tv|TV-14|500|", "TV-14"},
-    {"us-tv|TV-MA|600|", "TV-MA"},
-    {"us-tv|Unrated|???|", "Unrated"},
-    {"--", "-- United Kingdom"},
-    {"uk-movie|NR|000|", "Not Rated"},      // 17
-    {"uk-movie|U|100|", "U"},
-    {"uk-movie|Uc|150|", "Uc"},
-    {"uk-movie|PG|200|", "PG"},
-    {"uk-movie|12|300|", "12"},
-    {"uk-movie|12A|325|", "12A"},
-    {"uk-movie|15|350|", "15"},
-    {"uk-movie|18|400|", "18"},
-    {"uk-movie|R18|600|", "R18"},
-    {"uk-movie|E|0|", "Exempt" },
-    {"uk-movie|Unrated|???|", "Unrated"},
-    {"--", ""},
-    {"uk-tv|Caution|500|", "Caution"},      // 29
-    {"--", "-- Germany"},
-    {"de-movie|ab 0 Jahren|75|", "ab 0 Jahren"},		// 31
-    {"de-movie|ab 6 Jahren|100|", "ab 6 Jahren"},
-    {"de-movie|ab 12 Jahren|200|", "ab 12 Jahren"},
-    {"de-movie|ab 16 Jahren|500|", "ab 16 Jahren"},
-    {"de-movie|ab 18 Jahren|600|", "ab 18 Jahren"},
-    {"--", ""},
-    {"de-tv|ab 0 Jahren|75|", "ab 0 Jahren"},		// 37
-    {"de-tv|ab 6 Jahren|100|", "ab 6 Jahren"},
-    {"de-tv|ab 12 Jahren|200|", "ab 12 Jahren"},
-    {"de-tv|ab 16 Jahren|500|", "ab 16 Jahren"},
-    {"de-tv|ab 18 Jahren|600|", "ab 18 Jahren"},
-    {"--", "-- Australia"},
-    {"au-movie|G|100|", "G"},               // 43
-    {"au-movie|PG|200|", "PG"},
-    {"au-movie|M|350|", "M"},
-    {"au-movie|MA15+|375|", "MA 15+"},
-    {"au-movie|R18+|400|", "R18+"},
-    {"--", ""},
-    {"au-tv|P|100|", "P"},                  // 49
-    {"au-tv|C|200|", "C"},
-    {"au-tv|G|300|", "G"},
-    {"au-tv|PG|400|", "PG"},
-    {"au-tv|M|500|", "M"},
-    {"au-tv|MA15+|550|", "MA 15+"},
-    {"au-tv|AV15+|575|", "AV 15+"},
-    {"au-tv|R18+|600|", "R18+"},
-    {"--", "-- France"},
-    {"fr-movie|Tout Public|100|", "Tout Public"},     // 58
-    {"fr-movie|-10|100|", "-10"},
-    {"fr-movie|-12|300|", "-12"},
-    {"fr-movie|-16|375|", "-16"},
-    {"fr-movie|-18|400|", "-18"},
-    {"fr-movie|Unrated|???|", "Unrated"},
-    {"--", ""},
-    {"fr-tv|-10|100|", "-10"},              // 65
-    {"fr-tv|-12|200|", "-12"},
-    {"fr-tv|-16|500|", "-16"},
-    {"fr-tv|-18|600|", "-18"},
-    {"--", "-- Canada"},
-    {"ca-movie|G|100|", "G"},               // 70
-    {"ca-movie|PG|200|", "PG"},
-    {"ca-movie|14A|300|", "14A"},
-    {"ca-movie|18A|350|", "18A"},
-    {"ca-movie|R|400|", "R"},
-    {"ca-movie|A|500|", "A"},
-    {"--", ""},
-    {"ca-tv|TV-E|000|", "TV-E"},              // 77
-    {"ca-tv|TV-C|50|", "TV-C"},
-    {"ca-tv|TV-C8|75|", "TV-C8"},
-    {"ca-tv|TV-G|100|", "TV-G"},
-    {"ca-tv|TV-PG|200|", "TV-PG"},
-    {"ca-tv|TV-14+|300|", "TV-14+"},
-    {"ca-tv|TV-18+|350|", "TV-18+"},
-    {"ca-tv|TV-21+|500|", "TV-21+"},
-    {"--", "-- Switzerland"},
-    {"ch-movie|0|50|", "0"},     // 86
-    {"ch-movie|6|75|", "6"},
-    {"ch-movie|7|125|", "7"},
-    {"ch-movie|10|150|", "10"},
-    {"ch-movie|12|200|", "12"},
-    {"ch-movie|14|325|", "14"},
-    {"ch-movie|16|375|", "16"},
-    {"ch-movie|18|400|", "18"},
-    {"--", "-- Italy"},
-    {"it-movie|T|100|", "Film per Tutti"},     // 101
-    {"it-movie|VPA|125|", "Visione in presenza di un adulto"},
-    {"it-movie|VM10|150|", "Vietato ai minori di 10 Anni"},
-    {"it-movie|VM12|200|", "Vietato ai minori di 12 Anni"},
-    {"it-movie|VM14|325|", "Vietato ai minori di 14 Anni"},
-    {"it-movie|VM18|400|", "Vietato ai minori di 18 Anni"},
-    {"--", ""},
-    {"--", "Unknown"},                      // 111
-    {NULL, NULL},
 };
 
 typedef struct genreType_t
@@ -568,19 +456,6 @@ static const genreType_t genreType_strings[] = {
     }
 }
 
-- (NSArray *) availableRatings
-{
-    NSMutableArray *ratingsArray = [[NSMutableArray alloc] init];
-    iTMF_rating_t *_rating;
-    for ( _rating = (iTMF_rating_t*) rating_strings; _rating->english_name; _rating++ )
-        [ratingsArray addObject:[NSString stringWithUTF8String:_rating->english_name]];
-
-    if (rating)
-        [ratingsArray replaceObjectAtIndex:[ratingsArray count]-1 withObject:[NSString stringWithFormat:@"Unknown (%@)",rating]];
-
-    return [ratingsArray autorelease];
-}
-
 - (NSString *) genreFromIndex: (NSInteger)index {
     if ((index >= 0 && index < 127) || index == 255) {
         genreType_t *genre = (genreType_t*) genreType_strings;
@@ -599,25 +474,6 @@ static const genreType_t genreType_strings[] = {
             genreIndex = k + 1;
     }
     return genreIndex;
-}
-
-- (NSString *) ratingFromIndex: (NSInteger)index {
-    iTMF_rating_t *_rating = (iTMF_rating_t*) rating_strings;
-    _rating += index;
-    return [NSString stringWithUTF8String:_rating->english_name];    
-}
-
-- (NSInteger) ratingIndexFromString: (NSString *)ratingString{
-    NSInteger ratingIndex = 0;
-    iTMF_rating_t *ratingList;
-    NSInteger k = 0;
-    for ( ratingList = (iTMF_rating_t*) rating_strings; ratingList->english_name; ratingList++, k++ ) {
-        if ([ratingString isEqualToString:[NSString stringWithUTF8String:ratingList->english_name]]) {
-            ratingIndex = k;
-            break;
-        }
-    }
-    return ratingIndex;
 }
 
 - (NSArray *) availableGenres
@@ -738,24 +594,9 @@ static const genreType_t genreType_strings[] = {
         else
             [self setMediaKindFromString:value];
     }
-    else if ([key isEqualToString:@"Artwork"])
+    else if ([key isEqualToString:@"Artwork"]) {
          [self setArtworkFromFilePath:value];
-    
-    else if ([key isEqualToString:@"Rating"]) {
-        if ([value isKindOfClass:[NSNumber class]])
-            [tagsDict setValue:value forKey:key];
-        else if ([value length] && ![[tagsDict valueForKey:key] isEqualTo:value]) {
-            NSInteger rating_index = [self ratingIndexFromString:value];
-            if (rating_index)
-                [tagsDict setValue:[NSNumber numberWithInt:rating_index] forKey:key];
-            else
-                [tagsDict setValue:[NSNumber numberWithInt:MPAA_UNRATED] forKey:key];
-        }
-        else
-            [tagsDict setValue:[NSNumber numberWithInt:MPAA_UNRATED] forKey:key];
-
-        isEdited = YES;
-    }
+	}
     else if (![[tagsDict valueForKey:key] isEqualTo:value]) {
         [tagsDict setValue:value forKey:key];
         isEdited = YES;
@@ -1074,25 +915,10 @@ static const genreType_t genreType_strings[] = {
                 NSString *ratingString = [[NSString alloc] initWithBytes:data->value length: data->valueSize encoding:NSUTF8StringEncoding];
                 NSString *splitElements  = @"\\|";
                 NSArray *ratingItems = [ratingString componentsSeparatedByRegex:splitElements];
-                NSInteger ratingIndex = R_UNKNOWN;
-                if ([ratingItems count] >= 3) {
-                    NSString *ratingCompareString = [NSString stringWithFormat:@"%@|%@|%@|", 
-                                                     [ratingItems objectAtIndex:0],
-                                                     [ratingItems objectAtIndex:1],
-                                                     [ratingItems objectAtIndex:2]];
-                    iTMF_rating_t *ratingList;
-                    int k = 0;
-                    for ( ratingList = (iTMF_rating_t*) rating_strings; ratingList->rating; ratingList++, k++ ) {
-                        if ([ratingCompareString isEqualToString:[NSString stringWithUTF8String:ratingList->rating]])
-                            ratingIndex = k;
-                    }
-                }
-                [tagsDict setObject:[NSNumber numberWithInt:ratingIndex] forKey:@"Rating"];
+				ratingiTunesCode = [NSString stringWithFormat:@"%@|%@|%@|",[ratingItems objectAtIndex:0], [ratingItems objectAtIndex:1], [ratingItems objectAtIndex:2]];
+				[tagsDict setObject:[NSNumber numberWithUnsignedInteger:[[SBRatings defaultManager] ratingIndexForiTunesCode:ratingiTunesCode]] forKey:@"Rating"];
                 if ([ratingItems count] >= 4)
                     [tagsDict setObject:[ratingItems objectAtIndex:3] forKey:@"Rating Annotation"];
-                
-                rating = [ratingString retain];
-                [ratingString release];
             }
         }
         MP4ItmfItemListFree(list);
@@ -1393,16 +1219,7 @@ static const genreType_t genreType_strings[] = {
 
     /* Rewrite extended metadata using the generic iTMF api */
 
-    NSString * ratingString = nil;
-
-    if ([tagsDict valueForKey:@"Rating"] && ([[tagsDict valueForKey:@"Rating"] integerValue] != R_UNKNOWN) ) {
-        ratingString = [NSString stringWithUTF8String:
-                        rating_strings[[[tagsDict valueForKey:@"Rating"] integerValue]].rating];
-    }
-    else if (([[tagsDict valueForKey:@"Rating"] integerValue] == R_UNKNOWN) && rating) {
-        ratingString = rating;
-    }
-    if (ratingString) {
+    if ([tagsDict valueForKey:@"Rating"]) {
         MP4ItmfItemList* list = MP4ItmfGetItemsByMeaning(fileHandle, "com.apple.iTunes", "iTunEXTC");
         if (list) {
             uint32_t i;
@@ -1419,8 +1236,17 @@ static const genreType_t genreType_strings[] = {
 
         MP4ItmfData* data = &newItem->dataList.elements[0];
 
-        if ([[tagsDict valueForKey:@"Rating Annotation"] length] && [ratingString length])
-            ratingString = [ratingString stringByAppendingString:[tagsDict valueForKey:@"Rating Annotation"]];
+		if ([[tagsDict valueForKey:@"Rating"] unsignedIntegerValue] == [[SBRatings defaultManager] unknownIndex]) {
+			if (!ratingiTunesCode) {
+				ratingiTunesCode = [[[SBRatings defaultManager] iTunesCodes] objectAtIndex:[[SBRatings defaultManager] unknownIndex]];
+			}
+		} else {
+			ratingiTunesCode = [[[SBRatings defaultManager] iTunesCodes] objectAtIndex:[[tagsDict valueForKey:@"Rating"] unsignedIntegerValue]];
+		}
+		NSString *ratingString = ratingiTunesCode;
+        if ([[tagsDict valueForKey:@"Rating Annotation"] length] && [ratingString length]) {
+			ratingString = [NSString stringWithFormat:@"%@%@", ratingString, [tagsDict valueForKey:@"Rating Annotation"]];
+		}
         data->typeCode = MP4_ITMF_BT_UTF8;
         data->valueSize = strlen([ratingString UTF8String]);
         data->value = (uint8_t*)malloc( data->valueSize );
@@ -1649,8 +1475,6 @@ static const genreType_t genreType_strings[] = {
     [artworkURL release];
     [artworkThumbURLs release];
     [artworkFullsizeURLs release];
-
-    [rating release];
 
     [tagsDict release];
     [super dealloc];

@@ -559,10 +559,6 @@
                 return [self boldString:[selectedResultTagsArray objectAtIndex:rowIndex]];
             }
             if ([tableColumn.identifier isEqualToString:@"value"]) {
-                NSString *tagName = [selectedResultTagsArray objectAtIndex:rowIndex];
-                if ([tagName isEqualToString:@"Rating"]) {
-                    return [selectedResult ratingFromIndex:[[selectedResultTags objectForKey:[selectedResultTagsArray objectAtIndex:rowIndex]] integerValue]];
-                }
                 return [selectedResultTags objectForKey:[selectedResultTagsArray objectAtIndex:rowIndex]];
             }
         }
