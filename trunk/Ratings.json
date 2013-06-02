@@ -44,6 +44,16 @@
 	]
 },
 {
+	"country" : "Brasil",
+	"ratings" : [
+	   { "media" : "movie", "prefix" : "br-movie", 	"itunes-code" : "L", 	"itunes-value" : "000",  "description" : "L" },
+	   { "media" : "movie", "prefix" : "br-movie", 	"itunes-code" : "12", 	"itunes-value" : "100",  "description" : "12" },
+	   { "media" : "movie", "prefix" : "br-movie", 	"itunes-code" : "14", 	"itunes-value" : "300",  "description" : "14" },
+	   { "media" : "movie", "prefix" : "br-movie", 	"itunes-code" : "16", 	"itunes-value" : "350",  "description" : "16" },
+	   { "media" : "movie", "prefix" : "br-movie", 	"itunes-code" : "18", 	"itunes-value" : "400",  "description" : "18" }
+	]
+},
+{
 	"country" : "Canada",
 	"ratings" : [
 	   { "media" : "movie", "prefix" : "ca-movie", 	"itunes-code" : "G", 		"itunes-value" : "100",  "description" : "G" },

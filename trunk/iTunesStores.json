@@ -3,6 +3,7 @@
  {"storeCode": 143460, "country3": "AUS", "country2": "AU", "language2": "EN", "language": "English", "season": "season", "country": "Australia"},
  {"storeCode": 143446, "country3": "BEL", "country2": "BE", "language2": "NL", "language": "Nederlands", "season": "", "country": "België"},
  {"storeCode": 143446, "country3": "BEL", "country2": "BE", "language2": "FR", "language": "Français", "season": "saison", "country": "Belgique"},
+ {"storeCode": 143503, "country3": "BRA", "country2": "BR", "language2": "PT", "language": "Português", "season": "", "country": "Brasil"},
  {"storeCode": 143455, "country3": "CAN", "country2": "CA", "language2": "EN", "language": "English", "season": "season", "country": "Canada"},
  {"storeCode": 143455, "country3": "CAN", "country2": "CA", "language2": "FR", "language": "Français", "season": "saison", "country": "Canada"},
  {"storeCode": 143458, "country3": "DNK", "country2": "DK", "language2": "DA", "language": "Dansk", "season": "", "country": "Danmark"},
