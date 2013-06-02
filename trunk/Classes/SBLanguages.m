@@ -633,4 +633,14 @@ iso639_lang_t * lang_for_english( const char * english )
     return [languagesArray autorelease];
 }
 
++ (NSString *)iso6391CodeFor:(NSString *)aLanguage {
+    iso639_lang_t *_languages;
+    for ( _languages = (iso639_lang_t*) languages; _languages->iso639_2; _languages++ ) {
+		if ([[NSString stringWithUTF8String:_languages->eng_name] isEqualToString:aLanguage]) {
+			return [NSString stringWithUTF8String:_languages->iso639_1];
+		}
+	}
+	return nil;
+}
+
 @end

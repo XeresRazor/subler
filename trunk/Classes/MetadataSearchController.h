@@ -11,10 +11,6 @@
 @class SBTableView;
 @class MP42Metadata;
 
-#import "TheMovieDB.h"
-#import "TheTVDB.h"
-#import "iTunesStore.h"
-
 @interface MetadataSearchController : NSWindowController<NSTableViewDelegate> {
     id                            delegate;
     NSDictionary                 *detailBoldAttr;
@@ -55,7 +51,6 @@
 #pragma mark Initialization
 - (id)initWithDelegate:(id)del;
 + (NSDictionary *) parseFilename: (NSString *) filename;
-+ (NSString *)langCodeFor:(NSString *)language;
 
 #pragma mark Metadata provider
 - (void) createLanguageMenus;
@@ -65,7 +60,7 @@
 
 #pragma mark Search input fields
 - (void) updateSearchButtonVisibility;
-- (void) searchForTVSeriesNameDone:(NSMutableArray *)seriesArray;
+- (void) searchTVSeriesNameDone:(NSMutableArray *)seriesArray;
 
 #pragma mark Search for metadata
 - (IBAction) searchForResults:(id)sender;
@@ -88,8 +83,6 @@
 
 #pragma mark Miscellaneous
 - (NSAttributedString *) boldString: (NSString *) string;
-+ (NSString *) urlEncoded:(NSString *)s;
-+ (NSData *) downloadDataOrGetFromCache:(NSURL *)url;
 
 #pragma mark Static methods
 + (void) clearRecentSearches;

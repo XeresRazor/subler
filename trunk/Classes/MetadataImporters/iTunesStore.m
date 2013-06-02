@@ -13,7 +13,9 @@
 
 @implementation iTunesStore
 
-+ (NSArray *) languages {
+#pragma mark iTunes stores
+
+- (NSArray *) languages {
 	NSString* iTunesStoresJSON = [[NSBundle mainBundle] pathForResource:@"iTunesStores" ofType:@"json"];
 	JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 	NSArray *iTunesStores = [jsonDecoder objectWithData:[NSData dataWithContentsOfFile:iTunesStoresJSON]];
@@ -50,12 +52,12 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
         return NSOrderedSame;
 }
 
-- (NSArray*) searchForResults:(NSString *)aSeriesName seriesLanguage:(NSString *)aSeriesLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum
+- (NSArray *) searchTVSeries:(NSString *)aSeriesName language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum
 {
 	NSString *country = @"US";
 	NSString *language = @"EN";
 	NSString *season = @"season";
-	NSDictionary *store = [iTunesStore getStoreFor:aSeriesLanguage];
+	NSDictionary *store = [iTunesStore getStoreFor:aLanguage];
 	if (store) {
 		country = [store valueForKey:@"country2"];
 		language = [store valueForKey:@"language2"];
@@ -66,20 +68,20 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 
 	NSURL *url;
 	if (aSeasonNum && ![aSeasonNum isEqualToString:@""]) {
-		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=tvSeasonTerm&entity=tvEpisode", country, [language lowercaseString], [MetadataSearchController urlEncoded:[NSString stringWithFormat:@"%@ %@ %@", aSeriesName, season, aSeasonNum]]]];
+		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=tvSeasonTerm&entity=tvEpisode", country, [language lowercaseString], [MetadataImporter urlEncoded:[NSString stringWithFormat:@"%@ %@ %@", aSeriesName, season, aSeasonNum]]]];
 	} else {
-		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=showTerm&entity=tvEpisode", country, [language lowercaseString], [MetadataSearchController urlEncoded:aSeriesName]]];
+		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=showTerm&entity=tvEpisode", country, [language lowercaseString], [MetadataImporter urlEncoded:aSeriesName]]];
 	}
-	NSData *jsonData = [MetadataSearchController downloadDataOrGetFromCache:url];
+	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
 		NSArray *results = [iTunesStore metadataForResults:d store:store];
-		if (([results count] == 0) && aSeriesLanguage) {
-			return [self searchForResults:aSeriesName seriesLanguage:nil seasonNum:aSeasonNum episodeNum:aEpisodeNum];
+		if (([results count] == 0) && aLanguage) {
+			return [self searchTVSeries:aSeriesName language:nil seasonNum:aSeasonNum episodeNum:aEpisodeNum];
 		}
 		if (([results count] == 0) && aSeasonNum) {
-			return [self searchForResults:aSeriesName seriesLanguage:nil seasonNum:nil episodeNum:aEpisodeNum];
+			return [self searchTVSeries:aSeriesName language:nil seasonNum:nil episodeNum:aEpisodeNum];
 		}
 		if (aEpisodeNum && ![aEpisodeNum isEqualToString:@""]) {
 			NSEnumerator *resultsEnum = [results objectEnumerator];
@@ -96,22 +98,6 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	return nil;
 }
 
-- (void) searchForResults:(NSString *)aSeriesName seriesLanguage:(NSString *)aSeriesLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum callback:(MetadataSearchController *) aCallback
-{
-    mCallback = aCallback;
-	
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        NSArray *results = [self searchForResults:aSeriesName seriesLanguage:aSeriesLanguage seasonNum:aSeasonNum episodeNum:aEpisodeNum];
-		
-        // return results
-        if (!isCancelled)
-            [mCallback performSelectorOnMainThread:@selector(searchForResultsDone:) withObject:results waitUntilDone:YES];
-		
-        [pool release];
-    });
-}
-
 #pragma mark Quick iTunes search for metadata
 
 + (MP42Metadata *) quickiTunesSearchTV:(NSString *)aSeriesName episodeTitle:(NSString *)aEpisodeTitle {
@@ -121,8 +107,8 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	}
 	NSString *country = [store valueForKey:@"country2"];
 	NSString *language = [store valueForKey:@"language2"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&entity=tvEpisode", country, [language lowercaseString], [MetadataSearchController urlEncoded:[NSString stringWithFormat:@"%@ %@", aSeriesName, aEpisodeTitle]]]];
-	NSData *jsonData = [MetadataSearchController downloadDataOrGetFromCache:url];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&entity=tvEpisode", country, [language lowercaseString], [MetadataImporter urlEncoded:[NSString stringWithFormat:@"%@ %@", aSeriesName, aEpisodeTitle]]]];
+	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
@@ -141,8 +127,8 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	}
 	NSString *country = [store valueForKey:@"country2"];
 	NSString *language = [store valueForKey:@"language2"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&entity=movie", country, [language lowercaseString], [MetadataSearchController urlEncoded:aMovieName]]];
-	NSData *jsonData = [MetadataSearchController downloadDataOrGetFromCache:url];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&entity=movie", country, [language lowercaseString], [MetadataImporter urlEncoded:aMovieName]]];
+	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
@@ -156,18 +142,18 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 
 #pragma mark Search for movie metadata
 
-- (NSArray*) searchForResults:(NSString *)aMovieTitle movieLanguage:(NSString *)aMovieLanguage
+- (NSArray *) searchMovie:(NSString *)aMovieTitle language:(NSString *)aLanguage
 {
 	NSString *country = @"US";
 	NSString *language = @"EN";
-	NSDictionary *store = [iTunesStore getStoreFor:aMovieLanguage];
+	NSDictionary *store = [iTunesStore getStoreFor:aLanguage];
 	if (store) {
 		country = [store valueForKey:@"country2"];
 		language = [store valueForKey:@"language2"];
 	}
 	
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?&country=%@&lang=%@&term=%@&entity=movie", country, language, [MetadataSearchController urlEncoded:aMovieTitle]]];
-	NSData *jsonData = [MetadataSearchController downloadDataOrGetFromCache:url];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?&country=%@&lang=%@&term=%@&entity=movie", country, language, [MetadataImporter urlEncoded:aMovieTitle]]];
+	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
@@ -176,44 +162,11 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	return nil;
 }
 
-- (void) searchForResults:(NSString *)aMovieTitle movieLanguage:(NSString *)aMovieLanguage callback:(MetadataSearchController *)aCallback {
-    mCallback = aCallback;
-	
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        NSArray *results = [self searchForResults:aMovieTitle movieLanguage:aMovieLanguage];
-		
-        if (!isCancelled)
-            [mCallback performSelectorOnMainThread:@selector(searchForResultsDone:) withObject:results waitUntilDone:YES];
-		
-        [pool release];
-    });
-}
-
 #pragma mark Load additional metadata
 
-+ (NSArray *) readPeople:(NSString *)aPeople fromXML:(NSXMLDocument *)aXml {
-	if (aXml) {
-		NSArray *nodes = [aXml nodesForXPath:[NSString stringWithFormat:@"//div[starts-with(@metrics-loc,'Titledbox_%@')]", aPeople] error:NULL];
-		for (NSXMLNode *n in nodes) {
-			NSXMLDocument *subXML = [[NSXMLDocument alloc] initWithXMLString:[n XMLString] options:0 error:NULL];
-			if (subXML) {
-				NSArray *subNodes = [subXML nodesForXPath:@"//a" error:NULL];
-				NSMutableArray *r = [[NSMutableArray alloc] initWithCapacity:[subNodes count]];
-				for (NSXMLNode *sub in subNodes) {
-					[r addObject:[sub stringValue]];
-				}
-				[subXML release];
-				return r;
-			}
-		}
-	}
-	return nil;
-}
-
-- (MP42Metadata*) loadAdditionalMetadata:(MP42Metadata *)aMetadata movieLanguage:(NSString *)aMovieLanguage
+- (MP42Metadata*) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage
 {
-	NSData *xmlData = [MetadataSearchController downloadDataOrGetFromCache:[NSURL URLWithString:[[aMetadata tagsDict] valueForKey:@"iTunes URL"]]];
+	NSData *xmlData = [MetadataImporter downloadDataOrGetFromCache:[NSURL URLWithString:[[aMetadata tagsDict] valueForKey:@"iTunes URL"]]];
 	if (xmlData) {
 		NSXMLDocument *xml = [[NSXMLDocument alloc] initWithData:xmlData options:NSXMLDocumentTidyHTML error:NULL];
 		NSArray *p = [iTunesStore readPeople:@"Actor" fromXML:xml];
@@ -241,22 +194,27 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
     return aMetadata;
 }
 
-- (void) loadAdditionalMetadata:(MP42Metadata *)aMetadata movieLanguage:(NSString *)aMovieLanguage callback:(MetadataSearchController *) aCallback {
-    mCallback = aCallback;
-	
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        [self loadAdditionalMetadata:aMetadata movieLanguage:aMovieLanguage];
-		
-        if (!isCancelled)
-            [mCallback performSelectorOnMainThread:@selector(loadAdditionalMetadataDone:) withObject:aMetadata waitUntilDone:YES];
-		
-        [pool release];
-		
-    });
-}
-
 #pragma mark Parse results
+
+/* Scrape people from iTunes Store website HTML */
++ (NSArray *) readPeople:(NSString *)aPeople fromXML:(NSXMLDocument *)aXml {
+	if (aXml) {
+		NSArray *nodes = [aXml nodesForXPath:[NSString stringWithFormat:@"//div[starts-with(@metrics-loc,'Titledbox_%@')]", aPeople] error:NULL];
+		for (NSXMLNode *n in nodes) {
+			NSXMLDocument *subXML = [[NSXMLDocument alloc] initWithXMLString:[n XMLString] options:0 error:NULL];
+			if (subXML) {
+				NSArray *subNodes = [subXML nodesForXPath:@"//a" error:NULL];
+				NSMutableArray *r = [[NSMutableArray alloc] initWithCapacity:[subNodes count]];
+				for (NSXMLNode *sub in subNodes) {
+					[r addObject:[sub stringValue]];
+				}
+				[subXML release];
+				return r;
+			}
+		}
+	}
+	return nil;
+}
 
 + (NSArray *) metadataForResults:(NSDictionary *)dict store:(NSDictionary *)store {
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:[[dict valueForKey:@"resultCount"] integerValue]];
@@ -324,20 +282,6 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 		
 	}
     return [returnArray autorelease];
-}
-
-#pragma mark Finishing up
-
-- (void) dealloc {
-    mCallback = nil;
-    [super dealloc];
-}
-
-- (void)cancel
-{
-    @synchronized(self) {
-        isCancelled = YES;
-    }
 }
 
 @end

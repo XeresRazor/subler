@@ -8,6 +8,8 @@
 
 #import "ArtworkSelector.h"
 
+#import "MetadataImporter.h"
+
 #pragma mark IKImageBrowserItem data source objects
 
 @interface myImageObject : NSObject{
@@ -44,11 +46,11 @@
 }
 
 - (NSString *) imageRepresentationType {
-    return IKImageBrowserNSURLRepresentationType;
+    return IKImageBrowserNSDataRepresentationType;
 }
 
 - (id)  imageRepresentation {
-    return _url;
+    return [MetadataImporter downloadDataOrGetFromCache:_url];
 }
 
 - (NSString *) imageUID {

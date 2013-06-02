@@ -7,7 +7,8 @@
 //
 
 #import "TheTVDB.h"
-#import "MetadataSearchController.h"
+
+#import "MetadataImporter.h"
 #import "MP42File.h"
 #import "iTunesStore.h"
 
@@ -19,13 +20,15 @@
 
 @implementation TheTVDB
 
+- (NSArray *) languages {
+	return [NSArray arrayWithObjects:@"Chinese", @"Croatian", @"Czech", @"Danish", @"Dutch", @"English", @"Finnish", @"French", @"German", @"Greek, Modern", @"Hebrew", @"Hungarian", @"Italian", @"Japanese", @"Korean", @"Norwegian", @"Polish", @"Portuguese", @"Russian", @"Slovenian", @"Spanish", @"Swedish", @"Turkish", nil];
+}
+
 #pragma mark Search for TV series name
 
-- (NSArray*) searchForTVSeriesName:(NSString *)_seriesName {
-    seriesName = _seriesName;
-
+- (NSArray *) searchTVSeries:(NSString *)aSeriesName language:(NSString *)aLanguage {
     NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:3];
-    NSURL *u = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"http://www.thetvdb.com/api/GetSeries.php?seriesname=%@", [MetadataSearchController urlEncoded:seriesName]]];
+    NSURL *u = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"http://www.thetvdb.com/api/GetSeries.php?seriesname=%@", [MetadataImporter urlEncoded:aSeriesName]]];
     if (u != nil) {
         NSXMLDocument *x = [[NSXMLDocument alloc] initWithContentsOfURL:u options:0 error:NULL];
         if (x != nil) {
@@ -37,41 +40,20 @@
         }
         [x release];
     }
-
     [u release];
-
     return [results autorelease];
-}
-
-- (void) searchForTVSeriesName:(NSString *)_seriesName callback:(MetadataSearchController *)_callback {
-    callback = _callback;
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        NSArray *results = [self searchForTVSeriesName:_seriesName];
-
-        if (!isCancelled)
-            [callback performSelectorOnMainThread:@selector(searchForTVSeriesNameDone:) withObject:results waitUntilDone:YES];
-
-        [pool release];
-    });
 }
 
 #pragma mark Search for episode metadata
 
-- (NSArray*) searchForResults:(NSString *)_seriesName seriesLanguage:(NSString *)_seriesLanguage seasonNum:(NSString *)_seasonNum episodeNum:(NSString *)_episodeNum
-{
-    seriesName = _seriesName;
-    seasonNum = _seasonNum;
-    episodeNum = _episodeNum;
-	seriesLanguage = _seriesLanguage;
-
+- (NSArray *) searchTVSeries:(NSString *)aSeriesName language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum {
     // load data from tvdb via python on command line
     NSMutableArray *args = [[NSMutableArray alloc] initWithCapacity:4];
     [args addObject:@"tvdb_main.py"];
-    [args addObject:seriesName];
-	[args addObject:seriesLanguage];
-    if ([seasonNum length]) [args addObject:seasonNum];
-    if ([episodeNum length]) [args addObject:episodeNum];
+    [args addObject:aSeriesName];
+	[args addObject:aLanguage];
+    if ([aSeasonNum length]) [args addObject:aSeasonNum];
+    if ([aEpisodeNum length]) [args addObject:aEpisodeNum];
     NSPipe *outputPipe = [NSPipe pipe];
     NSTask *cmd = [[NSTask alloc] init];
     [cmd setArguments:args];
@@ -95,22 +77,6 @@
     [cmd release];
 
     return results;
-}
-
-- (void) searchForResults:(NSString *)_seriesName seriesLanguage:(NSString *)_seriesLanguage seasonNum:(NSString *)_seasonNum episodeNum:(NSString *)_episodeNum callback:(MetadataSearchController *) _callback
-{
-    callback = _callback;
-
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        NSArray *results = [self searchForResults:_seriesName seriesLanguage:_seriesLanguage seasonNum:_seasonNum episodeNum:_episodeNum];
-
-        // return results
-        if (!isCancelled)
-            [callback performSelectorOnMainThread:@selector(searchForResultsDone:) withObject:results waitUntilDone:YES];
-
-        [pool release];
-    });
 }
 
 #pragma mark Parse metadata
@@ -211,21 +177,6 @@
     return [returnArray autorelease];
 }
 
-#pragma mark Finishing up
-
-- (void) dealloc {
-    callback = nil;
-
-    [super dealloc];
-}
-
-- (void)cancel
-{
-    @synchronized(self) {
-        isCancelled = YES;
-    }
-}
-
 #pragma mark Privacy
 
 + (void) deleteCachedMetadata {
@@ -244,7 +195,6 @@
     NSData *outputData = [outputFile readDataToEndOfFile];
     NSString *output = [[[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding] autorelease] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [[NSFileManager defaultManager] removeItemAtPath:[output stringByAppendingPathComponent:@"tvdb_api"] error:NULL];
-
     [cmd release];
     [args release];
 }
