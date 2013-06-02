@@ -102,6 +102,16 @@
 	]
 },
 {
+	"country" : "日本",
+	"ratings" : [
+	   { "media" : "movie", "prefix" : "jp-movie", 	"itunes-code" : "G", 		"itunes-value" : "100",  "description" : "G" },
+	   { "media" : "movie", "prefix" : "jp-movie", 	"itunes-code" : "PG12", 	"itunes-value" : "200",  "description" : "PG12" },
+	   { "media" : "movie", "prefix" : "jp-movie", 	"itunes-code" : "R15+", 	"itunes-value" : "300",  "description" : "R15+" },
+	   { "media" : "movie", "prefix" : "jp-movie", 	"itunes-code" : "R18+", 	"itunes-value" : "400",  "description" : "R18+" },
+	   { "media" : "movie", "prefix" : "jp-movie", 	"itunes-code" : "Unrated", 	"itunes-value" : "???",  "description" : "未審査" }
+	]
+},
+{
 	"country" : "Nederland",
 	"ratings" : [
 	   { "media" : "movie & TV", "prefix" : "nl-movie", 	"itunes-code" : "AL/G", 	"itunes-value" : "000",  "description" : "AL/G" },
