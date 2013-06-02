@@ -112,9 +112,10 @@
 		A9FD5DA60F3C6F8A00817716 /* ChapterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9FD5DA50F3C6F8A00817716 /* ChapterView.xib */; };
 		A9FD5EC70F3C8A4800817716 /* MovieView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9FD5EC50F3C8A4800817716 /* MovieView.xib */; };
 		A9FD5ECF0F3C8AF100817716 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9FD5ECE0F3C8AF100817716 /* MovieViewController.m */; };
+		CD03087417576A550093A0BE /* TheMovieDB3.m in Sources */ = {isa = PBXBuildFile; fileRef = CD03087317576A550093A0BE /* TheMovieDB3.m */; };
+		CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CD03087817576AE50093A0BE /* MetadataImporter.m */; };
 		CD08BA9612F62829006BA549 /* tmdb-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CD08BA9512F62829006BA549 /* tmdb-logo.png */; };
 		CD16BC4712F6BC7F00AF5453 /* tvdb-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CD16BC4612F6BC7F00AF5453 /* tvdb-logo.png */; };
-		CD1894F312F3757D00582CBC /* TheMovieDB.m in Sources */ = {isa = PBXBuildFile; fileRef = CD1894F212F3757D00582CBC /* TheMovieDB.m */; };
 		CD4E6E5D12F744210095C84F /* ArtworkSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD4E6E5B12F744210095C84F /* ArtworkSelector.xib */; };
 		CD56963212FAAD680029FADB /* ArtworkSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56963112FAAD680029FADB /* ArtworkSelector.m */; };
 		CD71FEA312F1B5AF00F0A98D /* MetadataSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD71FEA212F1B5AF00F0A98D /* MetadataSearchController.m */; };
@@ -369,10 +370,12 @@
 		A9FD5EC60F3C8A4800817716 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/MovieView.xib; sourceTree = "<group>"; };
 		A9FD5ECD0F3C8AF100817716 /* MovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieViewController.h; path = PropertyView/MovieViewController.h; sourceTree = "<group>"; };
 		A9FD5ECE0F3C8AF100817716 /* MovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MovieViewController.m; path = PropertyView/MovieViewController.m; sourceTree = "<group>"; };
+		CD03087217576A550093A0BE /* TheMovieDB3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TheMovieDB3.h; path = Classes/MetadataImporters/TheMovieDB3.h; sourceTree = "<group>"; };
+		CD03087317576A550093A0BE /* TheMovieDB3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TheMovieDB3.m; path = Classes/MetadataImporters/TheMovieDB3.m; sourceTree = "<group>"; };
+		CD03087717576AE50093A0BE /* MetadataImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataImporter.h; path = Classes/MetadataImporters/MetadataImporter.h; sourceTree = "<group>"; };
+		CD03087817576AE50093A0BE /* MetadataImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataImporter.m; path = Classes/MetadataImporters/MetadataImporter.m; sourceTree = "<group>"; };
 		CD08BA9512F62829006BA549 /* tmdb-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tmdb-logo.png"; path = "images/tmdb-logo.png"; sourceTree = "<group>"; };
 		CD16BC4612F6BC7F00AF5453 /* tvdb-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tvdb-logo.png"; path = "images/tvdb-logo.png"; sourceTree = "<group>"; };
-		CD1894F112F3757D00582CBC /* TheMovieDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TheMovieDB.h; path = Classes/MetadataImporters/TheMovieDB.h; sourceTree = "<group>"; };
-		CD1894F212F3757D00582CBC /* TheMovieDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TheMovieDB.m; path = Classes/MetadataImporters/TheMovieDB.m; sourceTree = "<group>"; };
 		CD4A86AA1234AFA10054970A /* Simple.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Simple.pm; sourceTree = "<group>"; };
 		CD4A86AC1234AFA10054970A /* Roman.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Roman.pm; sourceTree = "<group>"; };
 		CD4A86AF1234AFA10054970A /* Filename.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Filename.pm; sourceTree = "<group>"; };
@@ -781,12 +784,14 @@
 		CD71FF1A12F1C46900F0A98D /* MetadataImporters */ = {
 			isa = PBXGroup;
 			children = (
-				CD71FF1B12F1C4A900F0A98D /* TheTVDB.h */,
-				CD71FF1C12F1C4A900F0A98D /* TheTVDB.m */,
-				CD1894F112F3757D00582CBC /* TheMovieDB.h */,
-				CD1894F212F3757D00582CBC /* TheMovieDB.m */,
+				CD03087717576AE50093A0BE /* MetadataImporter.h */,
+				CD03087817576AE50093A0BE /* MetadataImporter.m */,
 				CDC06FCC1747494D003C1D0A /* iTunesStore.h */,
 				CDC06FCD1747494D003C1D0A /* iTunesStore.m */,
+				CD03087217576A550093A0BE /* TheMovieDB3.h */,
+				CD03087317576A550093A0BE /* TheMovieDB3.m */,
+				CD71FF1B12F1C4A900F0A98D /* TheTVDB.h */,
+				CD71FF1C12F1C4A900F0A98D /* TheTVDB.m */,
 			);
 			name = MetadataImporters;
 			sourceTree = "<group>";
@@ -998,7 +1003,6 @@
 				A9F183DD12C201760035BDE1 /* downmix.c in Sources */,
 				CD71FEA312F1B5AF00F0A98D /* MetadataSearchController.m in Sources */,
 				CD71FF1D12F1C4A900F0A98D /* TheTVDB.m in Sources */,
-				CD1894F312F3757D00582CBC /* TheMovieDB.m in Sources */,
 				CD56963212FAAD680029FADB /* ArtworkSelector.m in Sources */,
 				A936E03E130BE10200CA5527 /* MAAttachedWindow.m in Sources */,
 				A90327E4133F68C5004E0D41 /* SBOCRWrapper.mm in Sources */,
@@ -1013,6 +1017,8 @@
 				A93F873116B2C8DA009B8303 /* MP42XMLReader.m in Sources */,
 				CDC06FCE1747494D003C1D0A /* iTunesStore.m in Sources */,
 				CDC06FD117475181003C1D0A /* JSONKit.m in Sources */,
+				CD03087417576A550093A0BE /* TheMovieDB3.m in Sources */,
+				CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

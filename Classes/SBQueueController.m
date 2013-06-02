@@ -11,6 +11,7 @@
 #import "MP42File.h"
 #import "MP42FileImporter.h"
 #import "MetadataSearchController.h"
+#import "MetadataImporter.h"
 
 #define SublerBatchTableViewDataType @"SublerBatchTableViewDataType"
 #define kOptionsPanelHeight 88
@@ -282,25 +283,19 @@
 {
     id  currentSearcher = nil;
     MP42Metadata *metadata = nil;
-    NSString *language = [[NSUserDefaults standardUserDefaults] valueForKey:@"SBNativeLanguage"];
-    if (!language)
-        language = @"English";
 
     // Parse FileName and search for metadata
     NSDictionary *parsed = [MetadataSearchController parseFilename:[url lastPathComponent]];
     if ([@"movie" isEqualToString:(NSString *) [parsed valueForKey:@"type"]]) {
-        currentSearcher = [[TheMovieDB alloc] init];
-        NSArray *results = [((TheMovieDB *) currentSearcher) searchForResults:[parsed valueForKey:@"title"]
-                                            mMovieLanguage:[MetadataSearchController langCodeFor:language]];
+		currentSearcher = [MetadataImporter defaultMovieProvider];
+		NSString *language = [MetadataImporter defaultMovieLanguage];
+		NSArray *results = [currentSearcher searchMovie:[parsed valueForKey:@"title"] language:language];
         if ([results count])
-            metadata = [((TheMovieDB *) currentSearcher) loadAdditionalMetadata:[results objectAtIndex:0] mMovieLanguage:language];
-
+			metadata = [currentSearcher loadMovieMetadata:[results objectAtIndex:0] language:language];
     } else if ([@"tv" isEqualToString:(NSString *) [parsed valueForKey:@"type"]]) {
-        currentSearcher = [[TheTVDB alloc] init];
-        NSArray *results = [((TheTVDB *) currentSearcher) searchForResults:[parsed valueForKey:@"seriesName"]
-                                         seriesLanguage:[MetadataSearchController langCodeFor:language] 
-                                              seasonNum:[parsed valueForKey:@"seasonNum"]
-                                             episodeNum:[parsed valueForKey:@"episodeNum"]];
+		currentSearcher = [MetadataImporter defaultTVProvider];
+		NSString *language = [MetadataImporter defaultTVLanguage];
+		NSArray *results = [currentSearcher searchTVSeries:[parsed valueForKey:@"seriesName"] language:language seasonNum:[parsed valueForKey:@"seasonNum"] episodeNum:[parsed valueForKey:@"episodeNum"]];
         if ([results count])
             metadata = [results objectAtIndex:0];
     }

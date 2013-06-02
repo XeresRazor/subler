@@ -8,28 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class MetadataSearchController;
+#import "MetadataImporter.h"
 
-@interface TheTVDB : NSObject {
-    NSString *seriesName;
-	NSString *seriesLanguage;
-    NSString *seasonNum;
-    NSString *episodeNum;
-    MetadataSearchController *callback;
-    BOOL isCancelled;
-}
-
-#pragma mark Search for TV series name
-- (NSArray*) searchForTVSeriesName:(NSString *)seriesName;
-- (void) searchForTVSeriesName:(NSString *)seriesName callback:(MetadataSearchController *) callback;
-
-#pragma mark Search for episode metadata
-- (NSArray*) searchForResults:(NSString *)_seriesName seriesLanguage:(NSString *)_seriesLanguage seasonNum:(NSString *)seasonNum
-               episodeNum:(NSString *)episodeNum;
-- (void) searchForResults:(NSString *)_seriesName seriesLanguage:(NSString *)_seriesLanguage seasonNum:(NSString *)seasonNum
-               episodeNum:(NSString *)episodeNum callback:(MetadataSearchController *) callback;
-
-- (void) cancel;
+@interface TheTVDB : MetadataImporter
 
 + (void) deleteCachedMetadata;
 

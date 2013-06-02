@@ -44,5 +44,6 @@ extern "C" {
 
 + (SBLanguages*)defaultManager;
 - (NSArray*) languages;
++ (NSString *)iso6391CodeFor:(NSString *)aLanguage;
 
 @end

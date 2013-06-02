@@ -533,7 +533,6 @@
 							<string key="NSFrame">{{13, 344}, {524, 110}}</string>
 							<reference key="NSSuperview" ref="683873310"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="448835749"/>
 							<object class="NSMutableArray" key="NSTabViewItems">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSTabViewItem" id="360524599">
@@ -675,10 +674,9 @@
 											<object class="NSPopUpButton" id="355706785">
 												<reference key="NSNextResponder" ref="448835749"/>
 												<int key="NSvFlags">268</int>
-												<string key="NSFrame">{{381, 10}, {108, 25}}</string>
+												<string key="NSFrame">{{358, 10}, {131, 25}}</string>
 												<reference key="NSSuperview" ref="448835749"/>
 												<reference key="NSWindow"/>
-												<reference key="NSNextKeyView" ref="642948999"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSPopUpButtonCell" key="NSCell" id="35041084">
@@ -700,24 +698,23 @@
 													<string key="NSKeyEquivalent"/>
 													<int key="NSPeriodicDelay">400</int>
 													<int key="NSPeriodicInterval">75</int>
-													<object class="NSMenuItem" key="NSMenuItem" id="940555873">
-														<reference key="NSMenu" ref="99992927"/>
-														<string key="NSTitle">iTunes Store</string>
-														<string key="NSKeyEquiv"/>
-														<int key="NSKeyEquivModMask">1048576</int>
-														<int key="NSMnemonicLoc">2147483647</int>
-														<int key="NSState">1</int>
-														<reference key="NSOnImage" ref="731376368"/>
-														<reference key="NSMixedImage" ref="48956838"/>
-														<string key="NSAction">_popUpItemAction:</string>
-														<reference key="NSTarget" ref="35041084"/>
-													</object>
+													<nil key="NSMenuItem"/>
 													<bool key="NSMenuItemRespectAlignment">YES</bool>
 													<object class="NSMenu" key="NSMenu" id="99992927">
 														<string key="NSTitle">OtherViews</string>
 														<object class="NSMutableArray" key="NSMenuItems">
 															<bool key="EncodedWithXMLCoder">YES</bool>
-															<reference ref="940555873"/>
+															<object class="NSMenuItem" id="940555873">
+																<reference key="NSMenu" ref="99992927"/>
+																<string key="NSTitle">iTunes Store</string>
+																<string key="NSKeyEquiv"/>
+																<int key="NSKeyEquivModMask">1048576</int>
+																<int key="NSMnemonicLoc">2147483647</int>
+																<reference key="NSOnImage" ref="731376368"/>
+																<reference key="NSMixedImage" ref="48956838"/>
+																<string key="NSAction">_popUpItemAction:</string>
+																<reference key="NSTarget" ref="35041084"/>
+															</object>
 															<object class="NSMenuItem" id="557746589">
 																<reference key="NSMenu" ref="99992927"/>
 																<string key="NSTitle">TheMovieDB</string>
@@ -2177,7 +2174,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">227</int>
+			<int key="maxID">228</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
