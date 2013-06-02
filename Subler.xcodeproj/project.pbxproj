@@ -128,6 +128,8 @@
 		CD89361412F34F9D0085C2B5 /* tvdb_ui.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD89360812F34F500085C2B5 /* tvdb_ui.py */; };
 		CDC06FCE1747494D003C1D0A /* iTunesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC06FCD1747494D003C1D0A /* iTunesStore.m */; };
 		CDC06FD117475181003C1D0A /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC06FD017475181003C1D0A /* JSONKit.m */; };
+		CDDC1954175AFD870005CD98 /* Ratings.json in Resources */ = {isa = PBXBuildFile; fileRef = CDDC1953175AFD870005CD98 /* Ratings.json */; };
+		CDDC1957175B05C50005CD98 /* SBRatings.m in Sources */ = {isa = PBXBuildFile; fileRef = CDDC1956175B05C50005CD98 /* SBRatings.m */; };
 		CDE8E452174CBBD4009410B5 /* iTunesStores.json in Resources */ = {isa = PBXBuildFile; fileRef = CDE8E451174CBBD4009410B5 /* iTunesStores.json */; };
 /* End PBXBuildFile section */
 
@@ -398,6 +400,9 @@
 		CDC06FCD1747494D003C1D0A /* iTunesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iTunesStore.m; path = Classes/MetadataImporters/iTunesStore.m; sourceTree = "<group>"; };
 		CDC06FCF17475181003C1D0A /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		CDC06FD017475181003C1D0A /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		CDDC1953175AFD870005CD98 /* Ratings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Ratings.json; sourceTree = "<group>"; };
+		CDDC1955175B05C50005CD98 /* SBRatings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBRatings.h; path = Classes/SBRatings.h; sourceTree = "<group>"; };
+		CDDC1956175B05C50005CD98 /* SBRatings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBRatings.m; path = Classes/SBRatings.m; sourceTree = "<group>"; };
 		CDE8E451174CBBD4009410B5 /* iTunesStores.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = iTunesStores.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -533,6 +538,8 @@
 				A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */,
 				A98F421815D9343000113CDE /* SBLanguages.h */,
 				A98F421915D9343000113CDE /* SBLanguages.m */,
+				CDDC1955175B05C50005CD98 /* SBRatings.h */,
+				CDDC1956175B05C50005CD98 /* SBRatings.m */,
 				32DBCF750370BD2300C91783 /* Subler_Prefix.pch */,
 				A9B46A9312B79B990040517A /* ButtonToolbarItem.h */,
 				A9B46A9412B79B990040517A /* ButtonToolbarItem.m */,
@@ -575,6 +582,7 @@
 				CD4A86A71234AFA10054970A /* ParseFilename */,
 				CD8935FF12F34F500085C2B5 /* tvdb_py */,
 				CDE8E451174CBBD4009410B5 /* iTunesStores.json */,
+				CDDC1953175AFD870005CD98 /* Ratings.json */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -932,6 +940,7 @@
 				A91D3FA015B15D2100627DD0 /* tvdb_cache.py in Resources */,
 				A96371B8164695070083BB80 /* ToolbarRemoveTemplate@2x.png in Resources */,
 				CDE8E452174CBBD4009410B5 /* iTunesStores.json in Resources */,
+				CDDC1954175AFD870005CD98 /* Ratings.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1019,6 +1028,7 @@
 				CDC06FD117475181003C1D0A /* JSONKit.m in Sources */,
 				CD03087417576A550093A0BE /* TheMovieDB3.m in Sources */,
 				CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */,
+				CDDC1957175B05C50005CD98 /* SBRatings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

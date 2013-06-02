@@ -10,6 +10,7 @@
 #import "MetadataSearchController.h"
 #import "MP42File.h"
 #import "JSONKit.h"
+#import "SBRatings.h"
 
 @implementation iTunesStore
 
@@ -78,10 +79,10 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
 		NSArray *results = [iTunesStore metadataForResults:d store:store];
 		if (([results count] == 0) && aLanguage) {
-			return [self searchTVSeries:aSeriesName language:nil seasonNum:aSeasonNum episodeNum:aEpisodeNum];
+			return [self searchTVSeries:aSeriesName language:@"USA (English)" seasonNum:aSeasonNum episodeNum:aEpisodeNum];
 		}
 		if (([results count] == 0) && aSeasonNum) {
-			return [self searchTVSeries:aSeriesName language:nil seasonNum:nil episodeNum:aEpisodeNum];
+			return [self searchTVSeries:aSeriesName language:@"USA (English)" seasonNum:nil episodeNum:aEpisodeNum];
 		}
 		if (aEpisodeNum && ![aEpisodeNum isEqualToString:@""]) {
 			NSEnumerator *resultsEnum = [results objectEnumerator];
@@ -223,7 +224,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 		NSDictionary *r = [resultsArray objectAtIndex:i];
         MP42Metadata *metadata = [[MP42Metadata alloc] init];
 		if ([[r valueForKey:@"kind"] isEqualToString:@"feature-movie"]) {
-			metadata.mediaKind = 9; // TV show
+			metadata.mediaKind = 9; // movie
 			[metadata setTag:[r valueForKey:@"trackName"] forKey:@"Name"];
 			[metadata setTag:[r valueForKey:@"artistName"] forKey:@"Director"];
 		} else if ([[r valueForKey:@"kind"] isEqualToString:@"tv-episode"]) {
@@ -249,7 +250,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 		[metadata setTag:[r valueForKey:@"shortDescription"] forKey:@"Description"];
 		[metadata setTag:[r valueForKey:@"longDescription"] forKey:@"Long Description"];
 		[metadata setTag:[r valueForKey:@"primaryGenreName"] forKey:@"Genre"];
-		[metadata setTag:[r valueForKey:@"contentAdvisoryRating"] forKey:@"Rating"];
+		[metadata setTag:[NSNumber numberWithUnsignedInteger:[[SBRatings defaultManager] ratingIndexForiTunesCountry:[store valueForKey:@"country"] media:(metadata.mediaKind == 9 ? @"movie" : @"TV") ratingString:[r valueForKey:@"contentAdvisoryRating"]]] forKey:@"Rating"];
 		[metadata setTag:[r valueForKey:@"trackViewUrl"] forKey:@"iTunes URL"];
 		if ([store valueForKey:@"storeCode"]) {
 			[metadata setTag:[[store valueForKey:@"storeCode"] stringValue] forKey:@"iTunes Country"];
