@@ -19,6 +19,9 @@
 
 + (SBRatings *) defaultManager;
 
+- (void)updateRatingsCountry;
+- (NSArray *) ratingsCountries;
+
 - (NSUInteger) unknownIndex;
 - (NSUInteger) ratingIndexForiTunesCode:(NSString *)aiTunesCode;
 - (NSUInteger) ratingIndexForiTunesCountry:(NSString *)aCountry media:(NSString *)aMedia ratingString:(NSString *)aRatingString;

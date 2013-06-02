@@ -32,4 +32,7 @@
 
 - (IBAction) deletePreset:(id) sender;
 
+- (NSArray *) ratingsCountries;
+- (IBAction) updateRatingsCountry:(id)sender;
+
 @end
