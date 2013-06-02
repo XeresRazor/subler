@@ -30,15 +30,51 @@
 		// construct movie ratings
 		ratings = [[NSMutableArray alloc] init];
 		iTunesCodes = [[NSMutableArray alloc] init];
+		// if a specific country is picked, include the USA ratings at the end
+		NSDictionary *usaRatings;
 		for (NSDictionary *countryRatings in ratingsDictionary) {
 			NSString *countryName = [countryRatings valueForKey:@"country"];
+			if ([countryName isEqualToString:@"USA"]) {
+				usaRatings = countryRatings;
+			}
+			if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"SBRatingsCountry"] isEqualToString:@"All countries"]) {
+				if (![countryName isEqualToString:@"Unknown"] && ![countryName isEqualToString:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBRatingsCountry"]]) {
+					continue;
+				}
+																								
+			}
 			for (NSDictionary *rating in [countryRatings valueForKey:@"ratings"]) {
 				[ratings addObject:[NSString stringWithFormat:@"%@ %@: %@", countryName, [rating valueForKey:@"media"], [rating valueForKey:@"description"]]];
 				[iTunesCodes addObject:[NSString stringWithFormat:@"%@|%@|%@|", [rating valueForKey:@"prefix"], [rating valueForKey:@"itunes-code"], [rating valueForKey:@"itunes-value"]]];
 			}
 		}
+		if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"SBRatingsCountry"] isEqualToString:@"All countries"] && ![[[NSUserDefaults standardUserDefaults] valueForKey:@"SBRatingsCountry"] isEqualToString:@"USA"]) {
+			for (NSDictionary *rating in [usaRatings valueForKey:@"ratings"]) {
+				[ratings addObject:[NSString stringWithFormat:@"%@ %@: %@", @"USA", [rating valueForKey:@"media"], [rating valueForKey:@"description"]]];
+				[iTunesCodes addObject:[NSString stringWithFormat:@"%@|%@|%@|", [rating valueForKey:@"prefix"], [rating valueForKey:@"itunes-code"], [rating valueForKey:@"itunes-value"]]];
+			}
+		}
 	}
 	return self;
+}
+
+- (NSArray *) ratingsCountries {
+	NSMutableArray *countries = [[NSMutableArray alloc] init];
+	for (NSDictionary *countryRatings in ratingsDictionary) {
+		NSString *countryName = [countryRatings valueForKey:@"country"];
+		if ([countryName isEqualToString:@"Unknown"]) {
+			[countries addObject:@"All countries"];
+		} else {
+			[countries addObject:countryName];
+		}
+	}
+	return countries;
+}
+
+- (void)updateRatingsCountry {
+	[ratings release];
+	[iTunesCodes release];
+	[self init];
 }
 
 - (NSArray *) ratings {

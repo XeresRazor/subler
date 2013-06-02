@@ -11,6 +11,7 @@
 #import "SBTableView.h"
 #import "MP42Metadata.h"
 #import "MovieViewController.h"
+#import "SBRatings.h"
 
 #define TOOLBAR_GENERAL     @"TOOLBAR_GENERAL"
 #define TOOLBAR_AUDIO       @"TOOLBAR_AUDIO"
@@ -36,7 +37,7 @@
                                                              @"1",          @"SBAudioMixdown",
                                                              @"96",         @"SBAudioBitrate",
                                                              @"YES",        @"SBAudioConvertAC3",
-                                                             @"English",    @"SBNativeLanguage",
+                                                             @"All countries",    @"SBRatingsCountry",
                                                              @"m4v",        @"SBSaveFormat",
                                                              @"NO",         @"mp464bitOffset",
                                                              @"YES",        @"chaptersPreviewTrack",
@@ -215,6 +216,14 @@
         [removeSet setEnabled:YES];
     else
         [removeSet setEnabled:NO];
+}
+
+- (NSArray *) ratingsCountries {
+	return [[SBRatings defaultManager] ratingsCountries];
+}
+
+- (IBAction) updateRatingsCountry:(id)sender {
+	[[SBRatings defaultManager] updateRatingsCountry];
 }
 
 @end
