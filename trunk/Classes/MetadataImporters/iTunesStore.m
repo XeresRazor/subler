@@ -78,7 +78,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
 		NSArray *results = [iTunesStore metadataForResults:d store:store];
-		if (([results count] == 0) && aLanguage) {
+		if (([results count] == 0) && ![aLanguage isEqualToString:@"USA (English)"]) {
 			return [self searchTVSeries:aSeriesName language:@"USA (English)" seasonNum:aSeasonNum episodeNum:aEpisodeNum];
 		}
 		if (([results count] == 0) && aSeasonNum) {
