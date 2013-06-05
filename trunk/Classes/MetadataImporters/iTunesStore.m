@@ -24,7 +24,7 @@
 	for (NSDictionary *store in iTunesStores) {
 		[results addObject:[NSString stringWithFormat:@"%@ (%@)", [store valueForKey:@"country"], [store valueForKey:@"language"]]];
 	}
-	return results;
+	return [results autorelease];
 }
 
 + (NSDictionary *) getStoreFor:(NSString *)aLanguageString {
@@ -210,7 +210,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 					[r addObject:[sub stringValue]];
 				}
 				[subXML release];
-				return r;
+				return [r autorelease];
 			}
 		}
 	}

@@ -304,7 +304,6 @@
         [metadata setArtwork:[self loadArtwork:[metadata.artworkFullsizeURLs lastObject]]];
     }
 
-    [currentSearcher release];
     return metadata;
 }
 

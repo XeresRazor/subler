@@ -915,6 +915,7 @@ static const genreType_t genreType_strings[] = {
                 NSString *ratingString = [[NSString alloc] initWithBytes:data->value length: data->valueSize encoding:NSUTF8StringEncoding];
                 NSString *splitElements  = @"\\|";
                 NSArray *ratingItems = [ratingString componentsSeparatedByRegex:splitElements];
+                [ratingString release];
 				ratingiTunesCode = [[NSString stringWithFormat:@"%@|%@|%@|",[ratingItems objectAtIndex:0], [ratingItems objectAtIndex:1], [ratingItems objectAtIndex:2]] retain];
 				[tagsDict setObject:[NSNumber numberWithUnsignedInteger:[[SBRatings defaultManager] ratingIndexForiTunesCode:ratingiTunesCode]] forKey:@"Rating"];
                 if ([ratingItems count] >= 4)
@@ -1475,6 +1476,7 @@ static const genreType_t genreType_strings[] = {
     [artworkURL release];
     [artworkThumbURLs release];
     [artworkFullsizeURLs release];
+    [artworkProviderNames release];
 
     [tagsDict release];
     [super dealloc];

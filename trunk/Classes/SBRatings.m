@@ -23,7 +23,7 @@
 }
 
 - (id) init {
-	if (self) {
+	if (self = [super init]) {
 		NSString* ratingsJSON = [[NSBundle mainBundle] pathForResource:@"Ratings" ofType:@"json"];
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		ratingsDictionary = [[jsonDecoder objectWithData:[NSData dataWithContentsOfFile:ratingsJSON]] retain];
@@ -31,7 +31,7 @@
 		ratings = [[NSMutableArray alloc] init];
 		iTunesCodes = [[NSMutableArray alloc] init];
 		// if a specific country is picked, include the USA ratings at the end
-		NSDictionary *usaRatings;
+		NSDictionary *usaRatings = nil;
 		for (NSDictionary *countryRatings in ratingsDictionary) {
 			NSString *countryName = [countryRatings valueForKey:@"country"];
 			if ([countryName isEqualToString:@"USA"]) {
@@ -49,10 +49,12 @@
 			}
 		}
 		if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"SBRatingsCountry"] isEqualToString:@"All countries"] && ![[[NSUserDefaults standardUserDefaults] valueForKey:@"SBRatingsCountry"] isEqualToString:@"USA"]) {
-			for (NSDictionary *rating in [usaRatings valueForKey:@"ratings"]) {
-				[ratings addObject:[NSString stringWithFormat:@"%@ %@: %@", @"USA", [rating valueForKey:@"media"], [rating valueForKey:@"description"]]];
-				[iTunesCodes addObject:[NSString stringWithFormat:@"%@|%@|%@|", [rating valueForKey:@"prefix"], [rating valueForKey:@"itunes-code"], [rating valueForKey:@"itunes-value"]]];
-			}
+            if (usaRatings) {
+                for (NSDictionary *rating in [usaRatings valueForKey:@"ratings"]) {
+                    [ratings addObject:[NSString stringWithFormat:@"%@ %@: %@", @"USA", [rating valueForKey:@"media"], [rating valueForKey:@"description"]]];
+                    [iTunesCodes addObject:[NSString stringWithFormat:@"%@|%@|%@|", [rating valueForKey:@"prefix"], [rating valueForKey:@"itunes-code"], [rating valueForKey:@"itunes-value"]]];
+                }
+            }
 		}
 	}
 	return self;
@@ -68,7 +70,7 @@
 			[countries addObject:countryName];
 		}
 	}
-	return countries;
+	return [countries autorelease];
 }
 
 - (void)updateRatingsCountry {
