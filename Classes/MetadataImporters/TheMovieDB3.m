@@ -55,7 +55,7 @@
 	if (!aArray || ([aArray count] == 0)) {
 		return nil;
 	}
-	NSMutableArray *r = [[NSMutableArray alloc] initWithCapacity:[aArray count]];
+	NSMutableArray *r = [NSMutableArray arrayWithCapacity:[aArray count]];
 	for (NSDictionary *d in aArray) {
 		if ([d valueForKey:aKey]) {
 			[r addObject:[d valueForKey:aKey]];
@@ -68,7 +68,7 @@
 	if (!aArray || ([aArray count] == 0)) {
 		return nil;
 	}
-	NSMutableArray *r = [[NSMutableArray alloc] init];
+	NSMutableArray *r = [NSMutableArray array];
 	for (NSDictionary *d in aArray) {
 		if ([d valueForKey:aKey]) {
 			if ([d valueForKey:aWithKey] && [[d valueForKey:aWithKey] isEqualToString:aEqualTo]) {
@@ -134,7 +134,7 @@
 	[artworkThumbURLs release];
 	[artworkFullsizeURLs release];
 	[artworkProviderNames release];
-    return metadata;
+    return [metadata autorelease];
 }
 
 + (NSArray *) metadataForResults:(NSDictionary *)dict {
@@ -143,7 +143,6 @@
 	for (NSDictionary *r in resultsArray) {
         MP42Metadata *metadata = [TheMovieDB3 metadataForResult:r];
         [returnArray addObject:metadata];
-        [metadata release];		
 	}
     return [returnArray autorelease];
 }

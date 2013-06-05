@@ -261,12 +261,12 @@
     if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"Movie"]) {
 		[progressText setStringValue:[NSString stringWithFormat:@"Searching %@ for movie information…", [[movieMetadataProvider selectedItem] title]]];
 		[progressText setHidden:NO];
-		currentSearcher = [MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]];
+		currentSearcher = [[MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]] retain];
 		[currentSearcher searchMovie:[movieName stringValue] language:[movieLanguage titleOfSelectedItem] callback:self];
     } else if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"TV Episode"]) {
 		[progressText setStringValue:[NSString stringWithFormat:@"Searching %@ for episode information…", [[tvMetadataProvider selectedItem] title]]];
 		[progressText setHidden:NO];
-		currentSearcher = [MetadataImporter importerForProvider:[[tvMetadataProvider selectedItem] title]];
+		currentSearcher = [[MetadataImporter importerForProvider:[[tvMetadataProvider selectedItem] title]] retain];
 		[currentSearcher searchTVSeries:[tvSeriesName stringValue] language:[tvLanguage titleOfSelectedItem] seasonNum:[tvSeasonNum stringValue] episodeNum:[tvEpisodeNum stringValue] callback:self];
     }
 }
@@ -301,7 +301,7 @@
         [progress setHidden:NO];
         [progressText setStringValue:@"Downloading additional movie metadata…"];
         [progressText setHidden:NO];
-		currentSearcher = [MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]];
+		currentSearcher = [[MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]] retain];
 		[currentSearcher loadMovieMetadata:selectedResult language:[[movieLanguage selectedItem] title] callback:self];
     } else if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"TV Episode"]) {
         [self loadAdditionalMetadataDone:selectedResult];
@@ -496,7 +496,7 @@
             [tvSeriesName reloadData];
             [currentSearcher cancel];
             [currentSearcher release];
-            currentSearcher = [MetadataImporter defaultTVProvider];
+            currentSearcher = [[MetadataImporter defaultTVProvider] retain];
 			[currentSearcher searchTVSeries:[tvSeriesName stringValue] language:[[tvLanguage selectedItem] title] callback:self];
         } else {
             tvSeriesNameSearchArray = nil;

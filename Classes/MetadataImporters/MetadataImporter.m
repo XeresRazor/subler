@@ -57,11 +57,11 @@
 			NSTimeInterval oldness = [date timeIntervalSinceNow];
 			// if less than 2 hours old
 			if (([[[[url absoluteString] pathExtension] lowercaseString] isEqualToString:@"jpg"]) || (oldness > -1000 * 60 * 60 * 2)) {
-				return [[NSData alloc] initWithContentsOfFile:filename];
+				return [NSData dataWithContentsOfFile:filename];
 			}
 		}
 	}
-	NSData *r = [[NSData alloc] initWithContentsOfURL:url];
+	NSData *r = [NSData dataWithContentsOfURL:url];
 	[r writeToFile:filename atomically:NO];
 	return r;
 }
@@ -70,11 +70,11 @@
 
 + (MetadataImporter *) forProvider:(NSString *)aProvider {
 	if ([aProvider isEqualToString:@"iTunes Store"]) {
-		return [[iTunesStore alloc] init];
+		return [[[iTunesStore alloc] init] autorelease];
 	} else if ([aProvider isEqualToString:@"TheMovieDB"]) {
-		return [[TheMovieDB3 alloc] init];
+		return [[[TheMovieDB3 alloc] init] autorelease];
 	} else if ([aProvider isEqualToString:@"TheTVDB"]) {
-		return [[TheTVDB alloc] init];
+		return [[[TheTVDB alloc] init] autorelease];
 	}
 	return nil;
 }
@@ -102,15 +102,14 @@
 + (NSArray *) languagesForProvider:(NSString *)aProvider {
 	MetadataImporter *m = [MetadataImporter forProvider:aProvider];
 	NSArray *a = [m languages];
-	[m release];
 	return a;
 }
 
 + (MetadataImporter *) importerForProvider:(NSString *)aProviderName {
 	if ([aProviderName isEqualToString:@"iTunes Store"]) {
-		return [[iTunesStore alloc] init];
+		return [[[iTunesStore alloc] init] autorelease];
 	} else if ([aProviderName isEqualToString:@"TheMovieDB"]) {
-		return [[TheMovieDB3 alloc] init];
+		return [[[TheMovieDB3 alloc] init] autorelease];
 	}
 	return nil;
 }
