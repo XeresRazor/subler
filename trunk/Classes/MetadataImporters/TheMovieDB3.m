@@ -131,7 +131,7 @@
 			NSString *imageBaseUrl = [[config valueForKey:@"images"] valueForKey:@"secure_base_url"];
 			NSString *posterThumbnailSize = [[[config valueForKey:@"images"] valueForKey:@"poster_sizes"] objectAtIndex:0];
 			NSString *backdropThumbnailSize = [[[config valueForKey:@"images"] valueForKey:@"backdrop_sizes"] objectAtIndex:0];
-			if ([r valueForKey:@"poster_path"] && ([r valueForKey:@"backdrop_path"] != [NSNull null])) {
+			if ([r valueForKey:@"poster_path"] && ([r valueForKey:@"poster_path"] != [NSNull null])) {
 				[artworkThumbURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, posterThumbnailSize, [r valueForKey:@"poster_path"]]]];
 				[artworkFullsizeURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, @"original", [r valueForKey:@"poster_path"]]]];
 				[artworkProviderNames addObject:@"TheMovieDB|poster"];
