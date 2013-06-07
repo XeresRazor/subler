@@ -13,7 +13,6 @@
 #import "RegexKitLite.h"
 #import "SBLanguages.h"
 #import "MetadataImporter.h"
-#import "TheTVDB.h"
 
 @implementation MetadataSearchController
 
@@ -304,7 +303,12 @@
 		currentSearcher = [[MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]] retain];
 		[currentSearcher loadMovieMetadata:selectedResult language:[[movieLanguage selectedItem] title] callback:self];
     } else if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"TV Episode"]) {
-        [self loadAdditionalMetadataDone:selectedResult];
+        [progress startAnimation:self];
+        [progress setHidden:NO];
+        [progressText setStringValue:@"Downloading additional TV metadata…"];
+        [progressText setHidden:NO];
+		currentSearcher = [MetadataImporter importerForProvider:[[tvMetadataProvider selectedItem] title]];
+		[currentSearcher loadTVMetadata:selectedResult language:[[tvLanguage selectedItem] title] callback:self];
     }
 }
 
@@ -443,7 +447,6 @@
 }
 
 + (void) deleteCachedMetadata {
-    [TheTVDB deleteCachedMetadata];
 	NSString *path = nil;
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
 	if ([paths count]) {

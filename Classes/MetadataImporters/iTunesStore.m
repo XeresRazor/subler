@@ -165,8 +165,11 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 
 #pragma mark Load additional metadata
 
-- (MP42Metadata*) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage
-{
+- (MP42Metadata *) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage {
+	return aMetadata;
+}
+
+- (MP42Metadata *) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage {
 	NSData *xmlData = [MetadataImporter downloadDataOrGetFromCache:[NSURL URLWithString:[[aMetadata tagsDict] valueForKey:@"iTunes URL"]]];
 	if (xmlData) {
 		NSXMLDocument *xml = [[NSXMLDocument alloc] initWithData:xmlData options:NSXMLDocumentTidyHTML error:NULL];

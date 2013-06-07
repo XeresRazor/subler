@@ -297,7 +297,7 @@
 		NSString *language = [MetadataImporter defaultTVLanguage];
 		NSArray *results = [currentSearcher searchTVSeries:[parsed valueForKey:@"seriesName"] language:language seasonNum:[parsed valueForKey:@"seasonNum"] episodeNum:[parsed valueForKey:@"episodeNum"]];
         if ([results count])
-            metadata = [results objectAtIndex:0];
+			metadata = [currentSearcher loadTVMetadata:[results objectAtIndex:0] language:language];
     }
 
     if (metadata.artworkThumbURLs && [metadata.artworkThumbURLs count]) {

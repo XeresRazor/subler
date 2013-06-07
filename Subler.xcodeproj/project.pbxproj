@@ -21,8 +21,6 @@
 		A911064B0F323D450013D1E0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A911064A0F323D450013D1E0 /* AppDelegate.m */; };
 		A916F42F1678D8DA003920D6 /* libtesseract.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A916F42D1678D89F003920D6 /* libtesseract.a */; };
 		A916F4311678DD07003920D6 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A916F4301678DD07003920D6 /* libjpeg.a */; };
-		A91D3FA015B15D2100627DD0 /* tvdb_cache.py in Resources */ = {isa = PBXBuildFile; fileRef = A91D3F9F15B15D2100627DD0 /* tvdb_cache.py */; };
-		A91D3FA115B15D3400627DD0 /* tvdb_cache.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91D3F9F15B15D2100627DD0 /* tvdb_cache.py */; };
 		A91E7DEA0F8A2E6800AF387E /* SoundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A91E7DE90F8A2E6800AF387E /* SoundViewController.m */; };
 		A91E7DEE0F8A2F3D00AF387E /* SoundView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A91E7DEC0F8A2F3D00AF387E /* SoundView.xib */; };
 		A91F622D0FB0A56F00B96B33 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A91F622C0FB0A56F00B96B33 /* libicucore.dylib */; };
@@ -116,16 +114,12 @@
 		CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CD03087817576AE50093A0BE /* MetadataImporter.m */; };
 		CD08BA9612F62829006BA549 /* tmdb-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CD08BA9512F62829006BA549 /* tmdb-logo.png */; };
 		CD16BC4712F6BC7F00AF5453 /* tvdb-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CD16BC4612F6BC7F00AF5453 /* tvdb-logo.png */; };
+		CD3F2A881761A143000D4C73 /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CD3F2A871761A143000D4C73 /* XMLReader.m */; };
 		CD4E6E5D12F744210095C84F /* ArtworkSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD4E6E5B12F744210095C84F /* ArtworkSelector.xib */; };
 		CD56963212FAAD680029FADB /* ArtworkSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56963112FAAD680029FADB /* ArtworkSelector.m */; };
 		CD71FEA312F1B5AF00F0A98D /* MetadataSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD71FEA212F1B5AF00F0A98D /* MetadataSearchController.m */; };
 		CD71FEA612F1B62600F0A98D /* MetadataSearch.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD71FEA412F1B62600F0A98D /* MetadataSearch.xib */; };
 		CD71FF1D12F1C4A900F0A98D /* TheTVDB.m in Sources */ = {isa = PBXBuildFile; fileRef = CD71FF1C12F1C4A900F0A98D /* TheTVDB.m */; };
-		CD89360E12F34F9D0085C2B5 /* setup.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD89360212F34F500085C2B5 /* setup.py */; };
-		CD89360F12F34F9D0085C2B5 /* tvdb_api.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD89360312F34F500085C2B5 /* tvdb_api.py */; };
-		CD89361112F34F9D0085C2B5 /* tvdb_exceptions.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD89360512F34F500085C2B5 /* tvdb_exceptions.py */; };
-		CD89361312F34F9D0085C2B5 /* tvdb_main.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD89360712F34F500085C2B5 /* tvdb_main.py */; };
-		CD89361412F34F9D0085C2B5 /* tvdb_ui.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD89360812F34F500085C2B5 /* tvdb_ui.py */; };
 		CDC06FCE1747494D003C1D0A /* iTunesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC06FCD1747494D003C1D0A /* iTunesStore.m */; };
 		CDC06FD117475181003C1D0A /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC06FD017475181003C1D0A /* JSONKit.m */; };
 		CDDC1954175AFD870005CD98 /* Ratings.json in Resources */ = {isa = PBXBuildFile; fileRef = CDDC1953175AFD870005CD98 /* Ratings.json */; };
@@ -191,12 +185,6 @@
 			dstPath = tvdb_py;
 			dstSubfolderSpec = 7;
 			files = (
-				CD89360E12F34F9D0085C2B5 /* setup.py in CopyFiles */,
-				A91D3FA115B15D3400627DD0 /* tvdb_cache.py in CopyFiles */,
-				CD89360F12F34F9D0085C2B5 /* tvdb_api.py in CopyFiles */,
-				CD89361112F34F9D0085C2B5 /* tvdb_exceptions.py in CopyFiles */,
-				CD89361312F34F9D0085C2B5 /* tvdb_main.py in CopyFiles */,
-				CD89361412F34F9D0085C2B5 /* tvdb_ui.py in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,7 +216,6 @@
 		A911064A0F323D450013D1E0 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		A916F42D1678D89F003920D6 /* libtesseract.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtesseract.a; path = Tesseract/lib/libtesseract.a; sourceTree = "<group>"; };
 		A916F4301678DD07003920D6 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = Tesseract/lib/libjpeg.a; sourceTree = "<group>"; };
-		A91D3F9F15B15D2100627DD0 /* tvdb_cache.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tvdb_cache.py; sourceTree = "<group>"; };
 		A91E7DE80F8A2E6800AF387E /* SoundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundViewController.h; path = PropertyView/SoundViewController.h; sourceTree = "<group>"; };
 		A91E7DE90F8A2E6800AF387E /* SoundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SoundViewController.m; path = PropertyView/SoundViewController.m; sourceTree = "<group>"; };
 		A91E7DED0F8A2F3D00AF387E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/SoundView.xib; sourceTree = "<group>"; };
@@ -378,6 +365,8 @@
 		CD03087817576AE50093A0BE /* MetadataImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataImporter.m; path = Classes/MetadataImporters/MetadataImporter.m; sourceTree = "<group>"; };
 		CD08BA9512F62829006BA549 /* tmdb-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tmdb-logo.png"; path = "images/tmdb-logo.png"; sourceTree = "<group>"; };
 		CD16BC4612F6BC7F00AF5453 /* tvdb-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tvdb-logo.png"; path = "images/tvdb-logo.png"; sourceTree = "<group>"; };
+		CD3F2A861761A143000D4C73 /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMLReader.h; path = Others/XMLReader.h; sourceTree = "<group>"; };
+		CD3F2A871761A143000D4C73 /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMLReader.m; path = Others/XMLReader.m; sourceTree = "<group>"; };
 		CD4A86AA1234AFA10054970A /* Simple.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Simple.pm; sourceTree = "<group>"; };
 		CD4A86AC1234AFA10054970A /* Roman.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Roman.pm; sourceTree = "<group>"; };
 		CD4A86AF1234AFA10054970A /* Filename.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Filename.pm; sourceTree = "<group>"; };
@@ -391,11 +380,6 @@
 		CD71FEA512F1B62600F0A98D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MetadataSearch.xib; sourceTree = "<group>"; };
 		CD71FF1B12F1C4A900F0A98D /* TheTVDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TheTVDB.h; path = Classes/MetadataImporters/TheTVDB.h; sourceTree = "<group>"; };
 		CD71FF1C12F1C4A900F0A98D /* TheTVDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TheTVDB.m; path = Classes/MetadataImporters/TheTVDB.m; sourceTree = "<group>"; };
-		CD89360212F34F500085C2B5 /* setup.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = setup.py; sourceTree = "<group>"; };
-		CD89360312F34F500085C2B5 /* tvdb_api.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tvdb_api.py; sourceTree = "<group>"; };
-		CD89360512F34F500085C2B5 /* tvdb_exceptions.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tvdb_exceptions.py; sourceTree = "<group>"; };
-		CD89360712F34F500085C2B5 /* tvdb_main.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tvdb_main.py; sourceTree = "<group>"; };
-		CD89360812F34F500085C2B5 /* tvdb_ui.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tvdb_ui.py; sourceTree = "<group>"; };
 		CDC06FCC1747494D003C1D0A /* iTunesStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunesStore.h; path = Classes/MetadataImporters/iTunesStore.h; sourceTree = "<group>"; };
 		CDC06FCD1747494D003C1D0A /* iTunesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iTunesStore.m; path = Classes/MetadataImporters/iTunesStore.m; sourceTree = "<group>"; };
 		CDC06FCF17475181003C1D0A /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
@@ -534,6 +518,8 @@
 			children = (
 				CDC06FCF17475181003C1D0A /* JSONKit.h */,
 				CDC06FD017475181003C1D0A /* JSONKit.m */,
+				CD3F2A861761A143000D4C73 /* XMLReader.h */,
+				CD3F2A871761A143000D4C73 /* XMLReader.m */,
 				A9B3411D1679D2E000E6EE0C /* QTKitDecrap.h */,
 				A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */,
 				A98F421815D9343000113CDE /* SBLanguages.h */,
@@ -580,7 +566,6 @@
 				A92A4FB712B0F2F300751FA5 /* prefs-audio.png */,
 				A941B4D6134A52B600E22F45 /* tessdata */,
 				CD4A86A71234AFA10054970A /* ParseFilename */,
-				CD8935FF12F34F500085C2B5 /* tvdb_py */,
 				CDE8E451174CBBD4009410B5 /* iTunesStores.json */,
 				CDDC1953175AFD870005CD98 /* Ratings.json */,
 			);
@@ -804,20 +789,6 @@
 			name = MetadataImporters;
 			sourceTree = "<group>";
 		};
-		CD8935FF12F34F500085C2B5 /* tvdb_py */ = {
-			isa = PBXGroup;
-			children = (
-				CD89360212F34F500085C2B5 /* setup.py */,
-				A91D3F9F15B15D2100627DD0 /* tvdb_cache.py */,
-				CD89360312F34F500085C2B5 /* tvdb_api.py */,
-				CD89360512F34F500085C2B5 /* tvdb_exceptions.py */,
-				CD89360712F34F500085C2B5 /* tvdb_main.py */,
-				CD89360812F34F500085C2B5 /* tvdb_ui.py */,
-			);
-			name = tvdb_py;
-			path = Utilities/tvdb_py;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -937,7 +908,6 @@
 				A9C9E34213FBC1EB00CA3B4E /* EncodeCanceled.png in Resources */,
 				A9C9E34313FBC1EB00CA3B4E /* EncodeComplete.png in Resources */,
 				A9C9E34413FBC1EB00CA3B4E /* EncodeWorking.png in Resources */,
-				A91D3FA015B15D2100627DD0 /* tvdb_cache.py in Resources */,
 				A96371B8164695070083BB80 /* ToolbarRemoveTemplate@2x.png in Resources */,
 				CDE8E452174CBBD4009410B5 /* iTunesStores.json in Resources */,
 				CDDC1954175AFD870005CD98 /* Ratings.json in Resources */,
@@ -1029,6 +999,7 @@
 				CD03087417576A550093A0BE /* TheMovieDB3.m in Sources */,
 				CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */,
 				CDDC1957175B05C50005CD98 /* SBRatings.m in Sources */,
+				CD3F2A881761A143000D4C73 /* XMLReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1172,7 +1143,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Subler.entitlements;
-				CODE_SIGN_IDENTITY = "Subler Sandbox";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1205,7 +1176,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Subler.entitlements;
-				CODE_SIGN_IDENTITY = "Subler Sandbox";
+				CODE_SIGN_IDENTITY = "";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1240,7 +1211,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Subler Sandbox";
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1276,7 +1247,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Subler Sandbox";
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
