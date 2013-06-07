@@ -111,7 +111,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 
 - (id)initWithError:(NSError **)error {
 	
-    if (self == [super init]) {
+    if (self = [super init]) {
 	
         errorPointer = error;
     }
