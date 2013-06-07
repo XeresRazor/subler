@@ -13,6 +13,10 @@
 		A90C277110AF32AF00991030 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A90C277010AF32AF00991030 /* libz.dylib */; };
 		A91CBA4014039F8F00B53F5A /* MP42AVFImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A91CBA3F14039F8F00B53F5A /* MP42AVFImporter.m */; };
 		A91F634A0FB0C70100B96B33 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A91F63490FB0C70100B96B33 /* libicucore.dylib */; };
+		A92D8CC31761EAAD0004E0C5 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D8CC21761EAAD0004E0C5 /* JSONKit.m */; };
+		A92D8CCE1761EAEC0004E0C5 /* SBRatings.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D8CCD1761EAEC0004E0C5 /* SBRatings.m */; };
+		A92D8CD31761EAFF0004E0C5 /* MP42VobSubImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D8CD01761EAFF0004E0C5 /* MP42VobSubImporter.m */; };
+		A92D8CD41761EAFF0004E0C5 /* MP42XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D8CD21761EAFF0004E0C5 /* MP42XMLReader.m */; };
 		A942AF651679197000780565 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A942AF631679197000780565 /* libjpeg.a */; };
 		A942AF661679197000780565 /* libtesseract.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A942AF641679197000780565 /* libtesseract.a */; };
 		A94871D20F7914D2008DBC94 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94871D10F7914D2008DBC94 /* QTKit.framework */; };
@@ -117,6 +121,14 @@
 		A91CBA3E14039F8F00B53F5A /* MP42AVFImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AVFImporter.h; path = ../MP42AVFImporter.h; sourceTree = "<group>"; };
 		A91CBA3F14039F8F00B53F5A /* MP42AVFImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42AVFImporter.m; path = ../MP42AVFImporter.m; sourceTree = "<group>"; };
 		A91F63490FB0C70100B96B33 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
+		A92D8CC11761EAAD0004E0C5 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = ../JSONKit.h; sourceTree = "<group>"; };
+		A92D8CC21761EAAD0004E0C5 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = ../JSONKit.m; sourceTree = "<group>"; };
+		A92D8CCC1761EAEC0004E0C5 /* SBRatings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBRatings.h; path = ../Classes/SBRatings.h; sourceTree = "<group>"; };
+		A92D8CCD1761EAEC0004E0C5 /* SBRatings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBRatings.m; path = ../Classes/SBRatings.m; sourceTree = "<group>"; };
+		A92D8CCF1761EAFF0004E0C5 /* MP42VobSubImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42VobSubImporter.h; path = ../MP42VobSubImporter.h; sourceTree = "<group>"; };
+		A92D8CD01761EAFF0004E0C5 /* MP42VobSubImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42VobSubImporter.m; path = ../MP42VobSubImporter.m; sourceTree = "<group>"; };
+		A92D8CD11761EAFF0004E0C5 /* MP42XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42XMLReader.h; path = ../MP42XMLReader.h; sourceTree = "<group>"; };
+		A92D8CD21761EAFF0004E0C5 /* MP42XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42XMLReader.m; path = ../MP42XMLReader.m; sourceTree = "<group>"; };
 		A942AF631679197000780565 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = ../Tesseract/lib/libjpeg.a; sourceTree = "<group>"; };
 		A942AF641679197000780565 /* libtesseract.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtesseract.a; path = ../Tesseract/lib/libtesseract.a; sourceTree = "<group>"; };
 		A94871D10F7914D2008DBC94 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
@@ -319,6 +331,10 @@
 				A9AEF82C167C7D6500FDDBB3 /* QTKitDecrap.m */,
 				A9BAABD115D930AD00A59EAB /* SBLanguages.h */,
 				A9BAABD215D930AD00A59EAB /* SBLanguages.m */,
+				A92D8CCC1761EAEC0004E0C5 /* SBRatings.h */,
+				A92D8CCD1761EAEC0004E0C5 /* SBRatings.m */,
+				A92D8CC11761EAAD0004E0C5 /* JSONKit.h */,
+				A92D8CC21761EAAD0004E0C5 /* JSONKit.m */,
 				CBE9465612FC53FF007E656A /* UniversalDetector.h */,
 				CBE9463C12FC535B007E656A /* RegexKitLite.h */,
 				CBE9463A12FC5350007E656A /* RegexKitLite.m */,
@@ -386,6 +402,10 @@
 				A9B46AE612B79EC60040517A /* MP42Sample.m */,
 				A9B46AE712B79EC60040517A /* MP42SrtImporter.h */,
 				A9B46AE812B79EC60040517A /* MP42SrtImporter.m */,
+				A92D8CCF1761EAFF0004E0C5 /* MP42VobSubImporter.h */,
+				A92D8CD01761EAFF0004E0C5 /* MP42VobSubImporter.m */,
+				A92D8CD11761EAFF0004E0C5 /* MP42XMLReader.h */,
+				A92D8CD21761EAFF0004E0C5 /* MP42XMLReader.m */,
 				A9C0604F16831C8D00FE3D98 /* SBBitmapSubConverter.h */,
 				A9C0605016831C8D00FE3D98 /* SBBitmapSubConverter.m */,
 				A991318613F0044B00DCAA12 /* SBOCRWrapper.h */,
@@ -529,6 +549,10 @@
 				A9A9551513F11365002CDC85 /* MP42QTImporter.m in Sources */,
 				A91CBA4014039F8F00B53F5A /* MP42AVFImporter.m in Sources */,
 				A9AEF82D167C7D6500FDDBB3 /* QTKitDecrap.m in Sources */,
+				A92D8CC31761EAAD0004E0C5 /* JSONKit.m in Sources */,
+				A92D8CCE1761EAEC0004E0C5 /* SBRatings.m in Sources */,
+				A92D8CD31761EAFF0004E0C5 /* MP42VobSubImporter.m in Sources */,
+				A92D8CD41761EAFF0004E0C5 /* MP42XMLReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

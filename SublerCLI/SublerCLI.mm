@@ -209,10 +209,11 @@ int main (int argc, const char * argv[]) {
 
             for (NSString* key in availableMetadata) {
                 NSString* tag = [tagsDict valueForKey:key];
-                if ([tag isKindOfClass:[NSString class]])
-                    printf("%s: %s\n", [key UTF8String], [tag UTF8String]);
-                else if ([key isEqualToString:@"Rating"]){
-                    printf("%s: %s\n", [key UTF8String], [[[mp4File metadata] ratingFromIndex:[tag integerValue]] UTF8String]);
+                if (tag) {
+                    if ([tag isKindOfClass:[NSString class]])
+                        printf("%s: %s\n", [key UTF8String], [tag UTF8String]);
+                    if ([tag isKindOfClass:[NSNumber class]])
+                        printf("%s: %d\n", [key UTF8String], [tag integerValue]);
                 }
             }
 
@@ -275,6 +276,8 @@ int main (int argc, const char * argv[]) {
             if ([[mp4File metadata] mediaKind]) {
                 mp4File.metadata.mediaKind = 0;
             }
+            
+            modified = YES;
         }
 
         if (removeExisting) {
