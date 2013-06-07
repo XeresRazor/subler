@@ -22,7 +22,18 @@
 }
 
 - (NSArray *) searchTVSeries:(NSString *)aSeriesName language:(NSString *)aLanguage {
-	return nil;
+	NSURL *url;
+	// search for series
+	url = [NSURL URLWithString:[NSString stringWithFormat:@"http://thetvdb.com/api/GetSeries.php?seriesname=%@", [MetadataImporter urlEncoded:aSeriesName]]];
+	NSData *seriesXML = [MetadataImporter downloadDataOrGetFromCache:url];
+	NSDictionary *series = [XMLReader dictionaryForXMLData:seriesXML error:NULL];
+	if (!series) return nil;
+	NSArray *seriesArray = [series retrieveArrayForPath:@"Data.Series"];
+	NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:[seriesArray count]];
+	for (NSDictionary *s in seriesArray) {
+		[results addObject:[s retrieveForPath:@"SeriesName.text"]];
+	}
+	return [results autorelease];
 }
 
 - (NSArray *) searchTVSeries:(NSString *)aSeriesName language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum {
