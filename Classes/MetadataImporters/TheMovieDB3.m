@@ -12,6 +12,7 @@
 #import "JSONKit.h"
 #import "iTunesStore.h"
 #import "SBLanguages.h"
+#import "SBRatings.h"
 
 #define API_KEY @"b0073bafb08b4f68df101eb2325f27dc"
 
@@ -36,12 +37,12 @@
 - (MP42Metadata*) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage {
 	NSString *lang = [SBLanguages iso6391CodeFor:aLanguage];
 	NSNumber *theMovieDBID = [[aMetadata tagsDict] valueForKey:@"TheMovieDB ID"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.themoviedb.org/3/movie/%@?api_key=%@&language=%@&append_to_response=casts", theMovieDBID, API_KEY, lang]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.themoviedb.org/3/movie/%@?api_key=%@&language=%@&append_to_response=casts,releases", theMovieDBID, API_KEY, lang]];
 	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
-		MP42Metadata *r = [TheMovieDB3 metadataForResult:d];
+		MP42Metadata *r = [TheMovieDB3 metadataForResult:d language:lang];
 		if (r) {
 			[aMetadata mergeMetadata:r];
 		}
@@ -79,22 +80,36 @@
 	return [r componentsJoinedByString:@", "];
 }
 
-+ (MP42Metadata *) metadataForResult:(NSDictionary *)r {
++ (MP42Metadata *) metadataForResult:(NSDictionary *)r language:(NSString *)aLanguage {
 	MP42Metadata *metadata = [[MP42Metadata alloc] init];
 	metadata.mediaKind = 9; // movie
 	[metadata setTag:[r valueForKey:@"id"] forKey:@"TheMovieDB ID"];
 	[metadata setTag:[r valueForKey:@"title"] forKey:@"Name"];
 	[metadata setTag:[r valueForKey:@"release_date"] forKey:@"Release Date"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[r valueForKey:@"genres"] forKey:@"name"] forKey:@"Genre"];
-	[metadata setTag:[r valueForKey:@"overview"] forKey:@"Description"];
+	[metadata setTag:[r valueForKey:@"overview"] forKey:@"Long Description"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[r valueForKey:@"production_companies"] forKey:@"name"] forKey:@"Studio"];
 	NSDictionary *casts = [r valueForKey:@"casts"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[casts valueForKey:@"cast"] forKey:@"name"] forKey:@"Cast"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[casts valueForKey:@"crew"] forKey:@"name" withKey:@"job" equalTo:@"Director"] forKey:@"Director"];
+    [metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[casts valueForKey:@"crew"] forKey:@"name" withKey:@"job" equalTo:@"Director"] forKey:@"Artist"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[casts valueForKey:@"crew"] forKey:@"name" withKey:@"job" equalTo:@"Producer"] forKey:@"Producers"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[casts valueForKey:@"crew"] forKey:@"name" withKey:@"job" equalTo:@"Executive Producer"] forKey:@"Executive Producer"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[casts valueForKey:@"crew"] forKey:@"name" withKey:@"department" equalTo:@"Writing"] forKey:@"Screenwriters"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[casts valueForKey:@"crew"] forKey:@"name" withKey:@"job" equalTo:@"Original Music Composer"] forKey:@"Composer"];
+    
+    if (aLanguage) {
+        NSArray *countries = [[r valueForKey:@"releases"] valueForKey:@"countries"];
+        
+        for (NSDictionary *d in countries) {
+            if ([[d valueForKey:@"iso_3166_1"] isEqualToString:@"US"]) {
+                [metadata setTag:[NSNumber numberWithUnsignedInteger:
+                                  [[SBRatings defaultManager] ratingIndexForiTunesCountry:@"USA" media:@"movie" ratingString:[d valueForKey:@"certification"]]] forKey:@"Rating"]   ;
+
+            }
+        }
+    }
+    
 	// artwork
 	NSMutableArray *artworkThumbURLs = [[NSMutableArray alloc] initWithCapacity:2];
 	NSMutableArray *artworkFullsizeURLs = [[NSMutableArray alloc] initWithCapacity:1];
@@ -141,7 +156,7 @@
 	NSArray *resultsArray = [dict valueForKey:@"results"];
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:[resultsArray count]];
 	for (NSDictionary *r in resultsArray) {
-        MP42Metadata *metadata = [TheMovieDB3 metadataForResult:r];
+        MP42Metadata *metadata = [TheMovieDB3 metadataForResult:r language:nil];
         [returnArray addObject:metadata];
 	}
     return [returnArray autorelease];
