@@ -31,6 +31,7 @@
 #pragma mark Asynchronous searching
 - (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback;
 - (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum callback:(MetadataSearchController *)aCallback;
+- (void) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback;
 - (void) searchMovie:(NSString *)aMovieTitle language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback;
 - (void) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback;
 - (void) cancel;
@@ -40,6 +41,7 @@
 - (NSArray *) searchTVSeries:(NSString *)aSeriesName language:(NSString *)aLanguage;
 - (NSArray *) searchTVSeries:(NSString *)aSeriesName language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum;
 - (NSArray *) searchMovie:(NSString *)aMovieTitle language:(NSString *)aLanguage;
+- (MP42Metadata*) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage;
 - (MP42Metadata*) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage;
 
 @end
