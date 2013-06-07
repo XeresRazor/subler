@@ -251,7 +251,6 @@
 - (IBAction) searchForResults: (id) sender {
     if (currentSearcher) {
         [currentSearcher cancel];
-        [currentSearcher release];
         currentSearcher = nil;
     }
 
@@ -283,6 +282,7 @@
     [metadataTable reloadData];
     [self tableViewSelectionDidChange:[NSNotification notificationWithName:@"tableViewSelectionDidChange" object:resultsTable]];
     [[self window] makeFirstResponder:resultsTable];
+	currentSearcher = nil;
 }
 
 #pragma mark Load additional metadata
@@ -290,7 +290,6 @@
 - (IBAction) loadAdditionalMetadata:(id) sender {
     if (currentSearcher) {
         [currentSearcher cancel];
-        [currentSearcher release];
         currentSearcher = nil;
     }
 
@@ -318,6 +317,7 @@
     [progress stopAnimation:self];
     selectedResult = metadata;
     [self selectArtwork];
+	currentSearcher = nil;
 }
 
 #pragma mark Select artwork
@@ -416,7 +416,8 @@
 
 - (IBAction) closeWindow: (id) sender
 {
-    [currentSearcher cancel];
+	if (currentSearcher)
+		[currentSearcher cancel];
 
     if ([delegate respondsToSelector:@selector(metadataImportDone:)]) {
         [delegate performSelector:@selector(metadataImportDone:) withObject:nil];
@@ -432,8 +433,8 @@
     [tvSeriesNameSearchArray release];
     [resultsArray release];
 
-    [currentSearcher cancel];
-    [currentSearcher release];
+	if (currentSearcher)
+		[currentSearcher cancel];
 
     [super dealloc];
 }
@@ -498,8 +499,7 @@
             [tvSeriesNameSearchArray addObject:@"searching…"];
             [tvSeriesName reloadData];
             [currentSearcher cancel];
-            [currentSearcher release];
-            currentSearcher = [[MetadataImporter defaultTVProvider] retain];
+            currentSearcher = [MetadataImporter defaultTVProvider];
 			[currentSearcher searchTVSeries:[tvSeriesName stringValue] language:[[tvLanguage selectedItem] title] callback:self];
         } else {
             tvSeriesNameSearchArray = nil;
