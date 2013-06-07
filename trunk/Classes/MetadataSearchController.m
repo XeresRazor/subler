@@ -182,15 +182,15 @@
 }
 
 - (void) metadataProvidersSelectDefaultLanguage {
-	[movieLanguage selectItemWithTitle:[[NSUserDefaults standardUserDefaults] valueForKey:[NSString stringWithFormat:@"SBMetadataPreference|Movie|%@|Langauge", [[movieMetadataProvider selectedItem] title]]]];
-	[tvLanguage selectItemWithTitle:[[NSUserDefaults standardUserDefaults] valueForKey:[NSString stringWithFormat:@"SBMetadataPreference|TV|%@|Langauge", [[tvMetadataProvider selectedItem] title]]]];
+	[movieLanguage selectItemWithTitle:[[NSUserDefaults standardUserDefaults] valueForKey:[NSString stringWithFormat:@"SBMetadataPreference|Movie|%@|Language", [[movieMetadataProvider selectedItem] title]]]];
+	[tvLanguage selectItemWithTitle:[[NSUserDefaults standardUserDefaults] valueForKey:[NSString stringWithFormat:@"SBMetadataPreference|TV|%@|Language", [[tvMetadataProvider selectedItem] title]]]];
 }
 
 - (IBAction) metadataProviderLanguageSelected:(id)sender {
 	if (sender == movieLanguage) {
-		[[NSUserDefaults standardUserDefaults] setValue:[[movieLanguage selectedItem] title] forKey:[NSString stringWithFormat:@"SBMetadataPreference|Movie|%@|Langauge", [[movieMetadataProvider selectedItem] title]]];
+		[[NSUserDefaults standardUserDefaults] setValue:[[movieLanguage selectedItem] title] forKey:[NSString stringWithFormat:@"SBMetadataPreference|Movie|%@|Language", [[movieMetadataProvider selectedItem] title]]];
 	} else if (sender == tvLanguage) {
-		[[NSUserDefaults standardUserDefaults] setValue:[[tvLanguage selectedItem] title] forKey:[NSString stringWithFormat:@"SBMetadataPreference|TV|%@|Langauge", [[tvMetadataProvider selectedItem] title]]];
+		[[NSUserDefaults standardUserDefaults] setValue:[[tvLanguage selectedItem] title] forKey:[NSString stringWithFormat:@"SBMetadataPreference|TV|%@|Language", [[tvMetadataProvider selectedItem] title]]];
 	}
 }
 
