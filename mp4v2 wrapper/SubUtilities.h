@@ -58,7 +58,7 @@ unsigned ParseSubTime(const char *time, unsigned secondScale, BOOL hasSign);
 
 @class MP42SampleBuffer;
 
-MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced);
+MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, u_int16_t top);
 MP42SampleBuffer* copyEmptySubtitleSample(MP4TrackId subtitleTrackId, MP4Duration duration, BOOL forced);
 
 typedef struct {

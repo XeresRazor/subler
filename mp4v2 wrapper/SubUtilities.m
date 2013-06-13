@@ -206,7 +206,7 @@ canOutput:
 
 -(NSString*)description
 {
-	return [NSString stringWithFormat:@"lines left: %d finished inputting: %d",[lines count],finished];
+	return [NSString stringWithFormat:@"lines left: %lu finished inputting: %d",(unsigned long)[lines count],finished];
 }
 @end
 
@@ -1009,10 +1009,32 @@ void createForcedAtom(u_int8_t* buffer) {
     buffer[7] = 'd';
 }
 
-MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced)
+void createTboxAtom(u_int8_t* buffer, u_int16_t top, u_int16_t left, u_int16_t bottom, u_int16_t right) {
+    buffer[0] = 0;
+    buffer[1] = 0;
+    buffer[2] = 0;
+    buffer[3] = 16;
+    buffer[4] = 't';
+    buffer[5] = 'b';
+    buffer[6] = 'o';
+    buffer[7] = 'x';
+    buffer[8] = top >> 8;
+    buffer[9] = top & 0xFF;
+    buffer[10] = left >> 8;
+    buffer[11] = left & 0xFF;
+    buffer[12] = bottom >> 8;
+    buffer[13] = bottom & 0xFF;
+    buffer[14] = right >> 8;
+    buffer[15] = right & 0xFF;
+
+}
+
+#define BUFFER_SIZE 16384
+
+MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, u_int16_t top)
 {
     uint8_t *sampleData = NULL;
-    u_int8_t styleAtom[2048];
+    u_int8_t styleAtom[8192];
     size_t styleSize = 0;
     size_t sampleSize = 0;
 
@@ -1021,20 +1043,27 @@ MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* strin
 
     size_t stringLength = strlen([string UTF8String]);
 
-    u_int8_t buffer[8192];
-    if (stringLength > 2048) {
-        stringLength = 2048;
-    }
-
-    memcpy(buffer+2, [string UTF8String], stringLength);
-    memcpy(buffer+2+stringLength, styleAtom, styleSize);
+    u_int8_t buffer[BUFFER_SIZE];
+    memcpy(buffer + 2, [string UTF8String], stringLength);
+    memcpy(buffer + 2 + stringLength, styleAtom, styleSize);
     sampleSize = 2 + stringLength + styleSize;
-    if (forced) {
+
+    // Add a frcd atom
+    if (forced && (sampleSize < (BUFFER_SIZE - 8))) {
         u_int8_t forcedAtom[8];
         createForcedAtom(forcedAtom);
 
         memcpy(buffer + sampleSize, forcedAtom, 8);
         sampleSize += 8;
+    }
+
+    // Add a tbox atom with offset from top
+    if (verticalPlacement && (sampleSize < (BUFFER_SIZE - 16))) {
+        u_int8_t tboxAtom[16];
+        createTboxAtom(tboxAtom, top, 0, 0, 0);
+
+        memcpy(buffer + sampleSize, tboxAtom, 16);
+        sampleSize += 16;
     }
 
     buffer[0] = (stringLength >> 8) & 0xff;

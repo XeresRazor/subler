@@ -575,10 +575,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
         UInt32 colorPalette[16];
 
         if (palette != NULL) {
-            sscanf(palette, "palette: %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx", 
-                   &colorPalette[ 0], &colorPalette[ 1], &colorPalette[ 2], &colorPalette[ 3], 
-                   &colorPalette[ 4], &colorPalette[ 5], &colorPalette[ 6], &colorPalette[ 7], 
-                   &colorPalette[ 8], &colorPalette[ 9], &colorPalette[10], &colorPalette[11], 
+            sscanf(palette, "palette: %lx, %lx, %lx %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx, %lx", 
+                   &colorPalette[ 0], &colorPalette[ 1], &colorPalette[ 2], &colorPalette[ 3],
+                   &colorPalette[ 4], &colorPalette[ 5], &colorPalette[ 6], &colorPalette[ 7],
+                   &colorPalette[ 8], &colorPalette[ 9], &colorPalette[10], &colorPalette[11],
                    &colorPalette[12], &colorPalette[13], &colorPalette[14], &colorPalette[15]);
         }
         return [NSData dataWithBytes:colorPalette length:sizeof(UInt32)*16];
@@ -928,7 +928,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 
                     continue;
                 }
-                if (!(sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, NO)))
+                if (!(sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, NO, NO, 0)))
                     break;
 
                 @synchronized(samplesBuffer) {

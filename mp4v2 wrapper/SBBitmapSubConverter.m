@@ -172,7 +172,7 @@ void FFInitFFmpeg()
             NSString *text = [ocr performOCROnCGImage:cgImage];
 
             if (text)
-                subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced);
+                subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced, NO, 0);
             else
                 subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, forced);
 
@@ -286,7 +286,7 @@ void FFInitFFmpeg()
             CGColorSpaceRelease(colorSpace);
 
             if ((text = [ocr performOCROnCGImage:cgImage]))
-                subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced);
+                subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced, NO, 0);
             else
                 subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, forced);
 

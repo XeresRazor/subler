@@ -94,7 +94,7 @@
             if ((sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO)))
                 return sample;
         }
-        if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, NO)))
+        if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, NO, NO, 0)))
             return sample;
     }
 
