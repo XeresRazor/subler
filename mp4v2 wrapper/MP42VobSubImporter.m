@@ -339,7 +339,7 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
                         [sample release];
                     }
 
-                    sample++;
+                    sampleCount++;
                 }
 
                 MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];

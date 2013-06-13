@@ -176,11 +176,11 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 
 - (NSString *)formatSummary
 {
-    return [NSString stringWithFormat:@"%@, %ld ch", format, channels];
+    return [NSString stringWithFormat:@"%@, %u ch", format, (unsigned int)channels];
 }
 
 - (NSString *)description {
-    return [[super description] stringByAppendingFormat:@", %ld ch", channels];
+    return [[super description] stringByAppendingFormat:@", %u ch", (unsigned int)channels];
 }
 
 @synthesize channels;

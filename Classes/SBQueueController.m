@@ -206,7 +206,7 @@
 
 - (void)updateDockTile
 {
-    NSInteger count = 0;
+    int count = 0;
     for (SBQueueItem *item in filesArray)
         if ([item status] != SBQueueItemStatusCompleted)
             count++;
@@ -221,7 +221,7 @@
 {
     [tableView reloadData];
     if (status != SBQueueStatusWorking) {
-        [countLabel setStringValue:[NSString stringWithFormat:@"%d files in queue.", [filesArray count]]];
+        [countLabel setStringValue:[NSString stringWithFormat:@"%lu files in queue.", (unsigned long)[filesArray count]]];
         [self updateDockTile];
     }
 }
