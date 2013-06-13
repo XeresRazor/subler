@@ -25,6 +25,11 @@
 - (id) init {
 	if (self = [super init]) {
 		NSString* ratingsJSON = [[NSBundle mainBundle] pathForResource:@"Ratings" ofType:@"json"];
+        if (!ratingsJSON) {
+            [self release];
+            return nil;
+        }
+
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		ratingsDictionary = [[jsonDecoder objectWithData:[NSData dataWithContentsOfFile:ratingsJSON]] retain];
 		// construct movie ratings

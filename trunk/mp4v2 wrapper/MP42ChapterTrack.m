@@ -229,7 +229,7 @@
 	NSUInteger x = 0;
 
 	for (SBTextSample * chapter in chapters) {
-		[file appendFormat:@"CHAPTER%02d=%@\nCHAPTER%02dNAME=%@\n", x, SRTStringFromTime([chapter timestamp], 1000, '.'), x, [chapter title]];
+		[file appendFormat:@"CHAPTER%02lu=%@\nCHAPTER%02dNAME=%@\n", (unsigned long)x, SRTStringFromTime([chapter timestamp], 1000, '.'), x, [chapter title]];
 		x++;
 	}
 

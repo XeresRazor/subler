@@ -333,12 +333,6 @@
         if (![self isDocumentEdited] && [mp4File hasFileRepresentation])
             return YES;
 
-    if (action == @selector(showSubititleWindow:))
-            return YES;
-
-    if (action == @selector(selectChapterFile:))
-        return YES;
-
     if (action == @selector(selectMetadataFile:))
         return YES;
 
@@ -845,7 +839,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
     if (minutes)
         for (i = 0, y = 1; i < [mp4File movieDuration]; i += minutes, y++) {
-            [chapterTrack addChapter:[NSString stringWithFormat:@"Chapter %d", y]
+            [chapterTrack addChapter:[NSString stringWithFormat:@"Chapter %ld", (long)y]
                             duration:i];
         }
     else
