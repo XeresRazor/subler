@@ -9,6 +9,7 @@
 #import "SubUtilities.h"
 #import "RegexKitLite.h"
 #import "MP42Sample.h"
+#import "SBHtmlParser.h"
 
 @implementation SBTextSample
 
@@ -857,11 +858,7 @@ NSString* StripSSALine(NSString *line){
     return line;
 }
 
-#define STYLE_BOLD 1
-#define STYLE_ITALIC 2
-#define STYLE_UNDERLINED 4
-
-u_int8_t* createStyleRecord(u_int16_t startChar, u_int16_t endChar, u_int16_t fontID, u_int8_t flags, u_int8_t* style)
+u_int8_t* createStyleRecord(u_int16_t startChar, u_int16_t endChar, u_int16_t fontID, u_int8_t flags, rgba_color color, u_int8_t* style)
 {
     style[0] = (startChar >> 8) & 0xff; // startChar
     style[1] = startChar & 0xff;
@@ -871,11 +868,11 @@ u_int8_t* createStyleRecord(u_int16_t startChar, u_int16_t endChar, u_int16_t fo
     style[5] = fontID & 0xff;
     style[6] = flags;   // face-style-flags: 1 bold; 2 italic; 4 underline
     style[7] = 24;      // font-size
-    style[8] = 255;     // r
-    style[9] = 255;     // g
-    style[10] = 255;    // b
-    style[11] = 255;    // a
-    
+    style[8] = color.r;     // r
+    style[9] = color.g;     // g
+    style[10] = color.b;    // b
+    style[11] = color.a;    // a
+
     return style;
 }
 
@@ -897,86 +894,27 @@ NSString* createStyleAtomForString(NSString* string, u_int8_t* buffer, size_t *s
     u_int16_t styleCount = 0;
     memcpy(buffer + 4, "styl", 4);
 
-    u_int8_t italic = 0;
-    u_int8_t bold = 0;
-    u_int8_t underlined = 0;
+    SBHtmlParser *parser = [[SBHtmlParser alloc] initWithString:string];
+    parser.defaultColor = make_color(255, 255, 255, 255);
 
-    // Parse the tags in the line, remove them and create a style record for every style change
-    NSRange endRange;
-    NSRange tagEndRange;
-    NSRange startRange = [string rangeOfString: @"<"];
-    if (startRange.location != NSNotFound) {
-        if ((startRange.location + 1) < [string length]) {
-            unichar tag = [string characterAtIndex:startRange.location + 1];
-            if (tag == 'i') italic++;
-            else if (tag == 'b') bold++;
-            else if (tag == 'u') underlined++;
-            tagEndRange = [string rangeOfString: @">"];
-            startRange.length = tagEndRange.location - startRange.location +1;
-            if (tagEndRange.location == NSNotFound || startRange.location > tagEndRange.location || startRange.length > [string length])
-                startRange.length = 2;
-            string = [string stringByReplacingCharactersInRange:startRange withString:@""];
-            }
-        else
-            startRange.location = NSNotFound;
-    }
+    while ([parser parseNextTag] != NSNotFound);
 
-    while (startRange.location != NSNotFound) {
-        endRange = [string rangeOfString: @"<"];
-        if (endRange.location == NSNotFound)
-            endRange.location = [string length] -1;
+    [parser serializeStyles];
 
-        u_int8_t styl = 0;
-        if (italic) styl |= STYLE_ITALIC;
-        if (bold) styl |= STYLE_BOLD;
-        if (underlined) styl |= STYLE_UNDERLINED;
-
-        if (styl && startRange.location != endRange.location) {
-            u_int8_t styleRecord[12];
-            createStyleRecord(startRange.location, endRange.location, 1, styl, styleRecord);
-            memcpy(buffer + 10 + (12 * styleCount), styleRecord, 12);
-            styleCount++;
-        }
-
-        endRange = [string rangeOfString: @"<"];
-        if (endRange.location != NSNotFound && (endRange.location + 1) < [string length]) {
-            unichar tag = [string characterAtIndex:endRange.location + 1];
-            if (tag == 'i') italic++;
-            else if (tag == 'b') bold++;
-            else if (tag == 'u') underlined++;
-
-            if (tag == '/' && (endRange.location + 2) < [string length]) {
-                unichar tag2 = [string characterAtIndex:endRange.location + 2];
-                if (tag2 == 'i') italic--;
-                else if (tag2 == 'b') bold--;
-                else if (tag2 == 'u') underlined--;
-                tagEndRange = [string rangeOfString: @">"];
-                if (tagEndRange.location < endRange.location) {
-                    string = [string stringByReplacingCharactersInRange:tagEndRange withString:@""];
-                    tagEndRange = [string rangeOfString: @">"];
-                }
-                endRange.length = tagEndRange.location - endRange.location +1;
-                if (tagEndRange.location == NSNotFound || endRange.length > [string length])
-                    endRange.length = 2;
-                string = [string stringByReplacingCharactersInRange:endRange withString:@""];
-            }
-            else {
-                tagEndRange = [string rangeOfString: @">"];
-                endRange.length = tagEndRange.location - endRange.location +1;
-                if (tagEndRange.location == NSNotFound || endRange.length > [string length])
-                    endRange.length = 2;
-                string = [string stringByReplacingCharactersInRange:endRange withString:@""];
-            }
-            startRange = endRange;
-        }
-        else
-            break;
+    for (SBStyle *style in parser.styles) {
+        u_int8_t styleRecord[12];
+        createStyleRecord(style.location, style.location + style.length, 1, style.style, style.color, styleRecord);
+        memcpy(buffer + 10 + (12 * styleCount), styleRecord, 12);
+        styleCount++;
     }
 
     if (styleCount)
         *size = closeStyleAtom(styleCount, buffer);
     
-    return string;
+    string = [parser.text retain];
+    [parser release];
+
+    return [string autorelease];
 }
 
 NSString* removeNewLines(NSString* string) {
