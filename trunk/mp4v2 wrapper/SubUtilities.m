@@ -170,7 +170,7 @@ canOutput:
 		}
 	}
 	
-	return [[[SBSubLine alloc] initWithLine:str start:begin_time end:end_time top_pos:first->top] autorelease];
+	return [[[SBSubLine alloc] initWithLine:str start:begin_time end:end_time top_pos:first->top forced:first->forced] autorelease];
 }
 
 -(SBSubLine*)getSerializedPacket
@@ -215,6 +215,16 @@ canOutput:
     position_information = info;
 }
 
+-(BOOL)forced
+{
+    return forced;
+}
+
+-(void)setForced:(BOOL)info
+{
+    forced = info;
+}
+
 -(NSString*)description
 {
 	return [NSString stringWithFormat:@"lines left: %lu finished inputting: %d",(unsigned long)[lines count],finished];
@@ -235,10 +245,11 @@ canOutput:
 	return self;
 }
 
--(id)initWithLine:(NSString*)l start:(unsigned)s end:(unsigned)e top_pos:(unsigned)p
+-(id)initWithLine:(NSString*)l start:(unsigned)s end:(unsigned)e top_pos:(unsigned)p forced:(unsigned)f;
 {
 	if ((self = [self initWithLine:l start:s end:e])) {
         top = p;
+        forced = f;
 	}
 	
 	return self;
@@ -387,6 +398,17 @@ static int ParsePosition(NSString *str)
 	return res;
 }
 
+static int ParseForced(NSString *str)
+{
+    NSRange s = [str rangeOfString:@"!!!"];    
+	int res = 0;
+    
+	if (s.location != NSNotFound)
+        res = 1;
+    
+	return res;
+}
+
 int LoadSRTFromPath(NSString *path, SBSubSerializer *ss, MP4Duration *duration)
 {
 	NSMutableString *srt = STStandardizeStringNewlines(STLoadFileWithUnknownEncoding(path));
@@ -399,9 +421,9 @@ int LoadSRTFromPath(NSString *path, SBSubSerializer *ss, MP4Duration *duration)
 	NSString *res = nil;
 	[sc setCharactersToBeSkipped:nil];
 
-	unsigned startTime=0, endTime=0;
+	unsigned startTime=0, endTime=0, forced = 0;
+    unsigned posCount = 0, forcedCount = 0;
     signed position = INT_MAX;
-    signed positionCount = 0;
 
 	enum {
 		INITIAL,
@@ -427,23 +449,29 @@ int LoadSRTFromPath(NSString *path, SBSubSerializer *ss, MP4Duration *duration)
 				[sc scanString:@"\n" intoString:nil];
 				endTime = ParseSubTime([res UTF8String], 1000, NO);
                 position = ParsePosition(res);
+                forced = ParseForced(res);
                 if (position < INT_MAX)
-                    positionCount++;
+                    posCount++;
+                if (forced)
+                    forcedCount++;
 
 				state = LINES;
 				break;
 			case LINES:
 				[sc scanUpToString:@"\n\n" intoString:&res];
 				[sc scanString:@"\n\n" intoString:nil];
-				SBSubLine *sl = [[SBSubLine alloc] initWithLine:res start:startTime end:endTime top_pos:position];
+				SBSubLine *sl = [[SBSubLine alloc] initWithLine:res start:startTime end:endTime top_pos:position forced:forced];
 				[ss addLine:[sl autorelease]];
 				state = INITIAL;
 				break;
 		};
 	} while (![sc isAtEnd]);
 
-    if (positionCount)
+    if (posCount)
         [ss setPositionInformation:TRUE];
+    if (forcedCount) {
+        [ss setForced:TRUE];
+    }
 
     *duration = endTime;
 
