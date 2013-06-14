@@ -170,7 +170,7 @@ canOutput:
 		}
 	}
 	
-	return [[[SBSubLine alloc] initWithLine:str start:begin_time end:end_time] autorelease];
+	return [[[SBSubLine alloc] initWithLine:str start:begin_time end:end_time top_pos:first->top] autorelease];
 }
 
 -(SBSubLine*)getSerializedPacket
@@ -205,6 +205,16 @@ canOutput:
 	return [lines count] == 0;
 }
 
+-(BOOL)positionInformation
+{
+    return position_information;
+}
+
+-(void)setPositionInformation:(BOOL)info
+{
+    position_information = info;
+}
+
 -(NSString*)description
 {
 	return [NSString stringWithFormat:@"lines left: %lu finished inputting: %d",(unsigned long)[lines count],finished];
@@ -220,6 +230,15 @@ canOutput:
 		begin_time = s;
 		end_time = e;
 		no = 0;
+	}
+	
+	return self;
+}
+
+-(id)initWithLine:(NSString*)l start:(unsigned)s end:(unsigned)e top_pos:(unsigned)p
+{
+	if ((self = [self initWithLine:l start:s end:e])) {
+        top = p;
 	}
 	
 	return self;
@@ -354,6 +373,20 @@ extern NSString *STLoadFileWithUnknownEncoding(NSString *path)
 	return res;
 }
 
+static int ParsePosition(NSString *str)
+{
+	NSScanner *sc = [NSScanner scannerWithString:str];
+
+	int res = INT_MAX;
+
+	if ([sc scanUpToString:@"X1:" intoString:nil]) {
+        [sc scanString:@"X1:" intoString:nil];
+		[sc scanInt:&res];
+    }
+
+	return res;
+}
+
 int LoadSRTFromPath(NSString *path, SBSubSerializer *ss, MP4Duration *duration)
 {
 	NSMutableString *srt = STStandardizeStringNewlines(STLoadFileWithUnknownEncoding(path));
@@ -367,6 +400,8 @@ int LoadSRTFromPath(NSString *path, SBSubSerializer *ss, MP4Duration *duration)
 	[sc setCharactersToBeSkipped:nil];
 
 	unsigned startTime=0, endTime=0;
+    signed position = INT_MAX;
+    signed positionCount = 0;
 
 	enum {
 		INITIAL,
@@ -391,17 +426,24 @@ int LoadSRTFromPath(NSString *path, SBSubSerializer *ss, MP4Duration *duration)
 				[sc scanUpToString:@"\n" intoString:&res];
 				[sc scanString:@"\n" intoString:nil];
 				endTime = ParseSubTime([res UTF8String], 1000, NO);
+                position = ParsePosition(res);
+                if (position < INT_MAX)
+                    positionCount++;
+
 				state = LINES;
 				break;
 			case LINES:
 				[sc scanUpToString:@"\n\n" intoString:&res];
 				[sc scanString:@"\n\n" intoString:nil];
-				SBSubLine *sl = [[SBSubLine alloc] initWithLine:res start:startTime end:endTime];
+				SBSubLine *sl = [[SBSubLine alloc] initWithLine:res start:startTime end:endTime top_pos:position];
 				[ss addLine:[sl autorelease]];
 				state = INITIAL;
 				break;
 		};
 	} while (![sc isAtEnd]);
+
+    if (positionCount)
+        [ss setPositionInformation:TRUE];
 
     *duration = endTime;
 
@@ -969,7 +1011,7 @@ void createTboxAtom(u_int8_t* buffer, u_int16_t top, u_int16_t left, u_int16_t b
 
 #define BUFFER_SIZE 16384
 
-MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, u_int16_t top)
+MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, int top)
 {
     uint8_t *sampleData = NULL;
     u_int8_t styleAtom[8192];

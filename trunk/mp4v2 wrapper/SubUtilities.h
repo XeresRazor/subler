@@ -26,8 +26,10 @@
 	NSString *line;
 	unsigned begin_time, end_time;
 	unsigned no; // line number, used only by SBSubSerializer
+    unsigned top;
 }
 -(id)initWithLine:(NSString*)l start:(unsigned)s end:(unsigned)e;
+-(id)initWithLine:(NSString*)l start:(unsigned)s end:(unsigned)e top_pos:(unsigned)p;
 @end
 
 @interface SBSubSerializer : NSObject
@@ -36,6 +38,7 @@
 	NSMutableArray *lines;
 	BOOL finished;
 
+    BOOL position_information;
 	unsigned last_begin_time, last_end_time;
 	unsigned linesInput;
 }
@@ -43,6 +46,8 @@
 -(void)setFinished:(BOOL)finished;
 -(SBSubLine*)getSerializedPacket;
 -(BOOL)isEmpty;
+-(BOOL)positionInformation;
+-(void)setPositionInformation:(BOOL)info;
 @end
 
 NSMutableString *STStandardizeStringNewlines(NSString *str);
@@ -58,7 +63,7 @@ unsigned ParseSubTime(const char *time, unsigned secondScale, BOOL hasSign);
 
 @class MP42SampleBuffer;
 
-MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, u_int16_t top);
+MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, int top);
 MP42SampleBuffer* copyEmptySubtitleSample(MP4TrackId subtitleTrackId, MP4Duration duration, BOOL forced);
 
 typedef struct {

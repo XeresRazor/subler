@@ -181,7 +181,6 @@
     startOffset = newOffset;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"start_offset"];
-    
 }
 
 - (NSString *) formatSummary

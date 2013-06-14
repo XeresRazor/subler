@@ -55,6 +55,11 @@
         }
 
         [ss setFinished:YES];
+        
+        if ([ss positionInformation]) {
+            newTrack.verticalPlacement = YES;
+            verticalPlacement = YES;
+        }
 
         [tracksArray addObject:newTrack];
         [newTrack release];
@@ -94,7 +99,8 @@
             if ((sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO)))
                 return sample;
         }
-        if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, NO, NO, 0)))
+        int top = (sl->top == INT_MAX) ? [(MP42SubtitleTrack*)[tracksArray lastObject] trackHeight] : sl->top;
+        if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, NO, verticalPlacement, top)))
             return sample;
     }
 
