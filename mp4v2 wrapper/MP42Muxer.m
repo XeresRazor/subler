@@ -284,6 +284,9 @@
                 free(val);
             }
 
+            [(MP42SubtitleTrack*)track setTrackWidth:videoSize.width];
+            [(MP42SubtitleTrack*)track setTrackHeight:subSize.height];
+
             [[track trackImporterHelper] setActiveTrack:track];
         }
         // VobSub bitmap track

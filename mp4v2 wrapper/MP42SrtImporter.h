@@ -15,6 +15,7 @@
     SBSubSerializer * ss;
     
     NSMutableArray *activeTracks;
+    BOOL verticalPlacement;
 }
 
 @end
