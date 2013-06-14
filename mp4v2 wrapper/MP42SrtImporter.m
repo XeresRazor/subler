@@ -60,6 +60,8 @@
             newTrack.verticalPlacement = YES;
             verticalPlacement = YES;
         }
+        if ([ss forced])
+            newTrack.someSamplesAreForced = YES;
 
         [tracksArray addObject:newTrack];
         [newTrack release];
@@ -100,7 +102,7 @@
                 return sample;
         }
         int top = (sl->top == INT_MAX) ? [(MP42SubtitleTrack*)[tracksArray lastObject] trackHeight] : sl->top;
-        if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, NO, verticalPlacement, top)))
+        if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, sl->forced, verticalPlacement, top)))
             return sample;
     }
 

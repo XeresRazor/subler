@@ -27,9 +27,10 @@
 	unsigned begin_time, end_time;
 	unsigned no; // line number, used only by SBSubSerializer
     unsigned top;
+    unsigned forced;
 }
 -(id)initWithLine:(NSString*)l start:(unsigned)s end:(unsigned)e;
--(id)initWithLine:(NSString*)l start:(unsigned)s end:(unsigned)e top_pos:(unsigned)p;
+-(id)initWithLine:(NSString*)l start:(unsigned)s end:(unsigned)e top_pos:(unsigned)p forced:(unsigned)f;
 @end
 
 @interface SBSubSerializer : NSObject
@@ -38,7 +39,7 @@
 	NSMutableArray *lines;
 	BOOL finished;
 
-    BOOL position_information;
+    BOOL position_information, forced;
 	unsigned last_begin_time, last_end_time;
 	unsigned linesInput;
 }
@@ -48,6 +49,8 @@
 -(BOOL)isEmpty;
 -(BOOL)positionInformation;
 -(void)setPositionInformation:(BOOL)info;
+-(BOOL)forced;
+-(void)setForced:(BOOL)info;
 @end
 
 NSMutableString *STStandardizeStringNewlines(NSString *str);
