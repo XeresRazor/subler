@@ -1039,7 +1039,7 @@ void createTboxAtom(u_int8_t* buffer, u_int16_t top, u_int16_t left, u_int16_t b
 
 #define BUFFER_SIZE 16384
 
-MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, int top)
+MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, CGSize trackSize, int top)
 {
     uint8_t *sampleData = NULL;
     u_int8_t styleAtom[8192];
@@ -1068,7 +1068,10 @@ MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* strin
     // Add a tbox atom with offset from top
     if (verticalPlacement && (sampleSize < (BUFFER_SIZE - 16))) {
         u_int8_t tboxAtom[16];
-        createTboxAtom(tboxAtom, top, 0, 0, 0);
+        if (top == 0)
+            createTboxAtom(tboxAtom, top, 0, trackSize.height * 0.12, trackSize.width);
+        else
+            createTboxAtom(tboxAtom, trackSize.height * 0.88, 0, trackSize.height, trackSize.width);
 
         memcpy(buffer + sampleSize, tboxAtom, 16);
         sampleSize += 16;
