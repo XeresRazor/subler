@@ -1,4 +1,4 @@
-#srt file format
+#summary srt file format
 
 = srt example =
 
