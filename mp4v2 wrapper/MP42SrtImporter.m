@@ -101,8 +101,12 @@
             if ((sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO)))
                 return sample;
         }
-        int top = (sl->top == INT_MAX) ? [(MP42SubtitleTrack*)[tracksArray lastObject] trackHeight] : sl->top;
-        if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, sl->forced, verticalPlacement, top)))
+        CGSize trackSize;
+        trackSize.width = [(MP42SubtitleTrack*)[tracksArray lastObject] trackWidth];
+        trackSize.height = [(MP42SubtitleTrack*)[tracksArray lastObject] trackHeight];
+
+        int top = (sl->top == INT_MAX) ? trackSize.height : sl->top;
+        if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, sl->forced, verticalPlacement, trackSize, top)))
             return sample;
     }
 
