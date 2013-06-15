@@ -1,3 +1,5 @@
+#srt file format
+
 = srt example =
 
 {{{
