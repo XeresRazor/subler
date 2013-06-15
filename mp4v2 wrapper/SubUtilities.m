@@ -959,11 +959,8 @@ size_t closeStyleAtom(u_int16_t styleCount, u_int8_t* styleAtom)
     return styleSize;
 }
 
-NSString* createStyleAtomForString(NSString* string, u_int8_t* buffer, size_t *size)
+NSString* createStyleAtomForString(NSString* string, u_int8_t** buffer, size_t *size)
 {
-    u_int16_t styleCount = 0;
-    memcpy(buffer + 4, "styl", 4);
-
     SBHtmlParser *parser = [[SBHtmlParser alloc] initWithString:string];
     parser.defaultColor = make_color(255, 255, 255, 255);
 
@@ -971,16 +968,20 @@ NSString* createStyleAtomForString(NSString* string, u_int8_t* buffer, size_t *s
 
     [parser serializeStyles];
 
+    *buffer = malloc(sizeof(u_int8_t) * 12 * [parser.styles count] + 10);
+    u_int16_t styleCount = 0;
+    memcpy(*buffer + 4, "styl", 4);
+
     for (SBStyle *style in parser.styles) {
         u_int8_t styleRecord[12];
         createStyleRecord(style.location, style.location + style.length, 1, style.style, style.color, styleRecord);
-        memcpy(buffer + 10 + (12 * styleCount), styleRecord, 12);
+        memcpy(*buffer + 10 + (12 * styleCount), styleRecord, 12);
         styleCount++;
     }
 
     if (styleCount)
-        *size = closeStyleAtom(styleCount, buffer);
-    
+        *size = closeStyleAtom(styleCount, *buffer);
+
     string = [parser.text retain];
     [parser release];
 
@@ -1037,51 +1038,51 @@ void createTboxAtom(u_int8_t* buffer, u_int16_t top, u_int16_t left, u_int16_t b
 
 }
 
-#define BUFFER_SIZE 16384
-
 MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, CGSize trackSize, int top)
 {
-    uint8_t *sampleData = NULL;
-    u_int8_t styleAtom[8192];
-    size_t styleSize = 0;
-    size_t sampleSize = 0;
+    u_int8_t *sampleData = NULL, *styleAtom = NULL;
+    size_t styleSize = 0, sampleSize = 0, stringLength = 0;
+    u_int8_t *pos = 0;
 
     string = removeNewLines(string);
-    string = createStyleAtomForString(string, styleAtom, &styleSize);
+    string = createStyleAtomForString(string, &styleAtom, &styleSize);
 
-    size_t stringLength = strlen([string UTF8String]);
+    stringLength = strlen([string UTF8String]);
+    sampleSize = 2 + stringLength * sizeof(char) + styleSize + (forced == 1 ? 8 : 0) + (verticalPlacement == 1 ? 16 : 0);
+    sampleData = malloc(sampleSize);
 
-    u_int8_t buffer[BUFFER_SIZE];
-    memcpy(buffer + 2, [string UTF8String], stringLength);
-    memcpy(buffer + 2 + stringLength, styleAtom, styleSize);
-    sampleSize = 2 + stringLength + styleSize;
+    pos = sampleData + 2;
+
+    memcpy(pos, [string UTF8String], stringLength);
+    pos += stringLength;
+
+    memcpy(pos, styleAtom, styleSize);
+    pos += styleSize;
 
     // Add a frcd atom
-    if (forced && (sampleSize < (BUFFER_SIZE - 8))) {
+    if (forced) {
         u_int8_t forcedAtom[8];
         createForcedAtom(forcedAtom);
 
-        memcpy(buffer + sampleSize, forcedAtom, 8);
-        sampleSize += 8;
+        memcpy(pos, forcedAtom, 8);
+        pos += 8;
     }
 
     // Add a tbox atom with offset from top
-    if (verticalPlacement && (sampleSize < (BUFFER_SIZE - 16))) {
+    if (verticalPlacement) {
         u_int8_t tboxAtom[16];
         if (top == 0)
             createTboxAtom(tboxAtom, top, 0, trackSize.height * 0.12, trackSize.width);
         else
             createTboxAtom(tboxAtom, trackSize.height * 0.88, 0, trackSize.height, trackSize.width);
 
-        memcpy(buffer + sampleSize, tboxAtom, 16);
-        sampleSize += 16;
+        memcpy(pos, tboxAtom, 16);
     }
 
-    buffer[0] = (stringLength >> 8) & 0xff;
-    buffer[1] = stringLength & 0xff;
+    sampleData[0] = (stringLength >> 8) & 0xff;
+    sampleData[1] = stringLength & 0xff;
 
-    sampleData = malloc(sampleSize);
-    memcpy(sampleData, buffer, sampleSize);
+    free(styleAtom);
 
     MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
     sample->sampleData = sampleData;
