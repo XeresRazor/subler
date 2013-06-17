@@ -81,9 +81,9 @@
 - (MP42Metadata*) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage {
 	// add iTunes artwork
 	MP42Metadata *iTunesMetadata = [iTunesStore quickiTunesSearchTV:[[aMetadata tagsDict] valueForKey:@"TV Show"] episodeTitle:[[aMetadata tagsDict] valueForKey:@"Name"]];
-	NSMutableArray * newArtworkThumbURLs = [[NSMutableArray alloc] init];
-	NSMutableArray * newArtworkFullsizeURLs = [[NSMutableArray alloc] init];
-	NSMutableArray * newArtworkProviderNames = [[NSMutableArray alloc] init];
+	NSMutableArray * newArtworkThumbURLs = [[[NSMutableArray alloc] init] autorelease];
+	NSMutableArray * newArtworkFullsizeURLs = [[[NSMutableArray alloc] init] autorelease];
+	NSMutableArray * newArtworkProviderNames = [[[NSMutableArray alloc] init] autorelease];
 	if (iTunesMetadata && [iTunesMetadata artworkThumbURLs] && [iTunesMetadata artworkFullsizeURLs] && ([[iTunesMetadata artworkThumbURLs] count] == [[iTunesMetadata artworkFullsizeURLs] count])) {
 		[newArtworkThumbURLs addObjectsFromArray:[iTunesMetadata artworkThumbURLs]];
 		[newArtworkFullsizeURLs addObjectsFromArray:[iTunesMetadata artworkFullsizeURLs]];
@@ -118,9 +118,6 @@
 	[aMetadata setArtworkThumbURLs:newArtworkThumbURLs];
 	[aMetadata setArtworkFullsizeURLs:newArtworkFullsizeURLs];
 	[aMetadata setArtworkProviderNames:newArtworkProviderNames];
-	[newArtworkThumbURLs release];
-	[newArtworkFullsizeURLs release];
-	[newArtworkProviderNames release];
 	return aMetadata;
 }
 
@@ -136,6 +133,7 @@
 	metadata.mediaKind = 10; // TV show
 	[metadata setTag:[aSeries retrieveForPath:@"id.text"] forKey:@"TheTVDB Series ID"];
 	[metadata setTag:[aSeries retrieveForPath:@"SeriesName.text"] forKey:@"TV Show"];
+    [metadata setTag:[aSeries retrieveForPath:@"Overview.text"] forKey:@"Series Description"];
 	[metadata setTag:[aEpisode retrieveForPath:@"SeasonNumber.text"] forKey:@"TV Season"];
 	[metadata setTag:[aEpisode retrieveForPath:@"EpisodeNumber.text"] forKey:@"TV Episode #"];
 	[metadata setTag:[aEpisode retrieveForPath:@"ProductionCode.text"] forKey:@"TV Episode ID"];
