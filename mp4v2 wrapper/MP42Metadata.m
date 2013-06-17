@@ -284,6 +284,7 @@ static const genreType_t genreType_strings[] = {
             @"TV Season",
             @"Description",
             @"Long Description",
+            @"Series Description",
             @"Rating",
             @"Rating Annotation",
             @"Studio",
@@ -357,6 +358,7 @@ static const genreType_t genreType_strings[] = {
             @"TV Season",
             @"Description",
             @"Long Description",
+            @"Series Description",
             @"Rating",
             @"Rating Annotation",
             @"Studio",
@@ -789,6 +791,10 @@ static const genreType_t genreType_strings[] = {
         [tagsDict setObject:[self stringFromMetadata:tags->longDescription]
                      forKey:@"Long Description"];
 
+    if (tags->seriesDescription)
+        [tagsDict setObject:[self stringFromMetadata:tags->seriesDescription]
+                     forKey:@"Series Description"];
+
     if (tags->lyrics)
         [tagsDict setObject:[self stringFromMetadata:tags->lyrics]
                      forKey:@"Lyrics"];
@@ -1086,6 +1092,8 @@ static const genreType_t genreType_strings[] = {
     MP4TagsSetDescription(tags, [[tagsDict valueForKey:@"Description"] UTF8String]);
 
     MP4TagsSetLongDescription(tags, [[tagsDict valueForKey:@"Long Description"] UTF8String]);
+    
+    MP4TagsSetSeriesDescription(tags, [[tagsDict valueForKey:@"Series Description"] UTF8String]);
 
     MP4TagsSetLyrics(tags, [[tagsDict valueForKey:@"Lyrics"] UTF8String]);
 
