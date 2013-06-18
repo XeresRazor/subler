@@ -11,22 +11,24 @@
 @class MP42FileImporter;
 @class MP42Metadata;
 
-@interface FileImport : NSWindowController <NSTableViewDelegate> {
+@interface SBFileImport : NSWindowController <NSTableViewDelegate> {
 
-	NSURL               * fileURL;
-    NSMutableArray		* importCheckArray;
-    NSMutableArray      * actionArray;
-    MP42FileImporter    * fileImporter;
+    NSArray         *_fileURLs;
+    NSMutableArray  *_fileImporters;
+    NSMutableArray  *_tracks;
+    
+    NSMutableArray		*_importCheckArray;
+    NSMutableArray      *_actionArray;
 
 	id delegate;
 	IBOutlet NSTableView * tableView;
 	IBOutlet NSButton    * addTracksButton;
     IBOutlet NSButton    * importMetadata;
     IBOutlet NSProgressIndicator *loadProgressBar;
-    NSTimer *loadTimer;
 }
 
-- (id)initWithDelegate:(id)del andFile: (NSURL *)file error:(NSError **)outError;
+- (id)initWithDelegate:(id)del andFiles: (NSArray *)files error:(NSError **)outError;
+
 - (IBAction) closeWindow: (id) sender;
 - (IBAction) addTracks: (id) sender;
 

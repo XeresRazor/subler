@@ -16,7 +16,7 @@
 #import "VideoViewController.h"
 #import "SoundViewController.h"
 #import "ChapterViewController.h"
-#import "FileImport.h"
+#import "SBFileImport.h"
 #import "VideoFramerate.h"
 #import "MetadataSearchController.h"
 #import "ArtworkSelector.h"
@@ -685,15 +685,12 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     }];
 }
 
-- (void) showImportSheet: (NSURL *) fileURL
+- (void)showImportSheet:(NSArray *)fileURLs
 {
     NSError *error = nil;
-
-    if ([[fileURL pathExtension] isEqualToString:@"h264"] || [[fileURL pathExtension] isEqualToString:@"264"])
-        importWindow = [[VideoFramerate alloc] initWithDelegate:self andFile:fileURL];
-    else
-		importWindow = [[FileImport alloc] initWithDelegate:self andFile:fileURL error:&error];
-
+    
+    importWindow = [[SBFileImport alloc] initWithDelegate:self andFiles:fileURLs error:&error];
+    
     if (importWindow) {
         [NSApp beginSheet:[importWindow window] modalForWindow:documentWindow
             modalDelegate:nil didEndSelector:NULL contextInfo:nil];
@@ -877,41 +874,22 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     NSPasteboard *pboard = [sender draggingPasteboard];
 
     if ( [[pboard types] containsObject:NSURLPboardType] ) {
-        NSArray * items = [pboard readObjectsForClasses:
+        NSArray *items = [pboard readObjectsForClasses:
                            [NSArray arrayWithObject: [NSURL class]] options: nil];
-        for (NSURL * file in items)
-        {
+        NSMutableArray *supItems = [[[NSMutableArray alloc] init] autorelease];
+
+        for (NSURL * file in items) {
             if ([[file pathExtension] caseInsensitiveCompare: @"txt"] == NSOrderedSame)
                 [self addChapterTrack:file];
-            else if ([[file pathExtension] caseInsensitiveCompare: @"scc"] == NSOrderedSame)
-                [self showImportSheet:file];
-            else if ([[file pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"smi"] == NSOrderedSame)
-                [self showImportSheet:file];
-            else if ([[file pathExtension] caseInsensitiveCompare: @"m4v"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"mp4"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"m4a"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"mov"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"mts"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"m2ts"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"mkv"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"mka"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"mks"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"h264"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"264"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"idx"] == NSOrderedSame)
-                [self showImportSheet:file];
-
-            else if ([[file pathExtension] caseInsensitiveCompare: @"aac"] == NSOrderedSame ||
-                     [[file pathExtension] caseInsensitiveCompare: @"ac3"] == NSOrderedSame)
-                [self showImportSheet:file];
             else if ([[file pathExtension] caseInsensitiveCompare: @"xml"] == NSOrderedSame ||
                      [[file pathExtension] caseInsensitiveCompare: @"nfo"] == NSOrderedSame)
                 [self addMetadata:file];
-
-            break;
-
+            else if (supportedFile([file pathExtension]))
+                [supItems addObject:file];
+                     
         }
+
+        [self showImportSheet:supItems];
         return YES;
     }
     return NO;

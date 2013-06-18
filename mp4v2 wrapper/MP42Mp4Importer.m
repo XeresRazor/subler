@@ -124,6 +124,7 @@
             uint8_t *ppConfig; uint32_t pConfigSize;
             MP4GetTrackESConfiguration(fileHandle, srcTrackId, &ppConfig, &pConfigSize);
             magicCookie = [NSData dataWithBytes:ppConfig length:pConfigSize];
+            free(ppConfig);
         }
         return magicCookie;
     }
@@ -139,6 +140,7 @@
             paletteG[ii] = yuv2rgb(EndianU32_BtoN(paletteG[ii]));
 
         magicCookie = [NSData dataWithBytes:paletteG length:pConfigSize];
+        free(paletteG);
 
         return magicCookie;
     }
@@ -189,6 +191,7 @@
                 [seqData appendBytes:&temp length:sizeof(uint16_t)];
                 [seqData appendBytes:seqheader[ix] length:seqheadersize[ix]];
                 iy++;
+                free(seqheader[ix]);
             }
             [avcCData appendBytes:&iy length:sizeof(uint8_t)];
             [avcCData appendData:seqData];
@@ -202,6 +205,7 @@
                 [pictData appendBytes:&temp length:sizeof(uint16_t)];
                 [pictData appendBytes:pictheader[ix] length:pictheadersize[ix]];
                 iy++;
+                free(pictheader[ix]);
             }
 
             [avcCData appendBytes:&iy length:sizeof(uint8_t)];

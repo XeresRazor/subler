@@ -28,6 +28,8 @@
 
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError;
 
+- (BOOL)containsTrack:(MP42Track*)track;
+
 - (NSUInteger)timescaleForTrack:(MP42Track *)track;
 - (NSSize)sizeForTrack:(MP42Track *)track;
 - (NSData*)magicCookieForTrack:(MP42Track *)track;
