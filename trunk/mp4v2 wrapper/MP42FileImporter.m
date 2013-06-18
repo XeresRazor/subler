@@ -114,6 +114,11 @@
     return NO;
 }
 
+- (BOOL)containsTrack:(MP42Track*)track
+{
+    return [tracksArray containsObject:track];
+}
+
 - (void)cancel
 {
     isCancelled = YES;

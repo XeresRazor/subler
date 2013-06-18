@@ -69,8 +69,8 @@
 
 - (IBAction) export: (id) sender;
 
-- (void) showImportSheet: (NSURL *) fileURL;
+- (void)showImportSheet:(NSArray *)fileURLs;
 
-- (MP42File *) mp4File;
+- (MP42File *)mp4File;
 
 @end

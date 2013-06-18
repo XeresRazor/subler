@@ -57,6 +57,7 @@ int readAC3Config(uint64_t acmod, uint64_t lfeon, UInt32 *channelsCount, UInt32 
 
 BOOL isTrackMuxable(NSString * formatName);
 BOOL trackNeedConversion(NSString * formatName);
+BOOL supportedFile(NSString * fileExt);
 
 int64_t getTrackStartOffset(MP4FileHandle fileHandle, MP4TrackId Id);
 void setTrackStartOffset(MP4FileHandle fileHandle, MP4TrackId Id, int64_t offset);

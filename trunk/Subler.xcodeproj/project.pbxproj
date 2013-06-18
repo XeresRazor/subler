@@ -68,7 +68,7 @@
 		A9A7C02E15C67D2F0022921C /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A7C02D15C67D2F0022921C /* Quartz.framework */; };
 		A9AEF83B167C808600FDDBB3 /* QTKitDecrap.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */; };
 		A9B3411C1679CA3E00E6EE0C /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9B3411B1679CA3E00E6EE0C /* QTKit.framework */; };
-		A9B46A8C12B79B240040517A /* FileImport.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A7F12B79B240040517A /* FileImport.m */; };
+		A9B46A8C12B79B240040517A /* SBFileImport.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A7F12B79B240040517A /* SBFileImport.m */; };
 		A9B46A8E12B79B240040517A /* PrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A8312B79B240040517A /* PrefsController.m */; };
 		A9B46A8F12B79B240040517A /* SBTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A8512B79B240040517A /* SBTableView.m */; };
 		A9B46A9012B79B240040517A /* SBView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A8712B79B240040517A /* SBView.m */; };
@@ -291,8 +291,8 @@
 		A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QTKitDecrap.m; path = Others/QTKitDecrap.m; sourceTree = "<group>"; };
 		A9B3411B1679CA3E00E6EE0C /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
 		A9B3411D1679D2E000E6EE0C /* QTKitDecrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QTKitDecrap.h; path = Others/QTKitDecrap.h; sourceTree = "<group>"; };
-		A9B46A7E12B79B240040517A /* FileImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileImport.h; path = Classes/FileImport.h; sourceTree = "<group>"; };
-		A9B46A7F12B79B240040517A /* FileImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileImport.m; path = Classes/FileImport.m; sourceTree = "<group>"; };
+		A9B46A7E12B79B240040517A /* SBFileImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBFileImport.h; path = Classes/SBFileImport.h; sourceTree = "<group>"; };
+		A9B46A7F12B79B240040517A /* SBFileImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBFileImport.m; path = Classes/SBFileImport.m; sourceTree = "<group>"; };
 		A9B46A8212B79B240040517A /* PrefsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrefsController.h; path = Classes/PrefsController.h; sourceTree = "<group>"; };
 		A9B46A8312B79B240040517A /* PrefsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PrefsController.m; path = Classes/PrefsController.m; sourceTree = "<group>"; };
 		A9B46A8412B79B240040517A /* SBTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBTableView.h; path = Classes/SBTableView.h; sourceTree = "<group>"; };
@@ -497,8 +497,8 @@
 				A982D0BF140AB66400B92357 /* SBQueueItem.m */,
 				A961476113F567E10068F161 /* SBPresetManager.h */,
 				A961476213F567E10068F161 /* SBPresetManager.m */,
-				A9B46A7E12B79B240040517A /* FileImport.h */,
-				A9B46A7F12B79B240040517A /* FileImport.m */,
+				A9B46A7E12B79B240040517A /* SBFileImport.h */,
+				A9B46A7F12B79B240040517A /* SBFileImport.m */,
 				CD71FEA112F1B5AF00F0A98D /* MetadataSearchController.h */,
 				CD71FEA212F1B5AF00F0A98D /* MetadataSearchController.m */,
 				CD56963012FAAD680029FADB /* ArtworkSelector.h */,
@@ -971,7 +971,7 @@
 				A9EBA68912AE28DF0092D645 /* MP42AC3Importer.m in Sources */,
 				A9C4ECF712AE562A00BDBB7D /* MP42AACImporter.mm in Sources */,
 				A937137512B76EAD00940FEC /* MP42H264Importer.mm in Sources */,
-				A9B46A8C12B79B240040517A /* FileImport.m in Sources */,
+				A9B46A8C12B79B240040517A /* SBFileImport.m in Sources */,
 				A9B46A8E12B79B240040517A /* PrefsController.m in Sources */,
 				A9B46A8F12B79B240040517A /* SBTableView.m in Sources */,
 				A9B46A9012B79B240040517A /* SBView.m in Sources */,
