@@ -22,6 +22,7 @@
 		A94871D20F7914D2008DBC94 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94871D10F7914D2008DBC94 /* QTKit.framework */; };
 		A94871D70F7914E7008DBC94 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94871D60F7914E7008DBC94 /* QuickTime.framework */; };
 		A95F07C2148BA07600D663E5 /* liblept.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A95F07BE148BA07600D663E5 /* liblept.a */; };
+		A971D67317730E0B0039DE54 /* SBHtmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A971D67217730E0B0039DE54 /* SBHtmlParser.m */; };
 		A9726A270F7B89F0008A828C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9726A260F7B89F0008A828C /* AudioToolbox.framework */; };
 		A98ED3330F59E08D00885A49 /* libmp4v2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A98ED3240F59E08D00885A49 /* libmp4v2.a */; };
 		A98ED3FC0F59E24A00885A49 /* libuniversaldetector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A98ED3550F59E17A00885A49 /* libuniversaldetector.a */; };
@@ -134,6 +135,8 @@
 		A94871D10F7914D2008DBC94 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		A94871D60F7914E7008DBC94 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		A95F07BE148BA07600D663E5 /* liblept.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblept.a; path = ../Tesseract/lib/liblept.a; sourceTree = "<group>"; };
+		A971D67117730E0B0039DE54 /* SBHtmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBHtmlParser.h; path = ../SBHtmlParser.h; sourceTree = "<group>"; };
+		A971D67217730E0B0039DE54 /* SBHtmlParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBHtmlParser.m; path = ../SBHtmlParser.m; sourceTree = "<group>"; };
 		A9726A260F7B89F0008A828C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		A98ED3240F59E08D00885A49 /* libmp4v2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmp4v2.a; sourceTree = "<group>"; };
 		A98ED3320F59E08D00885A49 /* mp4v2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mp4v2.h; sourceTree = "<group>"; };
@@ -410,6 +413,8 @@
 				A9C0605016831C8D00FE3D98 /* SBBitmapSubConverter.m */,
 				A991318613F0044B00DCAA12 /* SBOCRWrapper.h */,
 				A991318713F0044B00DCAA12 /* SBOCRWrapper.mm */,
+				A971D67117730E0B0039DE54 /* SBHtmlParser.h */,
+				A971D67217730E0B0039DE54 /* SBHtmlParser.m */,
 				A9B46AF412B79EC60040517A /* MatroskaFile.c */,
 				A9B46AF512B79EC60040517A /* MatroskaFile.h */,
 				A9B46AF612B79EC60040517A /* MatroskaParser.c */,
@@ -553,6 +558,7 @@
 				A92D8CCE1761EAEC0004E0C5 /* SBRatings.m in Sources */,
 				A92D8CD31761EAFF0004E0C5 /* MP42VobSubImporter.m in Sources */,
 				A92D8CD41761EAFF0004E0C5 /* MP42XMLReader.m in Sources */,
+				A971D67317730E0B0039DE54 /* SBHtmlParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
