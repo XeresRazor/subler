@@ -17,6 +17,8 @@ void print_help()
     printf("\t\t -metadata {Tag Name:Tag Value} \n");
     printf("\t\t -removemetadata remove all the tags \n");
     printf("\t\t -itunesfriendly enable tracks and create altenate groups in the iTunes friendly way\n");
+    printf("\t\t -vprofile sets the video profile to any of <baseline, main, [high]>\n");
+    printf("\t\t -vlevel sets the video level <21, 31, [41]>\n");
     printf("\n");
 
     printf("\t -source <source file> \n");
@@ -66,6 +68,9 @@ int main (int argc, const char * argv[]) {
     BOOL downmixAudio = NO;
     NSString *downmixArg = nil;
     NSString *downmixType = nil;
+    
+    unsigned int videoprofile = 100; //high
+    unsigned int videolevel = 41;    //4.1
 
     if (argc == 1) {
         print_help();
@@ -81,7 +86,7 @@ int main (int argc, const char * argv[]) {
 		
 		argc--;
 		argv++;
-		
+        
 		if ( ! strcmp ( args, "source" ) )
 		{
             sourcePath = [NSString stringWithUTF8String: *argv++];
@@ -172,6 +177,37 @@ int main (int argc, const char * argv[]) {
 		{
 			itunesfriendly = YES;
 		}
+        else if ( ! strcmp ( args, "vprofile" ) )
+		{
+            if (argc) {
+                const char *arg = *argv++;
+                
+                if (!strcmp(arg, "baseline")) videoprofile = 66;
+                else if(!strcmp(arg, "main")) videoprofile = 77;
+                else if(!strcmp(arg, "high")) videoprofile = 100;
+                else {
+                    printf( "Error: unsupported profile '%s'\n", arg );
+                    printf( "Valid profiles are: 'baseline', 'main' and 'high'\n" );
+                    exit( -1 );
+                }
+                argc--;
+			}
+            else {
+                print_help();
+                exit(-1);
+            }
+		}
+        else if ( ! strcmp ( args, "vlevel" ) )
+		{
+            if (argc) {
+                videolevel = atoi(*argv++);
+                argc--;
+            }
+            else {
+                print_help();
+                exit(-1);
+            }
+		}
 		else {
 			printf("Invalid input parameter: %s\n", args );
 			print_help();
@@ -184,7 +220,7 @@ int main (int argc, const char * argv[]) {
         printf("The destination path need to be different from the source path\n");
         exit(1);
     }
-
+    
     if (sourcePath && (listtracks || listmetadata)) {
         MP42File *mp4File;
 
@@ -345,6 +381,19 @@ int main (int argc, const char * argv[]) {
                 [track setNeedConversion: YES];
                 [track setMixdownType: downmixType];
 
+                modified = YES;
+            }
+        }
+        
+        for (MP42VideoTrack *track in [mp4File tracks]) {
+            if ([track isKindOfClass: [MP42VideoTrack class]] && [track.format isEqualToString:@"H.264"]) {
+                track.newProfile = videoprofile;
+                track.newLevel = videolevel;
+                
+                [track.updatedProperty setValue:@"True" forKey:@"profile"];
+                [track.updatedProperty setValue:@"True" forKey:@"level"];
+                track.isEdited = YES;
+                
                 modified = YES;
             }
         }
