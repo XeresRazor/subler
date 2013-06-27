@@ -1,3 +1,10 @@
+//
+//  SublerCLI.mm
+//  Subler
+//
+//  Copyright 2009-2013 Damiano Galassi. All rights reserved.
+//
+
 #import <Foundation/Foundation.h>
 #import "MP42File.h"
 #import "MP42FileImporter.h"

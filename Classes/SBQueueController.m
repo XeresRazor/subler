@@ -301,7 +301,7 @@
     }
 
     if (metadata.artworkThumbURLs && [metadata.artworkThumbURLs count]) {
-        [metadata setArtwork:[self loadArtwork:[metadata.artworkFullsizeURLs lastObject]]];
+        [metadata.artworks addObject:[self loadArtwork:[metadata.artworkFullsizeURLs lastObject]]];
     }
 
     return metadata;
@@ -793,17 +793,15 @@
 
     if (tableView == [info draggingSource]) { // From self
         NSData* rowData = [pboard dataForType:SublerBatchTableViewDataType];
-        NSIndexSet* rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:rowData];
-        NSInteger dragRow = [rowIndexes firstIndex];
+        NSIndexSet* rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:rowData];        
+        NSUInteger i = [rowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
+        row -= i;
 
         NSArray *objects = [filesArray objectsAtIndexes:rowIndexes];
         [filesArray removeObjectsAtIndexes:rowIndexes];
 
-        for (id object in [objects reverseObjectEnumerator]) {
-            if (row > [filesArray count] || row > dragRow)
-                row--;
+        for (id object in [objects reverseObjectEnumerator])
             [filesArray insertObject:object atIndex:row];
-        }
 
         NSIndexSet *selectionSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(row, [rowIndexes count])];
 

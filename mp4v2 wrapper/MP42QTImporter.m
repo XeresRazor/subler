@@ -9,6 +9,7 @@
 #if !__LP64__
 #import "MP42QTImporter.h"
 #import "MP42File.h"
+#import "MP42Image.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <QuickTime/QuickTime.h>
 #import "SBLanguages.h"
@@ -395,7 +396,7 @@
         id artworkData = [[items lastObject] value];
         if ([artworkData isKindOfClass:[NSData class]]) {
             NSImage *image = [[NSImage alloc] initWithData:artworkData];
-            [metadata setArtwork:image];
+            [metadata.artworks addObject:[[[MP42Image alloc] initWithImage:image] autorelease]];
             [image release];
         }
     }
@@ -488,7 +489,7 @@
             id artworkData = [[items lastObject] value];
             if ([artworkData isKindOfClass:[NSData class]]) {
                 NSImage *image = [[NSImage alloc] initWithData:artworkData];
-                [metadata setArtwork:image];
+                [metadata.artworks addObject:[[[MP42Image alloc] initWithImage:image] autorelease]];
                 [image release];
             }
         }

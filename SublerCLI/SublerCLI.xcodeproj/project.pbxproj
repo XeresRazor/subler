@@ -17,6 +17,8 @@
 		A92D8CCE1761EAEC0004E0C5 /* SBRatings.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D8CCD1761EAEC0004E0C5 /* SBRatings.m */; };
 		A92D8CD31761EAFF0004E0C5 /* MP42VobSubImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D8CD01761EAFF0004E0C5 /* MP42VobSubImporter.m */; };
 		A92D8CD41761EAFF0004E0C5 /* MP42XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D8CD21761EAFF0004E0C5 /* MP42XMLReader.m */; };
+		A92E3BEA177CC84100E7F7BB /* MP42Image.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E3BE9177CC84100E7F7BB /* MP42Image.m */; };
+		A92E3BEE177CC8E600E7F7BB /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92E3BED177CC8E600E7F7BB /* Quartz.framework */; };
 		A942AF651679197000780565 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A942AF631679197000780565 /* libjpeg.a */; };
 		A942AF661679197000780565 /* libtesseract.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A942AF641679197000780565 /* libtesseract.a */; };
 		A94871D20F7914D2008DBC94 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94871D10F7914D2008DBC94 /* QTKit.framework */; };
@@ -130,6 +132,9 @@
 		A92D8CD01761EAFF0004E0C5 /* MP42VobSubImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42VobSubImporter.m; path = ../MP42VobSubImporter.m; sourceTree = "<group>"; };
 		A92D8CD11761EAFF0004E0C5 /* MP42XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42XMLReader.h; path = ../MP42XMLReader.h; sourceTree = "<group>"; };
 		A92D8CD21761EAFF0004E0C5 /* MP42XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42XMLReader.m; path = ../MP42XMLReader.m; sourceTree = "<group>"; };
+		A92E3BE8177CC84100E7F7BB /* MP42Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Image.h; sourceTree = "<group>"; };
+		A92E3BE9177CC84100E7F7BB /* MP42Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Image.m; sourceTree = "<group>"; };
+		A92E3BED177CC8E600E7F7BB /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		A942AF631679197000780565 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = ../Tesseract/lib/libjpeg.a; sourceTree = "<group>"; };
 		A942AF641679197000780565 /* libtesseract.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtesseract.a; path = ../Tesseract/lib/libtesseract.a; sourceTree = "<group>"; };
 		A94871D10F7914D2008DBC94 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
@@ -224,6 +229,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A92E3BEE177CC8E600E7F7BB /* Quartz.framework in Frameworks */,
 				A95F07C2148BA07600D663E5 /* liblept.a in Frameworks */,
 				A942AF651679197000780565 /* libjpeg.a in Frameworks */,
 				A942AF661679197000780565 /* libtesseract.a in Frameworks */,
@@ -275,6 +281,7 @@
 		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				A92E3BED177CC8E600E7F7BB /* Quartz.framework */,
 				A9C0605116831CBE00FE3D98 /* libbz2.dylib */,
 				A91F63490FB0C70100B96B33 /* libicucore.dylib */,
 				A942AF631679197000780565 /* libjpeg.a */,
@@ -366,6 +373,8 @@
 				A9B46AEA12B79EC60040517A /* MP42SubtitleTrack.m */,
 				A9B46AED12B79EC60040517A /* MP42Utilities.h */,
 				A9B46AEE12B79EC60040517A /* MP42Utilities.m */,
+				A92E3BE8177CC84100E7F7BB /* MP42Image.h */,
+				A92E3BE9177CC84100E7F7BB /* MP42Image.m */,
 				A9B46AF112B79EC60040517A /* muxer */,
 				A9B46AFD12B79EC60040517A /* SBAudioConverter.h */,
 				A9B46AFE12B79EC60040517A /* SBAudioConverter.m */,
@@ -559,6 +568,7 @@
 				A92D8CD31761EAFF0004E0C5 /* MP42VobSubImporter.m in Sources */,
 				A92D8CD41761EAFF0004E0C5 /* MP42XMLReader.m in Sources */,
 				A971D67317730E0B0039DE54 /* SBHtmlParser.m in Sources */,
+				A92E3BEA177CC84100E7F7BB /* MP42Image.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

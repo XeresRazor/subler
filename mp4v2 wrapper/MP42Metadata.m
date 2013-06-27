@@ -9,6 +9,7 @@
 #import "MP42Metadata.h"
 #import "MP42Utilities.h"
 #import "MP42XMLReader.h"
+#import "MP42Image.h"
 #import "RegexKitLite.h"
 #import "SBRatings.h"
 
@@ -187,19 +188,20 @@ static const genreType_t genreType_strings[] = {
 
 @interface MP42Metadata (Private)
 
--(void) readMetaDataFromFileHandle:(MP4FileHandle)fileHandle;
+- (void)readMetaDataFromFileHandle:(MP4FileHandle)fileHandle;
 
 @end
 
 @implementation MP42Metadata
 
--(id)init
+- (id)init
 {
 	if ((self = [super init]))
 	{
         presetName = @"Unnamed Set";
 		sourceURL = nil;
         tagsDict = [[NSMutableDictionary alloc] init];
+        artworks = [[NSMutableArray alloc] init];
         isEdited = NO;
         isArtworkEdited = NO;
 	}
@@ -207,12 +209,13 @@ static const genreType_t genreType_strings[] = {
     return self;
 }
 
--(id)initWithSourceURL:(NSURL *)URL fileHandle:(MP4FileHandle)fileHandle
+- (id)initWithSourceURL:(NSURL *)URL fileHandle:(MP4FileHandle)fileHandle
 {
 	if ((self = [super init]))
 	{
 		sourceURL = URL;
         tagsDict = [[NSMutableDictionary alloc] init];
+        artworks = [[NSMutableArray alloc] init];
 
         [self readMetaDataFromFileHandle: fileHandle];
         isEdited = NO;
@@ -222,12 +225,14 @@ static const genreType_t genreType_strings[] = {
     return self;
 }
 
-- (id) initWithFileURL:(NSURL *)URL;
+- (id)initWithFileURL:(NSURL *)URL;
 {
     if ((self = [super init]))
 	{
 		sourceURL = URL;
-        tagsDict = [[NSMutableDictionary alloc] init];        
+        tagsDict = [[NSMutableDictionary alloc] init];
+        artworks = [[NSMutableArray alloc] init];
+
         isEdited = NO;
         isArtworkEdited = NO;
 
@@ -240,7 +245,7 @@ static const genreType_t genreType_strings[] = {
     return self;
 }
 
-- (NSString*) stringFromArray:(NSArray *)array
+- (NSString *)stringFromArray:(NSArray *)array
 {
     NSString *result = [NSString string];
     for (NSDictionary* name in array) {
@@ -440,8 +445,10 @@ static const genreType_t genreType_strings[] = {
         NSImage *artworkImage = nil;
         artworkImage = [[NSImage alloc] initByReferencingFile:imageFilePath];
         if([artworkImage isValid]) {
+            MP42Image *artwork = [[MP42Image alloc] initWithImage:artworkImage];
+            [artworks addObject:artwork];
+            [artworkImage release];
             [artwork release];
-            artwork = artworkImage;
             isEdited =YES;
             isArtworkEdited = YES;
             return YES;
@@ -450,8 +457,8 @@ static const genreType_t genreType_strings[] = {
             return NO;
         }
     } else {
-        [artwork release];
-        artwork = nil;
+        [artworks release];
+        artworks = nil;
         isEdited =YES;
         isArtworkEdited = YES;
         return YES;
@@ -899,11 +906,11 @@ static const genreType_t genreType_strings[] = {
                      forKey:@"Category"];
 
     if (tags->artwork) {
-        NSData *imageData = [NSData dataWithBytes:tags->artwork->data length:tags->artwork->size];
-        NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
-        if (imageRep != nil) {
-            artwork = [[NSImage alloc] initWithSize:[imageRep size]];
-            [artwork addRepresentation:imageRep];
+        uint32_t i;
+        for (i = 0; i < tags->artworkCount; i++) {
+            MP42Image *artwork = [[MP42Image alloc] initWithBytes:tags->artwork[i].data length:tags->artwork[i].size type:tags->artwork[i].type];
+            [artworks addObject:artwork];
+            [artwork release];
         }
     }
 
@@ -1203,25 +1210,40 @@ static const genreType_t genreType_strings[] = {
 
     MP4TagsSetSortTVShow(tags, [[tagsDict valueForKey:@"Sort TV Show"] UTF8String]);
 
-    if (artwork && isArtworkEdited) {
-        MP4TagArtwork newArtwork;
-        NSArray *representations;
-        NSData *bitmapData;
+    uint32_t j;
+    for (j = 0; j < tags->artworkCount; j++)
+        MP4TagsRemoveArtwork(tags, j);
 
-        representations = [artwork representations];
-        bitmapData = [NSBitmapImageRep representationOfImageRepsInArray:representations 
-                                                              usingType:NSPNGFileType properties:nil];
+    if ([artworks count] && isArtworkEdited) {
+        uint32_t i;
+        for (i = 0; i < [artworks count]; i++) {
+            MP42Image *artwork;
+            MP4TagArtwork newArtwork;
+            NSArray *representations;
+            NSData *bitmapData;
 
-        newArtwork.data = (void *)[bitmapData bytes];
-        newArtwork.size = [bitmapData length];
-        newArtwork.type = MP4_ART_PNG;
-        if (!tags->artworkCount)
-            MP4TagsAddArtwork(tags, &newArtwork);
-        else
-            MP4TagsSetArtwork(tags, 0, &newArtwork);
+            artwork = [artworks objectAtIndex:i];
+            if (artwork.data) {
+                newArtwork.data = (void *)[artwork.data bytes];
+                newArtwork.size = [artwork.data length];
+                newArtwork.type = artwork.type;
+            }
+            else {
+                representations = [artwork.image representations];
+                bitmapData = [NSBitmapImageRep representationOfImageRepsInArray:representations
+                                                                      usingType:NSPNGFileType properties:nil];
+
+                newArtwork.data = (void *)[bitmapData bytes];
+                newArtwork.size = [bitmapData length];
+                newArtwork.type = MP4_ART_PNG;
+            }
+
+            if (tags->artworkCount > i)
+                MP4TagsSetArtwork(tags, i, &newArtwork);
+            else
+                MP4TagsAddArtwork(tags, &newArtwork);
+        }
     }
-    else if (tags->artworkCount && isArtworkEdited)
-        MP4TagsRemoveArtwork(tags, 0);
 
     MP4TagsStore(tags, fileHandle);
     MP4TagsFree(tags);
@@ -1386,9 +1408,9 @@ static const genreType_t genreType_strings[] = {
             if((tagValue = [newMetadata.tagsDict valueForKey:key]))
                 [tagsDict setObject:tagValue forKey:key];
 
-    if ([newMetadata artwork]) {
-        artwork = [[newMetadata artwork] retain];
+    for (NSImage *artwork in newMetadata.artworks) {
         isArtworkEdited = YES;
+        [artworks addObject:artwork];
     }
 
     mediaKind = newMetadata.mediaKind;
@@ -1408,25 +1430,31 @@ static const genreType_t genreType_strings[] = {
 @synthesize presetName;
 
 @synthesize isEdited;
+
+@synthesize artworks;
+
 @synthesize isArtworkEdited;
-@synthesize artwork;
 @synthesize artworkURL;
 @synthesize artworkThumbURLs;
 @synthesize artworkFullsizeURLs;
 @synthesize artworkProviderNames;
+
 @synthesize mediaKind;
 @synthesize contentRating;
 @synthesize hdVideo;
 @synthesize gapless;
 @synthesize podcast;
 
+@synthesize tagsDict;
+
+
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-    [coder encodeInt:1 forKey:@"MP42TagEncodeVersion"];
+    [coder encodeInt:2 forKey:@"MP42TagEncodeVersion"];
 
     [coder encodeObject:presetName forKey:@"MP42SetName"];
     [coder encodeObject:tagsDict forKey:@"MP42TagsDict"];
-    [coder encodeObject:artwork forKey:@"MP42Artwork"];
+    [coder encodeObject:artworks forKey:@"MP42Artwork"];
     [coder encodeBool:isArtworkEdited forKey:@"MP42ArtworkEdited"];
 
     [coder encodeInt:mediaKind forKey:@"MP42MediaKind"];
@@ -1445,7 +1473,8 @@ static const genreType_t genreType_strings[] = {
     presetName = [[decoder decodeObjectForKey:@"MP42SetName"] retain];
 
     tagsDict = [[decoder decodeObjectForKey:@"MP42TagsDict"] retain];
-    artwork = [[decoder decodeObjectForKey:@"MP42Artwork"] retain];
+    // Add version 1 support
+    artworks = [[decoder decodeObjectForKey:@"MP42Artwork"] retain];
     isArtworkEdited = [decoder decodeBoolForKey:@"MP42ArtworkEdited"];
 
     mediaKind = [decoder decodeIntForKey:@"MP42MediaKind"];
@@ -1480,7 +1509,8 @@ static const genreType_t genreType_strings[] = {
 {
     [presetName release];
 
-    [artwork release];
+    [artworks release];
+
     [artworkURL release];
     [artworkThumbURLs release];
     [artworkFullsizeURLs release];
@@ -1489,7 +1519,5 @@ static const genreType_t genreType_strings[] = {
     [tagsDict release];
     [super dealloc];
 }
-
-@synthesize tagsDict;
 
 @end
