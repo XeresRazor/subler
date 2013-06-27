@@ -11,6 +11,8 @@
 #import "MP42AVFImporter.h"
 #import "SBLanguages.h"
 #import "MP42File.h"
+#import "MP42Image.h"
+
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
@@ -341,7 +343,7 @@
         id artworkData = [[items lastObject] value];
         if ([artworkData isKindOfClass:[NSData class]]) {
             NSImage *image = [[NSImage alloc] initWithData:artworkData];
-            [metadata setArtwork:image];
+            [metadata.artworks addObject:[[[MP42Image alloc] initWithImage:image] autorelease]];
             [image release];
         }
     }
@@ -434,7 +436,7 @@
             id artworkData = [[items lastObject] value];
             if ([artworkData isKindOfClass:[NSData class]]) {
                 NSImage *image = [[NSImage alloc] initWithData:artworkData];
-                [metadata setArtwork:image];
+                [metadata.artworks addObject:[[[MP42Image alloc] initWithImage:image] autorelease]];
                 [image release];
             }
         }

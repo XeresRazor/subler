@@ -7,6 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Quartz/Quartz.h>
+
 #import "MP42File.h"
 #import "SBTableView.h"
 
@@ -18,7 +20,6 @@
 
     IBOutlet SBTableView    *tagsTableView;
 
-    IBOutlet NSImageView    *imageView;
     IBOutlet NSPopUpButton  *mediaKind;
     IBOutlet NSPopUpButton  *contentRating;
     IBOutlet NSPopUpButton  *hdVideo;
@@ -41,6 +42,11 @@
     NSMutableDictionary  *dct;
     NSTableColumn *tabCol;
     CGFloat width;
+    
+    IBOutlet IKImageBrowserView *imageBrowser;
+
+    IBOutlet NSButton       *addArtwork;
+    IBOutlet NSButton       *removeArtwork;
 }
 
 - (void) setFile: (MP42File *)file;
@@ -55,14 +61,13 @@
 - (IBAction) closeSaveSheet: (id) sender;
 - (IBAction) saveSet: (id)sender;
 
-- (IBAction) updateArtwork: (id) sender;
-
 - (IBAction) changeMediaKind: (id) sender;
 - (IBAction) changecContentRating: (id) sender;
 - (IBAction) changeGapless: (id) sender;
 - (IBAction) changePodcast: (id) sender;
 - (IBAction) changehdVideo: (id) sender;
 
-
+- (IBAction) selectArtwork: (id) sender;
+- (IBAction) removeArtwork: (id) sender;
 
 @end

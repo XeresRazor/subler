@@ -12,6 +12,7 @@ NSString *MetadataPBoardType = @"MetadataPBoardType";
 #import "SBTableView.h"
 #import "SBPresetManager.h"
 #import "SBRatings.h"
+#import "MP42Image.h"
 
 @interface MovieViewController (Private)
 - (void) updateSetsMenu: (id)sender;
@@ -78,8 +79,6 @@ static NSInteger sortFunction (id ldict, id rdict, void *context)
                       [NSColor grayColor], NSForegroundColorAttributeName,
                        nil] retain];
 
-    [imageView setImage:[metadata artwork]];
-
     [mediaKind selectItemWithTag:metadata.mediaKind];
     [contentRating selectItemWithTag:metadata.contentRating];
     [hdVideo selectItemWithTag:metadata.hdVideo];
@@ -95,6 +94,9 @@ static NSInteger sortFunction (id ldict, id rdict, void *context)
     [tagsTableView set_pasteboardTypes:[NSArray arrayWithObject:MetadataPBoardType]];
     
     dct = [[NSMutableDictionary alloc] init];
+    
+    [imageBrowser setAllowsReordering:YES];
+    [imageBrowser reloadData];
 }
 
 - (void) setFile: (MP42File *)file
@@ -247,9 +249,9 @@ static NSInteger sortFunction (id ldict, id rdict, void *context)
             [tagDict setValue:[[newTags tagsDict] valueForKey:key] forKey:key];
     }
 
-    metadata.artwork = newTags.artwork;
-    [imageView setImage:newTags.artwork];
+    [metadata.artworks addObjectsFromArray:newTags.artworks];
     [metadata setIsArtworkEdited:YES];
+    [imageBrowser reloadData];
 
     metadata.mediaKind = newTags.mediaKind;
     [mediaKind selectItemWithTag:metadata.mediaKind];
@@ -505,15 +507,6 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         [removeTag setEnabled:NO];
 }
 
-- (IBAction) updateArtwork: (id) sender
-{
-    metadata.artwork = [imageView image];
-    metadata.isEdited = YES;
-    metadata.isArtworkEdited = YES;
-
-    [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
-}
-
 - (IBAction) changeMediaKind: (id) sender
 {
     uint8_t tagName = [[sender selectedItem] tag];
@@ -592,6 +585,119 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
     }
 }
+
+#pragma mark -
+#pragma mark IKImageBrowserDataSource
+
+- (NSUInteger)numberOfItemsInImageBrowser:(IKImageBrowserView *) aBrowser
+{
+    return [metadata.artworks count];
+}
+
+- (id)imageBrowser:(IKImageBrowserView *) aBrowser itemAtIndex:(NSUInteger)index
+{
+    return [metadata.artworks objectAtIndex:index];
+}
+
+- (BOOL)imageBrowser:(IKImageBrowserView *) aBrowser moveItemsAtIndexes: (NSIndexSet *)indexes toIndex:(NSUInteger)destinationIndex
+{
+    destinationIndex -= [indexes countOfIndexesInRange:NSMakeRange(0, destinationIndex)];;
+
+    NSArray *objects = [metadata.artworks objectsAtIndexes:indexes];
+    [metadata.artworks removeObjectsAtIndexes:indexes];
+
+    for (id object in [objects reverseObjectEnumerator])
+        [metadata.artworks insertObject:object atIndex:destinationIndex];
+
+    metadata.isEdited = YES;
+    metadata.isArtworkEdited = YES;
+    [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+
+    return YES;
+}
+
+- (NSUInteger)imageBrowser:(IKImageBrowserView *) aBrowser writeItemsAtIndexes:(NSIndexSet *) itemIndexes toPasteboard:(NSPasteboard *)pasteboard
+{
+    NSInteger index;
+    [pasteboard declareTypes:[NSArray arrayWithObject:NSTIFFPboardType] owner:nil];
+
+    for (index = [itemIndexes lastIndex]; index != NSNotFound; index = [itemIndexes indexLessThanIndex:index]) {
+        NSArray *representations = [[[metadata.artworks objectAtIndex:index] image] representations];
+        NSData *bitmapData = [NSBitmapImageRep representationOfImageRepsInArray:representations
+                                                              usingType:NSTIFFFileType properties:nil];
+
+        [pasteboard setData:bitmapData forType:NSTIFFPboardType];
+    }
+
+    return [itemIndexes count];
+}
+
+- (void)imageBrowser:(IKImageBrowserView *) aBrowser removeItemsAtIndexes:(NSIndexSet *) indexes
+{
+    [metadata.artworks removeObjectsAtIndexes:indexes];
+
+    metadata.isEdited = YES;
+    metadata.isArtworkEdited = YES;
+
+    [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+}
+
+#pragma mark -
+#pragma mark IKImageBrowserDelegate
+
+- (void)imageBrowser:(IKImageBrowserView *) aBrowser cellWasDoubleClickedAtIndex:(NSUInteger) index
+{
+}
+
+- (void)imageBrowserSelectionDidChange:(IKImageBrowserView *) aBrowser
+{
+    NSIndexSet *rowIndexes = [aBrowser selectionIndexes];
+    
+    if ([rowIndexes count])
+        [removeArtwork setEnabled:YES];
+    else
+        [removeArtwork setEnabled:NO];
+}
+
+- (IBAction) removeArtwork:(id) sender {
+    NSIndexSet *rowIndexes = [imageBrowser selectionIndexes];
+
+    metadata.isEdited = YES;
+    metadata.isArtworkEdited = YES;
+
+    [metadata.artworks removeObjectsAtIndexes: rowIndexes];
+    [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+
+    [imageBrowser reloadData];
+}
+
+- (IBAction) selectArtwork: (id) sender
+{
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    panel.allowsMultipleSelection = NO;
+    panel.canChooseFiles = YES;
+    panel.canChooseDirectories = NO;
+    [panel setAllowedFileTypes:[NSArray arrayWithObjects:@"jpg", @"jpeg", nil]];
+    
+    [panel beginSheetModalForWindow: [[self view] window] completionHandler:^(NSInteger result) {
+        if (result == NSFileHandlingPanelOKButton) {
+            NSData *artworkData = [[NSData alloc] initWithContentsOfURL:[panel.URLs objectAtIndex: 0]];
+            MP42Image *artwork = [[MP42Image alloc] initWithData:artworkData type:MP42_ART_JPEG];
+
+            metadata.isArtworkEdited = YES;
+            metadata.isEdited = YES;
+
+            [metadata.artworks addObject:artwork];
+            [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+            [imageBrowser reloadData];
+            
+            [artworkData release];
+            [artwork release];
+        }
+    }];
+}
+
+
 
 - (void) dealloc
 {

@@ -14,7 +14,8 @@
     NSURL                   *sourceURL;
     NSMutableDictionary     *tagsDict;
 
-    NSImage                 *artwork;
+    NSMutableArray          *artworks;
+    
     NSURL                   *artworkURL;
     NSArray                 *artworkThumbURLs;
     NSArray                 *artworkFullsizeURLs;
@@ -33,6 +34,7 @@
 
 - (id) initWithSourceURL:(NSURL *)URL fileHandle:(MP4FileHandle)fileHandle;
 - (id) initWithFileURL:(NSURL *)URL;
+
 - (NSArray *) availableMetadata;
 - (NSArray *) writableMetadata;
 
@@ -51,11 +53,14 @@
 @property(readonly) NSMutableDictionary *tagsDict;
 
 @property(readwrite, retain) NSString   *presetName;
-@property(readwrite, retain) NSImage    *artwork;
+
+@property(readwrite, retain) NSMutableArray *artworks;
+
 @property(readwrite, retain) NSURL      *artworkURL;
 @property(readwrite, retain) NSArray    *artworkThumbURLs;
 @property(readwrite, retain) NSArray    *artworkFullsizeURLs;
 @property(readwrite, retain) NSArray    *artworkProviderNames;
+
 @property(readwrite) uint8_t    mediaKind;
 @property(readwrite) uint8_t    contentRating;
 @property(readwrite) uint8_t    hdVideo;

@@ -13,6 +13,7 @@
 #import "RegexKitLite.h"
 #import "SBLanguages.h"
 #import "MetadataImporter.h"
+#import "MP42Image.h"
 
 @implementation MetadataSearchController
 
@@ -368,15 +369,10 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (artworkData && [artworkData length]) {
-
-                    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:artworkData];
-                    if (imageRep != nil) {
-                        NSImage *artwork = [[NSImage alloc] initWithSize:[imageRep size]];
-                        [artwork addRepresentation:imageRep];
-                        selectedResult.artwork = artwork;
-                        [artworkData release];
-                        [artwork release];
-                    }
+                    MP42Image *artwork = [[MP42Image alloc] initWithData:artworkData type:MP42_ART_JPEG];
+                    [selectedResult.artworks addObject:artwork];
+                    [artworkData release];
+                    [artwork release];
                 }
                 [self addMetadata];
             });
