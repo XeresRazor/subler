@@ -10,8 +10,7 @@
 
 @class NSImage;
 
-typedef enum MP42TagArtworkType_e
-{
+typedef enum MP42TagArtworkType_e {
     MP42_ART_UNDEFINED = 0,
     MP42_ART_BMP       = 1,
     MP42_ART_GIF       = 2,
@@ -19,8 +18,7 @@ typedef enum MP42TagArtworkType_e
     MP42_ART_PNG       = 4
 } MP42TagArtworkType;
 
-@interface MP42Image : NSObject
-{
+@interface MP42Image : NSObject <NSCoding> {
     NSImage *_image;
     NSData *_data;
     NSInteger _type;

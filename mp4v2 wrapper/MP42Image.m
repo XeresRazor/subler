@@ -58,12 +58,26 @@ NSLock *lock;
     return self.image;
 }
 
-- (void)dealloc
+- (void)encodeWithCoder:(NSCoder *)coder
 {
-    [_image release];
-    [_data release];
+    if (_data)
+        [coder encodeObject:_data forKey:@"MP42Image_Data"];
+    else
+        [coder encodeObject:_image forKey:@"MP42Image"];
+    
+    [coder encodeInt:_type forKey:@"MP42ImageType"];
+}
 
-    [super dealloc];
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    self = [super init];
+
+    _image = [[decoder decodeObjectForKey:@"MP42Image"] retain];
+    _data = [[decoder decodeObjectForKey:@"MP42Image_Data"] retain];
+
+    _type = [decoder decodeIntForKey:@"MP42ImageType"];
+
+    return self;
 }
 
 - (NSImage*)image
@@ -79,6 +93,14 @@ NSLock *lock;
     }
 
     return nil;
+}
+
+- (void)dealloc
+{
+    [_image release];
+    [_data release];
+    
+    [super dealloc];
 }
 
 @synthesize data = _data;
