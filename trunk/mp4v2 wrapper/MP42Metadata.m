@@ -1470,11 +1470,24 @@ static const genreType_t genreType_strings[] = {
 {
     self = [super init];
 
-    presetName = [[decoder decodeObjectForKey:@"MP42SetName"] retain];
+    NSInteger version = [decoder decodeIntForKey:@"MP42TagEncodeVersion"];
 
+    presetName = [[decoder decodeObjectForKey:@"MP42SetName"] retain];
     tagsDict = [[decoder decodeObjectForKey:@"MP42TagsDict"] retain];
-    // Add version 1 support
-    artworks = [[decoder decodeObjectForKey:@"MP42Artwork"] retain];
+
+    // Subler 0.19 and previous sets
+    if (version < 2) {
+        artworks = [[NSMutableArray alloc] init];
+        id image = [[decoder decodeObjectForKey:@"MP42Artwork"] retain];
+        if (image) {
+            MP42Image *artwork = [[MP42Image alloc] initWithImage:image];
+            [artworks addObject: artwork];
+            [artwork release];
+        }
+    }
+    else
+        artworks = [[decoder decodeObjectForKey:@"MP42Artwork"] retain];
+
     isArtworkEdited = [decoder decodeBoolForKey:@"MP42ArtworkEdited"];
 
     mediaKind = [decoder decodeIntForKey:@"MP42MediaKind"];

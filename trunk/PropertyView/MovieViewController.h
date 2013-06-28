@@ -67,6 +67,8 @@
 - (IBAction) changePodcast: (id) sender;
 - (IBAction) changehdVideo: (id) sender;
 
+- (IBAction) zoomSliderDidChange:(id)sender;
+
 - (IBAction) selectArtwork: (id) sender;
 - (IBAction) removeArtwork: (id) sender;
 

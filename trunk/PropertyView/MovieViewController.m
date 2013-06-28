@@ -39,7 +39,7 @@ static NSInteger sortFunction (id ldict, id rdict, void *context)
 - (void)awakeFromNib
 {
     [self updateSetsMenu:self];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateSetsMenu:)
                                                  name:@"SBPresetManagerUpdatedNotification" object:nil];
@@ -92,10 +92,10 @@ static NSInteger sortFunction (id ldict, id rdict, void *context)
     [tagsTableView setDoubleAction:@selector(doubleClickAction:)];
     [tagsTableView setTarget:self];
     [tagsTableView set_pasteboardTypes:[NSArray arrayWithObject:MetadataPBoardType]];
-    
+
     dct = [[NSMutableDictionary alloc] init];
-    
-    [imageBrowser setAllowsReordering:YES];
+
+    [imageBrowser setZoomValue:1.0];
     [imageBrowser reloadData];
 }
 
@@ -659,6 +659,11 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         [removeArtwork setEnabled:NO];
 }
 
+- (IBAction) zoomSliderDidChange:(id)sender {
+    [imageBrowser setZoomValue:[sender floatValue]];
+    [imageBrowser setNeedsDisplay:YES];
+}
+
 - (IBAction) removeArtwork:(id) sender {
     NSIndexSet *rowIndexes = [imageBrowser selectionIndexes];
 
@@ -674,30 +679,97 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 - (IBAction) selectArtwork: (id) sender
 {
     NSOpenPanel *panel = [NSOpenPanel openPanel];
-    panel.allowsMultipleSelection = NO;
+    panel.allowsMultipleSelection = YES;
     panel.canChooseFiles = YES;
     panel.canChooseDirectories = NO;
-    [panel setAllowedFileTypes:[NSArray arrayWithObjects:@"jpg", @"jpeg", nil]];
-    
+    [panel setAllowedFileTypes:[NSArray arrayWithObject:@"public.image"]];
+
     [panel beginSheetModalForWindow: [[self view] window] completionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {
-            NSData *artworkData = [[NSData alloc] initWithContentsOfURL:[panel.URLs objectAtIndex: 0]];
-            MP42Image *artwork = [[MP42Image alloc] initWithData:artworkData type:MP42_ART_JPEG];
+            
+            for (NSURL *url in [panel URLs]) {
+                NSString *type;
+
+                if ([url getResourceValue:&type forKey:NSURLTypeIdentifierKey error:NULL]) {
+                    if (UTTypeConformsTo((CFStringRef)type, (CFStringRef)@"public.jpeg")) {
+                        MP42Image *artwork = [[MP42Image alloc] initWithData:[NSData dataWithContentsOfURL:url] type:MP42_ART_JPEG];
+
+                        [metadata.artworks addObject:artwork];
+
+                        [artwork release];
+                    }
+                    else {
+                        NSImage * artworkImage = [[NSImage alloc] initWithContentsOfURL:url];
+                        MP42Image *artwork = [[MP42Image alloc] initWithImage:artworkImage];
+                        [metadata.artworks addObject:artwork];
+                        
+                        [artwork release];
+                        [artworkImage release];
+                    }
+                }
+            }
 
             metadata.isArtworkEdited = YES;
             metadata.isEdited = YES;
-
-            [metadata.artworks addObject:artwork];
             [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
             [imageBrowser reloadData];
-            
-            [artworkData release];
-            [artwork release];
         }
     }];
 }
 
+- (NSDragOperation)draggingEntered:(id < NSDraggingInfo >)sender
+{
+    return NSDragOperationGeneric;
+}
 
+- (NSDragOperation)draggingUpdated:(id < NSDraggingInfo >)sender
+{
+    return NSDragOperationGeneric;
+}
+
+- (BOOL)performDragOperation:(id )sender
+{
+	NSArray * files = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+
+    for (NSString *file in files) {
+        NSURL *url = [NSURL fileURLWithPath:file];
+        NSString *type;
+        NSError *error;
+
+        if ([url getResourceValue:&type forKey:NSURLTypeIdentifierKey error:&error]) {
+            if (UTTypeConformsTo((CFStringRef)type, (CFStringRef)@"public.jpeg")) {
+                MP42Image *artwork = [[MP42Image alloc] initWithData:[NSData dataWithContentsOfURL:url] type:MP42_ART_JPEG];
+
+                [metadata.artworks addObject:artwork];
+
+                [artwork release];
+            }
+            else {
+                NSImage * artworkImage = [[NSImage alloc] initWithContentsOfURL:url];
+                MP42Image *artwork = [[MP42Image alloc] initWithImage:artworkImage];
+                [metadata.artworks addObject:artwork];
+                
+                [artwork release];
+                [artworkImage release];
+            }
+        }
+    }
+
+    metadata.isArtworkEdited = YES;
+    metadata.isEdited = YES;
+    [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+    [imageBrowser reloadData];
+
+	if ([metadata.artworks count])
+        return YES;
+
+	return NO;
+}
+
+- (void)concludeDragOperation:(id < NSDraggingInfo >)sender
+{
+	[imageBrowser reloadData];
+}
 
 - (void) dealloc
 {
