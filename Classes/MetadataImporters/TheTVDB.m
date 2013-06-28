@@ -136,13 +136,17 @@
     [metadata setTag:[aSeries retrieveForPath:@"Overview.text"] forKey:@"Series Description"];
 	[metadata setTag:[aEpisode retrieveForPath:@"SeasonNumber.text"] forKey:@"TV Season"];
 	[metadata setTag:[aEpisode retrieveForPath:@"EpisodeNumber.text"] forKey:@"TV Episode #"];
-	[metadata setTag:[aEpisode retrieveForPath:@"ProductionCode.text"] forKey:@"TV Episode ID"];
+
+    NSString *episodeID = [NSString stringWithFormat:@"%d%02d", [[aEpisode retrieveForPath:@"SeasonNumber.text"] integerValue],
+                            [[aEpisode retrieveForPath:@"EpisodeNumber.text"] integerValue]];
+	[metadata setTag:episodeID forKey:@"TV Episode ID"];
+
 	[metadata setTag:[aEpisode retrieveForPath:@"SeasonNumber.text"] forKey:@"TV Season"];
 	[metadata setTag:[aEpisode retrieveForPath:@"EpisodeName.text"] forKey:@"Name"];
 	[metadata setTag:[aEpisode retrieveForPath:@"FirstAired.text"] forKey:@"Release Date"];
 	[metadata setTag:[aEpisode retrieveForPath:@"Overview.text"] forKey:@"Description"];
 	[metadata setTag:[aEpisode retrieveForPath:@"Overview.text"] forKey:@"Long Description"];
-	[metadata setTag:[aEpisode retrieveForPath:@"EpisodeName.text"] forKey:@"Track #"];
+	[metadata setTag:[aEpisode retrieveForPath:@"EpisodeNumber.text"] forKey:@"Track #"];
 	[metadata setTag:[TheTVDB cleanPeopleList:[aEpisode retrieveForPath:@"Director.text"]] forKey:@"Director"];
 	[metadata setTag:[TheTVDB cleanPeopleList:[aEpisode retrieveForPath:@"Director.text"]] forKey:@"Artist"];
 	[metadata setTag:[TheTVDB cleanPeopleList:[aEpisode retrieveForPath:@"Writer.text"]] forKey:@"Screenwriters"];
