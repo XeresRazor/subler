@@ -234,17 +234,24 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 			metadata.mediaKind = 10; // TV show
 			[metadata setTag:[r valueForKey:@"artistName"] forKey:@"TV Show"];
 			NSString *s = [r valueForKey:@"collectionName"];
+            NSString *season;
 			if (![[store valueForKey:@"season"] isEqualToString:@""]) {
 				NSArray *sa = [[s lowercaseString] componentsSeparatedByString:[NSString stringWithFormat:@", %@ ", [store valueForKey:@"season"]]];
 				if ([sa count] > 1) {
-					[metadata setTag:[sa objectAtIndex:1] forKey:@"TV Season"];
+                    season = [sa objectAtIndex:1];
 				} else {
-					[metadata setTag:@"1" forKey:@"TV Season"];
+					season = @"1";
 				}
 			}
+            [metadata setTag:season forKey:@"TV Season"];
 			[metadata setTag:[r valueForKey:@"trackNumber"] forKey:@"TV Episode #"];
 			[metadata setTag:[r valueForKey:@"trackName"] forKey:@"Name"];
 			[metadata setTag:[NSString stringWithFormat:@"%@/%@", [r valueForKey:@"trackNumber"], [r valueForKey:@"trackCount"]] forKey:@"Track #"];
+
+            NSString *episodeID = [NSString stringWithFormat:@"%d%02d", [season integerValue],
+                                   [[r valueForKey:@"trackNumber"] integerValue]];
+            [metadata setTag:episodeID forKey:@"TV Episode ID"];
+
 			[metadata setTag:[r valueForKey:@"artistId"] forKey:@"artistID"];
 			[metadata setTag:[r valueForKey:@"collectionId"] forKey:@"playlistID"];
 		}
