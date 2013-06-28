@@ -114,8 +114,6 @@
 		A9FD5ECF0F3C8AF100817716 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9FD5ECE0F3C8AF100817716 /* MovieViewController.m */; };
 		CD03087417576A550093A0BE /* TheMovieDB3.m in Sources */ = {isa = PBXBuildFile; fileRef = CD03087317576A550093A0BE /* TheMovieDB3.m */; };
 		CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CD03087817576AE50093A0BE /* MetadataImporter.m */; };
-		CD08BA9612F62829006BA549 /* tmdb-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CD08BA9512F62829006BA549 /* tmdb-logo.png */; };
-		CD16BC4712F6BC7F00AF5453 /* tvdb-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CD16BC4612F6BC7F00AF5453 /* tvdb-logo.png */; };
 		CD3F2A881761A143000D4C73 /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CD3F2A871761A143000D4C73 /* XMLReader.m */; };
 		CD4E6E5D12F744210095C84F /* ArtworkSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD4E6E5B12F744210095C84F /* ArtworkSelector.xib */; };
 		CD56963212FAAD680029FADB /* ArtworkSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56963112FAAD680029FADB /* ArtworkSelector.m */; };
@@ -369,8 +367,6 @@
 		CD03087317576A550093A0BE /* TheMovieDB3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TheMovieDB3.m; path = Classes/MetadataImporters/TheMovieDB3.m; sourceTree = "<group>"; };
 		CD03087717576AE50093A0BE /* MetadataImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataImporter.h; path = Classes/MetadataImporters/MetadataImporter.h; sourceTree = "<group>"; };
 		CD03087817576AE50093A0BE /* MetadataImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataImporter.m; path = Classes/MetadataImporters/MetadataImporter.m; sourceTree = "<group>"; };
-		CD08BA9512F62829006BA549 /* tmdb-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tmdb-logo.png"; path = "images/tmdb-logo.png"; sourceTree = "<group>"; };
-		CD16BC4612F6BC7F00AF5453 /* tvdb-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tvdb-logo.png"; path = "images/tvdb-logo.png"; sourceTree = "<group>"; };
 		CD3F2A861761A143000D4C73 /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMLReader.h; path = Others/XMLReader.h; sourceTree = "<group>"; };
 		CD3F2A871761A143000D4C73 /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMLReader.m; path = Others/XMLReader.m; sourceTree = "<group>"; };
 		CD4A86AA1234AFA10054970A /* Simple.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Simple.pm; sourceTree = "<group>"; };
@@ -560,8 +556,6 @@
 				A975644A132A325C0051ED08 /* info.pdf */,
 				A975644B132A325C0051ED08 /* info-over.pdf */,
 				A975644C132A325C0051ED08 /* info-pressed.pdf */,
-				CD08BA9512F62829006BA549 /* tmdb-logo.png */,
-				CD16BC4612F6BC7F00AF5453 /* tvdb-logo.png */,
 				A9B46AA312B79BB10040517A /* Subler.icns */,
 				A95C881C0F827BFB00F51A22 /* ToolbarRemoveTemplate.png */,
 				A96371B7164695070083BB80 /* ToolbarRemoveTemplate@2x.png */,
@@ -904,8 +898,6 @@
 				A92A4FB812B0F2F300751FA5 /* prefs-audio.png in Resources */,
 				A9B46AA412B79BB10040517A /* Subler.icns in Resources */,
 				CD71FEA612F1B62600F0A98D /* MetadataSearch.xib in Resources */,
-				CD08BA9612F62829006BA549 /* tmdb-logo.png in Resources */,
-				CD16BC4712F6BC7F00AF5453 /* tvdb-logo.png in Resources */,
 				CD4E6E5D12F744210095C84F /* ArtworkSelector.xib in Resources */,
 				A975644D132A325C0051ED08 /* info.pdf in Resources */,
 				A975644E132A325C0051ED08 /* info-over.pdf in Resources */,
