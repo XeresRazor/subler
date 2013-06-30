@@ -147,7 +147,7 @@
 
 #pragma mark Save methods
 
-- (void) saveDidComplete: (NSError **)outError URL:(NSURL*)absoluteURL
+- (BOOL) saveDidComplete: (NSError **)outError URL:(NSURL*)absoluteURL
 {
     [NSApp endSheet: savingWindow];
     [savingWindow orderOut:self];
@@ -163,6 +163,8 @@
     }
 
     [self reloadFile:absoluteURL];
+
+    return YES;
 }
 
 - (BOOL)writeSafelyToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName
@@ -684,17 +686,19 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 - (void)showImportSheet:(NSArray *)fileURLs
 {
     NSError *error = nil;
-    
+
     importWindow = [[SBFileImport alloc] initWithDelegate:self andFiles:fileURLs error:&error];
-    
-    if (importWindow) {
+
+    if (importWindow)
         [NSApp beginSheet:[importWindow window] modalForWindow:documentWindow
-            modalDelegate:nil didEndSelector:NULL contextInfo:nil];
-    }
-    else {
-        if (error)
+            modalDelegate:self didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:importWindow];
+    else if (error)
             [self presentError:error modalForWindow:documentWindow delegate:nil didPresentSelector:NULL contextInfo:nil];
-    }
+}
+
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;{
+    [importWindow autorelease], importWindow = nil;
+    [fileTracksTable reloadData];
 }
 
 - (void) importDoneWithTracks: (NSArray*) tracksToBeImported andMetadata: (MP42Metadata*) metadata
@@ -702,9 +706,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     if (tracksToBeImported) {
         for (id track in tracksToBeImported)
             [mp4File addTrack:track];
-
         [self updateChangeCount:NSChangeDone];
-        [fileTracksTable reloadData];
     }
 
     if (metadata) {
@@ -712,10 +714,6 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         [self tableViewSelectionDidChange:nil];
         [self updateChangeCount:NSChangeDone];
     }
-
-    [NSApp endSheet:[importWindow window]];
-    [[importWindow window] orderOut:self];
-    [importWindow release], importWindow = nil;
 }
 
 - (void) metadataImportDone: (MP42Metadata*) metadataToBeImported
