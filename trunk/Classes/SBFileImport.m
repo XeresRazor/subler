@@ -225,8 +225,10 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (IBAction) closeWindow: (id) sender
 {
-    if ([delegate respondsToSelector:@selector(importDoneWithTracks:andMetadata:)]) 
-        [delegate importDoneWithTracks:nil andMetadata:nil];
+    [tableView setDelegate:nil];
+    [tableView setDataSource:nil];
+    [NSApp endSheet:[self window] returnCode:NSOKButton];
+    [[self window] orderOut:self];
 }
 
 - (IBAction) addTracks: (id) sender
@@ -287,16 +289,23 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
     if ([delegate respondsToSelector:@selector(importDoneWithTracks:andMetadata:)]) 
         [delegate importDoneWithTracks:tracks andMetadata: metadata];
+
     [tracks release];
+
+    [tableView setDelegate:nil];
+    [tableView setDataSource:nil];
+    [NSApp endSheet:[self window] returnCode:NSOKButton];
+    [[self window] orderOut:self];
 }
 
 - (void) dealloc
 {
-    [_importCheckArray release];
-    [_actionArray release];
+    [_fileURLs release];
     [_fileImporters release];
     [_tracks release];
-    [_fileURLs release];
+
+    [_importCheckArray release];
+    [_actionArray release];
 
     [super dealloc];
 }
