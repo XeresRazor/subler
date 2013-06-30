@@ -10,6 +10,7 @@
 #import "SBQueueItem.h"
 #import "MP42File.h"
 #import "MP42FileImporter.h"
+#import "MP42Image.h"
 #import "MetadataSearchController.h"
 #import "MetadataImporter.h"
 
@@ -264,14 +265,12 @@
     return [tracksArray autorelease];
 }
 
-- (NSImage*)loadArtwork:(NSURL*)url
+- (MP42Image *)loadArtwork:(NSURL*)url
 {
     NSData *artworkData = [NSData dataWithContentsOfURL:url];
     if (artworkData && [artworkData length]) {
-        NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:artworkData];
-        if (imageRep != nil) {
-            NSImage *artwork = [[NSImage alloc] initWithSize:[imageRep size]];
-            [artwork addRepresentation:imageRep];
+        MP42Image *artwork = [[MP42Image alloc] initWithData:artworkData type:MP42_ART_JPEG];
+        if (artwork != nil) {
             return [artwork autorelease];
         }
     }
