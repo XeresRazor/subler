@@ -62,9 +62,10 @@
             else
                 [_actionArray addObject:[NSNumber numberWithInteger:1]];
         }
-        else
+        else {
             [_importCheckArray addObject: [NSNumber numberWithBool:YES]];
             [_actionArray addObject:[NSNumber numberWithInteger:0]];
+        }
     }
 
     if ([[_fileImporters objectAtIndex:0] metadata])
