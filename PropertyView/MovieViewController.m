@@ -737,6 +737,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         NSError *error;
 
         if ([url getResourceValue:&type forKey:NSURLTypeIdentifierKey error:&error]) {
+        if (UTTypeConformsTo((CFStringRef)type, (CFStringRef)@"public.image")) {
             if (UTTypeConformsTo((CFStringRef)type, (CFStringRef)@"public.jpeg")) {
                 MP42Image *artwork = [[MP42Image alloc] initWithData:[NSData dataWithContentsOfURL:url] type:MP42_ART_JPEG];
 
@@ -748,10 +749,11 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
                 NSImage * artworkImage = [[NSImage alloc] initWithContentsOfURL:url];
                 MP42Image *artwork = [[MP42Image alloc] initWithImage:artworkImage];
                 [metadata.artworks addObject:artwork];
-                
+
                 [artwork release];
                 [artworkImage release];
             }
+        }
         }
     }
 
