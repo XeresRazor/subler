@@ -1478,7 +1478,7 @@ static const genreType_t genreType_strings[] = {
     // Subler 0.19 and previous sets
     if (version < 2) {
         artworks = [[NSMutableArray alloc] init];
-        id image = [[decoder decodeObjectForKey:@"MP42Artwork"] retain];
+        id image = [decoder decodeObjectForKey:@"MP42Artwork"];
         if (image) {
             MP42Image *artwork = [[MP42Image alloc] initWithImage:image];
             [artworks addObject: artwork];
