@@ -85,7 +85,7 @@
 
 + (BOOL)canConcurrentlyReadDocumentsOfType:(NSString *)type
 {
-    return NO;
+    return YES;
 }
 
 - (BOOL)isEntireFileLoaded
@@ -95,7 +95,7 @@
 
 #pragma mark Read methods
 
-- (void) reloadFile: (NSURL*)absoluteURL
+- (void)reloadFile: (NSURL*)absoluteURL
 {
     if (absoluteURL) {
         MP42File *newFile = [[MP42File alloc] initWithExistingFile:absoluteURL andDelegate:self];
@@ -140,92 +140,88 @@
     return YES;
 }
 
++ (BOOL)autosavesInPlace
+{
+    return NO;
+}
+
 #pragma mark Save methods
 
-- (void) saveDidComplete: (NSError *)outError URL:(NSURL*)absoluteURL
+- (void) saveDidComplete: (NSError **)outError URL:(NSURL*)absoluteURL
 {
     [NSApp endSheet: savingWindow];
     [savingWindow orderOut:self];
 
-    if (outError) {
-        [self presentError:outError
+    if (*outError) {
+        [self presentError:*outError
             modalForWindow:documentWindow
                   delegate:nil
         didPresentSelector:NULL
                contextInfo:NULL];
 
-        [outError release];
+        [*outError release];
     }
 
     [self reloadFile:absoluteURL];
 }
 
-- (void)saveToURL:(NSURL *)absoluteURL
-		   ofType:(NSString *)typeName
- forSaveOperation:(NSSaveOperationType)saveOperation
-		 delegate:(id)delegate
-  didSaveSelector:(SEL)didSaveSelector
-	  contextInfo:(void *)contextInfo
+- (BOOL)writeSafelyToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName
+        forSaveOperation:(NSSaveOperationType)saveOperation error:(NSError **)outError;
 {
-    __block NSError	 *outError;
+    __block BOOL success = NO;
 
+    NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"chaptersPreviewTrack"] boolValue])
+        [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
+    
     [optBar setIndeterminate:YES];
     [optBar startAnimation:nil];
     [saveOperationName setStringValue:@"Saving…"];
     [NSApp beginSheet:savingWindow modalForWindow:documentWindow
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];
-
-    [documentWindow setTitle:[[absoluteURL path] lastPathComponent]];
+    
+    mp4File.operationIsRunning = YES;
 
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        BOOL success = [self saveToURL:absoluteURL ofType:typeName forSaveOperation:saveOperation error:&outError];
-
-        [self setFileURL:absoluteURL];
-        [self setFileModificationDate:[[[NSFileManager defaultManager]  
-                                        attributesOfItemAtPath:[absoluteURL path] error:nil]  
-                                       fileModificationDate]];
-        if (success && outError)
-            outError = nil;
-        else
-            [outError retain];
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self saveDidComplete:outError URL:absoluteURL];
-        });
+        switch (saveOperation) {
+            case NSSaveOperation:
+                // movie file already exists, so we'll just update
+                // the movie resource
+                success = [mp4File updateMP4FileWithAttributes:attributes error:outError];
+                break;
+            case NSSaveAsOperation:
+                if ([_64bit_data state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitData];
+                if ([_64bit_time state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitTime];
+                success = [mp4File writeToUrl:absoluteURL withAttributes:attributes error:outError];
+                break;
+            case NSSaveToOperation:
+                // not implemented
+                break;
+        }
+        if (_optimize) {
+            [saveOperationName setStringValue:@"Optimizing…"];
+            [mp4File optimize];
+            _optimize = NO;
+        }
+        mp4File.operationIsRunning = NO;
     });
-}
 
-- (BOOL)writeSafelyToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName 
-        forSaveOperation:(NSSaveOperationType)saveOperation error:(NSError **)outError;
-{
-    BOOL success = NO;
-    NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"chaptersPreviewTrack"] boolValue])
-        [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
-
-	switch (saveOperation)
-	{
-		case NSSaveOperation:
-            // movie file already exists, so we'll just update
-            // the movie resource
-            success = [mp4File updateMP4FileWithAttributes:attributes error:outError];
-            break;
-		case NSSaveAsOperation:
-            if ([_64bit_data state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitData];
-            if ([_64bit_time state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitTime];
-            success = [mp4File writeToUrl:absoluteURL withAttributes:attributes error:outError];
-            break;
-		case NSSaveToOperation:
-            // not implemented
-            break;
-	}
-    if (_optimize)
-    {
-        [saveOperationName setStringValue:@"Optimizing…"];
-        [mp4File optimize];
-        _optimize = NO;
+    while ([mp4File operationIsRunning]) {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        @try {
+            NSEvent *event = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:[NSDate distantFuture] inMode:NSDefaultRunLoopMode dequeue:YES];
+            if (event) [NSApp sendEvent:event];
+        }
+        @catch (NSException *localException) {
+            NSLog(@"Exception thrown during save: %@", localException);
+        }
+        @finally {
+            [pool drain];
+        }
     }
+
     [attributes release];
+    [self saveDidComplete:outError URL:absoluteURL];
     return success;
 }
 
@@ -308,7 +304,7 @@
 #pragma mark Interface validation
 
 - (void)progressStatus: (CGFloat)progress {
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [optBar setIndeterminate:NO];
         [optBar setDoubleValue:progress];
     });

@@ -452,6 +452,8 @@ NSString * const MP42FileTypeM4B = @"m4b";
     return success;
 }
 
+@synthesize operationIsRunning;
+
 - (void) cancel;
 {
     isCancelled = YES;

@@ -36,6 +36,7 @@ extern NSString * const MP42FileTypeM4A;
     NSMutableArray  *fileImporters;
     BOOL             hasFileRepresentation;
     BOOL             isCancelled;
+    BOOL             operationIsRunning;
 
     uint64_t _size;
 @protected
@@ -49,6 +50,7 @@ extern NSString * const MP42FileTypeM4A;
 @property (readonly) NSMutableArray  *tracks;
 @property (readonly) MP42Metadata    *metadata;
 @property (readonly) BOOL hasFileRepresentation;
+@property (atomic, readwrite) BOOL operationIsRunning;
 
 - (id)   initWithDelegate:(id)del;
 - (id)   initWithExistingFile:(NSURL *)URL andDelegate:(id)del;
