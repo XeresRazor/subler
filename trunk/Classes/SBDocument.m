@@ -50,6 +50,8 @@
         [documentWindow setFrameUsingName:@"documentSave"];
         [splitView setAutosaveName:@"splitViewSave"];
     }
+
+    [optBar setUsesThreadedAnimation:NO];
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *) aController
@@ -151,6 +153,7 @@
 {
     [NSApp endSheet: savingWindow];
     [savingWindow orderOut:self];
+    [optBar stopAnimation:self];
 
     if (*outError) {
         [self presentError:*outError
@@ -177,7 +180,7 @@
         [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
     
     [optBar setIndeterminate:YES];
-    [optBar startAnimation:nil];
+    [optBar startAnimation:self];
     [saveOperationName setStringValue:@"Saving…"];
     [NSApp beginSheet:savingWindow modalForWindow:documentWindow
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];
