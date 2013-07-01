@@ -725,11 +725,11 @@ BOOL trackNeedConversion(NSString * formatName) {
 BOOL supportedFile(NSString * fileExt) {
     NSArray *supportedFormat = [NSArray arrayWithObjects:@"scc", @"smi", @"m4v", @"mp4", @"m4a", @"mov", @"mts", @"m2ts",
                                 @"mkv", @"mka", @"mks", @"h264", @"264", @"idx", @"aac", @"ac3", @"srt", nil];
-    
-    for (NSString* type in supportedFormat)
-        if ([fileExt isEqualToString:type])
+
+    for (NSString *type in supportedFormat)
+        if ([fileExt caseInsensitiveCompare:type] == NSOrderedSame)
             return YES;
-    
+
     return NO;
 }
 
