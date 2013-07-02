@@ -161,7 +161,7 @@
                 }
             }
             else if ([track isMemberOfClass:[MP42ChapterTrack class]]) {
-                NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:@"Text" action:NULL keyEquivalent:@""] autorelease];
+                NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:@"Passthru" action:NULL keyEquivalent:@""] autorelease];
                 [item setTag:0];
                 [item setEnabled:YES];
                 [[actionCell menu] addItem:item];
