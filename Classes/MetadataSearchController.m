@@ -245,6 +245,8 @@
     [tvSeriesNameSearchArray sortUsingSelector:@selector(compare:)];
     [tvSeriesName noteNumberOfItemsChanged];
     [tvSeriesName reloadData];
+
+	currentSearcher = nil;
 }
 
 #pragma mark Search for results
@@ -260,12 +262,12 @@
     if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"Movie"]) {
 		[progressText setStringValue:[NSString stringWithFormat:@"Searching %@ for movie information…", [[movieMetadataProvider selectedItem] title]]];
 		[progressText setHidden:NO];
-		currentSearcher = [[MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]] retain];
+		currentSearcher = [MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]];
 		[currentSearcher searchMovie:[movieName stringValue] language:[movieLanguage titleOfSelectedItem] callback:self];
     } else if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"TV Episode"]) {
 		[progressText setStringValue:[NSString stringWithFormat:@"Searching %@ for episode information…", [[tvMetadataProvider selectedItem] title]]];
 		[progressText setHidden:NO];
-		currentSearcher = [[MetadataImporter importerForProvider:[[tvMetadataProvider selectedItem] title]] retain];
+		currentSearcher = [MetadataImporter importerForProvider:[[tvMetadataProvider selectedItem] title]];
 		[currentSearcher searchTVSeries:[tvSeriesName stringValue] language:[tvLanguage titleOfSelectedItem] seasonNum:[tvSeasonNum stringValue] episodeNum:[tvEpisodeNum stringValue] callback:self];
     }
 }
@@ -300,7 +302,7 @@
         [progress setHidden:NO];
         [progressText setStringValue:@"Downloading additional movie metadata…"];
         [progressText setHidden:NO];
-		currentSearcher = [[MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]] retain];
+		currentSearcher = [MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]];
 		[currentSearcher loadMovieMetadata:selectedResult language:[[movieLanguage selectedItem] title] callback:self];
     } else if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"TV Episode"]) {
         [progress startAnimation:self];
@@ -424,13 +426,13 @@
 {
     [detailBoldAttr release];
 
-    //[selectedResult release];
     [selectedResultTagsArray release];
     [tvSeriesNameSearchArray release];
     [resultsArray release];
 
-	if (currentSearcher)
+	if (currentSearcher) {
 		[currentSearcher cancel];
+    }
 
     [super dealloc];
 }
@@ -486,11 +488,12 @@
 - (void)comboBoxWillPopUp:(NSNotification *)notification {
     if ([notification object] == tvSeriesName) {
         if ([[tvSeriesName stringValue] length] == 0) {
+            [tvSeriesNameSearchArray release];
             tvSeriesNameSearchArray = [[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] arrayForKey:@"Previously used TV series"]];
             [tvSeriesNameSearchArray sortUsingSelector:@selector(compare:)];
             [tvSeriesName reloadData];
         } else if ([[tvSeriesName stringValue] length] > 3) {
-            tvSeriesNameSearchArray = nil;
+            [tvSeriesNameSearchArray release];
             tvSeriesNameSearchArray = [[NSMutableArray alloc] initWithCapacity:1];
             [tvSeriesNameSearchArray addObject:@"searching…"];
             [tvSeriesName reloadData];
