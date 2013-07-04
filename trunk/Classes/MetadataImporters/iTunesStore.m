@@ -166,6 +166,23 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 #pragma mark Load additional metadata
 
 - (MP42Metadata *) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage {
+	NSDictionary *store = [iTunesStore getStoreFor:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBMetadataPreference|TV|iTunes Store|Language"]];
+	if (!store) {
+		return nil;
+	}
+	NSString *country = [store valueForKey:@"country2"];
+	NSString *language = [store valueForKey:@"language2"];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/lookup?country=%@&lang=%@&id=%@", country, [language lowercaseString], [[aMetadata tagsDict] valueForKey:@"playlistID"]]];
+	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
+	if (jsonData) {
+		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
+		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
+		NSArray *resultsArray = [d valueForKey:@"results"];
+		if ([resultsArray count] > 0) {
+			NSDictionary *r = [resultsArray objectAtIndex:0];
+			[aMetadata setTag:[r valueForKey:@"longDescription"] forKey:@"Series Description"];
+		}
+	}
 	return aMetadata;
 }
 
