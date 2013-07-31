@@ -15,8 +15,8 @@ Here's the step for opening an existing document you want to work with.
 
 A faster way is to drag the document icon on the Subler icon in the Dock or in the Finder.
 
+Subler can even create new documents, when an empty file is needed.
 
-Subler can even create new documents, for when an empty file is needed.
 Since every task below needs a project, here's the steps for opening a new project and setting it to the media file you want to work with.
 
 1) Open Subler<br/>
@@ -46,7 +46,7 @@ To add a subtitle track to a movie, follow the steps above to create a project a
 
 5) Select Import->File... from the File menu or click the + button above the track listing in the project window.<br/>
 6) Use the Open dialog to find the subtitle track, in .SRT format, and Open it.<br/>
-7) A pane appears allowing you to edit basic information about the track. Most times no changes will be needed, simply click Add.
+7) A pane appears allowing you to edit basic information about the track. Most times no changes will be needed, simply click Add.<br/>
 8) The subtitle track appears at the end of the track list, with a default name.
 
 i) You can double click the name to edit it.<br/>
