@@ -220,6 +220,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
 - (BOOL) optimize
 {
     __block BOOL noErr = NO;
+
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSError *error;
     NSURL *folderURL = [fileURL URLByDeletingLastPathComponent];
@@ -255,13 +256,18 @@ NSString * const MP42FileTypeM4B = @"m4b";
     [fileManager release];
     [pool release];
 
+    self.operationIsRunning = NO;
+
+    if ([delegate respondsToSelector:@selector(endSave:)])
+        [delegate performSelector:@selector(endSave:) withObject:self];
+
     return noErr;
 }
 
 - (BOOL) writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError
 {
     BOOL success = YES;
-    
+
     if(!url) {
         if (outError)
             *outError = MP42Error(@"Invalid path.", @"The destination path cannot be empty.", 100);
@@ -448,6 +454,9 @@ NSString * const MP42FileTypeM4B = @"m4b";
     // Generate previews images for chapters
     if ([[attributes valueForKey:@"ChaptersPreview"] boolValue])
         [self createChaptersPreview];
+
+    if ([delegate respondsToSelector:@selector(endSave:)])
+        [delegate performSelector:@selector(endSave:) withObject:self];
 
     return success;
 }
