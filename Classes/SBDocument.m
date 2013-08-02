@@ -82,12 +82,13 @@
 {
     if (self = [super initWithType:typeName error:outError])
         mp4File = [[MP42File alloc] initWithDelegate:self];
+
     return self;
 }
 
 + (BOOL)canConcurrentlyReadDocumentsOfType:(NSString *)type
 {
-    return YES;
+    return NO;
 }
 
 - (BOOL)isEntireFileLoaded
@@ -149,7 +150,7 @@
 
 #pragma mark Save methods
 
-- (BOOL) saveDidComplete: (NSError **)outError URL:(NSURL*)absoluteURL
+- (BOOL)saveDidComplete: (NSError **)outError URL:(NSURL*)absoluteURL
 {
     [NSApp endSheet: savingWindow];
     [savingWindow orderOut:self];
@@ -170,6 +171,11 @@
     return YES;
 }
 
+- (void)endSave:(id)sender {
+    /* Post an event so our event loop wakes up */
+    [NSApp postEvent:[NSEvent otherEventWithType:NSApplicationDefined location:NSZeroPoint modifierFlags:0 timestamp:0 windowNumber:0 context:NULL subtype:0 data1:0 data2:0] atStart:NO];
+}
+
 - (BOOL)writeSafelyToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName
         forSaveOperation:(NSSaveOperationType)saveOperation error:(NSError **)outError;
 {
@@ -184,7 +190,7 @@
     [saveOperationName setStringValue:@"Saving…"];
     [NSApp beginSheet:savingWindow modalForWindow:documentWindow
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];
-    
+
     mp4File.operationIsRunning = YES;
 
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -254,13 +260,11 @@
         }
     }
 
-    if (filename) {
+    if (filename)
         [savePanel performSelector:@selector(setNameFieldStringValue:) withObject:filename];
-    }
 
-    if ([mp4File estimatedDataLength] > 4200000000) {
+    if ([mp4File estimatedDataLength] > 4200000000)
         [_64bit_data setState:NSOnState];
-    }
 
     return YES;
 }
