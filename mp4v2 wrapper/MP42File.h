@@ -81,5 +81,6 @@ extern NSString * const MP42FileTypeM4A;
 
 @interface NSObject (MP42FileDelegateMethod)
 - (void)progressStatus: (CGFloat)progress;
+- (void)endSave:(id)sender;
 
 @end

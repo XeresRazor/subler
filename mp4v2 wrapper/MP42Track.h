@@ -7,8 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MP42ConverterProtocol.h"
 #import "mp4v2.h"
+
 @class MP42FileImporter;
+@class MP42SampleBuffer;
+
+typedef struct muxer_helper {
+    MP42FileImporter *trackImporter;
+
+    id trackDemuxer;
+    id <MP42ConverterProtocol> trackConverter;
+    
+    NSMutableArray *fifo;
+    
+    BOOL done;
+} muxer_helper;
 
 @interface MP42Track : NSObject <NSCoding> {
     MP4TrackId  Id;
@@ -36,9 +50,7 @@
 
     NSMutableDictionary *updatedProperty;
 
-    MP42FileImporter * trackImporterHelper;
-    id trackDemuxerHelper;
-    id trackConverterHelper;
+    muxer_helper *_helper;
 }
 
 @property(readwrite) MP4TrackId Id;
@@ -65,16 +77,18 @@
 
 @property(readwrite) uint64_t dataLength;
 
-@property(readwrite, assign) MP42FileImporter * trackImporterHelper;
-@property(readwrite, assign) id trackDemuxerHelper;
-@property(readwrite, assign) id trackConverterHelper;
+@property(readonly) muxer_helper *muxer_helper;
 
 @property(readwrite, retain) NSMutableDictionary *updatedProperty;
 
-- (id) initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
-- (BOOL) writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError;
+- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
 
-- (NSString *) timeString;
-- (NSString *) formatSummary;
+- (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError;
+
+- (void)setTrackImporterHelper:(MP42FileImporter *)helper;
+- (MP42SampleBuffer*)copyNextSample;
+
+- (NSString *)timeString;
+- (NSString *)formatSummary;
 
 @end

@@ -6,7 +6,7 @@
 //  Copyright 2011 Damiano Galassi. All rights reserved.
 //
 
-#import "SBOCRWrapper.h"
+#import "MP42OCRWrapper.h"
 #import "SBLanguages.h"
 
 // Tesseract OCR
@@ -49,7 +49,7 @@ protected:
     TessBaseAPI tess_base_api;
 };
 
-@implementation SBOCRWrapper
+@implementation MP42OCRWrapper
 
 - (NSURL*) appSupportUrl
 {

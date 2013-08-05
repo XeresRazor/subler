@@ -7,12 +7,12 @@
 //  Copyright 2011 Damiano Galassi. All rights reserved.
 //
 
-#import "SBBitmapSubConverter.h"
+#import "MP42BitmapSubConverter.h"
 #import "MP42File.h"
 #import "MP42FileImporter.h"
 #import "MP42Sample.h"
+#import "MP42OCRWrapper.h"
 #import "SubUtilities.h"
-#import "SBOCRWrapper.h"
 
 #define REGISTER_DECODER(x) { \
 extern AVCodec ff_##x##_decoder; \
@@ -28,7 +28,7 @@ void FFInitFFmpeg()
 	});
 }
 
-@implementation SBBitmapSubConverter
+@implementation MP42BitmapSubConverter
 
 - (void) VobSubDecoderThreadMainRoutine: (id) sender
 {
@@ -335,9 +335,9 @@ void FFInitFFmpeg()
         outputSamplesBuffer = [[NSMutableArray alloc] init];
         inputSamplesBuffer = [[NSMutableArray alloc] init];
 
-        srcMagicCookie = [[[track trackImporterHelper] magicCookieForTrack:track] retain];
+        srcMagicCookie = [[track.muxer_helper->trackImporter magicCookieForTrack:track] retain];
 
-        ocr = [[SBOCRWrapper alloc] initWithLanguage:[track language]];
+        ocr = [[MP42OCRWrapper alloc] initWithLanguage:[track language]];
 
         if (([track.sourceFormat isEqualToString:@"VobSub"])) {
             // Launch the vobsub decoder thread.
@@ -357,18 +357,18 @@ void FFInitFFmpeg()
     return self;
 }
 
-- (void) setOutputTrack: (NSUInteger) outputTrackId {
+- (void)setOutputTrack: (NSUInteger) outputTrackId {
     trackId = outputTrackId;
 }
 
-- (void) addSample:(MP42SampleBuffer*)sample
+- (void)addSample:(MP42SampleBuffer*)sample
 {
     @synchronized(inputSamplesBuffer) {
         [inputSamplesBuffer addObject:sample];
     }
 }
 
-- (MP42SampleBuffer*) copyEncodedSample
+- (MP42SampleBuffer*)copyEncodedSample
 {
     MP42SampleBuffer *sample;
     if (![outputSamplesBuffer count]) {
@@ -383,9 +383,9 @@ void FFInitFFmpeg()
     return sample;
 }
 
-- (BOOL) needMoreSample
+- (BOOL)needMoreSample
 {
-    if ([inputSamplesBuffer count])
+    if ([inputSamplesBuffer count] > 4)
         return NO;
 
     return YES;

@@ -6,7 +6,7 @@
 //  Copyright 2010 Damiano Galassi. All rights reserved.
 //
 
-#import "SBAudioConverter.h"
+#import "MP42AudioConverter.h"
 #import "MP42Track.h"
 #import "MP42AudioTrack.h"
 #import "MP42FileImporter.h"
@@ -69,7 +69,7 @@ InstallStatus setWrongLocationInstalled(InstallStatus status)
 	return (status & ~1);
 }
 
-@implementation SBAudioConverter
+@implementation MP42AudioConverter
 
 - (NSString *)installationBasePath:(BOOL)userInstallation
 {
@@ -600,7 +600,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
         OSStatus err;
 
         // Set the right mixdown to use
-        sampleRate = [[track trackImporterHelper] timescaleForTrack:track];
+        sampleRate = [track.muxer_helper->trackImporter timescaleForTrack:track];
         inputChannelsCount = [track channels];
         outputChannelCount = [track channels];
 
@@ -634,7 +634,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
         // Decoder initialization
         CFDataRef   magicCookie = NULL;
-        NSData * srcMagicCookie = [[track trackImporterHelper] magicCookieForTrack:track];
+        NSData * srcMagicCookie = [track.muxer_helper->trackImporter magicCookieForTrack:track];
         AudioStreamBasicDescription inputFormat, outputFormat;
 
         bzero( &inputFormat, sizeof( AudioStreamBasicDescription ) );
@@ -679,7 +679,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
                 inputFormat.mFormatID = 'trhd';
             }
             else if ([track.sourceFormat isEqualToString:@"PCM"]) {
-                AudioStreamBasicDescription temp = [[track trackImporterHelper] audioDescriptionForTrack:track];
+                AudioStreamBasicDescription temp = [track.muxer_helper->trackImporter audioDescriptionForTrack:track];
                 if (temp.mFormatID)
                     inputFormat = temp;
                 else
@@ -804,7 +804,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
 - (BOOL) needMoreSample
 {
-    if ([inputSamplesBuffer count])
+    if ([inputSamplesBuffer count] < 200)
         return NO;
     
     return YES;

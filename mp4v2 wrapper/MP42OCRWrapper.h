@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface SBOCRWrapper : NSObject {
+@interface MP42OCRWrapper : NSObject {
     void *tess_base;
     
     NSString *_language;

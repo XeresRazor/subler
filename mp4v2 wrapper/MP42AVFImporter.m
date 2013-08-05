@@ -650,7 +650,7 @@
     return nil;
 }
 
-- (void) fillMovieSampleBuffer: (id)sender
+- (void)demux:(id)sender
 {
 	BOOL success = YES;
     OSStatus err = noErr;
@@ -673,8 +673,8 @@
 
             [assetReader addOutput:assetReaderOutput];
 
-            track.trackDemuxerHelper = [[AVFTrackHelper alloc] init];
-            trackHelper = track.trackDemuxerHelper;
+            track.muxer_helper->trackDemuxer = [[AVFTrackHelper alloc] init];
+            trackHelper = track.muxer_helper->trackDemuxer;
             trackHelper->assetReaderOutput = assetReaderOutput;
 
             totalDataLength += [track dataLength];
@@ -685,12 +685,13 @@
 	if (!success)
 		localError = [assetReader error];
 
-    for (MP42Track * track in activeTracks) {        
-        trackHelper = track.trackDemuxerHelper;
+    for (MP42Track * track in activeTracks) {
+        muxer_helper *helper = track.muxer_helper;
+        trackHelper = track.muxer_helper->trackDemuxer;
         AVAssetReaderOutput *assetReaderOutput = trackHelper->assetReaderOutput;
 
         while (!isCancelled) {
-            while ([samplesBuffer count] >= 300) {
+            while ([helper->fifo count] >= 300) {
                 usleep(200);
             }
             CMSampleBufferRef sampleBuffer = [assetReaderOutput copyNextSampleBuffer];
@@ -764,8 +765,8 @@
                     sample->sampleIsSync = sync;
                     sample->sampleTrackId = track.Id;
 
-                    @synchronized(samplesBuffer) {
-                        [samplesBuffer addObject:sample];
+                    @synchronized(helper->fifo) {
+                        [helper->fifo addObject:sample];
                         [sample release];
                     }
 
@@ -905,8 +906,8 @@
                         if(track.needConversion)
                             sample->sampleSourceTrack = track;
 
-                        @synchronized(samplesBuffer) {
-                            [samplesBuffer addObject:sample];
+                        @synchronized(helper->fifo) {
+                            [helper->fifo addObject:sample];
                             [sample release];
                         }
 
@@ -940,38 +941,18 @@
     [pool release];
 }
 
-- (MP42SampleBuffer*)copyNextSample
-{    
-    if (samplesBuffer == nil) {
-        samplesBuffer = [[NSMutableArray alloc] initWithCapacity:200];
-    }    
-    
+- (void)start
+{
     if (!dataReader && !readerStatus) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
+        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
         [dataReader setName:@"AVFoundation Demuxer"];
         [dataReader start];
     }
-    
-    while (![samplesBuffer count] && !readerStatus)
-        usleep(2000);
-    
-    if (readerStatus)
-        if ([samplesBuffer count] == 0) {
-            readerStatus = 0;
-            [dataReader release];
-            dataReader = nil;
-            return nil;
-        }
-    
-    MP42SampleBuffer* sample;
-    
-    @synchronized(samplesBuffer) {
-        sample = [samplesBuffer objectAtIndex:0];
-        [sample retain];
-        [samplesBuffer removeObjectAtIndex:0];
-    }
-    
-    return sample;
+}
+
+- (BOOL)done
+{
+    return readerStatus;
 }
 
 - (void)setActiveTrack:(MP42Track *)track {
@@ -996,7 +977,7 @@
         MP4Duration trackDuration = 0;
         MP4Timestamp editDuration;
 
-        AVFTrackHelper* trackHelper = track.trackDemuxerHelper;
+        AVFTrackHelper* trackHelper = track.muxer_helper->trackDemuxer;
 
         for (AVAssetTrackSegment *segment in assetTrack.segments) {
             bool empty = NO;
@@ -1067,8 +1048,6 @@
 
     if (activeTracks)
         [activeTracks release];
-    if (samplesBuffer)
-        [samplesBuffer release];
 
     [metadata release];
 	[fileURL release];

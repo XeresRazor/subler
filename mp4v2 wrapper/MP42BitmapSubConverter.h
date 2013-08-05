@@ -7,17 +7,19 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MP42ConverterProtocol.h"
+
 #include "avcodec.h"
 
 @class MP42SampleBuffer;
 @class MP42SubtitleTrack;
-@class SBOCRWrapper;
+@class MP42OCRWrapper;
 
-@interface SBBitmapSubConverter : NSObject {
+@interface MP42BitmapSubConverter : NSObject <MP42ConverterProtocol> {
     NSThread *decoderThread;
     NSThread *encoderThread;
 
-    SBOCRWrapper * ocr;
+    MP42OCRWrapper *ocr;
     
 	AVCodec                 *avCodec;
 	AVCodecContext          *avContext;

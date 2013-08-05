@@ -106,10 +106,11 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
 	return err;
 }
 
-- (void) fillMovieSampleBuffer: (id)sender
+- (void)demux:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     MP4TrackId dstTrackId = [[activeTracks lastObject] Id];
+    muxer_helper *helper = [[activeTracks lastObject] muxer_helper];
 
     NSString *scc = STStandardizeStringNewlines(STLoadFileWithUnknownEncoding([fileURL path]));
     if (!scc) return;
@@ -192,8 +193,8 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
             sample->sampleIsSync = 1;
             sample->sampleTrackId = dstTrackId;
 
-            @synchronized(samplesBuffer) {
-                [samplesBuffer addObject:sample];
+            @synchronized(helper->fifo) {
+                [helper->fifo addObject:sample];
                 [sample release];
             }
 
@@ -228,8 +229,8 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
         sample->sampleIsSync = 1;
         sample->sampleTrackId = dstTrackId;
 
-        @synchronized(samplesBuffer) {
-            [samplesBuffer addObject:sample];
+        @synchronized(helper->fifo) {
+            [helper->fifo addObject:sample];
             [sample release];
         }
 
@@ -241,37 +242,20 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
     readerStatus = 1;
 }
 
-- (MP42SampleBuffer*)copyNextSample {    
-    if (samplesBuffer == nil) {
-        samplesBuffer = [[NSMutableArray alloc] initWithCapacity:200];
-    }
-
+- (void)start
+{
     if (!dataReader && !readerStatus) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
-        [dataReader setName:@"Closed Caption Demuxer"];
+        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [dataReader setName:@"ClosedCaption Demuxer"];
         [dataReader start];
     }
-
-    while (![samplesBuffer count] && !readerStatus)
-        usleep(2000);
-
-    if (readerStatus)
-        if ([samplesBuffer count] == 0) {
-            readerStatus = 0;
-            dataReader = nil;
-            return nil;
-        }
-
-    MP42SampleBuffer* sample;
-
-    @synchronized(samplesBuffer) {
-        sample = [samplesBuffer objectAtIndex:0];
-        [sample retain];
-        [samplesBuffer removeObjectAtIndex:0];
-    }
-
-    return sample;
 }
+
+- (BOOL)done
+{
+    return readerStatus;
+}
+
 
 - (void)setActiveTrack:(MP42Track *)track {
     if (!activeTracks)

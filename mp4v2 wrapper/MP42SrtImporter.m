@@ -90,28 +90,47 @@
     return [[self copyNextSample] autorelease];
 }
 
-- (MP42SampleBuffer*)copyNextSample {
+- (void)start
+{
     MP42SampleBuffer *sample;
     MP4TrackId dstTrackId = [[activeTracks lastObject] Id];
 
-    if (![ss isEmpty]) {
-        SBSubLine *sl = [ss getSerializedPacket];
-        
-        if ([sl->line isEqualToString:@"\n"]) {
-            if ((sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO)))
-                return sample;
-        }
-        CGSize trackSize;
-        trackSize.width = [(MP42SubtitleTrack*)[tracksArray lastObject] trackWidth];
-        trackSize.height = [(MP42SubtitleTrack*)[tracksArray lastObject] trackHeight];
+    for (MP42Track * track in activeTracks) {
+        muxer_helper *helper = track.muxer_helper;
+        while (![ss isEmpty]) {
+            SBSubLine *sl = [ss getSerializedPacket];
 
-        int top = (sl->top == INT_MAX) ? trackSize.height : sl->top;
-        if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, sl->forced, verticalPlacement, trackSize, top)))
-            return sample;
+            if ([sl->line isEqualToString:@"\n"]) {
+                if ((sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO)))
+                    @synchronized(helper->fifo) {
+                        [helper->fifo addObject:sample];
+                        [sample release];
+                    }
+            }
+            else {
+            CGSize trackSize;
+            trackSize.width = [(MP42SubtitleTrack*)[tracksArray lastObject] trackWidth];
+            trackSize.height = [(MP42SubtitleTrack*)[tracksArray lastObject] trackHeight];
+
+            int top = (sl->top == INT_MAX) ? trackSize.height : sl->top;
+
+            if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, sl->forced, verticalPlacement, trackSize, top)))
+                @synchronized(helper->fifo) {
+                    [helper->fifo addObject:sample];
+                    [sample release];
+                }
+            }
+        }
     }
 
-    return nil;
+    return;
 }
+
+- (BOOL)done
+{
+    return 1;
+}
+
 
 - (void)setActiveTrack:(MP42Track *)track {
     if (!activeTracks)
