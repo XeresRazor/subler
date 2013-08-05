@@ -89,3 +89,7 @@
 + (void) deleteCachedMetadata;
 
 @end
+
+@interface NSObject (MetadataSearchControllerDelegateMethod)
+- (void)metadataImportDone:(MP42Metadata*) metadataToBeImported;
+@end
