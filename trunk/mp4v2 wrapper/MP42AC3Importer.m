@@ -337,13 +337,14 @@ static bool GetFirstHeader(FILE* inFile)
     return ac3Info;
 }
 
-- (void) fillMovieSampleBuffer: (id)sender
+- (void)demux:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     if (!inFile)
         inFile = fopen([[fileURL path] UTF8String], "rb");
 
     MP42Track *track = [activeTracks lastObject];
+    muxer_helper *helper = [[activeTracks lastObject] muxer_helper];
     MP4TrackId dstTrackId = [track Id];
 
     // parse the Ac3 frames, and write the MP4 samples
@@ -354,7 +355,7 @@ static bool GetFirstHeader(FILE* inFile)
     int64_t currentSize = 0;
 
     while (LoadNextAc3Frame(inFile, sampleBuffer, &sampleSize, false) && !isCancelled) {
-        while ([samplesBuffer count] >= 200) {
+        while ([helper->fifo count] >= 200) {
             usleep(200);
         }
 
@@ -373,8 +374,8 @@ static bool GetFirstHeader(FILE* inFile)
         if(track.needConversion)
             sample->sampleSourceTrack = track;
 
-        @synchronized(samplesBuffer) {
-            [samplesBuffer addObject:sample];
+        @synchronized(helper->fifo) {
+            [helper->fifo addObject:sample];
             [sample release];
         }
 
@@ -389,37 +390,18 @@ static bool GetFirstHeader(FILE* inFile)
     readerStatus = 1;
 }
 
-- (MP42SampleBuffer*)copyNextSample {    
-    if (samplesBuffer == nil) {
-        samplesBuffer = [[NSMutableArray alloc] initWithCapacity:200];
-    }
-
+- (void)start
+{
     if (!dataReader && !readerStatus) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
+        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
         [dataReader setName:@"AC-3 Demuxer"];
         [dataReader start];
     }
+}
 
-    while (![samplesBuffer count] && !readerStatus)
-        usleep(2000);
-
-    if (readerStatus)
-        if ([samplesBuffer count] == 0) {
-            readerStatus = 0;
-            [dataReader release];
-            dataReader = nil;
-            return nil;
-        }
-
-    MP42SampleBuffer* sample;
-
-    @synchronized(samplesBuffer) {
-        sample = [samplesBuffer objectAtIndex:0];
-        [sample retain];
-        [samplesBuffer removeObjectAtIndex:0];
-    }
-
-    return sample;
+- (BOOL)done
+{
+    return readerStatus;
 }
 
 - (void)setActiveTrack:(MP42Track *)track {
@@ -438,8 +420,6 @@ static bool GetFirstHeader(FILE* inFile)
 {
     if (dataReader)
         [dataReader release];
-    if (samplesBuffer)
-        [samplesBuffer release];
 
     fclose(inFile);
 

@@ -114,8 +114,8 @@ MatroskaFile *openMatroskaFile(char *filePath, StdIoStream *ioStream)
 	}
 
     /* Disable ram cache */
-    fcntl (ioStream->fp->_file, F_RDAHEAD, 1);
-    fcntl (ioStream->fp->_file, F_NOCACHE, 1);
+    //fcntl (ioStream->fp->_file, F_RDAHEAD, 1);
+    //fcntl (ioStream->fp->_file, F_NOCACHE, 1);
 
 	/* initialize matroska parser */ 
 	MatroskaFile *mf = mkv_Open(&ioStream->base, /* pointer to I/O object */ 

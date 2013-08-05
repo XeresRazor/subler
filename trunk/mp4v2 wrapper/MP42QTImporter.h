@@ -18,7 +18,6 @@
     NSInteger readerStatus;
     
     NSMutableArray *activeTracks;
-    NSMutableArray *samplesBuffer;
     
     CGFloat progress;
 }

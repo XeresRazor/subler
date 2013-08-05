@@ -19,7 +19,6 @@
     NSThread *dataReader;
     NSInteger readerStatus;
 
-    NSMutableArray *samplesBuffer;
     NSMutableArray *activeTracks;
 
     CGFloat progress;

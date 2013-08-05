@@ -34,10 +34,15 @@
 - (NSSize)sizeForTrack:(MP42Track *)track;
 - (NSData*)magicCookieForTrack:(MP42Track *)track;
 - (AudioStreamBasicDescription)audioDescriptionForTrack:(MP42Track *)track;
+
 - (void)setActiveTrack:(MP42Track *)track;
+- (void)start;
 
 - (MP42SampleBuffer*)copyNextSample;
+
 - (CGFloat)progress;
+- (BOOL)done;
+
 - (void)cancel;
 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle;

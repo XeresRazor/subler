@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #include "sfifo.h"
 #include "downmix.h"
+#import "MP42ConverterProtocol.h"
 
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreAudio/CoreAudio.h>
@@ -45,7 +46,7 @@ struct AudioFileIO
     int                   fileReaderDone;
 } AudioFileIO;
 
-@interface SBAudioConverter : NSObject {
+@interface MP42AudioConverter : NSObject <MP42ConverterProtocol> {
     NSThread *decoderThread;
     NSThread *encoderThread;
 

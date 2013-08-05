@@ -13,7 +13,6 @@
     NSThread *dataReader;
     NSInteger readerStatus;
 
-    NSMutableArray *samplesBuffer;
     NSMutableArray *activeTracks;
 }
 

@@ -225,7 +225,7 @@
     return nil;
 }
 
-- (void) fillMovieSampleBuffer: (id)sender
+- (void)demux:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     if (!fileHandle)
@@ -236,17 +236,21 @@
     Mp4TrackHelper * trackHelper;
 
     for (MP42Track * track in activeTracks) {
-        if (track.trackDemuxerHelper == nil) {
+        muxer_helper *helper = track.muxer_helper;
+
+        if (helper->trackDemuxer == nil) {
             trackHelper = [[Mp4TrackHelper alloc] init];
 
-            track.trackDemuxerHelper = trackHelper;
+            helper->trackDemuxer = trackHelper;
             trackHelper->totalSampleNumber = MP4GetTrackNumberOfSamples(fileHandle, [track Id]);
         }
     }
 
     for (MP42Track * track in activeTracks) {
+        muxer_helper *helper = track.muxer_helper;
+
         while (!isCancelled) {
-            while ([samplesBuffer count] >= 200) {
+            while ([helper->fifo count] >= 200) {
                 usleep(200);
             }
 
@@ -258,7 +262,7 @@
             MP4Timestamp pStartTime;
             bool isSyncSample;
 
-            trackHelper = track.trackDemuxerHelper;
+            trackHelper = helper->trackDemuxer;
             trackHelper->currentSampleId = trackHelper->currentSampleId + 1;
 
             if (!MP4ReadSample(fileHandle,
@@ -282,8 +286,8 @@
             if(track.needConversion)
                 sample->sampleSourceTrack = track;
 
-            @synchronized(samplesBuffer) {
-                [samplesBuffer addObject:sample];
+            @synchronized(helper->fifo) {
+                [helper->fifo addObject:sample];
                 [sample release];
             }
 
@@ -298,40 +302,21 @@
     [pool release];
 }
 
-- (MP42SampleBuffer*)copyNextSample
+- (void)start
 {
     if (!fileHandle)
         fileHandle = MP4Read([[fileURL path] UTF8String]);
 
-    if (samplesBuffer == nil) {
-        samplesBuffer = [[NSMutableArray alloc] initWithCapacity:200];
-    }    
-
     if (!dataReader && !readerStatus) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
+        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [dataReader setName:@"MP4 Demuxer"];
         [dataReader start];
     }
+}
 
-    while (![samplesBuffer count] && !readerStatus)
-        usleep(2000);
-
-    if (readerStatus)
-        if ([samplesBuffer count] == 0) {
-            readerStatus = 0;
-            [dataReader release];
-            dataReader = nil;
-            return nil;
-        }
-
-    MP42SampleBuffer* sample;
-
-    @synchronized(samplesBuffer) {
-        sample = [samplesBuffer objectAtIndex:0];
-        [sample retain];
-        [samplesBuffer removeObjectAtIndex:0];
-    }
-
-    return sample;
+- (BOOL)done
+{
+    return readerStatus;
 }
 
 - (void)setActiveTrack:(MP42Track *)track {
@@ -391,8 +376,6 @@
 
     if (activeTracks)
         [activeTracks release];
-    if (samplesBuffer)
-        [samplesBuffer release];
 
     [metadata release];
 	[fileURL release];

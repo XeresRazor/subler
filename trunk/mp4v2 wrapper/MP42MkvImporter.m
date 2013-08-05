@@ -594,7 +594,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 
 // Methods to extract all the samples from the active tracks at the same time
 
-- (void) fillMovieSampleBuffer: (id)sender
+- (void)demux:(id)sender
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -606,7 +606,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     uint8_t         * frame = NULL;
 
     MP42Track           * track = nil;
-    MatroskaTrackHelper * trackHelper = nil;
+    MatroskaTrackHelper * trackDemuxerHelper = nil;
     MatroskaSample      * frameSample = nil, * currentSample = nil;
     int64_t             offset, minOffset = 0, duration, next_duration;
 
@@ -616,30 +616,34 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     unsigned int TrackMask = ~0;
 
     for (MP42Track* track in activeTracks){
+        muxer_helper *helper = track.muxer_helper;
+
         TrackMask &= ~(1 << [track sourceId]);
-        if (track.trackDemuxerHelper == nil) {
-            trackHelper = [[MatroskaTrackHelper alloc] init];
-            track.trackDemuxerHelper = trackHelper;
+        if (helper->trackDemuxer == nil) {
+            trackDemuxerHelper = [[MatroskaTrackHelper alloc] init];
+            helper->trackDemuxer = trackDemuxerHelper;
         }
     }
 
     mkv_SetTrackMask(matroskaFile, TrackMask);
 
     while (!mkv_ReadFrame(matroskaFile, 0, &Track, &StartTime, &EndTime, &FilePos, &FrameSize, &FrameFlags) && !isCancelled) {
-        while ([samplesBuffer count] >= 400) {
-            usleep(200);
-        }
-
         progress = (StartTime / fileDuration / 10000);
+        muxer_helper *helper = NULL;
 
         for (MP42Track* fTrack in activeTracks){
             if (fTrack.sourceId == Track) {
-                trackHelper = fTrack.trackDemuxerHelper;
+                helper = fTrack.muxer_helper;
+                trackDemuxerHelper = helper->trackDemuxer;
                 track = fTrack;
             }
         }
+        
+        while ([helper->fifo count] >= 200) {
+            usleep(200);
+        }
 
-        if (trackHelper == nil) {
+        if (trackDemuxerHelper == nil) {
             NSLog(@"trackHelper is nil, aborting");
             return;
         }
@@ -647,7 +651,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
         TrackInfo *trackInfo = mkv_GetTrackInfo(matroskaFile, Track);
 
         if (trackInfo->Type == TT_AUDIO) {
-            trackHelper->samplesWritten++;
+            trackDemuxerHelper->samplesWritten++;
 
             if (readMkvPacket(ioStream, trackInfo, FilePos, &frame, &FrameSize)) {
                 MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
@@ -661,8 +665,8 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 if(track.needConversion)
                     sample->sampleSourceTrack = track;
 
-                @synchronized(samplesBuffer) {
-                    [samplesBuffer addObject:sample];
+                @synchronized(helper->fifo) {
+                    [helper->fifo addObject:sample];
                     [sample release];
                 }
             }
@@ -671,8 +675,8 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
         if (trackInfo->Type == TT_SUB) {
             if (readMkvPacket(ioStream, trackInfo, FilePos, &frame, &FrameSize)) {
                 if (strcmp(trackInfo->CodecID, "S_VOBSUB") && strcmp(trackInfo->CodecID, "S_HDMV/PGS")) {
-                    if (!trackHelper->ss)
-                        trackHelper->ss = [[SBSubSerializer alloc] init];
+                    if (!trackDemuxerHelper->ss)
+                        trackDemuxerHelper->ss = [[SBSubSerializer alloc] init];
                     
                     NSString *string = [[[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding] autorelease];
                     if (!strcmp(trackInfo->CodecID, "S_TEXT/ASS") || !strcmp(trackInfo->CodecID, "S_TEXT/SSA"))
@@ -680,9 +684,9 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     
                     if ([string length]) {
                         SBSubLine *sl = [[SBSubLine alloc] initWithLine:string start:StartTime/1000000 end:EndTime/1000000];
-                        [trackHelper->ss addLine:[sl autorelease]];
+                        [trackDemuxerHelper->ss addLine:[sl autorelease]];
                     }
-                    trackHelper->samplesWritten++;
+                    trackDemuxerHelper->samplesWritten++;
                     free(frame);
                 }
                 else {
@@ -700,44 +704,44 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     
                     // PGS are usually stored with just the start time, and blank samples to fill the gaps
                     if (!strcmp(trackInfo->CodecID, "S_HDMV/PGS")) {
-                        if (!trackHelper->previousSample) {
-                            trackHelper->previousSample = [[MP42SampleBuffer alloc] init];
-                            trackHelper->previousSample.sampleDuration = StartTime / 1000000;
-                            trackHelper->previousSample.sampleOffset = 0;
-                            trackHelper->previousSample.sampleTimestamp = 0;
-                            trackHelper->previousSample.sampleIsSync = YES;
-                            trackHelper->previousSample.sampleTrackId = track.Id;
+                        if (!trackDemuxerHelper->previousSample) {
+                            trackDemuxerHelper->previousSample = [[MP42SampleBuffer alloc] init];
+                            trackDemuxerHelper->previousSample.sampleDuration = StartTime / 1000000;
+                            trackDemuxerHelper->previousSample.sampleOffset = 0;
+                            trackDemuxerHelper->previousSample.sampleTimestamp = 0;
+                            trackDemuxerHelper->previousSample.sampleIsSync = YES;
+                            trackDemuxerHelper->previousSample.sampleTrackId = track.Id;
                             if(track.needConversion)
-                                trackHelper->previousSample.sampleSourceTrack = track;
+                                trackDemuxerHelper->previousSample.sampleSourceTrack = track;
 
-                            @synchronized(samplesBuffer) {
-                                [samplesBuffer addObject:trackHelper->previousSample];
-                                [trackHelper->previousSample release];
+                            @synchronized(helper->fifo) {
+                                [helper->fifo addObject:trackDemuxerHelper->previousSample];
+                                [trackDemuxerHelper->previousSample release];
                             }
                         }
                         else {
-                            if (nextSample->sampleTimestamp < trackHelper->previousSample.sampleTimestamp) {
+                            if (nextSample->sampleTimestamp < trackDemuxerHelper->previousSample.sampleTimestamp) {
                                 // Out of order samples? swap the next with the previous
                                 MP42SampleBuffer *temp = nextSample;
-                                nextSample = trackHelper->previousSample;
-                                trackHelper->previousSample = temp;
+                                nextSample = trackDemuxerHelper->previousSample;
+                                trackDemuxerHelper->previousSample = temp;
                             }
 
-                            trackHelper->previousSample.sampleDuration = (nextSample->sampleTimestamp - trackHelper->previousSample.sampleTimestamp) / 1000000;
-                            @synchronized(samplesBuffer) {
-                                [samplesBuffer addObject:trackHelper->previousSample];
-                                [trackHelper->previousSample release];
+                            trackDemuxerHelper->previousSample.sampleDuration = (nextSample->sampleTimestamp - trackDemuxerHelper->previousSample.sampleTimestamp) / 1000000;
+                            @synchronized(helper->fifo) {
+                                [helper->fifo addObject:trackDemuxerHelper->previousSample];
+                                [trackDemuxerHelper->previousSample release];
                             }
                         }
 
-                        trackHelper->previousSample = nextSample;
-                        trackHelper->samplesWritten++;
+                        trackDemuxerHelper->previousSample = nextSample;
+                        trackDemuxerHelper->samplesWritten++;
                     }
                     // VobSub seems to have an end duration, and no blank samples, so create a new one each time to fill the gaps
                     else if (!strcmp(trackInfo->CodecID, "S_VOBSUB")) {
-                        if (StartTime > trackHelper->current_time) {
+                        if (StartTime > trackDemuxerHelper->current_time) {
                             MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-                            sample->sampleDuration = (StartTime - trackHelper->current_time) / 1000000;
+                            sample->sampleDuration = (StartTime - trackDemuxerHelper->current_time) / 1000000;
                             sample->sampleSize = 2;
                             sample->sampleData = calloc(1, 2);
                             sample->sampleIsSync = YES;
@@ -745,20 +749,20 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                             if(track.needConversion)
                                 sample->sampleSourceTrack = track;
                             
-                            @synchronized(samplesBuffer) {
-                                [samplesBuffer addObject:sample];
+                            @synchronized(helper->fifo) {
+                                [helper->fifo addObject:sample];
                                 [sample release];
                             }
                         }
                         
                         nextSample->sampleDuration = (EndTime - StartTime ) / 1000000;
                         
-                        @synchronized(samplesBuffer) {
-                            [samplesBuffer addObject:nextSample];
+                        @synchronized(helper->fifo) {
+                            [helper->fifo addObject:nextSample];
                             [nextSample release];
                         }
                         
-                        trackHelper->current_time = EndTime;
+                        trackDemuxerHelper->current_time = EndTime;
                     }
                 }
             }
@@ -773,33 +777,33 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
             frameSample->filePos = FilePos;
             frameSample->frameSize = FrameSize;
             frameSample->frameFlags = FrameFlags;
-            [trackHelper->queue addObject:frameSample];
+            [trackDemuxerHelper->queue addObject:frameSample];
             [frameSample release];
 
-            if ([trackHelper->queue count] < bufferSize)
+            if ([trackDemuxerHelper->queue count] < bufferSize)
                 continue;
             else {
-                currentSample = [trackHelper->queue objectAtIndex:trackHelper->buffer];
+                currentSample = [trackDemuxerHelper->queue objectAtIndex:trackDemuxerHelper->buffer];
 
                 // matroska stores only the start and end time, so we need to recreate
                 // the frame duration and the offset from the start time, the end time is useless
                 // duration calculation
-                duration = [[trackHelper->queue lastObject] startTime] - currentSample->startTime;
+                duration = [[trackDemuxerHelper->queue lastObject] startTime] - currentSample->startTime;
 
-                for (MatroskaSample *sample in trackHelper->queue)
+                for (MatroskaSample *sample in trackDemuxerHelper->queue)
                     if (sample != currentSample && (sample->startTime >= currentSample->startTime))
                         if ((next_duration = (sample->startTime - currentSample->startTime)) < duration)
                             duration = next_duration;
 
                 // offset calculation
-                offset = currentSample->startTime - trackHelper->current_time;
+                offset = currentSample->startTime - trackDemuxerHelper->current_time;
                 // save the minimum offset, used later to keep all the offset values positive
                 if (offset < minOffset)
                     minOffset = offset;
 
-                [trackHelper->offsetsArray addObject:[NSNumber numberWithLongLong:offset]];
+                [trackDemuxerHelper->offsetsArray addObject:[NSNumber numberWithLongLong:offset]];
 
-                trackHelper->current_time += duration;
+                trackDemuxerHelper->current_time += duration;
 
                 if (readMkvPacket(ioStream, trackInfo, currentSample->filePos, &frame, &currentSample->frameSize)) {
                     MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
@@ -811,18 +815,18 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     sample->sampleIsSync = currentSample->frameFlags & FRAME_KF;
                     sample->sampleTrackId = track.Id;
 
-                    trackHelper->samplesWritten++;
+                    trackDemuxerHelper->samplesWritten++;
 
-                    if (sample->sampleOffset < trackHelper->minDisplayOffset)
-                        trackHelper->minDisplayOffset = sample->sampleOffset;
+                    if (sample->sampleOffset < trackDemuxerHelper->minDisplayOffset)
+                        trackDemuxerHelper->minDisplayOffset = sample->sampleOffset;
 
-                    if (trackHelper->buffer >= bufferSize)
-                        [trackHelper->queue removeObjectAtIndex:0];
-                    if (trackHelper->buffer < bufferSize)
-                        trackHelper->buffer++;
+                    if (trackDemuxerHelper->buffer >= bufferSize)
+                        [trackDemuxerHelper->queue removeObjectAtIndex:0];
+                    if (trackDemuxerHelper->buffer < bufferSize)
+                        trackDemuxerHelper->buffer++;
 
-                    @synchronized(samplesBuffer) {
-                        [samplesBuffer addObject:sample];
+                    @synchronized(helper->fifo) {
+                        [helper->fifo addObject:sample];
                         [sample release];
                     }
                 }
@@ -833,45 +837,46 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     }
 
     for (MP42Track* track in activeTracks) {
-        trackHelper = track.trackDemuxerHelper;
+        muxer_helper *helper = track.muxer_helper;
+        trackDemuxerHelper = helper->trackDemuxer;
 
-        if (trackHelper->queue) {
+        if (trackDemuxerHelper->queue) {
             TrackInfo *trackInfo = mkv_GetTrackInfo(matroskaFile, [track sourceId]);
 
-            while ([trackHelper->queue count]) {
-                if (trackHelper->bufferFlush == 1) {
+            while ([trackDemuxerHelper->queue count]) {
+                if (trackDemuxerHelper->bufferFlush == 1) {
                     // add a last sample to get the duration for the last frame
-                    MatroskaSample *lastSample = [trackHelper->queue lastObject];
-                    for (MatroskaSample *sample in trackHelper->queue) {
+                    MatroskaSample *lastSample = [trackDemuxerHelper->queue lastObject];
+                    for (MatroskaSample *sample in trackDemuxerHelper->queue) {
                         if (sample->startTime > lastSample->startTime)
                             lastSample = sample;
                     }
                     frameSample = [[MatroskaSample alloc] init];
                     frameSample->startTime = [lastSample endTime];
-                    [trackHelper->queue addObject:frameSample];
+                    [trackDemuxerHelper->queue addObject:frameSample];
                     [frameSample release];
                 }
-                currentSample = [trackHelper->queue objectAtIndex:trackHelper->buffer];
+                currentSample = [trackDemuxerHelper->queue objectAtIndex:trackDemuxerHelper->buffer];
 
                 // matroska stores only the start and end time, so we need to recreate
                 // the frame duration and the offset from the start time, the end time is useless
                 // duration calculation
-                duration = [[trackHelper->queue lastObject] startTime] - currentSample->startTime;
+                duration = [[trackDemuxerHelper->queue lastObject] startTime] - currentSample->startTime;
 
-                for (MatroskaSample *sample in trackHelper->queue)
+                for (MatroskaSample *sample in trackDemuxerHelper->queue)
                     if (sample != currentSample && (sample->startTime >= currentSample->startTime))
                         if ((next_duration = (sample->startTime - currentSample->startTime)) < duration)
                             duration = next_duration;
 
                 // offset calculation
-                offset = currentSample->startTime - trackHelper->current_time;
+                offset = currentSample->startTime - trackDemuxerHelper->current_time;
                 // save the minimum offset, used later to keep the all the offset values positive
                 if (offset < minOffset)
                     minOffset = offset;
 
-                [trackHelper->offsetsArray addObject:[NSNumber numberWithLongLong:offset]];
+                [trackDemuxerHelper->offsetsArray addObject:[NSNumber numberWithLongLong:offset]];
 
-                trackHelper->current_time += duration;
+                trackDemuxerHelper->current_time += duration;
 
                 if (readMkvPacket(ioStream, trackInfo, currentSample->filePos, &frame, &currentSample->frameSize)) {
                     MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
@@ -883,21 +888,21 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     sample->sampleIsSync = currentSample->frameFlags & FRAME_KF;
                     sample->sampleTrackId = track.Id;
 
-                    trackHelper->samplesWritten++;
+                    trackDemuxerHelper->samplesWritten++;
 
-                    if (sample->sampleOffset < trackHelper->minDisplayOffset)
-                        trackHelper->minDisplayOffset = sample->sampleOffset;
+                    if (sample->sampleOffset < trackDemuxerHelper->minDisplayOffset)
+                        trackDemuxerHelper->minDisplayOffset = sample->sampleOffset;
 
-                    if (trackHelper->buffer >= bufferSize)
-                        [trackHelper->queue removeObjectAtIndex:0];
+                    if (trackDemuxerHelper->buffer >= bufferSize)
+                        [trackDemuxerHelper->queue removeObjectAtIndex:0];
 
-                    @synchronized(samplesBuffer) {
-                        [samplesBuffer addObject:sample];
+                    @synchronized(helper->fifo) {
+                        [helper->fifo addObject:sample];
                         [sample release];
                     }
 
-                    trackHelper->bufferFlush++;
-                    if (trackHelper->bufferFlush >= bufferSize - 1) {
+                    trackDemuxerHelper->bufferFlush++;
+                    if (trackDemuxerHelper->bufferFlush >= bufferSize - 1) {
                         break;
                     }
                 }
@@ -906,10 +911,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
             }
         }
 
-        if (trackHelper->ss) {
+        if (trackDemuxerHelper->ss) {
             MP42SampleBuffer *sample;
             MP4TrackId dstTrackId = track.Id;
-            SBSubSerializer *ss = trackHelper->ss;
+            SBSubSerializer *ss = trackDemuxerHelper->ss;
 
             [ss setFinished:YES];
 
@@ -920,10 +925,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     if (!(sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO)))
                         break;
 
-                    @synchronized(samplesBuffer) {
-                        [samplesBuffer addObject:sample];
+                    @synchronized(helper->fifo) {
+                        [helper->fifo addObject:sample];
                         [sample release];
-                        trackHelper->samplesWritten++;
+                        trackDemuxerHelper->samplesWritten++;
                     }
 
                     continue;
@@ -931,10 +936,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 if (!(sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, NO, NO, CGSizeMake(0, 0), 0)))
                     break;
 
-                @synchronized(samplesBuffer) {
-                    [samplesBuffer addObject:sample];
+                @synchronized(helper->fifo) {
+                    [helper->fifo addObject:sample];
                     [sample release];
-                    trackHelper->samplesWritten++;
+                    trackDemuxerHelper->samplesWritten++;
                 }
             }
         }
@@ -944,40 +949,22 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     [pool release];
 }
 
-- (MP42SampleBuffer*)copyNextSample {
+- (void)start
+{
     if (!matroskaFile)
-        return nil;
-
-    if (samplesBuffer == nil) {
-        samplesBuffer = [[NSMutableArray alloc] initWithCapacity:200];
-    }
+        return;
 
     if (!dataReader && !readerStatus) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
+        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
         [dataReader setName:@"Matroska Demuxer"];
         [dataReader start];
     }
 
-    while (![samplesBuffer count] && !readerStatus)
-        usleep(2000);
+}
 
-    if (readerStatus)
-        if ([samplesBuffer count] == 0) {
-            readerStatus = 0;
-            [dataReader release];
-            dataReader = nil;
-            return nil;
-        }
-
-    MP42SampleBuffer* sample;
-
-    @synchronized(samplesBuffer) {
-        sample = [samplesBuffer objectAtIndex:0];
-        [sample retain];
-        [samplesBuffer removeObjectAtIndex:0];
-    }
-
-    return sample;
+- (BOOL)done
+{
+    return readerStatus;
 }
 
 - (void)setActiveTrack:(MP42Track *)track {
@@ -995,7 +982,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
 {
     for (MP42Track * track in activeTracks) {
-        MatroskaTrackHelper * trackHelper = track.trackDemuxerHelper;
+        MatroskaTrackHelper * trackHelper = track.muxer_helper->trackDemuxer;
         MP4TrackId trackId = [track Id];
 
         if (trackHelper->minDisplayOffset != 0) {
@@ -1026,7 +1013,6 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     [metadata release], metadata = nil;
     [activeTracks release], activeTracks = nil;
     [tracksArray release], tracksArray = nil;
-    [samplesBuffer release], samplesBuffer = nil;
 	[fileURL release], fileURL = nil;
 
 	/* close matroska parser */ 

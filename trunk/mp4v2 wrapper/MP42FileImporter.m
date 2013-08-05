@@ -15,12 +15,15 @@
 #import "MP42AACImporter.h"
 #import "MP42H264Importer.h"
 #import "MP42VobSubImporter.h"
+#import "MP42Track.h"
 
 #if !__LP64__
 #import "MP42QTImporter.h"
 #endif
 
 #import "MP42AVFImporter.h"
+
+#include "MP42AudioConverter.h"
 
 @implementation MP42FileImporter
 
@@ -92,6 +95,16 @@
 - (void)setActiveTrack:(MP42Track *)track
 {
     
+}
+
+- (void)start
+{
+    
+}
+
+- (BOOL)done
+{
+    return YES;
 }
 
 - (MP42SampleBuffer*)copyNextSample

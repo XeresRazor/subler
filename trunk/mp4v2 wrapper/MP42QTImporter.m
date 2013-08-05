@@ -805,7 +805,7 @@
     return [super audioDescriptionForTrack:track];
 }
 
-- (void) fillMovieSampleBuffer: (id)sender
+- (void)demux:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     OSStatus err = noErr;
@@ -816,13 +816,13 @@
     MovTrackHelper * trackHelper=nil; 
 
     for (MP42Track * track in activeTracks) {
-        if (track.trackDemuxerHelper == nil) {
-            track.trackDemuxerHelper = [[MovTrackHelper alloc] init];
+        if (track.muxer_helper->trackDemuxer == nil) {
+            track.muxer_helper->trackDemuxer = [[MovTrackHelper alloc] init];
 
             Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
             Media media = GetTrackMedia(qtcTrack);
 
-            trackHelper = track.trackDemuxerHelper;
+            trackHelper = track.muxer_helper->trackDemuxer;
             trackHelper->totalSampleNumber = GetMediaSampleCount(media);
         }
     }
@@ -830,10 +830,11 @@
     for (MP42Track * track in activeTracks) {
         if (isCancelled)
             break;
-
+        
+        muxer_helper *helper = track.muxer_helper;
         Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
         Media media = GetTrackMedia(qtcTrack);
-        trackHelper = track.trackDemuxerHelper;
+        trackHelper = helper->trackDemuxer;
 
         // Create a QTSampleTable which contains all the informatio of the track samples.
         TimeValue64 sampleTableStartDecodeTime = 0;
@@ -861,7 +862,7 @@
         sampleCount = QTSampleTableGetNumberOfSamples(sampleTable);
 
         for (sampleIndex = 1; sampleIndex <= sampleCount && !isCancelled; sampleIndex++) {
-            while ([samplesBuffer count] >= 300) {
+            while ([helper->fifo count] >= 300) {
                 usleep(200);
             }
 
@@ -904,8 +905,8 @@
             if(track.needConversion)
                 sample->sampleSourceTrack = track;
 
-            @synchronized(samplesBuffer) {
-                [samplesBuffer addObject:sample];
+            @synchronized(helper->fifo) {
+                [helper->fifo addObject:sample];
                 [sample release];
             }
 
@@ -923,37 +924,18 @@
     [pool release];
 }
 
-- (MP42SampleBuffer*)copyNextSample
-{    
-    if (samplesBuffer == nil) {
-        samplesBuffer = [[NSMutableArray alloc] initWithCapacity:200];
-    }    
-    
+- (void)start
+{
     if (!dataReader && !readerStatus) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(fillMovieSampleBuffer:) object:self];
+        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [dataReader setName:@"QT Demuxer"];
         [dataReader start];
     }
-    
-    while (![samplesBuffer count] && !readerStatus)
-        usleep(2000);
-    
-    if (readerStatus)
-        if ([samplesBuffer count] == 0) {
-            readerStatus = 0;
-            [dataReader release];
-            dataReader = nil;
-            return nil;
-        }
-    
-    MP42SampleBuffer* sample;
-    
-    @synchronized(samplesBuffer) {
-        sample = [samplesBuffer objectAtIndex:0];
-        [sample retain];
-        [samplesBuffer removeObjectAtIndex:0];
-    }
-    
-    return sample;
+}
+
+- (BOOL)done
+{
+    return readerStatus;
 }
 
 - (void)setActiveTrack:(MP42Track *)track {
@@ -978,7 +960,7 @@
         Fixed editDwell;
 
         MovTrackHelper * trackHelper;
-        trackHelper = track.trackDemuxerHelper;
+        trackHelper = track.muxer_helper->trackDemuxer;
 
         // Find the first edit
         // Each edit has a starting track timestamp, a duration in track time, a starting display timestamp and a rate.
@@ -1027,8 +1009,6 @@
 
     if (activeTracks)
         [activeTracks release];
-    if (samplesBuffer)
-        [samplesBuffer release];
 
     [metadata release];
     [sourceFile release];

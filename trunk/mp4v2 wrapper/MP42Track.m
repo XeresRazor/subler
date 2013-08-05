@@ -8,6 +8,8 @@
 
 #import "MP42Track.h"
 #import "MP42Utilities.h"
+#import "MP42FileImporter.h"
+#import "MP42Sample.h"
 #import "SBLanguages.h"
 
 @implementation MP42Track
@@ -98,10 +100,16 @@
 
 - (void) dealloc
 {
-    if (trackDemuxerHelper)
-        [trackDemuxerHelper release];
-    if (trackConverterHelper)
-        [trackConverterHelper release];
+    if (_helper) {
+        if (_helper->trackDemuxer)
+            [_helper->trackDemuxer release];
+        if (_helper->trackConverter)
+            [_helper->trackConverter release];
+        if (_helper->fifo)
+            [_helper->fifo release];
+        
+        free(_helper);
+    }
 
     [updatedProperty release];
     [format release];
@@ -301,8 +309,61 @@
 
 @synthesize dataLength = _size;;
 
-@synthesize trackImporterHelper;
-@synthesize trackDemuxerHelper;
-@synthesize trackConverterHelper;
+@synthesize muxer_helper = _helper;
+
+- (muxer_helper*)muxer_helper
+{
+    if (_helper == NULL)
+        _helper = calloc(1, sizeof(muxer_helper));
+
+    return _helper;
+}
+
+- (void)setTrackImporterHelper:(MP42FileImporter *)importer
+{
+    if (_helper == NULL)
+        _helper = calloc(1, sizeof(muxer_helper));
+    
+    _helper->trackImporter = importer;
+}
+
+- (MP42SampleBuffer*)copyNextSample {
+    MP42SampleBuffer *sample = nil;
+
+    if (_helper->trackConverter) {
+        while (/*[_helper->trackConverter needMoreSample] &&*/ [_helper->fifo count]) {
+            @synchronized(_helper->fifo) {
+                sample = [_helper->fifo objectAtIndex:0];
+                [sample retain];
+                [_helper->fifo removeObjectAtIndex:0];
+            }
+            [_helper->trackConverter addSample:sample];
+            [sample release];
+        }
+
+        if (![_helper->fifo count] && [_helper->trackImporter done])
+            [_helper->trackConverter setDone:YES];
+
+        if ([_helper->trackConverter encoderDone])
+            _helper->done = YES;
+
+        sample = [_helper->trackConverter copyEncodedSample];
+        return sample;
+    }
+    else {
+        if ([_helper->trackImporter done])
+            _helper->done = YES;
+
+        if ([_helper->fifo count]) {
+            @synchronized(_helper->fifo) {
+                sample = [_helper->fifo objectAtIndex:0];
+                [sample retain];
+                [_helper->fifo removeObjectAtIndex:0];
+            }
+        }
+    }
+
+    return sample;
+}
 
 @end
