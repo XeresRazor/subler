@@ -35,3 +35,7 @@
 - (IBAction) addNoArtwork:(id)sender;
 
 @end
+
+@interface NSObject (ArtworkSelectorDelegateMethod)
+- (void)selectArtworkDone:(NSURL *)url;
+@end
