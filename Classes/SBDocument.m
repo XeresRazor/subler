@@ -645,7 +645,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [offsetWindow orderOut:self];
 }
 
-- (IBAction) deleteTrack: (id) sender
+- (IBAction)deleteTrack:(id) sender
 {
     if ([fileTracksTable selectedRow] == -1  || [fileTracksTable editedRow] != -1)
         return;
@@ -653,6 +653,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [mp4File removeTrackAtIndex:[fileTracksTable selectedRow]];
 
     [fileTracksTable reloadData];
+    [self tableViewSelectionDidChange:nil];
     [self updateChangeCount:NSChangeDone];
 }
 
