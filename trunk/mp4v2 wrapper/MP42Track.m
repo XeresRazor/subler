@@ -203,6 +203,7 @@
     [coder encodeInt64:Id forKey:@"Id"];
     [coder encodeInt64:sourceId forKey:@"sourceId"];
 
+#ifdef SB_SANDBOX
     if ([sourceURL respondsToSelector:@selector(startAccessingSecurityScopedResource)]) {
         NSData *bookmarkData = nil;
         NSError *error = nil;
@@ -215,11 +216,13 @@
         }
         
         [coder encodeObject:bookmarkData forKey:@"bookmark"];
-        
     }
     else {
         [coder encodeObject:sourceURL forKey:@"sourceURL"];
     }
+#else
+    [coder encodeObject:sourceURL forKey:@"sourceURL"];
+#endif
 
     [coder encodeObject:sourceFormat forKey:@"sourceFormat"];
     [coder encodeObject:format forKey:@"format"];

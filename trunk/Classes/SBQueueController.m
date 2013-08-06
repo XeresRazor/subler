@@ -157,6 +157,7 @@
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestination"]) {
         destination = [[NSURL fileURLWithPath:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestination"]] retain];
 
+#ifdef SB_SANDBOX
         if ([[NSUserDefaults standardUserDefaults] valueForKey:@"SBQueueDestinationBookmark"]) {
             BOOL bookmarkDataIsStale;
             NSError *error;
@@ -170,6 +171,7 @@
                                              bookmarkDataIsStale:&bookmarkDataIsStale
                                              error:&error] retain];
         }
+#endif
         if (![[NSFileManager defaultManager] fileExistsAtPath:[destination path] isDirectory:nil])
             destination = nil;
     }
@@ -390,8 +392,10 @@
         NSError *outError = nil;
         BOOL success = NO;
 
+#ifdef SB_SANDBOX
         if([destination respondsToSelector:@selector(startAccessingSecurityScopedResource)])
             [destination startAccessingSecurityScopedResource];
+#endif
 
         for (;;) {
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -480,8 +484,10 @@
                 break;
         }
 
+#ifdef SB_SANDBOX
         if([destination respondsToSelector:@selector(stopAccessingSecurityScopedResource)])
             [destination stopAccessingSecurityScopedResource];
+#endif
 
         dispatch_async(dispatch_get_main_queue(), ^{
             currentItem = nil;
@@ -607,6 +613,7 @@
             [destButton selectItem:folderItem];
             customDestination = YES;
 
+#ifdef SB_SANDBOX
             NSData *bookmark = nil;
             NSError *error = nil;
             bookmark = [[panel URL] bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
@@ -618,9 +625,10 @@
                 [NSApp presentError:error];
             }
 
+            [[NSUserDefaults standardUserDefaults] setValue:bookmark forKey:@"SBQueueDestinationBookmark"];
+#endif
             [[NSUserDefaults standardUserDefaults] setValue:[[panel URL] path] forKey:@"SBQueueDestination"];
             [[NSUserDefaults standardUserDefaults] setValue:@"YES" forKey:@"SBQueueDestinationSelected"];
-            [[NSUserDefaults standardUserDefaults] setValue:bookmark forKey:@"SBQueueDestinationBookmark"];
         }
         else
             [destButton selectItemAtIndex:2];

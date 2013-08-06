@@ -223,13 +223,16 @@ NSString * const MP42FileTypeM4B = @"m4b";
 
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSError *error;
-    NSURL *folderURL = [fileURL URLByDeletingLastPathComponent];
 
     NSFileManager *fileManager = [[NSFileManager alloc] init];
+#ifdef SB_SANDBOX
+    NSURL *folderURL = [fileURL URLByDeletingLastPathComponent];
     NSURL *tempURL = [fileManager URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:folderURL create:YES error:&error];
-
+#else
+    NSURL *tempURL = [fileURL URLByDeletingLastPathComponent];
+#endif
     if (tempURL) {
-        tempURL = [tempURL URLByAppendingPathComponent:[fileURL lastPathComponent]];
+        tempURL = [tempURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.tmp", [fileURL lastPathComponent]]];
 
         unsigned long long originalFileSize = [[[fileManager attributesOfItemAtPath:[fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
 
@@ -383,8 +386,10 @@ NSString * const MP42FileTypeM4B = @"m4b";
                     [track setTrackImporterHelper:fileImporter];
                 }
                 else if (sourceURL) {
+#ifdef SB_SANDBOX
                     if([sourceURL respondsToSelector:@selector(startAccessingSecurityScopedResource)])
                         [sourceURL startAccessingSecurityScopedResource];
+#endif
 
                     fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil andFile:[track sourceURL] error:outError];
                     if (fileImporter) {
@@ -415,6 +420,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
     [muxer release];
     muxer = nil;
 
+#ifdef SB_SANDBOX
     // Stop accessing scoped bookmarks
     NSString* currentPath = nil;
     for (track in tracks) {
@@ -429,6 +435,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
             currentPath = [sourceURL path];
         }
     }
+#endif
 
     [_fileImporters release];
 
@@ -763,6 +770,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
 {
     [coder encodeInt:2 forKey:@"MP42FileVersion"];
 
+#ifdef SB_SANDBOX
     if ([fileURL respondsToSelector:@selector(startAccessingSecurityScopedResource)]) {
             NSData *bookmarkData = nil;
             NSError *error = nil;
@@ -780,6 +788,9 @@ NSString * const MP42FileTypeM4B = @"m4b";
     else {
         [coder encodeObject:fileURL forKey:@"fileUrl"];
     }
+#else
+    [coder encodeObject:fileURL forKey:@"fileUrl"];
+#endif
 
     [coder encodeObject:tracksToBeDeleted forKey:@"tracksToBeDeleted"];
     [coder encodeBool:hasFileRepresentation forKey:@"hasFileRepresentation"];
