@@ -1,12 +1,12 @@
 //
-//  AppDelegate.m
+//  SBAppDelegate.m
 //  Subler
 //
 //  Created by Damiano Galassi on 29/01/09.
 //  Copyright 2009 Damiano Galassi. All rights reserved.
 //
 
-#import "AppDelegate.h"
+#import "SBAppDelegate.h"
 #import "SBDocument.h"
 #import "SBPresetManager.h"
 #import "SBQueueController.h"
@@ -56,7 +56,7 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
     }
 }
 
-@implementation AppDelegate
+@implementation SBAppDelegate
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {

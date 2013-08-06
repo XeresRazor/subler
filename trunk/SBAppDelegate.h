@@ -1,5 +1,5 @@
 //
-//  AppDelegate.h
+//  SBAppDelegate.h
 //  Subler
 //
 //  Created by Damiano Galassi on 29/01/09.
@@ -15,7 +15,7 @@
 
 @end
 
-@interface AppDelegate : NSObject {
+@interface SBAppDelegate : NSObject {
     SBPrefsController *prefController;
 	SBDocumentController *documentController;
 }
