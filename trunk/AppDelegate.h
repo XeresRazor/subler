@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class PrefsController;
+@class SBPrefsController;
 
 @interface SBDocumentController : NSDocumentController {
 }
@@ -16,7 +16,7 @@
 @end
 
 @interface AppDelegate : NSObject {
-    PrefsController *prefController;
+    SBPrefsController *prefController;
 	SBDocumentController *documentController;
 }
 

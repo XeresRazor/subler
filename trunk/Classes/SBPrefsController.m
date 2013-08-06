@@ -1,11 +1,11 @@
 //
-//  PrefsController.m
+//  SBPrefsController.m
 //
 //  Created by Damiano Galassi on 13/05/08.
 //  Copyright 2008 Damiano Galassi. All rights reserved.
 //
 
-#import "PrefsController.h"
+#import "SBPrefsController.h"
 #import "MetadataSearchController.h"
 #import "SBPresetManager.h"
 #import "SBTableView.h"
@@ -17,7 +17,7 @@
 #define TOOLBAR_AUDIO       @"TOOLBAR_AUDIO"
 #define TOOLBAR_SETS        @"TOOLBAR_SETS"
 
-@interface PrefsController (Private)
+@interface SBPrefsController (Private)
 
 - (void) setPrefView: (id) sender;
 - (NSToolbarItem *)toolbarItemWithIdentifier: (NSString *)identifier
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation PrefsController
+@implementation SBPrefsController
 
 + (void)registerUserDefaults
 {    
@@ -236,7 +236,7 @@
 
 @end
 
-@implementation PrefsController (Private)
+@implementation SBPrefsController (Private)
 
 - (void) setPrefView: (id) sender
 {

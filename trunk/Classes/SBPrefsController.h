@@ -1,5 +1,5 @@
 //
-//  PrefsController.h
+//  SBPrefsController.h
 //
 //  Created by Damiano Galassi on 13/05/08.
 //  Copyright 2008 Damiano Galassi. All rights reserved.
@@ -11,7 +11,7 @@
 @class MovieViewController;
 @class SBTableView;
 
-@interface PrefsController : NSWindowController <NSToolbarDelegate, NSWindowDelegate> {
+@interface SBPrefsController : NSWindowController <NSToolbarDelegate, NSWindowDelegate> {
     IBOutlet NSView *generalView, *audioView, *setsView;
 
     id _popover;
