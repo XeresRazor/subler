@@ -10,7 +10,7 @@
 #import "SBDocument.h"
 #import "SBPresetManager.h"
 #import "SBQueueController.h"
-#import "PrefsController.h"
+#import "SBPrefsController.h"
 
 #import "mp4v2.h"
 
@@ -62,7 +62,7 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
 {
     documentController = [[SBDocumentController alloc] init];
 
-    [PrefsController registerUserDefaults];
+    [SBPrefsController registerUserDefaults];
 
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"SBShowQueueWindow"])
         [[SBQueueController sharedManager] showWindow:self];
@@ -167,7 +167,7 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
 - (IBAction) showPrefsWindow: (id) sender
 {
     if (!prefController) {
-        prefController = [[PrefsController alloc] init];
+        prefController = [[SBPrefsController alloc] init];
     }
     [prefController showWindow:self];
 }
