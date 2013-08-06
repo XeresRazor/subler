@@ -306,6 +306,10 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
         int i, sampleCount = [vobTrack->samples count];
         
         for(i = 0; i < sampleCount; i++) {
+            while ([helper->fifo count] >= 20) {
+                usleep(2000);
+            }
+
             SBVobSubSample *currentSample = [vobTrack->samples objectAtIndex:i];
             int offset = currentSample->fileOffset;
             int nextOffset;
