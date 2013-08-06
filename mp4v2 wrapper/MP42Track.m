@@ -331,7 +331,7 @@
     MP42SampleBuffer *sample = nil;
 
     if (_helper->trackConverter) {
-        while (/*[_helper->trackConverter needMoreSample] &&*/ [_helper->fifo count]) {
+        while ([_helper->trackConverter needMoreSample] && [_helper->fifo count]) {
             @synchronized(_helper->fifo) {
                 sample = [_helper->fifo objectAtIndex:0];
                 [sample retain];
@@ -351,7 +351,7 @@
         return sample;
     }
     else {
-        if ([_helper->trackImporter done])
+        if ([_helper->trackImporter done] && ![_helper->fifo count])
             _helper->done = YES;
 
         if ([_helper->fifo count]) {

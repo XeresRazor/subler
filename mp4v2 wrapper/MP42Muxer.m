@@ -389,7 +389,8 @@
         for (MP42Track * track in workingTracks) {
             MP42SampleBuffer * sampleBuffer = nil;
 
-            while ((sampleBuffer = [track copyNextSample]) != nil) {
+            int i = 0;
+            while ( i < 100 && (sampleBuffer = [track copyNextSample]) != nil) {
                 if (!MP4WriteSample(fileHandle, sampleBuffer->sampleTrackId,
                                     sampleBuffer->sampleData, sampleBuffer->sampleSize,
                                     sampleBuffer->sampleDuration, sampleBuffer->sampleOffset,
@@ -397,6 +398,7 @@
                     isCancelled = YES;
 
                 [sampleBuffer release];
+                i++;
             }
         }
 
