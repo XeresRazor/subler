@@ -23,7 +23,7 @@
 		A916F4311678DD07003920D6 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A916F4301678DD07003920D6 /* libjpeg.a */; };
 		A91E7DEA0F8A2E6800AF387E /* SoundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A91E7DE90F8A2E6800AF387E /* SoundViewController.m */; };
 		A91E7DEE0F8A2F3D00AF387E /* SoundView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A91E7DEC0F8A2F3D00AF387E /* SoundView.xib */; };
-		A91ED322176A4BDF0091DC0A /* SBHtmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A91ED321176A4BDF0091DC0A /* SBHtmlParser.m */; };
+		A91ED322176A4BDF0091DC0A /* MP42HtmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A91ED321176A4BDF0091DC0A /* MP42HtmlParser.m */; };
 		A91F622D0FB0A56F00B96B33 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A91F622C0FB0A56F00B96B33 /* libicucore.dylib */; };
 		A92A4FB812B0F2F300751FA5 /* prefs-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = A92A4FB712B0F2F300751FA5 /* prefs-audio.png */; };
 		A92E3BE4177CB29800E7F7BB /* MP42Image.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E3BE3177CB29800E7F7BB /* MP42Image.m */; };
@@ -220,8 +220,8 @@
 		A91E7DE80F8A2E6800AF387E /* SoundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundViewController.h; path = PropertyView/SoundViewController.h; sourceTree = "<group>"; };
 		A91E7DE90F8A2E6800AF387E /* SoundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SoundViewController.m; path = PropertyView/SoundViewController.m; sourceTree = "<group>"; };
 		A91E7DED0F8A2F3D00AF387E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/SoundView.xib; sourceTree = "<group>"; };
-		A91ED320176A4BDF0091DC0A /* SBHtmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBHtmlParser.h; path = "mp4v2 wrapper/SBHtmlParser.h"; sourceTree = "<group>"; };
-		A91ED321176A4BDF0091DC0A /* SBHtmlParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBHtmlParser.m; path = "mp4v2 wrapper/SBHtmlParser.m"; sourceTree = "<group>"; };
+		A91ED320176A4BDF0091DC0A /* MP42HtmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42HtmlParser.h; path = "mp4v2 wrapper/MP42HtmlParser.h"; sourceTree = "<group>"; };
+		A91ED321176A4BDF0091DC0A /* MP42HtmlParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42HtmlParser.m; path = "mp4v2 wrapper/MP42HtmlParser.m"; sourceTree = "<group>"; };
 		A91F622C0FB0A56F00B96B33 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
 		A92A4FB712B0F2F300751FA5 /* prefs-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "prefs-audio.png"; path = "images/prefs-audio.png"; sourceTree = "<group>"; };
 		A92E3BE2177CB29800E7F7BB /* MP42Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Image.h; path = "mp4v2 wrapper/MP42Image.h"; sourceTree = "<group>"; };
@@ -677,10 +677,10 @@
 				A936DAFD1682057700D19BDB /* MP42BitmapSubConverter.m */,
 				A90327E2133F68C5004E0D41 /* MP42OCRWrapper.h */,
 				A90327E3133F68C5004E0D41 /* MP42OCRWrapper.mm */,
+				A91ED320176A4BDF0091DC0A /* MP42HtmlParser.h */,
+				A91ED321176A4BDF0091DC0A /* MP42HtmlParser.m */,
 				A9B46AA712B79BD00040517A /* SubUtilities.h */,
 				A9B46AA812B79BD00040517A /* SubUtilities.m */,
-				A91ED320176A4BDF0091DC0A /* SBHtmlParser.h */,
-				A91ED321176A4BDF0091DC0A /* SBHtmlParser.m */,
 			);
 			name = Muxer;
 			sourceTree = "<group>";
@@ -1004,7 +1004,7 @@
 				CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */,
 				CDDC1957175B05C50005CD98 /* SBRatings.m in Sources */,
 				CD3F2A881761A143000D4C73 /* XMLReader.m in Sources */,
-				A91ED322176A4BDF0091DC0A /* SBHtmlParser.m in Sources */,
+				A91ED322176A4BDF0091DC0A /* MP42HtmlParser.m in Sources */,
 				A92E3BE4177CB29800E7F7BB /* MP42Image.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -92,6 +92,7 @@
 
 - (void)start
 {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     MP42SampleBuffer *sample;
     MP4TrackId dstTrackId = [[activeTracks lastObject] Id];
 
@@ -122,7 +123,8 @@
             }
         }
     }
-
+    
+    [pool release];
     return;
 }
 
