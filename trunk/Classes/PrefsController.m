@@ -147,7 +147,7 @@
 - (IBAction)closePopOver:(id)sender
 {
     if(_popover) {
-        if (!NSClassFromString(@"ANSPopover")) {
+        if (!NSClassFromString(@"NSPopover")) {
             [[self window] removeChildWindow:_popover];
             [_popover orderOut:self];
         }
@@ -173,7 +173,7 @@
         _controller = [[MovieViewController alloc] initWithNibName:@"MovieView" bundle:nil];
         [_controller setMetadata:[[presetManager presets] objectAtIndex:_currentRow]];
         
-        if (NSClassFromString(@"ANSPopover")) {
+        if (NSClassFromString(@"NSPopover")) {
             _popover = [[NSPopover alloc] init];
             ((NSPopover *)_popover).contentViewController = _controller;
             ((NSPopover *)_popover).contentSize = NSMakeSize(480.0f, 500.0f);
