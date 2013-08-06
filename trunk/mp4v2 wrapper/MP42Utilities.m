@@ -374,6 +374,8 @@ NSString* getFilenameLanguage(CFStringRef filename)
 		langStr = CFStringCreateWithSubstring(NULL, baseName, findResult);
 		CFStringGetCString(langStr, langCStr, 40, kCFStringEncodingASCII);
         lang = [NSString stringWithFormat:@"%s", lang_for_english(langCStr)->eng_name];
+        
+        CFRelease(langStr);
     }
 
 	CFRelease(baseName);
