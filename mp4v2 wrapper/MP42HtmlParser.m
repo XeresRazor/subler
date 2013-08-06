@@ -6,7 +6,7 @@
 //
 //
 
-#import "SBHtmlParser.h"
+#import "MP42HtmlParser.h"
 
 rgba_color make_color(u_int8_t r, u_int8_t g, u_int8_t b, u_int8_t a) {
     rgba_color color;
@@ -26,7 +26,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
     else
         return 1;
 }
-@implementation SBStyle
+@implementation MP42Style
 
 - (id)init {
     self = [super init];
@@ -51,7 +51,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    SBStyle *newObject = [[SBStyle allocWithZone:zone] init];
+    MP42Style *newObject = [[MP42Style allocWithZone:zone] init];
 
     newObject.style = _style;
     newObject.type = _type;
@@ -70,7 +70,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
 
 @end
 
-@implementation SBHtmlParser
+@implementation MP42HtmlParser
 
 - (id)initWithString: (NSString*) string
 {
@@ -114,7 +114,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
     content = [_text substringWithRange:contentInternalRange];
 
     NSInteger tagType;
-    SBStyle *style = nil;
+    MP42Style *style = nil;
     if ([content hasPrefix:@"/"]) {
         tagType = kTagClose;
         contentInternalRange.location +=1;
@@ -125,7 +125,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
         tagType = kTagOpen;
 
     if ([content hasPrefix:@"font"]) {
-        style = [[SBStyle alloc] initWithStyle:kStyleColor type:tagType location:openRange.location color: _defaultColor];
+        style = [[MP42Style alloc] initWithStyle:kStyleColor type:tagType location:openRange.location color: _defaultColor];
         if (tagType == kTagOpen) {
             NSRange colorRange = [content rangeOfString:@"color=\"#"];
             if (colorRange.location != NSNotFound && colorRange.location < [content length]) {
@@ -144,13 +144,13 @@ int compare_color(rgba_color c1, rgba_color c2) {
         }
     }
     else if ([content hasPrefix:@"b"]) {
-        style = [[SBStyle alloc] initWithStyle:kStyleBold type:tagType location:openRange.location color:_defaultColor];
+        style = [[MP42Style alloc] initWithStyle:kStyleBold type:tagType location:openRange.location color:_defaultColor];
     }
     else if ([content hasPrefix:@"i"]) {
-        style = [[SBStyle alloc] initWithStyle:kStyleItalic type:tagType location:openRange.location color:_defaultColor];
+        style = [[MP42Style alloc] initWithStyle:kStyleItalic type:tagType location:openRange.location color:_defaultColor];
     }
     else if ([content hasPrefix:@"u"]) {
-        style = [[SBStyle alloc] initWithStyle:kStyleUnderlined type:tagType location:openRange.location color:_defaultColor];
+        style = [[MP42Style alloc] initWithStyle:kStyleUnderlined type:tagType location:openRange.location color:_defaultColor];
     }
 
     if (style) {
@@ -165,9 +165,9 @@ int compare_color(rgba_color c1, rgba_color c2) {
 - (void)serializeStyles
 {
     NSMutableArray *serializedStyles = [[NSMutableArray alloc] init];
-    SBStyle *currentStyle = [[SBStyle alloc] init];
+    MP42Style *currentStyle = [[MP42Style alloc] init];
 
-    for (SBStyle *nextStyle in _styles) {
+    for (MP42Style *nextStyle in _styles) {
         if (currentStyle.location != nextStyle.location) {
             currentStyle.length = nextStyle.location - currentStyle.location;
             if (currentStyle.style || compare_color(currentStyle.color, nextStyle.color))

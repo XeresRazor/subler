@@ -9,7 +9,7 @@
 #import "SubUtilities.h"
 #import "RegexKitLite.h"
 #import "MP42Sample.h"
-#import "SBHtmlParser.h"
+#import "MP42HtmlParser.h"
 
 @implementation SBTextSample
 
@@ -145,6 +145,7 @@ static CFComparisonResult CompareLinesByBeginTime(const void *a, const void *b, 
 canOutput:
 	str = [NSMutableString stringWithString:first->line];
 	unsigned begin_time = last_end_time, end_time = first->end_time;
+    unsigned frcd = first->forced, top_pos = first->top;
 	int deleted = 0;
     
 	for (i = 1; i < nlines; i++) {
@@ -170,7 +171,7 @@ canOutput:
 		}
 	}
 	
-	return [[[SBSubLine alloc] initWithLine:str start:begin_time end:end_time top_pos:first->top forced:first->forced] autorelease];
+	return [[[SBSubLine alloc] initWithLine:str start:begin_time end:end_time top_pos:top_pos forced:frcd] autorelease];
 }
 
 -(SBSubLine*)getSerializedPacket
@@ -421,7 +422,7 @@ int LoadSRTFromPath(NSString *path, SBSubSerializer *ss, MP4Duration *duration)
 	NSString *res = nil;
 	[sc setCharactersToBeSkipped:nil];
 
-	unsigned startTime=0, endTime=0, forced = 0;
+	unsigned startTime = 0, endTime = 0, forced = 0;
     unsigned posCount = 0, forcedCount = 0;
     signed position = INT_MAX;
 
@@ -468,9 +469,9 @@ int LoadSRTFromPath(NSString *path, SBSubSerializer *ss, MP4Duration *duration)
 	} while (![sc isAtEnd]);
 
     if (posCount)
-        [ss setPositionInformation:TRUE];
+        [ss setPositionInformation:YES];
     if (forcedCount) {
-        [ss setForced:TRUE];
+        [ss setForced:YES];
     }
 
     *duration = endTime;
@@ -961,7 +962,7 @@ size_t closeStyleAtom(u_int16_t styleCount, u_int8_t* styleAtom)
 
 NSString* createStyleAtomForString(NSString* string, u_int8_t** buffer, size_t *size)
 {
-    SBHtmlParser *parser = [[SBHtmlParser alloc] initWithString:string];
+    MP42HtmlParser *parser = [[MP42HtmlParser alloc] initWithString:string];
     parser.defaultColor = make_color(255, 255, 255, 255);
 
     while ([parser parseNextTag] != NSNotFound);
@@ -972,7 +973,7 @@ NSString* createStyleAtomForString(NSString* string, u_int8_t** buffer, size_t *
     u_int16_t styleCount = 0;
     memcpy(*buffer + 4, "styl", 4);
 
-    for (SBStyle *style in parser.styles) {
+    for (MP42Style *style in parser.styles) {
         u_int8_t styleRecord[12];
         createStyleRecord(style.location, style.location + style.length, 1, style.style, style.color, styleRecord);
         memcpy(*buffer + 10 + (12 * styleCount), styleRecord, 12);
@@ -1042,29 +1043,33 @@ MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* strin
 {
     u_int8_t *sampleData = NULL, *styleAtom = NULL;
     size_t styleSize = 0, sampleSize = 0, stringLength = 0;
-    u_int8_t *pos = 0;
+    u_int8_t pos = 0;
 
     string = removeNewLines(string);
     string = createStyleAtomForString(string, &styleAtom, &styleSize);
 
     stringLength = strlen([string UTF8String]);
-    sampleSize = 2 + stringLength * sizeof(char) + styleSize + (forced == 1 ? 8 : 0) + (verticalPlacement == 1 ? 16 : 0);
+    sampleSize = 2 + (stringLength * sizeof(char)) + styleSize + (forced == 1 ? 8 : 0) + (verticalPlacement == 1 ? 16 : 0);
     sampleData = malloc(sampleSize);
 
-    pos = sampleData + 2;
+    pos = 2;
 
-    memcpy(pos, [string UTF8String], stringLength);
-    pos += stringLength;
+    if (stringLength) {
+        memcpy(sampleData + pos, [string UTF8String], stringLength);
+        pos += stringLength;
+    }
 
-    memcpy(pos, styleAtom, styleSize);
-    pos += styleSize;
+    if (styleSize) {
+        memcpy(sampleData + pos, styleAtom, styleSize);
+        pos += styleSize;
+    }
 
     // Add a frcd atom
     if (forced) {
         u_int8_t forcedAtom[8];
         createForcedAtom(forcedAtom);
 
-        memcpy(pos, forcedAtom, 8);
+        memcpy(sampleData + pos, forcedAtom, 8);
         pos += 8;
     }
 
@@ -1076,7 +1081,7 @@ MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* strin
         else
             createTboxAtom(tboxAtom, trackSize.height * 0.88, 0, trackSize.height, trackSize.width);
 
-        memcpy(pos, tboxAtom, 16);
+        memcpy(sampleData + pos, tboxAtom, 16);
     }
 
     sampleData[0] = (stringLength >> 8) & 0xff;

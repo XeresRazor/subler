@@ -25,7 +25,7 @@ typedef struct rgba_color {
 
 rgba_color make_color(u_int8_t r, u_int8_t g, u_int8_t b, u_int8_t a);
 
-@interface SBStyle : NSObject
+@interface MP42Style : NSObject
 {
     NSInteger _style;
     rgba_color _color;
@@ -44,7 +44,7 @@ rgba_color make_color(u_int8_t r, u_int8_t g, u_int8_t b, u_int8_t a);
 
 @end
 
-@interface SBHtmlParser : NSObject
+@interface MP42HtmlParser : NSObject
 {
     NSUInteger _location;
     NSMutableString *_text;
