@@ -368,6 +368,13 @@ NSString* getFilenameLanguage(CFStringRef filename)
 
 		CFRelease(langStr);
 	}
+    else if (findResult.length) {
+        char langCStr[40] = "";
+
+		langStr = CFStringCreateWithSubstring(NULL, baseName, findResult);
+		CFStringGetCString(langStr, langCStr, 40, kCFStringEncodingASCII);
+        lang = [NSString stringWithFormat:@"%s", lang_for_english(langCStr)->eng_name];
+    }
 
 	CFRelease(baseName);
 	return lang;
