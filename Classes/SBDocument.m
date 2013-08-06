@@ -17,7 +17,6 @@
 #import "SoundViewController.h"
 #import "ChapterViewController.h"
 #import "SBFileImport.h"
-#import "VideoFramerate.h"
 #import "MetadataSearchController.h"
 #import "ArtworkSelector.h"
 

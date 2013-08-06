@@ -73,7 +73,6 @@
 		A9B46A8E12B79B240040517A /* PrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A8312B79B240040517A /* PrefsController.m */; };
 		A9B46A8F12B79B240040517A /* SBTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A8512B79B240040517A /* SBTableView.m */; };
 		A9B46A9012B79B240040517A /* SBView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A8712B79B240040517A /* SBView.m */; };
-		A9B46A9212B79B240040517A /* VideoFramerate.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A8B12B79B240040517A /* VideoFramerate.m */; };
 		A9B46A9E12B79B990040517A /* ButtonToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A9412B79B990040517A /* ButtonToolbarItem.m */; };
 		A9B46AA212B79B990040517A /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A9D12B79B990040517A /* RegexKitLite.m */; };
 		A9B46AA412B79BB10040517A /* Subler.icns in Resources */ = {isa = PBXBuildFile; fileRef = A9B46AA312B79BB10040517A /* Subler.icns */; };
@@ -105,7 +104,6 @@
 		A9F284A0133C9F6E00F10951 /* close.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A9F2849D133C9F6E00F10951 /* close.pdf */; };
 		A9F284A1133C9F6E00F10951 /* close-over.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A9F2849E133C9F6E00F10951 /* close-over.pdf */; };
 		A9F284A2133C9F6E00F10951 /* close-pressed.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A9F2849F133C9F6E00F10951 /* close-pressed.pdf */; };
-		A9FB9DC90F83AAC100AB791A /* VideoFramerate.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9FB9DC80F83AAC100AB791A /* VideoFramerate.xib */; };
 		A9FD5D340F3C69BE00817716 /* ChapterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9FD5D330F3C69BE00817716 /* ChapterViewController.m */; };
 		A9FD5D420F3C6A6300817716 /* EmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9FD5D410F3C6A6300817716 /* EmptyViewController.m */; };
 		A9FD5DA40F3C6F8100817716 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9FD5DA30F3C6F8100817716 /* EmptyView.xib */; };
@@ -301,8 +299,6 @@
 		A9B46A8512B79B240040517A /* SBTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBTableView.m; path = Classes/SBTableView.m; sourceTree = "<group>"; };
 		A9B46A8612B79B240040517A /* SBView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBView.h; path = Classes/SBView.h; sourceTree = "<group>"; };
 		A9B46A8712B79B240040517A /* SBView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBView.m; path = Classes/SBView.m; sourceTree = "<group>"; };
-		A9B46A8A12B79B240040517A /* VideoFramerate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoFramerate.h; path = Classes/VideoFramerate.h; sourceTree = "<group>"; };
-		A9B46A8B12B79B240040517A /* VideoFramerate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoFramerate.m; path = Classes/VideoFramerate.m; sourceTree = "<group>"; };
 		A9B46A9312B79B990040517A /* ButtonToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ButtonToolbarItem.h; path = Others/ButtonToolbarItem.h; sourceTree = "<group>"; };
 		A9B46A9412B79B990040517A /* ButtonToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ButtonToolbarItem.m; path = Others/ButtonToolbarItem.m; sourceTree = "<group>"; };
 		A9B46A9C12B79B990040517A /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = Others/RegexKitLite.h; sourceTree = "<group>"; };
@@ -354,7 +350,6 @@
 		A9F2849D133C9F6E00F10951 /* close.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = close.pdf; path = images/close.pdf; sourceTree = "<group>"; };
 		A9F2849E133C9F6E00F10951 /* close-over.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "close-over.pdf"; path = "images/close-over.pdf"; sourceTree = "<group>"; };
 		A9F2849F133C9F6E00F10951 /* close-pressed.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "close-pressed.pdf"; path = "images/close-pressed.pdf"; sourceTree = "<group>"; };
-		A9FB9D3C0F83A5CF00AB791A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/VideoFramerate.xib; sourceTree = "<group>"; };
 		A9FD5CE30F3C64D000817716 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/EmptyView.xib; sourceTree = "<group>"; };
 		A9FD5D320F3C69BE00817716 /* ChapterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChapterViewController.h; path = PropertyView/ChapterViewController.h; sourceTree = "<group>"; };
 		A9FD5D330F3C69BE00817716 /* ChapterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChapterViewController.m; path = PropertyView/ChapterViewController.m; sourceTree = "<group>"; };
@@ -505,8 +500,6 @@
 				CD56963112FAAD680029FADB /* ArtworkSelector.m */,
 				A9B46A8212B79B240040517A /* PrefsController.h */,
 				A9B46A8312B79B240040517A /* PrefsController.m */,
-				A9B46A8A12B79B240040517A /* VideoFramerate.h */,
-				A9B46A8B12B79B240040517A /* VideoFramerate.m */,
 				A91106490F323D450013D1E0 /* AppDelegate.h */,
 				A911064A0F323D450013D1E0 /* AppDelegate.m */,
 				CD71FF1A12F1C46900F0A98D /* MetadataImporters */,
@@ -634,7 +627,6 @@
 				A9C055360F6D395B00AF15B5 /* FileImport.xib */,
 				CD71FEA412F1B62600F0A98D /* MetadataSearch.xib */,
 				CD4E6E5B12F744210095C84F /* ArtworkSelector.xib */,
-				A9FB9DC80F83AAC100AB791A /* VideoFramerate.xib */,
 				A961476513F568210068F161 /* Batch.xib */,
 			);
 			name = NIBs;
@@ -894,7 +886,6 @@
 				A9629D070F56FB2A001D6A75 /* VideoView.xib in Resources */,
 				A9C055370F6D395B00AF15B5 /* FileImport.xib in Resources */,
 				A95C881D0F827BFB00F51A22 /* ToolbarRemoveTemplate.png in Resources */,
-				A9FB9DC90F83AAC100AB791A /* VideoFramerate.xib in Resources */,
 				A91E7DEE0F8A2F3D00AF387E /* SoundView.xib in Resources */,
 				A90B023B10F3290A000416F3 /* Prefs.xib in Resources */,
 				A92A4FB812B0F2F300751FA5 /* prefs-audio.png in Resources */,
@@ -974,7 +965,6 @@
 				A9B46A8E12B79B240040517A /* PrefsController.m in Sources */,
 				A9B46A8F12B79B240040517A /* SBTableView.m in Sources */,
 				A9B46A9012B79B240040517A /* SBView.m in Sources */,
-				A9B46A9212B79B240040517A /* VideoFramerate.m in Sources */,
 				A9B46A9E12B79B990040517A /* ButtonToolbarItem.m in Sources */,
 				A9B46AA212B79B990040517A /* RegexKitLite.m in Sources */,
 				A9B46AA912B79BD00040517A /* MP42AudioConverter.m in Sources */,
@@ -1090,14 +1080,6 @@
 				A9C055330F6D394F00AF15B5 /* English */,
 			);
 			name = FileImport.xib;
-			sourceTree = "<group>";
-		};
-		A9FB9DC80F83AAC100AB791A /* VideoFramerate.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A9FB9D3C0F83A5CF00AB791A /* English */,
-			);
-			name = VideoFramerate.xib;
 			sourceTree = "<group>";
 		};
 		A9FD5DA30F3C6F8100817716 /* EmptyView.xib */ = {
