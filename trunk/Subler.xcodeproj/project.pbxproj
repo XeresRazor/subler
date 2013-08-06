@@ -46,6 +46,7 @@
 		A9629D070F56FB2A001D6A75 /* VideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9629D050F56FB2A001D6A75 /* VideoView.xib */; };
 		A9629D0A0F56FB36001D6A75 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9629D080F56FB36001D6A75 /* VideoViewController.m */; };
 		A96371B8164695070083BB80 /* ToolbarRemoveTemplate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A96371B7164695070083BB80 /* ToolbarRemoveTemplate@2x.png */; };
+		A9707B9317B139780010F3DB /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD56966E12FAAFA90029FADB /* Quartz.framework */; };
 		A975644D132A325C0051ED08 /* info.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A975644A132A325C0051ED08 /* info.pdf */; };
 		A975644E132A325C0051ED08 /* info-over.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A975644B132A325C0051ED08 /* info-over.pdf */; };
 		A975644F132A325C0051ED08 /* info-pressed.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A975644C132A325C0051ED08 /* info-pressed.pdf */; };
@@ -66,7 +67,6 @@
 		A99EACA31115C18000D89903 /* MP42MkvImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A99EACA21115C18000D89903 /* MP42MkvImporter.m */; };
 		A99EEA3F12B801AE002367D3 /* SBDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B46AC012B79E230040517A /* SBDocument.xib */; };
 		A99F4D270F6D5825003BA2B9 /* MP42AudioTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A99F4D260F6D5825003BA2B9 /* MP42AudioTrack.m */; };
-		A9A7C02E15C67D2F0022921C /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A7C02D15C67D2F0022921C /* Quartz.framework */; };
 		A9AEF83B167C808600FDDBB3 /* QTKitDecrap.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */; };
 		A9B3411C1679CA3E00E6EE0C /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9B3411B1679CA3E00E6EE0C /* QTKit.framework */; };
 		A9B46A8C12B79B240040517A /* SBFileImport.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A7F12B79B240040517A /* SBFileImport.m */; };
@@ -267,7 +267,6 @@
 		A975644B132A325C0051ED08 /* info-over.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "info-over.pdf"; path = "images/info-over.pdf"; sourceTree = "<group>"; };
 		A975644C132A325C0051ED08 /* info-pressed.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "info-pressed.pdf"; path = "images/info-pressed.pdf"; sourceTree = "<group>"; };
 		A97BE36E0F73D72E00652CBD /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
-		A97C78DE167F5F6100A7AD32 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = ffmpeg/lib/libswresample.a; sourceTree = "<group>"; };
 		A982D0BE140AB66400B92357 /* SBQueueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBQueueItem.h; path = Classes/SBQueueItem.h; sourceTree = "<group>"; };
 		A982D0BF140AB66400B92357 /* SBQueueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBQueueItem.m; path = Classes/SBQueueItem.m; sourceTree = "<group>"; };
 		A984DB4A0F52D644001A20B2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
@@ -285,7 +284,6 @@
 		A99EACA21115C18000D89903 /* MP42MkvImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42MkvImporter.m; path = "mp4v2 wrapper/MP42MkvImporter.m"; sourceTree = "<group>"; };
 		A99F4D250F6D5825003BA2B9 /* MP42AudioTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AudioTrack.h; path = "mp4v2 wrapper/MP42AudioTrack.h"; sourceTree = "<group>"; };
 		A99F4D260F6D5825003BA2B9 /* MP42AudioTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42AudioTrack.m; path = "mp4v2 wrapper/MP42AudioTrack.m"; sourceTree = "<group>"; };
-		A9A7C02D15C67D2F0022921C /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Quartz.framework; sourceTree = DEVELOPER_DIR; };
 		A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QTKitDecrap.m; path = Others/QTKitDecrap.m; sourceTree = "<group>"; };
 		A9B3411B1679CA3E00E6EE0C /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
 		A9B3411D1679D2E000E6EE0C /* QTKitDecrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QTKitDecrap.h; path = Others/QTKitDecrap.h; sourceTree = "<group>"; };
@@ -391,6 +389,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9707B9317B139780010F3DB /* Quartz.framework in Frameworks */,
 				A97C78DA167F5F6100A7AD32 /* libavcodec.a in Frameworks */,
 				A97C78DB167F5F6100A7AD32 /* libavdevice.a in Frameworks */,
 				A97C78DC167F5F6100A7AD32 /* libavformat.a in Frameworks */,
@@ -398,7 +397,6 @@
 				A9B3411C1679CA3E00E6EE0C /* QTKit.framework in Frameworks */,
 				A991319C13F0668300DCAA12 /* CoreMedia.framework in Frameworks */,
 				A991319A13F0615700DCAA12 /* AVFoundation.framework in Frameworks */,
-				A9A7C02E15C67D2F0022921C /* Quartz.framework in Frameworks */,
 				A91103E40F321DBA0013D1E0 /* libuniversaldetector.a in Frameworks */,
 				A9C1E8560F31F395003A08F3 /* libmp4v2.a in Frameworks */,
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
@@ -423,8 +421,10 @@
 				A9C0603F168315C500FE3D98 /* libbz2.dylib */,
 				948058B5106E07990037A911 /* libz.dylib */,
 				A91F622C0FB0A56F00B96B33 /* libicucore.dylib */,
+				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
+				13E42FBA07B3F13500E4EEF1 /* CoreData.framework */,
+				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
 				A9B3411B1679CA3E00E6EE0C /* QTKit.framework */,
-				A9A7C02D15C67D2F0022921C /* Quartz.framework */,
 				A991319B13F0668300DCAA12 /* CoreMedia.framework */,
 				A991319913F0615700DCAA12 /* AVFoundation.framework */,
 				CD56966E12FAAFA90029FADB /* Quartz.framework */,
@@ -440,7 +440,6 @@
 		1058C7A8FEA54F5311CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A97C78DE167F5F6100A7AD32 /* libswresample.a */,
 				A9BAD446140505CB00F3F4AE /* liblept.a */,
 				A916F42D1678D89F003920D6 /* libtesseract.a */,
 				A916F4301678DD07003920D6 /* libjpeg.a */,
@@ -450,9 +449,6 @@
 				A95FE300133E3DCB00D35687 /* libavutil.a */,
 				A91103850F321CF60013D1E0 /* UniversalDetector.xcodeproj */,
 				A9C1E8550F31F395003A08F3 /* libmp4v2.a */,
-				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
-				13E42FBA07B3F13500E4EEF1 /* CoreData.framework */,
-				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -502,7 +498,7 @@
 				A911064A0F323D450013D1E0 /* SBAppDelegate.m */,
 				CD71FF1A12F1C46900F0A98D /* MetadataImporters */,
 				A9FD5D150F3C692400817716 /* PropertyView */,
-				A9FD5E020F3C7B0400817716 /* mp4v2 wrapper */,
+				A9FD5E020F3C7B0400817716 /* mp4v2 */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -685,7 +681,7 @@
 			name = PropertyView;
 			sourceTree = "<group>";
 		};
-		A9FD5E020F3C7B0400817716 /* mp4v2 wrapper */ = {
+		A9FD5E020F3C7B0400817716 /* mp4v2 */ = {
 			isa = PBXGroup;
 			children = (
 				A9629C830F56F7B6001D6A75 /* MP42File.h */,
@@ -712,7 +708,7 @@
 				A9629C8C0F56F7B6001D6A75 /* MP42Utilities.m */,
 				A9C03EB41116DFE700DA6FF6 /* Muxer */,
 			);
-			name = "mp4v2 wrapper";
+			name = mp4v2;
 			sourceTree = "<group>";
 		};
 		CD4A86A71234AFA10054970A /* ParseFilename */ = {
