@@ -180,6 +180,7 @@
         forSaveOperation:(NSSaveOperationType)saveOperation error:(NSError **)outError;
 {
     __block BOOL success = NO;
+    __block NSError *inError = NULL;
 
     NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"chaptersPreviewTrack"] boolValue])
@@ -198,12 +199,12 @@
             case NSSaveOperation:
                 // movie file already exists, so we'll just update
                 // the movie resource
-                success = [mp4File updateMP4FileWithAttributes:attributes error:outError];
+                success = [mp4File updateMP4FileWithAttributes:attributes error:&inError];
                 break;
             case NSSaveAsOperation:
                 if ([_64bit_data state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitData];
                 if ([_64bit_time state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitTime];
-                success = [mp4File writeToUrl:absoluteURL withAttributes:attributes error:outError];
+                success = [mp4File writeToUrl:absoluteURL withAttributes:attributes error:&inError];
                 break;
             case NSSaveToOperation:
                 // not implemented
@@ -215,6 +216,7 @@
             _optimize = NO;
         }
         mp4File.operationIsRunning = NO;
+        [inError retain];
     });
 
     while ([mp4File operationIsRunning]) {
@@ -230,6 +232,8 @@
             [pool drain];
         }
     }
+    
+    *outError = [inError autorelease];
 
     [attributes release];
     [self saveDidComplete:outError URL:absoluteURL];
