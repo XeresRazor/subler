@@ -26,7 +26,6 @@ NSLock *lock;
     if (self = [super init]) {
         _data = [data retain];
         _type = type;
-        [self image];
     }
     
     return self;
@@ -37,7 +36,6 @@ NSLock *lock;
     if (self = [super init]) {
         _data = [[NSData alloc] initWithBytes:bytes length:length];
         _type = type;
-        [self image];
     }
 
     return self;
@@ -92,7 +90,7 @@ NSLock *lock;
         }
     }
 
-    return nil;
+    return _image;
 }
 
 - (void)dealloc
