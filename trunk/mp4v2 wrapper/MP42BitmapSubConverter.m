@@ -385,7 +385,7 @@ void FFInitFFmpeg()
 
 - (BOOL)needMoreSample
 {
-    if ([inputSamplesBuffer count] > 4)
+    if ([inputSamplesBuffer count] > 10)
         return NO;
 
     return YES;

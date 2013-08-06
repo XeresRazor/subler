@@ -595,7 +595,6 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
 - (id) initWithTrack: (MP42AudioTrack*) track andMixdownType: (NSString*) mixdownType error:(NSError **)outError
 {
-
     if ((self = [super init])) {
         OSStatus err;
 
@@ -804,7 +803,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
 - (BOOL) needMoreSample
 {
-    if ([inputSamplesBuffer count] < 200)
+    if ([inputSamplesBuffer count] > 300)
         return NO;
     
     return YES;
