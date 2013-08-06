@@ -127,14 +127,16 @@
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn
             row:(NSInteger)rowIndex {
-    SBPresetManager *presetManager = [SBPresetManager sharedManager];
-    
-    return [[[presetManager presets] objectAtIndex:rowIndex] presetName];
+    if ([aTableColumn.identifier isEqualToString:@"name"]) {
+        SBPresetManager *presetManager = [SBPresetManager sharedManager];
+        return [[[presetManager presets] objectAtIndex:rowIndex] presetName];
+    }
+    return nil;
 }
 
 - (IBAction) deletePreset:(id) sender
 {
-    [self hideInfoWindow:self];
+    [self closePopOver:self];
 
     NSInteger rowIndex = [tableView selectedRow];
     SBPresetManager *presetManager = [SBPresetManager sharedManager];
@@ -142,67 +144,73 @@
     [tableView reloadData];
 }
 
-- (IBAction)hideInfoWindow:(id)sender
+- (IBAction)closePopOver:(id)sender
 {
-    if(attachedWindow) {
-        [[self window] removeChildWindow:attachedWindow];
-        [attachedWindow orderOut:self];
-        [attachedWindow release];
-        attachedWindow = nil;
-        [controller release];
-        controller = nil;
+    if(_popover) {
+        if (!NSClassFromString(@"ANSPopover")) {
+            [[self window] removeChildWindow:_popover];
+            [_popover orderOut:self];
+        }
+        else
+            [_popover close];
+
+        [_popover release];
+        _popover = nil;
+        [_controller release];
+        _controller = nil;
     }
 }
 
 - (IBAction)toggleInfoWindow:(id)sender
 {
-    if (attachedWindow) {
-        [self hideInfoWindow:sender];
-    }
-    if (!attachedWindow) {
-        SBPresetManager *presetManager = [SBPresetManager sharedManager];
-
-        NSInteger row = [tableView selectedRow]; 
-
-        NSRect cellFrame = [tableView frameOfCellAtColumn:1 row:row];
-        NSRect tableFrame = [[[tableView superview] superview]frame];
-
-        NSPoint windowPoint = NSMakePoint(NSMidX(cellFrame),
-                                          NSHeight(tableFrame) + tableFrame.origin.y - cellFrame.origin.y - (cellFrame.size.height / 2));        
-
-        controller = [[MovieViewController alloc] initWithNibName:@"MovieView" bundle:nil];
-        [controller setMetadata:[[presetManager presets] objectAtIndex:row]];
-
-        attachedWindow = [[MAAttachedWindow alloc] initWithView:[controller view] 
-                                                attachedToPoint:windowPoint
-                                                       inWindow:[self window] 
-                                                         onSide:MAPositionRightBottom 
-                                                     atDistance:11
-                                                       delegate:self];
-
-        [attachedWindow setBackgroundColor:[NSColor colorWithCalibratedRed:0.98 green:0.98 blue:1 alpha:1]];
-        [attachedWindow setDelegate:self];
-        [attachedWindow setCornerRadius:15];
-
-        [[self window] addChildWindow:attachedWindow ordered:NSWindowAbove];
-
-        [attachedWindow setAlphaValue:0.0];
-
-        [NSAnimationContext beginGrouping];
-        [[NSAnimationContext currentContext] setDuration:0.1];  
-        [attachedWindow makeKeyAndOrderFront:self];
-        [[attachedWindow animator] setAlphaValue:1.0];
-        [NSAnimationContext endGrouping];
-    }
+    if (_currentRow == [tableView clickedRow] && _popover)
+        [self closePopOver:sender];
     else {
-        [[self window] removeChildWindow:attachedWindow];
-        [attachedWindow orderOut:self];
-        [attachedWindow release];
-        attachedWindow = nil;
-        [controller release];
-        controller = nil;
+        _currentRow = [tableView clickedRow];
+        [self closePopOver:sender];
+        
+        SBPresetManager *presetManager = [SBPresetManager sharedManager];
+        _controller = [[MovieViewController alloc] initWithNibName:@"MovieView" bundle:nil];
+        [_controller setMetadata:[[presetManager presets] objectAtIndex:_currentRow]];
+        
+        if (NSClassFromString(@"ANSPopover")) {
+            _popover = [[NSPopover alloc] init];
+            ((NSPopover *)_popover).contentViewController = _controller;
+            ((NSPopover *)_popover).contentSize = NSMakeSize(480.0f, 500.0f);
+            
+            [_popover showRelativeToRect:[tableView frameOfCellAtColumn:1 row:_currentRow] ofView:tableView preferredEdge:NSMaxYEdge];
+        }
+        else {
+            NSInteger row = [tableView selectedRow];
+            
+            NSRect cellFrame = [tableView frameOfCellAtColumn:1 row:row];
+            NSRect tableFrame = [[[tableView superview] superview]frame];
+            
+            NSPoint windowPoint = NSMakePoint(NSMidX(cellFrame) + 20,
+                                              NSHeight(tableFrame) + tableFrame.origin.y - cellFrame.origin.y - (cellFrame.size.height / 2) - 8);
+            
+            
+            _popover = [[MAAttachedWindow alloc] initWithView:[_controller view]
+                                              attachedToPoint:windowPoint
+                                                     inWindow:[self window]
+                                                       onSide:MAPositionBottom
+                                                   atDistance:0];
+            
+            [_popover setBackgroundColor:[NSColor colorWithCalibratedRed:0.98 green:0.98 blue:1 alpha:0.9]];
+            [_popover setDelegate:self];
+            [_popover setCornerRadius:6];
+            
+            [[self window] addChildWindow:_popover ordered:NSWindowAbove];
+            
+            [_popover setAlphaValue:0.0];
+            
+            [NSAnimationContext beginGrouping];
+            [[NSAnimationContext currentContext] setDuration:0.2];
+            [_popover makeKeyAndOrderFront:self];
+            [[_popover animator] setAlphaValue:1.0];
+            [NSAnimationContext endGrouping];
+        }
     }
-
 }
 
 - (void)updateTableView:(id)sender

@@ -86,6 +86,7 @@ static NSInteger sortFunction (id ldict, id rdict, void *context)
     [podcast setState:metadata.podcast];
 
     tabCol = [[[tagsTableView tableColumns] objectAtIndex:1] retain];
+    width = [tabCol width];
 
     tagsArray = [[[tags allKeys] sortedArrayUsingFunction:sortFunction context:[metadata availableMetadata]] retain];
 
@@ -473,11 +474,9 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     if (!(height = [dct objectForKey:key])) {
         //calculate new row height
         NSRect r = NSMakeRect(0,0,width,1000.0);
-        NSTextFieldCell *cell = [tabCol dataCellForRow:rowIndex];	
+        NSTextFieldCell *cell = [tabCol dataCellForRow:rowIndex];
         [cell setObjectValue:[tags objectForKey:[tagsArray objectAtIndex:rowIndex]]];
         height = [NSNumber numberWithDouble:[cell cellSizeForBounds:r].height]; // Slow, but we cache it.
-        //if (height <= 0)
-        //    height = 14.0; // Ensure miniumum height is 14.0
         [dct setObject:height forKey:key];
     }
 

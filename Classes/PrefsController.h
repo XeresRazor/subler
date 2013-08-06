@@ -12,12 +12,11 @@
 @class SBTableView;
 
 @interface PrefsController : NSWindowController <NSToolbarDelegate, NSWindowDelegate> {
-    IBOutlet NSView         * generalView, * audioView, *setsView;
+    IBOutlet NSView *generalView, *audioView, *setsView;
 
-    MAAttachedWindow *attachedWindow;
-    MAAttachedWindow *oldAttachedWindow;
-    MovieViewController *controller;
-    MovieViewController *oldController;
+    id _popover;
+    MovieViewController *_controller;
+    NSInteger _currentRow;
 
     IBOutlet SBTableView *tableView;
     IBOutlet NSButton    *removeSet;
