@@ -46,8 +46,6 @@
     BOOL _optimize;
 }
 
-@property (readonly) NSMutableArray *languages;
-
 - (IBAction) selectFile: (id) sender;
 - (IBAction) deleteTrack: (id) sender;
 - (IBAction) sendToQueue:(id)sender;
