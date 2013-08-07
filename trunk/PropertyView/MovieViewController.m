@@ -21,21 +21,6 @@ NSString *MetadataPBoardType = @"MetadataPBoardType";
 
 @implementation MovieViewController
 
-static NSInteger sortFunction (id ldict, id rdict, void *context)
-{
-    NSComparisonResult rc;
-
-    NSInteger right = [(NSArray*) context indexOfObject:rdict];
-    NSInteger left = [(NSArray*) context indexOfObject:ldict];
-
-    if (right < left)
-        rc = NSOrderedDescending;
-    else
-        rc = NSOrderedAscending;
-
-    return rc;
-}
-
 - (void)awakeFromNib
 {
     [self updateSetsMenu:self];
@@ -88,7 +73,7 @@ static NSInteger sortFunction (id ldict, id rdict, void *context)
     tabCol = [[[tagsTableView tableColumns] objectAtIndex:1] retain];
     width = [tabCol width];
 
-    tagsArray = [[[tags allKeys] sortedArrayUsingFunction:sortFunction context:[metadata availableMetadata]] retain];
+    [self updateTagsArray];
 
     [tagsTableView setDoubleAction:@selector(doubleClickAction:)];
     [tagsTableView setTarget:self];
@@ -115,7 +100,17 @@ static NSInteger sortFunction (id ldict, id rdict, void *context)
 - (void) updateTagsArray
 {
     [tagsArray autorelease];
-    tagsArray = [[[tags allKeys] sortedArrayUsingFunction:sortFunction context:[metadata availableMetadata]] retain];
+    NSArray *context = [metadata availableMetadata];
+    tagsArray = [[tags allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSInteger right = [context indexOfObject:obj2];
+        NSInteger left = [context indexOfObject:obj1];
+        
+        if (right < left)
+            return NSOrderedDescending;
+        else
+            return NSOrderedAscending;
+    }];
+    [tagsArray retain];
 }
 
 - (void) add:(NSDictionary *) data
