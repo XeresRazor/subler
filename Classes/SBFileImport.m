@@ -52,7 +52,8 @@
                                                                  valueForKey:@"SBAudioMixdown"] integerValue]]];
             else if ([[object format] isEqualToString:@"DTS"])
                 [_actionArray addObject:[NSNumber numberWithInteger:1]];
-            else if ([[object format] isEqualToString:@"VobSub"])
+            else if ([[object format] isEqualToString:@"VobSub"] &&
+                     [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBSubtitleConvertBitmap"] boolValue])
                 [_actionArray addObject:[NSNumber numberWithInteger:1]];
             else if (!trackNeedConversion([object format]))
                 [_actionArray addObject:[NSNumber numberWithInteger:0]];

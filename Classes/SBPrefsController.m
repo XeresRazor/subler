@@ -14,7 +14,7 @@
 #import "SBRatings.h"
 
 #define TOOLBAR_GENERAL     @"TOOLBAR_GENERAL"
-#define TOOLBAR_AUDIO       @"TOOLBAR_AUDIO"
+#define TOOLBAR_ADVANCED       @"TOOLBAR_ADVANCED"
 #define TOOLBAR_SETS        @"TOOLBAR_SETS"
 
 @interface SBPrefsController (Private)
@@ -31,22 +31,23 @@
 + (void)registerUserDefaults
 {    
     [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                             @"m4v",        @"SBSaveFormat",
-                                                             @"0",          @"defaultSaveFormat",
-                                                             @"YES",        @"SBQueueOptimize",
-                                                             @"1",          @"SBAudioMixdown",
-                                                             @"96",         @"SBAudioBitrate",
-                                                             @"YES",        @"SBAudioConvertAC3",
-                                                             @"All countries",    @"SBRatingsCountry",
-                                                             @"m4v",        @"SBSaveFormat",
-                                                             @"NO",         @"mp464bitOffset",
-                                                             @"YES",        @"chaptersPreviewTrack",
-                                                             @"iTunes Store",  @"SBMetadataPreference|Movie",
-                                                             @"USA (English)", @"SBMetadataPreference|Movie|iTunes Store|Language",
-                                                             @"English",       @"SBMetadataPreference|Movie|TheMovieDB|Language",
-                                                             @"iTunes Store",  @"SBMetadataPreference|TV",
-                                                             @"USA (English)", @"SBMetadataPreference|TV|iTunes Store|Language",
-                                                             @"English",       @"SBMetadataPreference|TV|TheTVDB|Language",
+                                                             @"m4v",            @"SBSaveFormat",
+                                                             @"0",              @"defaultSaveFormat",
+                                                             @"YES",            @"SBQueueOptimize",
+                                                             @"1",              @"SBAudioMixdown",
+                                                             @"96",             @"SBAudioBitrate",
+                                                             @"YES",            @"SBAudioConvertAC3",
+                                                             @"YES",            @"SBSubtitleConvertBitmap",
+                                                             @"All countries",  @"SBRatingsCountry",
+                                                             @"m4v",            @"SBSaveFormat",
+                                                             @"NO",             @"mp464bitOffset",
+                                                             @"YES",            @"chaptersPreviewTrack",
+                                                             @"iTunes Store",   @"SBMetadataPreference|Movie",
+                                                             @"USA (English)",  @"SBMetadataPreference|Movie|iTunes Store|Language",
+                                                             @"English",        @"SBMetadataPreference|Movie|TheMovieDB|Language",
+                                                             @"iTunes Store",   @"SBMetadataPreference|TV",
+                                                             @"USA (English)",  @"SBMetadataPreference|TV|iTunes Store|Language",
+                                                             @"English",        @"SBMetadataPreference|TV|TheTVDB|Language",
                                                              nil]];
 }
 
@@ -78,17 +79,17 @@
      itemForItemIdentifier: (NSString *)ident
  willBeInsertedIntoToolbar: (BOOL)flag
 {
-    if ( [ident isEqualToString:TOOLBAR_GENERAL] ) {
+    if ([ident isEqualToString:TOOLBAR_GENERAL]) {
         return [self toolbarItemWithIdentifier:ident
                                          label:NSLocalizedString(@"General", @"Preferences General Toolbar Item")
                                          image:[NSImage imageNamed:NSImageNamePreferencesGeneral]];
     }
-    else if ( [ident isEqualToString:TOOLBAR_AUDIO] ) {
+    else if ([ident isEqualToString:TOOLBAR_ADVANCED]) {
         return [self toolbarItemWithIdentifier:ident
-                                         label:NSLocalizedString(@"Audio", @"Preferences Audio Toolbar Item")
-                                         image:[NSImage imageNamed:@"prefs-audio"]];
+                                         label:NSLocalizedString(@"Advanced", @"Preferences Audio Toolbar Item")
+                                         image:[NSImage imageNamed:NSImageNameAdvanced]];
     }
-    else if ( [ident isEqualToString:TOOLBAR_SETS] ) {
+    else if ([ident isEqualToString:TOOLBAR_SETS]) {
         return [self toolbarItemWithIdentifier:ident
                                          label:NSLocalizedString(@"Sets", @"Preferences Sets Toolbar Item")
                                          image:[NSImage imageNamed:NSImageNameFolderSmart]];
@@ -109,7 +110,7 @@
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar
 {
-    return [NSArray arrayWithObjects: TOOLBAR_GENERAL, TOOLBAR_SETS, TOOLBAR_AUDIO, nil];
+    return [NSArray arrayWithObjects: TOOLBAR_GENERAL, TOOLBAR_SETS, TOOLBAR_ADVANCED, nil];
 }
 
 - (IBAction) clearRecentSearches:(id) sender {
@@ -243,8 +244,8 @@
     NSView * view = generalView;
     if( sender ) {
         NSString * identifier = [sender itemIdentifier];
-        if( [identifier isEqualToString: TOOLBAR_AUDIO] )
-            view = audioView;
+        if( [identifier isEqualToString: TOOLBAR_ADVANCED] )
+            view = advancedView;
         else if( [identifier isEqualToString: TOOLBAR_SETS] )
             view = setsView;
         else;
