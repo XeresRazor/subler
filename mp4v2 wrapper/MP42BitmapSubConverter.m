@@ -42,7 +42,10 @@ void FFInitFFmpeg()
         if (![inputSamplesBuffer count] && fileReaderDone)
             break;
 
-        MP42SampleBuffer* sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
+        MP42SampleBuffer *sampleBuffer = nil;
+        @synchronized(inputSamplesBuffer) {
+            sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
+        }
         UInt8 *data = (UInt8 *) sampleBuffer->sampleData;
         int ret, got_sub;
 
@@ -55,7 +58,9 @@ void FFInitFFmpeg()
 
             [subSample release];
 
-            [inputSamplesBuffer removeObjectAtIndex:0];
+            @synchronized(inputSamplesBuffer) {
+                [inputSamplesBuffer removeObjectAtIndex:0];
+            }
 
             continue;
         }
@@ -92,7 +97,9 @@ void FFInitFFmpeg()
             }
             [subSample release];
             
-            [inputSamplesBuffer removeObjectAtIndex:0];
+            @synchronized(inputSamplesBuffer) {
+                [inputSamplesBuffer removeObjectAtIndex:0];
+            }
 
             continue;
         }
@@ -191,7 +198,9 @@ void FFInitFFmpeg()
 
         avsubtitle_free(&subtitle);
         av_free_packet(&pkt);
-        [inputSamplesBuffer removeObjectAtIndex:0];
+        @synchronized(inputSamplesBuffer) {
+            [inputSamplesBuffer removeObjectAtIndex:0];
+        }
     }
 
     encoderDone = YES;
@@ -210,7 +219,10 @@ void FFInitFFmpeg()
         if (![inputSamplesBuffer count] && fileReaderDone)
             break;
 
-        MP42SampleBuffer* sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
+        MP42SampleBuffer *sampleBuffer = nil;
+        @synchronized(inputSamplesBuffer) {
+            sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
+        }
         int ret, got_sub, i;
         uint32_t *imageData;
         BOOL forced = NO;
@@ -230,7 +242,9 @@ void FFInitFFmpeg()
             }
 
             [subSample release];
-            [inputSamplesBuffer removeObjectAtIndex:0];
+            @synchronized(inputSamplesBuffer) {
+                [inputSamplesBuffer removeObjectAtIndex:0];
+            }
 
             continue;
         }
@@ -305,7 +319,9 @@ void FFInitFFmpeg()
 
         avsubtitle_free(&subtitle);
         av_free_packet(&pkt);
-        [inputSamplesBuffer removeObjectAtIndex:0];
+        @synchronized(inputSamplesBuffer) {
+            [inputSamplesBuffer removeObjectAtIndex:0];
+        }
     }
 
     encoderDone = YES;
