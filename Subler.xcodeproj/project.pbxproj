@@ -36,7 +36,7 @@
 		A95C881D0F827BFB00F51A22 /* ToolbarRemoveTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = A95C881C0F827BFB00F51A22 /* ToolbarRemoveTemplate.png */; };
 		A961476313F567E10068F161 /* SBQueueController.m in Sources */ = {isa = PBXBuildFile; fileRef = A961476013F567E10068F161 /* SBQueueController.m */; };
 		A961476413F567E10068F161 /* SBPresetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A961476213F567E10068F161 /* SBPresetManager.m */; };
-		A961476713F568210068F161 /* Batch.xib in Resources */ = {isa = PBXBuildFile; fileRef = A961476513F568210068F161 /* Batch.xib */; };
+		A961476713F568210068F161 /* Queue.xib in Resources */ = {isa = PBXBuildFile; fileRef = A961476513F568210068F161 /* Queue.xib */; };
 		A9629C8D0F56F7B6001D6A75 /* MP42ChapterTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9629C820F56F7B6001D6A75 /* MP42ChapterTrack.m */; };
 		A9629C8E0F56F7B6001D6A75 /* MP42File.m in Sources */ = {isa = PBXBuildFile; fileRef = A9629C840F56F7B6001D6A75 /* MP42File.m */; };
 		A9629C8F0F56F7B6001D6A75 /* MP42Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = A9629C860F56F7B6001D6A75 /* MP42Metadata.m */; };
@@ -248,7 +248,7 @@
 		A961476013F567E10068F161 /* SBQueueController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBQueueController.m; path = Classes/SBQueueController.m; sourceTree = "<group>"; };
 		A961476113F567E10068F161 /* SBPresetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBPresetManager.h; path = Classes/SBPresetManager.h; sourceTree = "<group>"; };
 		A961476213F567E10068F161 /* SBPresetManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBPresetManager.m; path = Classes/SBPresetManager.m; sourceTree = "<group>"; };
-		A961476613F568210068F161 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Batch.xib; sourceTree = "<group>"; };
+		A961476613F568210068F161 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Queue.xib; sourceTree = "<group>"; };
 		A9629C810F56F7B6001D6A75 /* MP42ChapterTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42ChapterTrack.h; path = "mp4v2 wrapper/MP42ChapterTrack.h"; sourceTree = "<group>"; };
 		A9629C820F56F7B6001D6A75 /* MP42ChapterTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42ChapterTrack.m; path = "mp4v2 wrapper/MP42ChapterTrack.m"; sourceTree = "<group>"; };
 		A9629C830F56F7B6001D6A75 /* MP42File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42File.h; path = "mp4v2 wrapper/MP42File.h"; sourceTree = "<group>"; };
@@ -614,7 +614,7 @@
 				A9C055360F6D395B00AF15B5 /* FileImport.xib */,
 				CD71FEA412F1B62600F0A98D /* MetadataSearch.xib */,
 				CD4E6E5B12F744210095C84F /* ArtworkSelector.xib */,
-				A961476513F568210068F161 /* Batch.xib */,
+				A961476513F568210068F161 /* Queue.xib */,
 			);
 			name = NIBs;
 			sourceTree = "<group>";
@@ -890,7 +890,7 @@
 				A9F284A0133C9F6E00F10951 /* close.pdf in Resources */,
 				A9F284A1133C9F6E00F10951 /* close-over.pdf in Resources */,
 				A9F284A2133C9F6E00F10951 /* close-pressed.pdf in Resources */,
-				A961476713F568210068F161 /* Batch.xib in Resources */,
+				A961476713F568210068F161 /* Queue.xib in Resources */,
 				A98739FE13FBB09B00B795A7 /* ToolbarActionTemplate.png in Resources */,
 				A9D47B5B17B239E200900BCA /* EncodeComplete@2x.png in Resources */,
 				A9C9E34413FBC1EB00CA3B4E /* EncodeWorking.png in Resources */,
@@ -1041,12 +1041,12 @@
 			name = SoundView.xib;
 			sourceTree = "<group>";
 		};
-		A961476513F568210068F161 /* Batch.xib */ = {
+		A961476513F568210068F161 /* Queue.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				A961476613F568210068F161 /* English */,
 			);
-			name = Batch.xib;
+			name = Queue.xib;
 			sourceTree = "<group>";
 		};
 		A9629D050F56FB2A001D6A75 /* VideoView.xib */ = {

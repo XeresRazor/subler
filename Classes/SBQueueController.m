@@ -47,7 +47,7 @@
 
 - (id)init
 {
-    if (self = [super initWithWindowNibName:@"Batch"])
+    if (self = [super initWithWindowNibName:@"Queue"])
     {
         queue = dispatch_queue_create("org.subler.Queue", NULL);
 
@@ -110,7 +110,8 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
-    
+    [self removeCompletedItems:self];
+
     [tableView registerForDraggedTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, SublerBatchTableViewDataType, nil]];
 }
 
@@ -132,7 +133,6 @@
 
 - (BOOL)saveQueueToDisk
 {
-    [self removeCompletedItems:self];
     return [NSKeyedArchiver archiveRootObject:filesArray
                                        toFile:[[self queueURL] path]];
 }
@@ -366,13 +366,16 @@
 
 - (SBQueueItem*)firstItemInQueue
 {
-    @synchronized(filesArray) {
+    __block SBQueueItem *next = nil;
+    dispatch_sync(dispatch_get_main_queue(), ^{
         for (SBQueueItem *item in filesArray)
-            if (([item status] != SBQueueItemStatusCompleted) && ([item status] != SBQueueItemStatusFailed))
-                return item;
-    }
+            if (([item status] != SBQueueItemStatusCompleted) && ([item status] != SBQueueItemStatusFailed)) {
+                next = item;
+                break;
+            }
+    });
 
-    return nil;
+    return next;
 }
 
 - (void)start:(id)sender
@@ -511,6 +514,7 @@
             [start setTitle:@"Start"];
 
             [self updateDockTile];
+            [self saveQueueToDisk];
         });
     });
 
