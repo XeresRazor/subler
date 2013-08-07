@@ -88,13 +88,19 @@ int compare_color(rgba_color c1, rgba_color c2) {
     NSCharacterSet *closeChar = [NSCharacterSet characterSetWithCharactersInString:@">"];
     NSRange openRange;
     NSRange closeRange;
-    
+
     NSString *content;
 
     openRange = [_text rangeOfCharacterFromSet:openChar];
     if (openRange.location != NSNotFound) {
         closeRange = [_text rangeOfCharacterFromSet:closeChar];
-        
+
+        while (closeRange.location < openRange.location) {
+            [_text deleteCharactersInRange:closeRange];
+            openRange.location--;
+            closeRange = [_text rangeOfCharacterFromSet:closeChar];
+        }
+
         if (closeRange.location == NSNotFound)
             closeRange.location = [_text length];
     }
@@ -157,6 +163,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
         [_styles addObject:style];
         [style release];
     }
+
     [_text deleteCharactersInRange:contentRange];
 
     return contentRange.location;
