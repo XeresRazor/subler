@@ -73,6 +73,8 @@
                                    NSColorPboardType, NSFilenamesPboardType, nil]];
 
     _optimize = NO;
+
+    [sendToQueue setImage:[NSImage imageNamed:NSImageNameShareTemplate]];
 }
 
 - (id)initWithType:(NSString *)typeName error:(NSError **)outError
