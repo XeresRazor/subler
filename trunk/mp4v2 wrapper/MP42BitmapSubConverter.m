@@ -242,6 +242,7 @@ void FFInitFFmpeg()
             }
 
             [subSample release];
+
             @synchronized(inputSamplesBuffer) {
                 [inputSamplesBuffer removeObjectAtIndex:0];
             }

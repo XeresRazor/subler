@@ -103,10 +103,10 @@
 
             if ([sl->line isEqualToString:@"\n"]) {
                 if ((sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO)))
-                    @synchronized(helper->fifo) {
+                    dispatch_async(helper->queue, ^{
                         [helper->fifo addObject:sample];
                         [sample release];
-                    }
+                    });
             }
             else {
             CGSize trackSize;
@@ -116,10 +116,10 @@
             int top = (sl->top == INT_MAX) ? trackSize.height : sl->top;
 
             if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, sl->forced, verticalPlacement, trackSize, top)))
-                @synchronized(helper->fifo) {
+                dispatch_async(helper->queue, ^{
                     [helper->fifo addObject:sample];
                     [sample release];
-                }
+                });
             }
         }
     }

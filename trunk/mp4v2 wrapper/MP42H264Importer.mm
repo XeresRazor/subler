@@ -1421,7 +1421,11 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
         inFile = fopen([[fileURL path] UTF8String], "rb");
 
     MP42Track *track = [activeTracks lastObject];
-    muxer_helper *helper = [[activeTracks lastObject] muxer_helper];
+
+    muxer_helper *helper = track.muxer_helper;
+    dispatch_retain(helper->queue);
+    [helper->fifo retain];
+
     MP4TrackId dstTrackId = [track Id];
 
     framerate_t * framerate;
@@ -1502,10 +1506,10 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
                 if(track.needConversion)
                     sample->sampleSourceTrack = track;
                 
-                @synchronized(helper->fifo) {
+                dispatch_async(helper->queue, ^{
                     [helper->fifo addObject:sample];
                     [sample release];
-                }
+                });
 
                 sampleId++;
                 DpbAdd( &h264_dpb, poc, slice_is_idr );
@@ -1592,17 +1596,20 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
         if(track.needConversion)
             sample->sampleSourceTrack = track;
 
-        @synchronized(helper->fifo) {
+        dispatch_async(helper->queue, ^{
             [helper->fifo addObject:sample];
             [sample release];
-        }
+        });
 
         DpbAdd(&h264_dpb, h264_dec.pic_order_cnt, slice_is_idr);
     }
 
     DpbFlush(&h264_dpb);
-
     free(nal_buffer);
+
+    dispatch_release(helper->queue);
+    [helper->fifo release];
+
     [pool release];
     readerStatus = 1;
 }

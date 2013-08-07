@@ -368,6 +368,7 @@
     for (MP42Track * track in workingTracks) {
         muxer_helper *helper = track.muxer_helper;
         helper->fifo = [[NSMutableArray alloc] initWithCapacity:200];
+        helper->queue = dispatch_queue_create([[NSString stringWithFormat:@"com.subler.queue-%d",track.Id] UTF8String], NULL);
         if (![trackImportersArray containsObject:helper->trackImporter]) {
             [trackImportersArray addObject:helper->trackImporter];
         }
@@ -445,6 +446,12 @@
                                            [magicCookie length]);
             }
         }
+
+        dispatch_release(helper->queue);
+        [helper->fifo release];
+        
+        if (helper->trackConverter)
+            [helper->trackConverter setDone:YES];
     }
 
     [trackImportersArray release];

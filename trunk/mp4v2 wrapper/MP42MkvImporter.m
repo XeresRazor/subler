@@ -623,6 +623,9 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
             trackDemuxerHelper = [[MatroskaTrackHelper alloc] init];
             helper->trackDemuxer = trackDemuxerHelper;
         }
+
+        dispatch_retain(helper->queue);
+        [helper->fifo retain];
     }
 
     mkv_SetTrackMask(matroskaFile, TrackMask);
@@ -665,10 +668,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 if(track.needConversion)
                     sample->sampleSourceTrack = track;
 
-                @synchronized(helper->fifo) {
+                dispatch_async(helper->queue, ^{
                     [helper->fifo addObject:sample];
                     [sample release];
-                }
+                });
             }
         }
 
@@ -713,11 +716,6 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                             trackDemuxerHelper->previousSample.sampleTrackId = track.Id;
                             if(track.needConversion)
                                 trackDemuxerHelper->previousSample.sampleSourceTrack = track;
-
-                            @synchronized(helper->fifo) {
-                                [helper->fifo addObject:trackDemuxerHelper->previousSample];
-                                [trackDemuxerHelper->previousSample release];
-                            }
                         }
                         else {
                             if (nextSample->sampleTimestamp < trackDemuxerHelper->previousSample.sampleTimestamp) {
@@ -728,11 +726,13 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                             }
 
                             trackDemuxerHelper->previousSample.sampleDuration = (nextSample->sampleTimestamp - trackDemuxerHelper->previousSample.sampleTimestamp) / 1000000;
-                            @synchronized(helper->fifo) {
-                                [helper->fifo addObject:trackDemuxerHelper->previousSample];
-                                [trackDemuxerHelper->previousSample release];
-                            }
                         }
+                        
+                        MP42SampleBuffer *sample = trackDemuxerHelper->previousSample;
+                        dispatch_async(helper->queue, ^{
+                            [helper->fifo addObject:sample];
+                            [sample release];
+                        });
 
                         trackDemuxerHelper->previousSample = nextSample;
                         trackDemuxerHelper->samplesWritten++;
@@ -749,18 +749,18 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                             if(track.needConversion)
                                 sample->sampleSourceTrack = track;
                             
-                            @synchronized(helper->fifo) {
+                            dispatch_async(helper->queue, ^{
                                 [helper->fifo addObject:sample];
                                 [sample release];
-                            }
+                            });
                         }
                         
                         nextSample->sampleDuration = (EndTime - StartTime ) / 1000000;
                         
-                        @synchronized(helper->fifo) {
+                        dispatch_async(helper->queue, ^{
                             [helper->fifo addObject:nextSample];
                             [nextSample release];
-                        }
+                        });
                         
                         trackDemuxerHelper->current_time = EndTime;
                     }
@@ -825,10 +825,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     if (trackDemuxerHelper->buffer < bufferSize)
                         trackDemuxerHelper->buffer++;
 
-                    @synchronized(helper->fifo) {
+                    dispatch_async(helper->queue, ^{
                         [helper->fifo addObject:sample];
                         [sample release];
-                    }
+                    });
                 }
                 else
                     continue;
@@ -896,10 +896,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     if (trackDemuxerHelper->buffer >= bufferSize)
                         [trackDemuxerHelper->queue removeObjectAtIndex:0];
 
-                    @synchronized(helper->fifo) {
+                    dispatch_async(helper->queue, ^{
                         [helper->fifo addObject:sample];
                         [sample release];
-                    }
+                    });
 
                     trackDemuxerHelper->bufferFlush++;
                     if (trackDemuxerHelper->bufferFlush >= bufferSize - 1) {
@@ -925,27 +925,36 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     if (!(sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO)))
                         break;
 
-                    @synchronized(helper->fifo) {
+                    dispatch_async(helper->queue, ^{
                         [helper->fifo addObject:sample];
                         [sample release];
-                        trackDemuxerHelper->samplesWritten++;
-                    }
+                    });
+                    trackDemuxerHelper->samplesWritten++;
 
                     continue;
                 }
                 if (!(sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, NO, NO, CGSizeMake(0, 0), 0)))
                     break;
 
-                @synchronized(helper->fifo) {
+                dispatch_async(helper->queue, ^{
                     [helper->fifo addObject:sample];
                     [sample release];
-                    trackDemuxerHelper->samplesWritten++;
-                }
+                });
+                
+                trackDemuxerHelper->samplesWritten++;
             }
         }
     }
 
     readerStatus = 1;
+
+    for (MP42Track* track in activeTracks) {
+        muxer_helper *helper = track.muxer_helper;
+
+        dispatch_release(helper->queue);
+        [helper->fifo release];
+    }
+
     [pool release];
 }
 

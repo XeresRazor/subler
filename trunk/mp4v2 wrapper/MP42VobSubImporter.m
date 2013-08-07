@@ -299,14 +299,18 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
 
     for (MP42Track * track in activeTracks) {
         muxer_helper *helper = track.muxer_helper;
+
+        dispatch_retain(helper->queue);
+        [helper->fifo retain];
+
         SBVobSubTrack *vobTrack = [tracks objectAtIndex:track.sourceId];
         SBVobSubSample *firstSample = nil;
         
         uint32_t lastTime = 0;
         int i, sampleCount = [vobTrack->samples count];
         
-        for(i = 0; i < sampleCount; i++) {
-            while ([helper->fifo count] >= 20) {
+        for (i = 0; i < sampleCount && !isCancelled; i++) {
+            while ([helper->fifo count] >= 20 && !isCancelled) {
                 usleep(2000);
             }
 
@@ -365,10 +369,10 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
                 if(track.needConversion)
                     sample->sampleSourceTrack = track;
                 
-                @synchronized(helper->fifo) {
+                dispatch_async(helper->queue, ^{
                     [helper->fifo addObject:sample];
                     [sample release];
-                }
+                });
             }
             
             MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
@@ -382,16 +386,19 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
             if(track.needConversion)
                 sample->sampleSourceTrack = track;
             
-            @synchronized(helper->fifo) {
+            dispatch_async(helper->queue, ^{
                 [helper->fifo addObject:sample];
                 [sample release];
-            }
+            });
             
             lastTime = endTime;
             
             progress = ((i / (CGFloat) sampleCount ) * 100 / tracksNumber) + (tracksDone / (CGFloat) tracksNumber * 100);
         }
         tracksDone++;
+        
+        dispatch_release(helper->queue);
+        [helper->fifo release];
     }
 
     readerStatus = 1;

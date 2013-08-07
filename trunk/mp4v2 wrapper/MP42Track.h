@@ -18,9 +18,10 @@ typedef struct muxer_helper {
 
     id trackDemuxer;
     id <MP42ConverterProtocol> trackConverter;
-    
+
     NSMutableArray *fifo;
-    
+    dispatch_queue_t queue;
+
     BOOL done;
 } muxer_helper;
 
