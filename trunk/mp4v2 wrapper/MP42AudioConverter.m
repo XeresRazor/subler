@@ -599,7 +599,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
         OSStatus err;
 
         // Set the right mixdown to use
-        sampleRate = [track.muxer_helper->trackImporter timescaleForTrack:track];
+        sampleRate = [track.muxer_helper->importer timescaleForTrack:track];
         inputChannelsCount = [track channels];
         outputChannelCount = [track channels];
 
@@ -633,7 +633,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
         // Decoder initialization
         CFDataRef   magicCookie = NULL;
-        NSData * srcMagicCookie = [track.muxer_helper->trackImporter magicCookieForTrack:track];
+        NSData * srcMagicCookie = [track.muxer_helper->importer magicCookieForTrack:track];
         AudioStreamBasicDescription inputFormat, outputFormat;
 
         bzero( &inputFormat, sizeof( AudioStreamBasicDescription ) );
@@ -678,7 +678,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
                 inputFormat.mFormatID = 'trhd';
             }
             else if ([track.sourceFormat isEqualToString:@"PCM"]) {
-                AudioStreamBasicDescription temp = [track.muxer_helper->trackImporter audioDescriptionForTrack:track];
+                AudioStreamBasicDescription temp = [track.muxer_helper->importer audioDescriptionForTrack:track];
                 if (temp.mFormatID)
                     inputFormat = temp;
                 else

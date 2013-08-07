@@ -10,13 +10,7 @@
 
 @interface MP42VobSubImporter : MP42FileImporter {
     NSThread *dataReader;
-    NSInteger readerStatus;
-
     NSArray *tracks;
-    
-    NSMutableArray *activeTracks;
-    
-    CGFloat progress;
 }
 
 @end

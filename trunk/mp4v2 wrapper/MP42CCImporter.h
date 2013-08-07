@@ -11,9 +11,6 @@
 
 @interface MP42CCImporter : MP42FileImporter {
     NSThread *dataReader;
-    NSInteger readerStatus;
-
-    NSMutableArray *activeTracks;
 }
 
 @end

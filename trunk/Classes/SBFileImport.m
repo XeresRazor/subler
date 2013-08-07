@@ -26,7 +26,7 @@
                 [_tracks addObject:[file lastPathComponent]];
                 [_fileImporters addObject:importer];
                 [importer release];
-                [_tracks addObjectsFromArray:importer.tracksArray];
+                [_tracks addObjectsFromArray:importer.tracks];
             }
         }
 	}

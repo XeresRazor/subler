@@ -17,11 +17,6 @@
     u_int32_t samplesPerSecond;
 
     NSThread *dataReader;
-    NSInteger readerStatus;
-
-    NSMutableArray *activeTracks;
-
-    CGFloat progress;
 }
 
 @end

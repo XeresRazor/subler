@@ -12,14 +12,8 @@
 #import <QTKit/QTKit.h>
 
 @interface MP42QTImporter : MP42FileImporter {
-    QTMovie         *sourceFile;
-    
-    NSThread *dataReader;
-    NSInteger readerStatus;
-    
-    NSMutableArray *activeTracks;
-    
-    CGFloat progress;
+    QTMovie     *sourceFile;
+    NSThread    *dataReader;
 }
 
 @end

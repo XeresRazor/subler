@@ -10,17 +10,12 @@
 #import "MP42FileImporter.h"
 
 @interface MP42MkvImporter : MP42FileImporter {
-
     struct MatroskaFile	*matroskaFile;
 	struct StdIoStream  *ioStream;
+    u_int64_t fileDuration;
 
     NSThread *dataReader;
-    NSInteger readerStatus;
     
-    NSMutableArray *activeTracks;
-    
-    CGFloat progress;
-    u_int64_t fileDuration;
 }
 
 @end

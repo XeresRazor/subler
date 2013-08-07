@@ -18,18 +18,18 @@
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
 {
     if ((self = [super init])) {
-        delegate = del;
-        fileURL = [URL retain];
+        _delegate = del;
+        _fileURL = [URL retain];
 
-        tracksArray = [[NSMutableArray alloc] initWithCapacity:1];
+        _tracksArray = [[NSMutableArray alloc] initWithCapacity:1];
 
         MP42Track *newTrack = [[MP42ClosedCaptionTrack alloc] init];
 
         newTrack.name = @"Closed Caption Track";
         newTrack.format = @"CEA-608";
-        newTrack.sourceURL = fileURL;
+        newTrack.sourceURL = _fileURL;
 
-        [tracksArray addObject:newTrack];
+        [_tracksArray addObject:newTrack];
         [newTrack release];
     }
 
@@ -109,13 +109,10 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
 - (void)demux:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    MP4TrackId dstTrackId = [[activeTracks lastObject] Id];
-    muxer_helper *helper = [[activeTracks lastObject] muxer_helper];
+    MP4TrackId dstTrackId = [[_activeTracks lastObject] Id];
+    muxer_helper *helper = [[_activeTracks lastObject] muxer_helper];
 
-    dispatch_retain(helper->queue);
-    [helper->fifo retain];
-
-    NSString *scc = STStandardizeStringNewlines(STLoadFileWithUnknownEncoding([fileURL path]));
+    NSString *scc = STStandardizeStringNewlines(STLoadFileWithUnknownEncoding([_fileURL path]));
     if (!scc) return;
 
     NSScanner *sc = [NSScanner scannerWithString:scc];
@@ -240,34 +237,21 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
         i++;
     }
 
-    dispatch_release(helper->queue);
-    [helper->fifo release];
-
     [sampleArray release];
+    _done = 1;
+
     [pool release];
-    readerStatus = 1;
 }
 
-- (void)start
+- (void)startReading
 {
-    if (!dataReader && !readerStatus) {
+    [super startReading];
+
+    if (!dataReader && !_done) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
         [dataReader setName:@"ClosedCaption Demuxer"];
         [dataReader start];
     }
-}
-
-- (BOOL)done
-{
-    return readerStatus;
-}
-
-
-- (void)setActiveTrack:(MP42Track *)track {
-    if (!activeTracks)
-        activeTracks = [[NSMutableArray alloc] init];
-    
-    [activeTracks addObject:track];
 }
 
 - (CGFloat)progress {
@@ -276,8 +260,7 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
 
 - (void) dealloc
 {
-	[fileURL release];
-    [tracksArray release];
+    [dataReader release];
 
     [super dealloc];
 }

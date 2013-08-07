@@ -16,7 +16,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
-@interface AVFTrackHelper : NSObject {
+@interface AVFDemuxHelper : NSObject {
 @public
     BOOL                countFrames;
     int64_t             correctionValue;
@@ -33,19 +33,7 @@
 }
 @end
 
-@implementation AVFTrackHelper
-
--(id)init
-{
-    if ((self = [super init])) {
-    }
-    return self;
-}
-
-- (void) dealloc
-{
-    [super dealloc];
-}
+@implementation AVFDemuxHelper
 @end
 
 @implementation MP42AVFImporter
@@ -180,12 +168,12 @@
     if ((self = [super init])) {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-        delegate = del;
-        fileURL = [URL retain];
+        _delegate = del;
+        _fileURL = [URL retain];
 
-        localAsset = [[AVAsset assetWithURL:fileURL] retain];
+        localAsset = [[AVAsset assetWithURL:_fileURL] retain];
 
-        tracksArray = [[NSMutableArray alloc] init];
+        _tracksArray = [[NSMutableArray alloc] init];
         NSArray *tracks = [localAsset tracks];
 
         NSArray *availableChapter = [localAsset availableChapterLocales];
@@ -271,7 +259,7 @@
             newTrack.format = [self formatForTrack:track];
             newTrack.sourceFormat = newTrack.format;
             newTrack.Id = [track trackID];
-            newTrack.sourceURL = fileURL;
+            newTrack.sourceURL = _fileURL;
             newTrack.sourceFileHandle = localAsset;
             newTrack.dataLength = [track totalSampleDataLength];
 
@@ -290,7 +278,7 @@
             CMTimeRange timeRange = [track timeRange];
             newTrack.duration = timeRange.duration.value / timeRange.duration.timescale * 1000;
 
-            [tracksArray addObject:newTrack];
+            [_tracksArray addObject:newTrack];
             [newTrack release];
         }
 
@@ -330,12 +318,12 @@
                                      @"Encoding Tool", AVMetadataCommonKeySoftware,
                                      nil];
 
-    metadata = [[MP42Metadata alloc] init];
+    _metadata = [[MP42Metadata alloc] init];
 
     for (NSString *commonKey in [commonItemsDict allKeys]) {
         items = [AVMetadataItem metadataItemsFromArray:localAsset.commonMetadata withKey:commonKey keySpace:AVMetadataKeySpaceCommon];
         if ([items count])
-            [metadata setTag:[[items lastObject] value] forKey:[commonItemsDict objectForKey:commonKey]];
+            [_metadata setTag:[[items lastObject] value] forKey:[commonItemsDict objectForKey:commonKey]];
     }
     
     items = [AVMetadataItem metadataItemsFromArray:localAsset.commonMetadata withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
@@ -343,7 +331,7 @@
         id artworkData = [[items lastObject] value];
         if ([artworkData isKindOfClass:[NSData class]]) {
             NSImage *image = [[NSImage alloc] initWithData:artworkData];
-            [metadata.artworks addObject:[[[MP42Image alloc] initWithImage:image] autorelease]];
+            [_metadata.artworks addObject:[[[MP42Image alloc] initWithImage:image] autorelease]];
             [image release];
         }
     }
@@ -427,7 +415,7 @@
         for (NSString *itunesKey in [itunesMetadataDict allKeys]) {
             items = [AVMetadataItem metadataItemsFromArray:itunesMetadata withKey:itunesKey keySpace:AVMetadataKeySpaceiTunes];
             if ([items count]) {
-                [metadata setTag:[[items lastObject] value] forKey:[itunesMetadataDict objectForKey:itunesKey]];
+                [_metadata setTag:[[items lastObject] value] forKey:[itunesMetadataDict objectForKey:itunesKey]];
             }
         }
 
@@ -436,7 +424,7 @@
             id artworkData = [[items lastObject] value];
             if ([artworkData isKindOfClass:[NSData class]]) {
                 NSImage *image = [[NSImage alloc] initWithData:artworkData];
-                [metadata.artworks addObject:[[[MP42Image alloc] initWithImage:image] autorelease]];
+                [_metadata.artworks addObject:[[[MP42Image alloc] initWithImage:image] autorelease]];
                 [image release];
             }
         }
@@ -473,7 +461,7 @@
         for (NSString *qtKey in [quicktimeMetadataDict allKeys]) {
             items = [AVMetadataItem metadataItemsFromArray:quicktimeMetadata withKey:qtKey keySpace:AVMetadataKeySpaceQuickTimeUserData];
             if ([items count]) {
-                [metadata setTag:[[items lastObject] value] forKey:[quicktimeMetadataDict objectForKey:qtKey]];
+                [_metadata setTag:[[items lastObject] value] forKey:[quicktimeMetadataDict objectForKey:qtKey]];
             }
         }
     }
@@ -506,7 +494,7 @@
         for (NSString *qtUserDataKey in [quicktimeUserDataMetadataDict allKeys]) {
             items = [AVMetadataItem metadataItemsFromArray:quicktimeUserDataMetadata withKey:qtUserDataKey keySpace:AVMetadataKeySpaceQuickTimeUserData];
             if ([items count]) {
-                [metadata setTag:[[items lastObject] value] forKey:[quicktimeUserDataMetadataDict objectForKey:qtUserDataKey]];
+                [_metadata setTag:[[items lastObject] value] forKey:[quicktimeUserDataMetadataDict objectForKey:qtUserDataKey]];
             }
         }
     }
@@ -660,22 +648,22 @@
 
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
-    AVFTrackHelper * trackHelper=nil;
+    AVFDemuxHelper *demuxHelper=nil;
     NSError *localError;
     AVAssetReader *assetReader = [[AVAssetReader alloc] initWithAsset:localAsset error:&localError];
 
 	success = (assetReader != nil);
 	if (success) {
-        for (MP42Track * track in activeTracks) {
+        for (MP42Track * track in _activeTracks) {
             AVAssetReaderOutput *assetReaderOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[localAsset trackWithTrackID:track.sourceId] outputSettings:nil];
             if (! [assetReader canAddOutput: assetReaderOutput])
                 NSLog(@"Unable to add the output to assetReader!");
 
             [assetReader addOutput:assetReaderOutput];
 
-            track.muxer_helper->trackDemuxer = [[AVFTrackHelper alloc] init];
-            trackHelper = track.muxer_helper->trackDemuxer;
-            trackHelper->assetReaderOutput = assetReaderOutput;
+            track.muxer_helper->demuxer_context = [[AVFDemuxHelper alloc] init];
+            demuxHelper = track.muxer_helper->demuxer_context;
+            demuxHelper->assetReaderOutput = assetReaderOutput;
 
             totalDataLength += [track dataLength];
         }
@@ -685,16 +673,13 @@
 	if (!success)
 		localError = [assetReader error];
 
-    for (MP42Track * track in activeTracks) {
+    for (MP42Track * track in _activeTracks) {
         muxer_helper *helper = track.muxer_helper;
 
-        dispatch_retain(helper->queue);
-        [helper->fifo retain];
+        demuxHelper = track.muxer_helper->demuxer_context;
+        AVAssetReaderOutput *assetReaderOutput = demuxHelper->assetReaderOutput;
 
-        trackHelper = track.muxer_helper->trackDemuxer;
-        AVAssetReaderOutput *assetReaderOutput = trackHelper->assetReaderOutput;
-
-        while (!isCancelled) {
+        while (!_cancelled) {
             while ([helper->fifo count] >= 300) {
                 usleep(200);
             }
@@ -727,35 +712,35 @@
                         }
                     }
 
-                    if ((presentationTimeStamp.value + trackHelper->correctionValue) != presentationOutputTimeStamp.value) {
-                        if (!trackHelper->discontinuity)
-                            trackHelper->discontinuity = (CMTimeRange *) malloc(sizeof(CMTimeRange) * 100);
+                    if ((presentationTimeStamp.value + demuxHelper->correctionValue) != presentationOutputTimeStamp.value) {
+                        if (!demuxHelper->discontinuity)
+                            demuxHelper->discontinuity = (CMTimeRange *) malloc(sizeof(CMTimeRange) * 100);
 
                         NSLog(@"We found a timestamp discontinuity");
                         NSLog(@"Current presentationTimeStamp: %lld", presentationTimeStamp.value);
-                        trackHelper->correctionValue =  -presentationTimeStamp.value + presentationOutputTimeStamp.value;
-                        //trackHelper->disTimeStamp = presentationOutputTimeStamp.value;
-                        NSLog(@"Making an adjustment of %lld", -trackHelper->correctionValue);
+                        demuxHelper->correctionValue =  -presentationTimeStamp.value + presentationOutputTimeStamp.value;
+                        //demuxHelper->disTimeStamp = presentationOutputTimeStamp.value;
+                        NSLog(@"Making an adjustment of %lld", -demuxHelper->correctionValue);
                         NSLog(@"Timestamp of discontinuity %lld", presentationOutputTimeStamp.value);
 
-                        trackHelper->discontinuity[trackHelper->discontinuityCount].start = presentationTimeStamp;
-                        trackHelper->discontinuity[trackHelper->discontinuityCount].duration.value = -trackHelper->correctionValue; //presentationTimeStamp.value;
-                        trackHelper->discontinuity[trackHelper->discontinuityCount].duration.timescale = presentationTimeStamp.timescale;
+                        demuxHelper->discontinuity[demuxHelper->discontinuityCount].start = presentationTimeStamp;
+                        demuxHelper->discontinuity[demuxHelper->discontinuityCount].duration.value = -demuxHelper->correctionValue; //presentationTimeStamp.value;
+                        demuxHelper->discontinuity[demuxHelper->discontinuityCount].duration.timescale = presentationTimeStamp.timescale;
 
-                        trackHelper->discontinuityCount++;
-                        trackHelper->countFrames = YES;
+                        demuxHelper->discontinuityCount++;
+                        demuxHelper->countFrames = YES;
                     }
-                    if (trackHelper->countFrames) {
-                        trackHelper->disTimeStamp +=  duration.value;
+                    if (demuxHelper->countFrames) {
+                        demuxHelper->disTimeStamp +=  duration.value;
                     }
                     
-                    if (presentationOutputTimeStamp.value >= trackHelper->currentTime.value) {
-                        trackHelper->currentTime = presentationOutputTimeStamp;
-                        if (trackHelper->countFrames) {
-                            trackHelper->discontinuity[trackHelper->discontinuityCount-1].duration.value -= trackHelper->disTimeStamp;
-                            NSLog(@"Corrected decode time stamp: %lld", trackHelper->disTimeStamp);
+                    if (presentationOutputTimeStamp.value >= demuxHelper->currentTime.value) {
+                        demuxHelper->currentTime = presentationOutputTimeStamp;
+                        if (demuxHelper->countFrames) {
+                            demuxHelper->discontinuity[demuxHelper->discontinuityCount-1].duration.value -= demuxHelper->disTimeStamp;
+                            NSLog(@"Corrected decode time stamp: %lld", demuxHelper->disTimeStamp);
                             }
-                        trackHelper->countFrames = NO;
+                        demuxHelper->countFrames = NO;
                     }
 
                     //NSLog(@"D: %lld, P: %lld, PO: %lld Display: %d", decodeTimeStamp.value, presentationTimeStamp.value, presentationOutputTimeStamp.value, doNotDisplay);
@@ -866,35 +851,35 @@
                             }
                         }
 
-                        if ((presentationTimeStamp.value + trackHelper->correctionValue) != presentationOutputTimeStamp.value) {
-                            if (!trackHelper->discontinuity)
-                                trackHelper->discontinuity = (CMTimeRange *) malloc(sizeof(CMTimeRange) * 100);
+                        if ((presentationTimeStamp.value + demuxHelper->correctionValue) != presentationOutputTimeStamp.value) {
+                            if (!demuxHelper->discontinuity)
+                                demuxHelper->discontinuity = (CMTimeRange *) malloc(sizeof(CMTimeRange) * 100);
                             
                             NSLog(@"We found a timestamp discontinuity");
                             NSLog(@"Current presentationTimeStamp: %lld", presentationTimeStamp.value);
-                            trackHelper->correctionValue =  -presentationTimeStamp.value + presentationOutputTimeStamp.value;
-                            //trackHelper->disTimeStamp = presentationOutputTimeStamp.value;
-                            NSLog(@"Making an adjustment of %lld", -trackHelper->correctionValue);
+                            demuxHelper->correctionValue =  -presentationTimeStamp.value + presentationOutputTimeStamp.value;
+                            //demuxHelper->disTimeStamp = presentationOutputTimeStamp.value;
+                            NSLog(@"Making an adjustment of %lld", -demuxHelper->correctionValue);
                             NSLog(@"Timestamp of discontinuity %lld", presentationOutputTimeStamp.value);
                             
-                            trackHelper->discontinuity[trackHelper->discontinuityCount].start = presentationTimeStamp;
-                            trackHelper->discontinuity[trackHelper->discontinuityCount].duration.value = -trackHelper->correctionValue; //presentationTimeStamp.value;
-                            trackHelper->discontinuity[trackHelper->discontinuityCount].duration.timescale = presentationTimeStamp.timescale;
+                            demuxHelper->discontinuity[demuxHelper->discontinuityCount].start = presentationTimeStamp;
+                            demuxHelper->discontinuity[demuxHelper->discontinuityCount].duration.value = -demuxHelper->correctionValue; //presentationTimeStamp.value;
+                            demuxHelper->discontinuity[demuxHelper->discontinuityCount].duration.timescale = presentationTimeStamp.timescale;
                             
-                            trackHelper->discontinuityCount++;
-                            trackHelper->countFrames = YES;
+                            demuxHelper->discontinuityCount++;
+                            demuxHelper->countFrames = YES;
                         }
-                        if (trackHelper->countFrames) {
-                            trackHelper->disTimeStamp +=  sampleTimingInfo.duration.value;
+                        if (demuxHelper->countFrames) {
+                            demuxHelper->disTimeStamp +=  sampleTimingInfo.duration.value;
                         }
                         
-                        if (presentationOutputTimeStamp.value >= trackHelper->currentTime.value) {
-                            trackHelper->currentTime = presentationOutputTimeStamp;
-                            if (trackHelper->countFrames) {
-                                trackHelper->discontinuity[trackHelper->discontinuityCount-1].duration.value -= trackHelper->disTimeStamp;
-                                NSLog(@"Corrected decode time stamp: %lld", trackHelper->disTimeStamp);
+                        if (presentationOutputTimeStamp.value >= demuxHelper->currentTime.value) {
+                            demuxHelper->currentTime = presentationOutputTimeStamp;
+                            if (demuxHelper->countFrames) {
+                                demuxHelper->discontinuity[demuxHelper->discontinuityCount-1].duration.value -= demuxHelper->disTimeStamp;
+                                NSLog(@"Corrected decode time stamp: %lld", demuxHelper->disTimeStamp);
                             }
-                            trackHelper->countFrames = NO;
+                            demuxHelper->countFrames = NO;
                         }
 
                         //NSLog(@"D: %lld, P: %lld, PO: %lld", decodeTimeStamp.value, presentationTimeStamp.value, presentationOutputTimeStamp.value);
@@ -925,7 +910,7 @@
                 }
                 CFRelease(sampleBuffer);
 
-                progress = (((CGFloat) currentDataLength /  totalDataLength ) * 100);
+                _progress = (((CGFloat) currentDataLength /  totalDataLength ) * 100);
 
             }
             else {
@@ -938,40 +923,22 @@
                 break;
             }
         }
-
-        dispatch_release(helper->queue);
-        [helper->fifo release];
     }
 
     [assetReader release];
-    readerStatus = 1;
+    _done = 1;
     [pool release];
 }
 
-- (void)start
+- (void)startReading
 {
-    if (!dataReader && !readerStatus) {
+    [super startReading];
+
+    if (!dataReader && !_done) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
         [dataReader setName:@"AVFoundation Demuxer"];
         [dataReader start];
     }
-}
-
-- (BOOL)done
-{
-    return readerStatus;
-}
-
-- (void)setActiveTrack:(MP42Track *)track {
-    if (!activeTracks)
-        activeTracks = [[NSMutableArray alloc] init];
-    
-    [activeTracks addObject:track];
-}
-
-- (CGFloat)progress
-{
-    return progress;
 }
 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
@@ -979,20 +946,20 @@
     uint32_t timescale = MP4GetTimeScale(fileHandle);
     int i;
 
-    for (MP42Track * track in activeTracks) {
+    for (MP42Track * track in _activeTracks) {
         AVAssetTrack *assetTrack = [localAsset trackWithTrackID:track.sourceId];
         MP4Duration trackDuration = 0;
         MP4Timestamp editDuration;
 
-        AVFTrackHelper* trackHelper = track.muxer_helper->trackDemuxer;
+        AVFDemuxHelper *demuxHelper = track.muxer_helper->demuxer_context;
 
         for (AVAssetTrackSegment *segment in assetTrack.segments) {
             bool empty = NO;
             CMTimeMapping timeMapping = segment.timeMapping;
             CMTimeValue correction = 0;
 
-            for (i = trackHelper->discontinuityCount - 1; i >= 0; i--) {
-                CMTimeRange timeRange = trackHelper->discontinuity[i];
+            for (i = demuxHelper->discontinuityCount - 1; i >= 0; i--) {
+                CMTimeRange timeRange = demuxHelper->discontinuity[i];
 
                 if (timeMapping.source.start.value > timeRange.start.value) {
                     correction = timeRange.duration.value;
@@ -1048,17 +1015,8 @@
 
 - (void) dealloc
 {
-    if (dataReader)
-        [dataReader release];
-
+    [dataReader release];
     [localAsset release];
-
-    if (activeTracks)
-        [activeTracks release];
-
-    [metadata release];
-	[fileURL release];
-    [tracksArray release];
 
     [super dealloc];
 }

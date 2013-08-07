@@ -101,10 +101,10 @@
 - (void) dealloc
 {
     if (_helper) {
-        if (_helper->trackDemuxer)
-            [_helper->trackDemuxer release];
-        if (_helper->trackConverter)
-            [_helper->trackConverter release];
+        if (_helper->demuxer_context)
+            [_helper->demuxer_context release];
+        if (_helper->converter)
+            [_helper->converter release];
         
         free(_helper);
     }
@@ -325,35 +325,35 @@
     if (_helper == NULL)
         _helper = calloc(1, sizeof(muxer_helper));
     
-    _helper->trackImporter = importer;
+    _helper->importer = importer;
 }
 
 - (MP42SampleBuffer*)copyNextSample {
     __block MP42SampleBuffer *sample = nil;
 
-    if (_helper->trackConverter) {
-        while ([_helper->trackConverter needMoreSample] && [_helper->fifo count]) {
+    if (_helper->converter) {
+        while ([_helper->converter needMoreSample] && [_helper->fifo count]) {
             dispatch_sync(_helper->queue, ^{
                 sample = [_helper->fifo objectAtIndex:0];
                 [sample retain];
                 [_helper->fifo removeObjectAtIndex:0];
             });
 
-            [_helper->trackConverter addSample:sample];
+            [_helper->converter addSample:sample];
             [sample release];
         }
 
-        if (![_helper->fifo count] && [_helper->trackImporter done])
-            [_helper->trackConverter setDone:YES];
+        if (![_helper->fifo count] && [_helper->importer done])
+            [_helper->converter setDone:YES];
 
-        if ([_helper->trackConverter encoderDone])
+        if ([_helper->converter encoderDone])
             _helper->done = YES;
 
-        sample = [_helper->trackConverter copyEncodedSample];
+        sample = [_helper->converter copyEncodedSample];
         return sample;
     }
     else {
-        if ([_helper->trackImporter done] && ![_helper->fifo count])
+        if ([_helper->importer done] && ![_helper->fifo count])
             _helper->done = YES;
 
         if ([_helper->fifo count]) {

@@ -16,14 +16,18 @@
 @class MP42Track;
 
 @interface MP42FileImporter : NSObject {
-    NSURL          *fileURL;
+    NSURL   *_fileURL;
+    id       _delegate;
 
-    NSInteger      chapterTrackId;
-    MP42Metadata   *metadata;
-    NSMutableArray *tracksArray;
+    NSInteger       _chapterId;
+    MP42Metadata   *_metadata;
 
-    id delegate;
-    BOOL           isCancelled;
+    NSMutableArray *_tracksArray;
+    NSMutableArray *_activeTracks;
+
+    CGFloat         _progress;
+    u_int32_t       _cancelled;
+    u_int32_t       _done;
 }
 
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError;
@@ -36,7 +40,8 @@
 - (AudioStreamBasicDescription)audioDescriptionForTrack:(MP42Track *)track;
 
 - (void)setActiveTrack:(MP42Track *)track;
-- (void)start;
+- (void)startReading;
+- (void)stopReading;
 
 - (MP42SampleBuffer*)copyNextSample;
 
@@ -48,7 +53,7 @@
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle;
 
 @property(readwrite, retain) MP42Metadata *metadata;
-@property(readonly) NSMutableArray  *tracksArray;
+@property(readonly) NSMutableArray  *tracks;
 
 @end
 

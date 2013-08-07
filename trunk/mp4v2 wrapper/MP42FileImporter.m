@@ -92,19 +92,35 @@
     return desc;
 }
 
-- (void)setActiveTrack:(MP42Track *)track
-{
+- (void)setActiveTrack:(MP42Track *)track {
+    if (!_activeTracks)
+        _activeTracks = [[NSMutableArray alloc] init];
     
+    [_activeTracks addObject:track];
 }
 
-- (void)start
+- (void)startReading
 {
-    
+    for (MP42Track* track in _activeTracks) {
+        dispatch_retain(track.muxer_helper->queue);
+        [track.muxer_helper->fifo retain];
+    }
+}
+
+- (void)stopReading
+{
+    while (!_done)
+        usleep(2000);
+
+    for (MP42Track* track in _activeTracks) {        
+        dispatch_release(track.muxer_helper->queue);
+        [track.muxer_helper->fifo release];
+    }
 }
 
 - (BOOL)done
 {
-    return YES;
+    return _done;
 }
 
 - (MP42SampleBuffer*)copyNextSample
@@ -119,7 +135,7 @@
 
 - (CGFloat)progress
 {
-    return 0;
+    return _progress;
 }
 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
@@ -129,16 +145,25 @@
 
 - (BOOL)containsTrack:(MP42Track*)track
 {
-    return [tracksArray containsObject:track];
+    return [_tracksArray containsObject:track];
 }
 
 - (void)cancel
 {
-    isCancelled = YES;
+    _cancelled = 1;
+}
+
+- (void)dealloc
+{
+    [_metadata release], _metadata = nil;
+    [_tracksArray release], _tracksArray = nil;
+    [_activeTracks release], _activeTracks = nil;
+	[_fileURL release], _fileURL = nil;
+    [super dealloc];
 }
 
 
-@synthesize metadata;
-@synthesize tracksArray;
+@synthesize metadata = _metadata;
+@synthesize tracks = _tracksArray;
 
 @end

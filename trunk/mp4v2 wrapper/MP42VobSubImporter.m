@@ -220,28 +220,28 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
 {
     if ((self = [super init])) {
         NSInteger count = 0;
-        delegate = del;
-        fileURL = [URL retain];
+        _delegate = del;
+        _fileURL = [URL retain];
 
         tracks = LoadVobSubSubtitles([URL URLByDeletingLastPathComponent], [URL lastPathComponent]);
-        tracksArray = [[NSMutableArray alloc] initWithCapacity:[tracks count]];
+        _tracksArray = [[NSMutableArray alloc] initWithCapacity:[tracks count]];
 
         for (SBVobSubTrack *track in tracks) {
             MP42SubtitleTrack *newTrack = [[MP42SubtitleTrack alloc] init];
 
             newTrack.format = @"VobSub";
             newTrack.sourceFormat = @"VobSub";
-            newTrack.sourceURL = fileURL;
+            newTrack.sourceURL = _fileURL;
             newTrack.alternate_group = 2;
             newTrack.Id = count++;
             newTrack.language = [NSString stringWithFormat:@"%s", lang_for_code_s([track->language UTF8String])->eng_name];;
             newTrack.duration = track->duration;
 
-            [tracksArray addObject:newTrack];
+            [_tracksArray addObject:newTrack];
             [newTrack release];
         }
 
-        if (![tracksArray count]) {
+        if (![_tracksArray count]) {
             if (outError)
                 *outError = MP42Error(@"The file could not be opened.", @"The file is not a idx file, or it does not contain any subtitles.", 100);
 
@@ -290,18 +290,15 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
 - (void)demux:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    NSURL *subFileURL = [[fileURL URLByDeletingPathExtension] URLByAppendingPathExtension:@"sub"];
+    NSURL *subFileURL = [[_fileURL URLByDeletingPathExtension] URLByAppendingPathExtension:@"sub"];
 
     NSData *subFileData = [NSData dataWithContentsOfURL:subFileURL];
 
-    NSInteger tracksNumber = [activeTracks count];
+    NSInteger tracksNumber = [_activeTracks count];
     NSInteger tracksDone = 0;
 
-    for (MP42Track * track in activeTracks) {
+    for (MP42Track * track in _activeTracks) {
         muxer_helper *helper = track.muxer_helper;
-
-        dispatch_retain(helper->queue);
-        [helper->fifo retain];
 
         SBVobSubTrack *vobTrack = [tracks objectAtIndex:track.sourceId];
         SBVobSubSample *firstSample = nil;
@@ -309,8 +306,8 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
         uint32_t lastTime = 0;
         int i, sampleCount = [vobTrack->samples count];
         
-        for (i = 0; i < sampleCount && !isCancelled; i++) {
-            while ([helper->fifo count] >= 20 && !isCancelled) {
+        for (i = 0; i < sampleCount && !_cancelled; i++) {
+            while ([helper->fifo count] >= 20 && !_cancelled) {
                 usleep(2000);
             }
 
@@ -393,15 +390,12 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
             
             lastTime = endTime;
             
-            progress = ((i / (CGFloat) sampleCount ) * 100 / tracksNumber) + (tracksDone / (CGFloat) tracksNumber * 100);
+            _progress = ((i / (CGFloat) sampleCount ) * 100 / tracksNumber) + (tracksDone / (CGFloat) tracksNumber * 100);
         }
         tracksDone++;
-        
-        dispatch_release(helper->queue);
-        [helper->fifo release];
     }
 
-    readerStatus = 1;
+    _done = 1;
     [pool release];
 }
 
@@ -411,39 +405,21 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
     return [[self copyNextSample] autorelease];
 }
 
-- (void)start
+- (void)startReading
 {
-    if (!dataReader && !readerStatus) {
+    [super startReading];
+
+    if (!dataReader && !_done) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
         [dataReader setName:@"VobSub Demuxer"];
         [dataReader start];
     }
 }
 
-- (BOOL)done
-{
-    return readerStatus;
-}
-
-- (void)setActiveTrack:(MP42Track *)track {
-    if (!activeTracks)
-        activeTracks = [[NSMutableArray alloc] init];
-
-    [activeTracks addObject:track];
-}
-
-- (CGFloat)progress {
-    return progress;
-}
-
 - (void) dealloc
 {
-	[fileURL release];
-    [tracksArray release];
-    [tracks release];
-
     [dataReader release];
-    [activeTracks release];
+    [tracks release];
 
     [super dealloc];
 }

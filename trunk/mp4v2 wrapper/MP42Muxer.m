@@ -18,7 +18,7 @@
 - (id)init
 {
     if ((self = [super init])) {
-        workingTracks = [[NSMutableArray alloc] init];
+        _workingTracks = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -26,8 +26,8 @@
 - (id)initWithDelegate:(id)del
 {
     if ((self = [super init])) {
-        workingTracks = [[NSMutableArray alloc] init];
-        delegate = del;
+        _workingTracks = [[NSMutableArray alloc] init];
+        _delegate = del;
     }
 
     return self;
@@ -36,22 +36,22 @@
 - (void)addTrack:(MP42Track*)track
 {
     if (![track isMemberOfClass:[MP42ChapterTrack class]])
-        [workingTracks addObject:track];
+        [_workingTracks addObject:track];
 }
 
-- (BOOL)prepareWork:(MP4FileHandle)fileHandle error:(NSError **)outError
+- (BOOL)setup:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
     BOOL noErr = YES;
 
-    for (MP42Track * track in workingTracks) {
+    for (MP42Track * track in _workingTracks) {
         MP4TrackId dstTrackId = 0;
         NSData *magicCookie;
         NSInteger timeScale;
         muxer_helper *helper = track.muxer_helper;
 
         if (helper) {
-            magicCookie = [helper->trackImporter magicCookieForTrack:track];
-            timeScale = [helper->trackImporter timescaleForTrack:track];
+            magicCookie = [helper->importer magicCookieForTrack:track];
+            timeScale = [helper->importer timescaleForTrack:track];
         }
         else
             continue;
@@ -65,7 +65,7 @@
             if (audioConverter == nil)
                 noErr = NO;
 
-            helper->trackConverter = audioConverter;
+            helper->converter = audioConverter;
         }
         if([track isMemberOfClass:[MP42SubtitleTrack class]] && ([track.format isEqualToString:@"VobSub"] || [track.format isEqualToString:@"PGS"]) && track.needConversion) {
             track.format = @"3GPP Text";
@@ -75,7 +75,7 @@
             if (subConverter == nil)
                 noErr = NO;
 
-            helper->trackConverter = subConverter;
+            helper->converter = subConverter;
         }
         else if([track isMemberOfClass:[MP42SubtitleTrack class]] && track.needConversion)
             track.format = @"3GPP Text";
@@ -85,7 +85,7 @@
             if ([magicCookie length] < sizeof(uint8_t) * 6)
                 continue;
 
-            NSSize size = [helper->trackImporter sizeForTrack:track];
+            NSSize size = [helper->importer sizeForTrack:track];
 
             uint8_t* avcCAtom = (uint8_t*)[magicCookie bytes];
             dstTrackId = MP4AddH264VideoTrack(fileHandle, timeScale,
@@ -118,7 +118,7 @@
 
             MP4SetVideoProfileLevel(fileHandle, 0x15);
 
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
 
         // MPEG-4 Visual video track
@@ -135,7 +135,7 @@
                                            [magicCookie bytes],
                                            [magicCookie length]);
 
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
 
         // Photo-JPEG video track
@@ -144,7 +144,7 @@
             dstTrackId = MP4AddJpegVideoTrack(fileHandle, timeScale,
                                   MP4_INVALID_DURATION, [(MP42VideoTrack*)track width], [(MP42VideoTrack*)track height]);
 
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
 
         // AAC audio track
@@ -159,7 +159,7 @@
                                            [magicCookie length]);
             }
             
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
 
         // AC-3 audio track
@@ -178,7 +178,7 @@
                                              ac3Info[4],
                                              ac3Info[5]);
 
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
 
         // ALAC audio track
@@ -188,7 +188,7 @@
             if ([magicCookie length])
                 MP4SetTrackBytesProperty(fileHandle, dstTrackId, "mdia.minf.stbl.stsd.alac.alac.AppleLosslessMagicCookie", [magicCookie bytes], [magicCookie length]);
 
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
 
         // DTS audio track
@@ -198,7 +198,7 @@
                                           512, 0xA9);
 
             MP4SetTrackIntegerProperty(fileHandle, dstTrackId, "mdia.minf.stbl.stsd.*.channels", [(MP42AudioTrack*)track channels]);
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
 
         // 3GPP text track
@@ -208,7 +208,7 @@
 
             NSInteger vPlacement = [(MP42SubtitleTrack*)track verticalPlacement];
 
-            for (id track in workingTracks)
+            for (id track in _workingTracks)
                 if ([track isMemberOfClass:[MP42VideoTrack class]]) {
                     videoSize.width  = [track trackWidth];
                     videoSize.height = [track trackHeight];
@@ -288,7 +288,7 @@
             [(MP42SubtitleTrack*)track setTrackWidth:videoSize.width];
             [(MP42SubtitleTrack*)track setTrackHeight:subSize.height];
 
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
         // VobSub bitmap track
         else if ([track isMemberOfClass:[MP42SubtitleTrack class]] && [track.format isEqualToString:@"VobSub"]) {
@@ -312,14 +312,14 @@
             MP4SetTrackESConfiguration( fileHandle, dstTrackId,
                                              (uint8_t*)palette, 16 * 4 );
 
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
 
         // Closed Caption text track
         else if ([track isMemberOfClass:[MP42ClosedCaptionTrack class]]) {
-            NSSize videoSize = [helper->trackImporter sizeForTrack:track];
+            NSSize videoSize = [helper->importer sizeForTrack:track];
 
-            for (id track in workingTracks)
+            for (id track in _workingTracks)
                 if ([track isMemberOfClass:[MP42VideoTrack class]]) {
                     videoSize.width  = [track trackWidth];
                     videoSize.height = [track trackHeight];
@@ -340,7 +340,7 @@
 
             dstTrackId = MP4AddCCTrack(fileHandle, timeScale, videoSize.width, videoSize.height);
 
-            [helper->trackImporter setActiveTrack:track];
+            [helper->importer setActiveTrack:track];
         }
         else {
             continue;
@@ -349,45 +349,43 @@
         MP4SetTrackDurationPerChunk(fileHandle, dstTrackId, timeScale / 8);
         track.Id = dstTrackId;
 
-        if (helper->trackConverter)
-            [helper->trackConverter setOutputTrack:track.Id];
+        if (helper->converter)
+            [helper->converter setOutputTrack:track.Id];
     }
 
     return noErr;
 }
 
-- (void)start:(MP4FileHandle)fileHandle
+- (void)work:(MP4FileHandle)fileHandle
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSMutableArray * trackImportersArray = [[NSMutableArray alloc] init];
-    
-    NSUInteger done = 0;
-    CGFloat progress = 0;
-    NSUInteger update = 0;
 
-    for (MP42Track * track in workingTracks) {
+    NSUInteger done = 0, update = 0;
+    CGFloat progress = 0;
+
+    for (MP42Track * track in _workingTracks) {
         muxer_helper *helper = track.muxer_helper;
+
+        // Initialize the fifo and the helper queue
         helper->fifo = [[NSMutableArray alloc] initWithCapacity:200];
         helper->queue = dispatch_queue_create([[NSString stringWithFormat:@"com.subler.queue-%d",track.Id] UTF8String], NULL);
-        if (![trackImportersArray containsObject:helper->trackImporter]) {
-            [trackImportersArray addObject:helper->trackImporter];
-        }
-    }
-    
-    for (id importerHelper in trackImportersArray)
-        [importerHelper start];
-    
-    NSInteger tracksImportersCount = [trackImportersArray count];
-    NSInteger tracksCount = [workingTracks count];
 
-    while (1) {
+        if (![trackImportersArray containsObject:helper->importer])
+            [trackImportersArray addObject:helper->importer];
+    }
+
+    for (id importerHelper in trackImportersArray)
+        [importerHelper startReading];
+
+    NSInteger tracksImportersCount = [trackImportersArray count];
+    NSInteger tracksCount = [_workingTracks count];
+
+    for (;;) {
         usleep(1000);
 
-        for (MP42Track *track in workingTracks)
-            done += (track.muxer_helper->done ? 1 : 0);
-
         // Iterate the tracks array and mux the samples
-        for (MP42Track * track in workingTracks) {
+        for (MP42Track *track in _workingTracks) {
             MP42SampleBuffer * sampleBuffer = nil;
 
             int i = 0;
@@ -396,14 +394,16 @@
                                     sampleBuffer->sampleData, sampleBuffer->sampleSize,
                                     sampleBuffer->sampleDuration, sampleBuffer->sampleOffset,
                                     sampleBuffer->sampleIsSync))
-                    isCancelled = YES;
+                    _cancelled = YES;
 
                 [sampleBuffer release];
                 i++;
             }
+            
+            done += (track.muxer_helper->done ? 1 : 0);
         }
 
-        if (isCancelled)
+        if (_cancelled)
             break;
 
         // If all tracks are done, exit the loop
@@ -420,27 +420,30 @@
 
             progress = progress /= tracksImportersCount;
 
-            if ([delegate respondsToSelector:@selector(progressStatus:)])
-                [delegate progressStatus:progress];
+            if ([_delegate respondsToSelector:@selector(progressStatus:)])
+                [_delegate progressStatus:progress];
         }
         update++;
     }
 
     // Stop the importers and clean ups
     for (id importerHelper in trackImportersArray) {
-        if (isCancelled)
+        if (_cancelled)
             [importerHelper cancel];
         else
             [importerHelper cleanUp:fileHandle];
+
+        [importerHelper stopReading];
     }
 
     // Write the converted audio track magic cookie
-    for (MP42Track * track in workingTracks) {
+    // And release the various muxer helpers
+    for (MP42Track * track in _workingTracks) {
         muxer_helper *helper = track.muxer_helper;
 
-        if(helper->trackConverter && track.needConversion) {
+        if(helper->converter && track.needConversion) {
             if ([track isMemberOfClass:[MP42AudioTrack class]]) {
-                NSData *magicCookie = [helper->trackConverter magicCookie];
+                NSData *magicCookie = [helper->converter magicCookie];
                 MP4SetTrackESConfiguration(fileHandle, track.Id,
                                            [magicCookie bytes],
                                            [magicCookie length]);
@@ -449,9 +452,9 @@
 
         dispatch_release(helper->queue);
         [helper->fifo release];
-        
-        if (helper->trackConverter)
-            [helper->trackConverter setDone:YES];
+
+        if (helper->converter)
+            [helper->converter setDone:YES];
     }
 
     [trackImportersArray release];
@@ -460,12 +463,12 @@
 
 - (void)cancel
 {
-    isCancelled = YES;
+    _cancelled = YES;
 }
 
 - (void)dealloc
 {
-    [workingTracks release], workingTracks = nil;
+    [_workingTracks release], _workingTracks = nil;
     [super dealloc];
 }
 

@@ -709,22 +709,22 @@ static bool GetFirstHeader(FILE* inFile)
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
 {
     if ((self = [super init])) {
-        delegate = del;
-        fileURL = [URL retain];
+        _delegate = del;
+        _fileURL = [URL retain];
 
-        tracksArray = [[NSMutableArray alloc] initWithCapacity:1];
+        _tracksArray = [[NSMutableArray alloc] initWithCapacity:1];
 
         MP42Track *newTrack = [[MP42AudioTrack alloc] init];
 
         newTrack.format = @"AAC";
         newTrack.sourceFormat = @"AAC";
-        newTrack.sourceURL = fileURL;
+        newTrack.sourceURL = _fileURL;
 
         if (!inFile)
-            inFile = fopen([[fileURL path] UTF8String], "rb");
+            inFile = fopen([[_fileURL path] UTF8String], "rb");
 
         struct stat st;
-        stat([[fileURL path] UTF8String], &st);
+        stat([[_fileURL path] UTF8String], &st);
         size = st.st_size * 8;
 
         // collect all the necessary meta information
@@ -792,13 +792,13 @@ static bool GetFirstHeader(FILE* inFile)
                                   channelConfig);
 
         [(MP42AudioTrack*) newTrack setChannels:channelConfig];
-        [newTrack setDataLength:[[[[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue]];
+        [newTrack setDataLength:[[[[NSFileManager defaultManager] attributesOfItemAtPath:[_fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue]];
 
         aacInfo = [[NSMutableData alloc] init];
         [aacInfo appendBytes:pConfig length:configLength];
         free(pConfig);
 
-        [tracksArray addObject:newTrack];
+        [_tracksArray addObject:newTrack];
         [newTrack release];
     }
 
@@ -824,14 +824,10 @@ static bool GetFirstHeader(FILE* inFile)
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     if (!inFile)
-        inFile = fopen([[fileURL path] UTF8String], "rb");
+        inFile = fopen([[_fileURL path] UTF8String], "rb");
 
-    MP42Track *track = [activeTracks lastObject];
-
+    MP42Track *track = [_activeTracks lastObject];
     muxer_helper *helper = track.muxer_helper;
-    dispatch_retain(helper->queue);
-    [helper->fifo retain];
-    
     MP4TrackId dstTrackId = [track Id];
 
     // parse the ADTS frames, and write the MP4 samples
@@ -841,7 +837,7 @@ static bool GetFirstHeader(FILE* inFile)
 
     int64_t currentSize = 0;
 
-    while (LoadNextAacFrame(inFile, sampleBuffer, &sampleSize, true) && !isCancelled) {
+    while (LoadNextAacFrame(inFile, sampleBuffer, &sampleSize, true) && !_cancelled) {
         while ([helper->fifo count] >= 200) {
             usleep(200);
         }
@@ -870,53 +866,30 @@ static bool GetFirstHeader(FILE* inFile)
         sampleSize = sizeof(sampleBuffer);
 
         currentSize += sampleSize;
-        progress = (currentSize / (CGFloat) size) * 100;
+        _progress = (currentSize / (CGFloat) size) * 100;
     }
 
-    dispatch_release(helper->queue);
-    [helper->fifo release];
+    _done = 1;
 
     [pool release];
-    readerStatus = 1;
 }
 
-- (void)start
+- (void)startReading
 {
-    if (!dataReader && !readerStatus) {
+    [super startReading];
+
+    if (!dataReader && !_done) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
         [dataReader setName:@"AAC Demuxer"];
         [dataReader start];
     }
 }
 
-- (BOOL)done
-{
-    return readerStatus;
-}
-
-- (void)setActiveTrack:(MP42Track *)track {
-    if (!activeTracks)
-        activeTracks = [[NSMutableArray alloc] init];
-    
-    [activeTracks addObject:track];
-}
-
-- (CGFloat)progress
-{
-    return progress;
-}
-
 - (void) dealloc
 {
-    if (dataReader)
-        [dataReader release];
-
-    fclose(inFile);
-
+    [dataReader release];
     [aacInfo release];
-	[fileURL release];
-    [tracksArray release];
-    [activeTracks release];
+    fclose(inFile);
 
     [super dealloc];
 }

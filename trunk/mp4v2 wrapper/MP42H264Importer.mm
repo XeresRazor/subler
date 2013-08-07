@@ -1353,10 +1353,10 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
 {
     if ((self = [super init])) {
-        delegate = del;
-        fileURL = [URL retain];
+        _delegate = del;
+        _fileURL = [URL retain];
 
-        tracksArray = [[NSMutableArray alloc] initWithCapacity:1];
+        _tracksArray = [[NSMutableArray alloc] initWithCapacity:1];
 
         MP42VideoTrack *newTrack = [[MP42VideoTrack alloc] init];
 
@@ -1365,15 +1365,15 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
         newTrack.sourceURL = URL;
 
         if (!inFile)
-            inFile = fopen([[fileURL path] UTF8String], "rb");
+            inFile = fopen([[_fileURL path] UTF8String], "rb");
 
         struct stat st;
-        stat([[fileURL path] UTF8String], &st);
+        stat([[_fileURL path] UTF8String], &st);
         size = st.st_size * 8;
 
         uint32_t tw, th;
         uint8_t profile, level;
-        if ((avcC = H264Info([[fileURL path] cStringUsingEncoding:NSASCIIStringEncoding], &tw, &th, &profile, &level))) {
+        if ((avcC = H264Info([[_fileURL path] cStringUsingEncoding:NSASCIIStringEncoding], &tw, &th, &profile, &level))) {
             newTrack.width = newTrack.trackWidth = tw;
             newTrack.height = newTrack.trackHeight = th;
             newTrack.hSpacing = newTrack.vSpacing = 1;
@@ -1381,9 +1381,9 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
             newTrack.origLevel = newTrack.newLevel = level;
         }
 
-        [newTrack setDataLength:[[[[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue]];
+        [newTrack setDataLength:[[[[NSFileManager defaultManager] attributesOfItemAtPath:[_fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue]];
 
-        [tracksArray addObject:newTrack];
+        [_tracksArray addObject:newTrack];
         [newTrack release];
     }
 
@@ -1418,14 +1418,10 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     if (!inFile)
-        inFile = fopen([[fileURL path] UTF8String], "rb");
+        inFile = fopen([[_fileURL path] UTF8String], "rb");
 
-    MP42Track *track = [activeTracks lastObject];
-
+    MP42Track *track = [_activeTracks lastObject];
     muxer_helper *helper = track.muxer_helper;
-    dispatch_retain(helper->queue);
-    [helper->fifo retain];
-
     MP4TrackId dstTrackId = [track Id];
 
     framerate_t * framerate;
@@ -1480,7 +1476,7 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     memset(&h264_dec, 0, sizeof(h264_dec));
     DpbInit(&h264_dpb);
     
-    while ( (LoadNal(&nal) != false) && !isCancelled) {
+    while ( (LoadNal(&nal) != false) && !_cancelled) {
         uint32_t header_size;
         header_size = nal.buffer[2] == 1 ? 3 : 4;
         bool boundary = h264_detect_boundary(nal.buffer, 
@@ -1607,16 +1603,14 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     DpbFlush(&h264_dpb);
     free(nal_buffer);
 
-    dispatch_release(helper->queue);
-    [helper->fifo release];
+    _done = 1;
 
     [pool release];
-    readerStatus = 1;
 }
 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
 {
-    MP42Track *track = [activeTracks lastObject];
+    MP42Track *track = [_activeTracks lastObject];
     MP4TrackId trackId = [track Id];
 
     if (h264_dpb.dpb.size_min > 0) {
@@ -1641,43 +1635,21 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     return YES;
 }
 
-- (void)start
+- (void)startReading
 {
-    if (!dataReader && !readerStatus) {
+    [super startReading];
+    if (!dataReader && !_done) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
         [dataReader setName:@"H264 Demuxer"];
         [dataReader start];
     }
 }
 
-- (BOOL)done
-{
-    return readerStatus;
-}
-
-- (void)setActiveTrack:(MP42Track *)track {
-    if (!activeTracks)
-        activeTracks = [[NSMutableArray alloc] init];
-    
-    [activeTracks addObject:track];
-}
-
-- (CGFloat)progress
-{
-    return progress;
-}
-
 - (void) dealloc
 {
-    if (dataReader)
-        [dataReader release];
-
-    fclose(inFile);
-
+    [dataReader release];
     [avcC release];
-	[fileURL release];
-    [tracksArray release];
-    [activeTracks release];
+    fclose(inFile);
 
     [super dealloc];
 }
