@@ -12,10 +12,8 @@
 @class SBSubSerializer;
 
 @interface MP42SrtImporter : MP42FileImporter {
-    SBSubSerializer * ss;
-    
-    NSMutableArray *activeTracks;
-    BOOL verticalPlacement;
+    SBSubSerializer *ss;
+    BOOL    verticalPlacement;
 }
 
 @end

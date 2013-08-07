@@ -253,7 +253,7 @@
                                                                                         andFile:dirUrl
                                                                                           error:&outError];
 
-                    for (MP42Track *track in [fileImporter tracksArray]) {
+                    for (MP42Track *track in fileImporter.tracks) {
                         [track setTrackImporterHelper:fileImporter];
                         [[fileImporter retain] autorelease];
                         [tracksArray addObject:track];
@@ -323,7 +323,7 @@
                                                                             andFile:url
                                                                               error:outError];
 
-        for (MP42Track *track in [fileImporter tracksArray]) {
+        for (MP42Track *track in fileImporter.tracks) {
             if (([track.format isEqualToString:@"AC-3"] || [track.format isEqualToString:@"DTS"]) && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue])
                 track.needConversion = YES;
 

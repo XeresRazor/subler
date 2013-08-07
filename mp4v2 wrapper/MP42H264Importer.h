@@ -42,11 +42,6 @@ typedef struct
     h264_dpb_t h264_dpb;
 
     NSThread *dataReader;
-    NSInteger readerStatus;
-
-    NSMutableArray *activeTracks;
-
-    CGFloat progress;
 }
 
 @end

@@ -11,14 +11,8 @@
 @class AVAsset;
 
 @interface MP42AVFImporter : MP42FileImporter {
-    AVAsset *localAsset;
-    
-    NSThread *dataReader;
-    NSInteger readerStatus;
-    
-    NSMutableArray *activeTracks;
-    
-    CGFloat progress;
+    AVAsset     *localAsset;
+    NSThread    *dataReader;
 }
 
 @end

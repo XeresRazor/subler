@@ -14,10 +14,10 @@
 @class MP42SampleBuffer;
 
 typedef struct muxer_helper {
-    MP42FileImporter *trackImporter;
+    MP42FileImporter *importer;
 
-    id trackDemuxer;
-    id <MP42ConverterProtocol> trackConverter;
+    id demuxer_context;
+    id <MP42ConverterProtocol> converter;
 
     NSMutableArray *fifo;
     dispatch_queue_t queue;

@@ -17,11 +17,11 @@
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
 {
     if ((self = [super init])) {
-        delegate = del;
-        fileURL = [URL retain];
+        _delegate = del;
+        _fileURL = [URL retain];
 
         NSInteger trackCount = 1;
-        tracksArray = [[NSMutableArray alloc] initWithCapacity:trackCount];
+        _tracksArray = [[NSMutableArray alloc] initWithCapacity:trackCount];
 
         NSInteger success = 0;
         MP4Duration duration = 0;
@@ -30,16 +30,16 @@
 
         newTrack.format = @"3GPP Text";
         newTrack.sourceFormat = @"Srt";
-        newTrack.sourceURL = fileURL;
+        newTrack.sourceURL = _fileURL;
         newTrack.alternate_group = 2;
-        newTrack.language = getFilenameLanguage((CFStringRef)[fileURL path]);
+        newTrack.language = getFilenameLanguage((CFStringRef)[_fileURL path]);
 
         ss = [[SBSubSerializer alloc] init];
-        if ([[fileURL pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame) {
-            success = LoadSRTFromPath([fileURL path], ss, &duration);
+        if ([[_fileURL pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame) {
+            success = LoadSRTFromPath([_fileURL path], ss, &duration);
         }
-        else if ([[fileURL pathExtension] caseInsensitiveCompare: @"smi"] == NSOrderedSame) {
-            success = LoadSMIFromPath([fileURL path], ss, 1);
+        else if ([[_fileURL pathExtension] caseInsensitiveCompare: @"smi"] == NSOrderedSame) {
+            success = LoadSMIFromPath([_fileURL path], ss, 1);
         }
 
         [newTrack setDuration:duration];
@@ -63,7 +63,7 @@
         if ([ss forced])
             newTrack.someSamplesAreForced = YES;
 
-        [tracksArray addObject:newTrack];
+        [_tracksArray addObject:newTrack];
         [newTrack release];
     }
 
@@ -90,13 +90,15 @@
     return [[self copyNextSample] autorelease];
 }
 
-- (void)start
+- (void)startReading
 {
+    [super startReading];
+
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     MP42SampleBuffer *sample;
-    MP4TrackId dstTrackId = [[activeTracks lastObject] Id];
+    MP4TrackId dstTrackId = [[_activeTracks lastObject] Id];
 
-    for (MP42Track * track in activeTracks) {
+    for (MP42Track * track in _activeTracks) {
         muxer_helper *helper = track.muxer_helper;
         while (![ss isEmpty]) {
             SBSubLine *sl = [ss getSerializedPacket];
@@ -110,8 +112,8 @@
             }
             else {
             CGSize trackSize;
-            trackSize.width = [(MP42SubtitleTrack*)[tracksArray lastObject] trackWidth];
-            trackSize.height = [(MP42SubtitleTrack*)[tracksArray lastObject] trackHeight];
+            trackSize.width = [(MP42SubtitleTrack*)[_tracksArray lastObject] trackWidth];
+            trackSize.height = [(MP42SubtitleTrack*)[_tracksArray lastObject] trackHeight];
 
             int top = (sl->top == INT_MAX) ? trackSize.height : sl->top;
 
@@ -124,33 +126,16 @@
         }
     }
     
+    _done = 1;
+    _progress = 100.0;
+
     [pool release];
     return;
-}
-
-- (BOOL)done
-{
-    return 1;
-}
-
-
-- (void)setActiveTrack:(MP42Track *)track {
-    if (!activeTracks)
-        activeTracks = [[NSMutableArray alloc] init];
-    
-    [activeTracks addObject:track];
-}
-
-- (CGFloat)progress {
-    return 100.0;
 }
 
 - (void) dealloc
 {
     [ss release];
-	[fileURL release];
-    [tracksArray release];
-    [activeTracks release];
 
     [super dealloc];
 }

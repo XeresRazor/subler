@@ -192,8 +192,8 @@ NSString * const MP42FileTypeM4B = @"m4b";
     if (trackNeedConversion(track.format))
         track.needConversion = YES;
 
-    if (track.muxer_helper->trackImporter)
-        [fileImporters addObject:track.muxer_helper->trackImporter];
+    if (track.muxer_helper->importer)
+        [fileImporters addObject:track.muxer_helper->importer];
 
     [tracks addObject:track];
 }
@@ -378,7 +378,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
     for (track in tracks)
         if (!(track.muxed) && !isCancelled) {
             // Reopen the file importer is they are not already open, this happens when the object has been unarchived from a file
-            if (!track.muxer_helper->trackImporter && ![tracks isKindOfClass:[MP42ChapterTrack class]]) {
+            if (!track.muxer_helper->importer && ![tracks isKindOfClass:[MP42ChapterTrack class]]) {
                 MP42FileImporter *fileImporter = nil;
                 NSURL *sourceURL = [track sourceURL];
 
@@ -403,7 +403,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
     }
 
 
-    success = [muxer prepareWork:fileHandle error:outError];
+    success = [muxer setup:fileHandle error:outError];
     if ( !success && outError != NULL) {
         [muxer release];
         [_fileImporters release];
@@ -413,7 +413,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
         return NO;
     }
     else {
-        [muxer start:fileHandle];
+        [muxer work:fileHandle];
         updateMoovDuration(fileHandle);
     }
 

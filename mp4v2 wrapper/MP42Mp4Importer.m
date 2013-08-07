@@ -11,7 +11,7 @@
 #import "MP42File.h"
 #import "MP42Sample.h"
 
-@interface Mp4TrackHelper : NSObject {
+@interface MP4DemuxkHelper : NSObject {
 @public
     MP4SampleId     currentSampleId;
     uint64_t        totalSampleNumber;
@@ -19,20 +19,7 @@
 }
 @end
 
-@implementation Mp4TrackHelper
-
--(id)init
-{
-    if ((self = [super init]))
-    {
-    }
-    return self;
-}
-
-- (void) dealloc {
-    
-    [super dealloc];
-}
+@implementation MP4DemuxkHelper
 @end
 
 
@@ -41,10 +28,10 @@
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
 {
     if ((self = [super init])) {
-        delegate = del;
-        fileURL = [URL retain];
+        _delegate = del;
+        _fileURL = [URL retain];
 
-        MP42File *sourceFile = [[MP42File alloc] initWithExistingFile:fileURL andDelegate:self];
+        MP42File *sourceFile = [[MP42File alloc] initWithExistingFile:_fileURL andDelegate:self];
 
         if(!sourceFile) {
             if (outError) {
@@ -55,12 +42,12 @@
             return nil;
         }
 
-        tracksArray = [[sourceFile tracks] retain];
-        for (MP42Track * track in tracksArray) {
+        _tracksArray = [[sourceFile tracks] retain];
+        for (MP42Track * track in _tracksArray) {
             [track setSourceFormat:[track format]];
         }
 
-        metadata = [[sourceFile metadata] retain];
+        _metadata = [[sourceFile metadata] retain];
 
         [sourceFile release];
     }
@@ -83,7 +70,7 @@
 - (NSData*)magicCookieForTrack:(MP42Track *)track
 {
     if (!fileHandle)
-        fileHandle = MP4Read([[fileURL path] UTF8String]);
+        fileHandle = MP4Read([[_fileURL path] UTF8String]);
 
     NSData *magicCookie = nil;
     MP4TrackId srcTrackId = [track sourceId];
@@ -229,30 +216,27 @@
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     if (!fileHandle)
-        fileHandle = MP4Read([[fileURL path] UTF8String]);
+        fileHandle = MP4Read([[_fileURL path] UTF8String]);
 
-    NSInteger tracksNumber = [activeTracks count];
+    NSInteger tracksNumber = [_activeTracks count];
     NSInteger tracksDone = 0;
-    Mp4TrackHelper * trackHelper;
+    MP4DemuxkHelper *demuxHelper;
 
-    for (MP42Track * track in activeTracks) {
+    for (MP42Track *track in _activeTracks) {
         muxer_helper *helper = track.muxer_helper;
 
-        if (helper->trackDemuxer == nil) {
-            trackHelper = [[Mp4TrackHelper alloc] init];
+        if (helper->demuxer_context == nil) {
+            demuxHelper = [[MP4DemuxkHelper alloc] init];
 
-            helper->trackDemuxer = trackHelper;
-            trackHelper->totalSampleNumber = MP4GetTrackNumberOfSamples(fileHandle, [track Id]);
+            helper->demuxer_context = demuxHelper;
+            demuxHelper->totalSampleNumber = MP4GetTrackNumberOfSamples(fileHandle, track.Id);
         }
-
-        dispatch_retain(helper->queue);
-        [helper->fifo retain];
     }
 
-    for (MP42Track * track in activeTracks) {
+    for (MP42Track * track in _activeTracks) {
         muxer_helper *helper = track.muxer_helper;
 
-        while (!isCancelled) {
+        while (!_cancelled) {
             while ([helper->fifo count] >= 200) {
                 usleep(200);
             }
@@ -265,12 +249,12 @@
             MP4Timestamp pStartTime;
             bool isSyncSample;
 
-            trackHelper = helper->trackDemuxer;
-            trackHelper->currentSampleId = trackHelper->currentSampleId + 1;
+            demuxHelper = helper->demuxer_context;
+            demuxHelper->currentSampleId = demuxHelper->currentSampleId + 1;
 
             if (!MP4ReadSample(fileHandle,
                                srcTrackId,
-                               trackHelper->currentSampleId,
+                               demuxHelper->currentSampleId,
                                &pBytes, &numBytes,
                                &pStartTime, &duration, &renderingOffset,
                                &isSyncSample)) {
@@ -294,56 +278,34 @@
                 [sample release];
             });
 
-            progress = ((trackHelper->currentSampleId / (CGFloat) trackHelper->totalSampleNumber ) * 100 / tracksNumber) +
+            _progress = ((demuxHelper->currentSampleId / (CGFloat) demuxHelper->totalSampleNumber ) * 100 / tracksNumber) +
                         (tracksDone / (CGFloat) tracksNumber * 100);
         }
     }
 
-    for (MP42Track * track in activeTracks) {
-        muxer_helper *helper = track.muxer_helper;
-        
-        dispatch_release(helper->queue);
-        [helper->fifo release];
-    }
-
     if (tracksDone >= tracksNumber)
-        readerStatus = 1;
+        _done = 1;
 
     [pool release];
 }
 
-- (void)start
+- (void)startReading
 {
     if (!fileHandle)
-        fileHandle = MP4Read([[fileURL path] UTF8String]);
+        fileHandle = MP4Read([[_fileURL path] UTF8String]);
+    
+    [super startReading];
 
-    if (!dataReader && !readerStatus) {
+    if (!dataReader && !_done) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
         [dataReader setName:@"MP4 Demuxer"];
         [dataReader start];
     }
 }
 
-- (BOOL)done
-{
-    return readerStatus;
-}
-
-- (void)setActiveTrack:(MP42Track *)track {
-    if (!activeTracks)
-        activeTracks = [[NSMutableArray alloc] init];
-    
-    [activeTracks addObject:track];
-}
-
-- (CGFloat)progress
-{
-    return progress;
-}
-
 - (BOOL)cleanUp:(MP4FileHandle) dstFileHandle
 {
-    for (MP42Track * track in activeTracks) {
+    for (MP42Track * track in _activeTracks) {
         MP4TrackId srcTrackId = [track sourceId];
         MP4TrackId dstTrackId = [track Id];
 
@@ -378,18 +340,10 @@
 
 - (void) dealloc
 {
-    if (dataReader)
-        [dataReader release];
+    [dataReader release];
 
     if (fileHandle)
         MP4Close(fileHandle, 0);
-
-    if (activeTracks)
-        [activeTracks release];
-
-    [metadata release];
-	[fileURL release];
-    [tracksArray release];
 
     [super dealloc];
 }

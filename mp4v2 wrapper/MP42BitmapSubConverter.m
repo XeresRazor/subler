@@ -352,7 +352,7 @@ void FFInitFFmpeg()
         outputSamplesBuffer = [[NSMutableArray alloc] init];
         inputSamplesBuffer = [[NSMutableArray alloc] init];
 
-        srcMagicCookie = [[track.muxer_helper->trackImporter magicCookieForTrack:track] retain];
+        srcMagicCookie = [[track.muxer_helper->importer magicCookieForTrack:track] retain];
 
         ocr = [[MP42OCRWrapper alloc] initWithLanguage:[track language]];
 
