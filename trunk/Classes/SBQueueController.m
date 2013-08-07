@@ -327,6 +327,9 @@
             if (([track.format isEqualToString:@"AC-3"] || [track.format isEqualToString:@"DTS"]) && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue])
                 track.needConversion = YES;
 
+            if ([track.format isEqualToString:@"VobSub"] && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBSubtitleConvertBitmap"] boolValue])
+                track.needConversion = YES;
+
             [track setTrackImporterHelper:fileImporter];
 
             if (isTrackMuxable(track.format) || trackNeedConversion(track.format))

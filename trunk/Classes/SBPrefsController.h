@@ -12,7 +12,7 @@
 @class SBTableView;
 
 @interface SBPrefsController : NSWindowController <NSToolbarDelegate, NSWindowDelegate> {
-    IBOutlet NSView *generalView, *audioView, *setsView;
+    IBOutlet NSView *generalView, *advancedView, *setsView;
 
     id _popover;
     MovieViewController *_controller;
