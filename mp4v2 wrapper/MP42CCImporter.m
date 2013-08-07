@@ -112,6 +112,9 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
     MP4TrackId dstTrackId = [[activeTracks lastObject] Id];
     muxer_helper *helper = [[activeTracks lastObject] muxer_helper];
 
+    dispatch_retain(helper->queue);
+    [helper->fifo retain];
+
     NSString *scc = STStandardizeStringNewlines(STLoadFileWithUnknownEncoding([fileURL path]));
     if (!scc) return;
 
@@ -193,10 +196,10 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
             sample->sampleIsSync = 1;
             sample->sampleTrackId = dstTrackId;
 
-            @synchronized(helper->fifo) {
+            dispatch_async(helper->queue, ^{
                 [helper->fifo addObject:sample];
                 [sample release];
-            }
+            });
 
             frameDrop += ccSample.timestamp;
             minutesDrop += frameDrop;
@@ -229,13 +232,16 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
         sample->sampleIsSync = 1;
         sample->sampleTrackId = dstTrackId;
 
-        @synchronized(helper->fifo) {
+        dispatch_async(helper->queue, ^{
             [helper->fifo addObject:sample];
             [sample release];
-        }
+        });
 
         i++;
     }
+
+    dispatch_release(helper->queue);
+    [helper->fifo release];
 
     [sampleArray release];
     [pool release];

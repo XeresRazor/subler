@@ -244,6 +244,9 @@
             helper->trackDemuxer = trackHelper;
             trackHelper->totalSampleNumber = MP4GetTrackNumberOfSamples(fileHandle, [track Id]);
         }
+
+        dispatch_retain(helper->queue);
+        [helper->fifo retain];
     }
 
     for (MP42Track * track in activeTracks) {
@@ -286,14 +289,21 @@
             if(track.needConversion)
                 sample->sampleSourceTrack = track;
 
-            @synchronized(helper->fifo) {
+            dispatch_async(helper->queue, ^{
                 [helper->fifo addObject:sample];
                 [sample release];
-            }
+            });
 
             progress = ((trackHelper->currentSampleId / (CGFloat) trackHelper->totalSampleNumber ) * 100 / tracksNumber) +
                         (tracksDone / (CGFloat) tracksNumber * 100);
         }
+    }
+
+    for (MP42Track * track in activeTracks) {
+        muxer_helper *helper = track.muxer_helper;
+        
+        dispatch_release(helper->queue);
+        [helper->fifo release];
     }
 
     if (tracksDone >= tracksNumber)

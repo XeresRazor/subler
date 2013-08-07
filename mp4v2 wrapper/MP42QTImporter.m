@@ -816,15 +816,20 @@
     MovTrackHelper * trackHelper=nil; 
 
     for (MP42Track * track in activeTracks) {
+        muxer_helper *helper = track.muxer_helper;
+
         if (track.muxer_helper->trackDemuxer == nil) {
-            track.muxer_helper->trackDemuxer = [[MovTrackHelper alloc] init];
+            helper->trackDemuxer = [[MovTrackHelper alloc] init];
 
             Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
             Media media = GetTrackMedia(qtcTrack);
 
-            trackHelper = track.muxer_helper->trackDemuxer;
+            trackHelper = helper->trackDemuxer;
             trackHelper->totalSampleNumber = GetMediaSampleCount(media);
         }
+
+        dispatch_retain(helper->queue);
+        [helper->fifo retain];
     }
 
     for (MP42Track * track in activeTracks) {
@@ -905,10 +910,10 @@
             if(track.needConversion)
                 sample->sampleSourceTrack = track;
 
-            @synchronized(helper->fifo) {
+            dispatch_async(helper->queue, ^{
                 [helper->fifo addObject:sample];
                 [sample release];
-            }
+            });
 
             progress = ((trackHelper->currentSampleId / (CGFloat) trackHelper->totalSampleNumber ) * 100 / tracksNumber) +
             (tracksDone / (CGFloat) tracksNumber * 100);
@@ -918,6 +923,13 @@
 
         bail:
         QTSampleTableRelease(sampleTable);
+    }
+
+    for (MP42Track * track in activeTracks) {
+        muxer_helper *helper = track.muxer_helper;
+        
+        dispatch_release(helper->queue);
+        [helper->fifo release];
     }
 
     readerStatus = 1;

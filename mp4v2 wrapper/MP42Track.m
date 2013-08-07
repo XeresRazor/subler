@@ -105,8 +105,6 @@
             [_helper->trackDemuxer release];
         if (_helper->trackConverter)
             [_helper->trackConverter release];
-        if (_helper->fifo)
-            [_helper->fifo release];
         
         free(_helper);
     }
@@ -331,15 +329,16 @@
 }
 
 - (MP42SampleBuffer*)copyNextSample {
-    MP42SampleBuffer *sample = nil;
+    __block MP42SampleBuffer *sample = nil;
 
     if (_helper->trackConverter) {
         while ([_helper->trackConverter needMoreSample] && [_helper->fifo count]) {
-            @synchronized(_helper->fifo) {
+            dispatch_sync(_helper->queue, ^{
                 sample = [_helper->fifo objectAtIndex:0];
                 [sample retain];
                 [_helper->fifo removeObjectAtIndex:0];
-            }
+            });
+
             [_helper->trackConverter addSample:sample];
             [sample release];
         }
@@ -358,11 +357,11 @@
             _helper->done = YES;
 
         if ([_helper->fifo count]) {
-            @synchronized(_helper->fifo) {
+            dispatch_sync(_helper->queue, ^{
                 sample = [_helper->fifo objectAtIndex:0];
                 [sample retain];
                 [_helper->fifo removeObjectAtIndex:0];
-            }
+            });
         }
     }
 

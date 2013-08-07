@@ -827,7 +827,11 @@ static bool GetFirstHeader(FILE* inFile)
         inFile = fopen([[fileURL path] UTF8String], "rb");
 
     MP42Track *track = [activeTracks lastObject];
-    muxer_helper *helper = [[activeTracks lastObject] muxer_helper];
+
+    muxer_helper *helper = track.muxer_helper;
+    dispatch_retain(helper->queue);
+    [helper->fifo retain];
+    
     MP4TrackId dstTrackId = [track Id];
 
     // parse the ADTS frames, and write the MP4 samples
@@ -857,10 +861,10 @@ static bool GetFirstHeader(FILE* inFile)
         if(track.needConversion)
             sample->sampleSourceTrack = track;
 
-        @synchronized(helper->fifo) {
+        dispatch_async(helper->queue, ^{
             [helper->fifo addObject:sample];
             [sample release];
-        }
+        });
 
         sampleId++;
         sampleSize = sizeof(sampleBuffer);
@@ -868,6 +872,9 @@ static bool GetFirstHeader(FILE* inFile)
         currentSize += sampleSize;
         progress = (currentSize / (CGFloat) size) * 100;
     }
+
+    dispatch_release(helper->queue);
+    [helper->fifo release];
 
     [pool release];
     readerStatus = 1;

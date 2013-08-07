@@ -687,6 +687,10 @@
 
     for (MP42Track * track in activeTracks) {
         muxer_helper *helper = track.muxer_helper;
+
+        dispatch_retain(helper->queue);
+        [helper->fifo retain];
+
         trackHelper = track.muxer_helper->trackDemuxer;
         AVAssetReaderOutput *assetReaderOutput = trackHelper->assetReaderOutput;
 
@@ -765,10 +769,10 @@
                     sample->sampleIsSync = sync;
                     sample->sampleTrackId = track.Id;
 
-                    @synchronized(helper->fifo) {
+                    dispatch_async(helper->queue, ^{
                         [helper->fifo addObject:sample];
                         [sample release];
-                    }
+                    });
 
                     currentDataLength += sampleSize;
                 }
@@ -906,10 +910,10 @@
                         if(track.needConversion)
                             sample->sampleSourceTrack = track;
 
-                        @synchronized(helper->fifo) {
+                        dispatch_async(helper->queue, ^{
                             [helper->fifo addObject:sample];
                             [sample release];
-                        }
+                        });
 
                         currentDataLength += sampleSize;
                     }
@@ -934,6 +938,9 @@
                 break;
             }
         }
+
+        dispatch_release(helper->queue);
+        [helper->fifo release];
     }
 
     [assetReader release];
