@@ -31,11 +31,11 @@ typedef NSInteger SBQueueItemStatus;
     BOOL humanEdited;
 }
 
-@property (readonly) NSDictionary *attributes;
-@property (readonly) NSURL *URL;
-@property (readonly) NSURL *destURL;
-@property (readonly) MP42File *mp4File;
-@property (readwrite) SBQueueItemStatus status;
+@property (atomic, readonly) NSDictionary *attributes;
+@property (atomic, readonly) NSURL *URL;
+@property (atomic, readonly) NSURL *destURL;
+@property (atomic, readonly) MP42File *mp4File;
+@property (atomic, readwrite) SBQueueItemStatus status;
 
 - (id)initWithURL:(NSURL*)URL;
 + (id)itemWithURL:(NSURL*)URL;
