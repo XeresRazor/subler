@@ -8,6 +8,7 @@
 
 #import "MP42SubtitleTrack.h"
 #import "MP42Utilities.h"
+#import "MP42MediaFormat.h"
 #import "SBLanguages.h"
 
 @implementation MP42SubtitleTrack
@@ -20,7 +21,7 @@
 {
     if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle]))
     {
-        if (![format isEqualToString:@"VobSub"]) {
+        if (![format isEqualToString:MP42SubtitleFormatVobSub]) {
             MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.tx3g.defTextBoxBottom", &height);
             MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.tx3g.defTextBoxRight", &width);
 
@@ -51,8 +52,8 @@
 {
     if ((self = [super init]))
     {
-        name = @"Subtitle Track";
-        format = @"3GPP Text";
+        name = MP42MediaTypeSubtitle;
+        format = MP42SubtitleFormatTx3g;
     }
 
     return self;
@@ -91,7 +92,7 @@
     else
         [super writeToFile:fileHandle error:outError];
 
-    if ([format isEqualToString:@"VobSub"]) {
+    if ([format isEqualToString:MP42SubtitleFormatVobSub]) {
     }
     else {
         MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.tx3g.defTextBoxBottom", trackHeight);

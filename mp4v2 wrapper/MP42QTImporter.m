@@ -90,7 +90,7 @@
 
         // Video
         if ([mediaType isEqualToString:QTMediaTypeVideo]) {
-            if ([[self formatForTrack:track] isEqualToString:@"Text"]) {
+            if ([[self formatForTrack:track] isEqualToString:MP42SubtitleFormatText]) {
                 newTrack = [[MP42SubtitleTrack alloc] init];
                 [(MP42SubtitleTrack*)newTrack setTrackWidth:80];
             }
@@ -239,91 +239,91 @@
     
     switch ((*idh)->cType) {
         case kH264CodecType:
-            result = @"H.264";
+            result = MP42VideoFormatH264;
             break;
         case kMPEG4VisualCodecType:
-            result = @"MPEG-4 Visual";
+            result = MP42VideoFormatMPEG4Visual;
             break;
         case kSorensonCodecType:
-            result = @"Sorenson Video";
+            result = MP42VideoFormatSorenson;
             break;
         case kSorenson3CodecType:
-            result = @"Sorenson Video 3";
+            result = MP42VideoFormatSorenson3;
             break;
         case 'ap4h':
         case 'apch':
         case 'apcn':
         case 'apcs':
         case 'apco':
-            result = @"ProRes";
+            result = MP42VideoFormatProRes;
             break;
         case 'png ':
-            result = @"PNG";
+            result = MP42VideoFormatPNG;
             break;
         case kAnimationCodecType:
-            result = @"Animation";
+            result = MP42VideoFormatAnimation;
             break;
         case kAudioFormatMPEG4AAC:
         case 'mp4a':
-            result = @"AAC";
+            result = MP42AudioFormatAAC;
             break;
         case kAudioFormatMPEG4AAC_HE:
         case kAudioFormatMPEG4AAC_HE_V2:
-            result = @"HE-AAC";
+            result = MP42AudioFormatHEAAC;
             break;
         case kAudioFormatLinearPCM:
         case kRawCodecType:
         case 'twos':
         case 'sowt':
-            result = @"PCM";
+            result = MP42AudioFormatPCM;
             break;
         case kAudioFormatAppleLossless:
-            result = @"ALAC";
+            result = MP42AudioFormatALAC;
             break;
         case kAudioFormatAC3:
         case 'ms \0':
-            result = @"AC-3";
+            result = MP42AudioFormatAC3;
             break;
         case kAudioFormatMPEGLayer1:
         case kAudioFormatMPEGLayer2:
         case kAudioFormatMPEGLayer3:
         case 'ms\0U':
-            result = @"MP3";
+            result = MP42AudioFormatMP3;
             break;
         case kAudioFormatAMR:
-            result = @"AMR Narrow Band";
+            result = MP42AudioFormatAMR;
             break;
         case TextMediaType:
-            result = @"Text";
+            result = MP42SubtitleFormatText;
             break;
         case kTx3gSampleType:
-            result = @"3GPP Text";
+            result = MP42SubtitleFormatTx3g;
             break;
         case 'SRT ':
-            result = @"Text";
+            result = MP42SubtitleFormatText;
             break;
         case 'SSA ':
-            result = @"SSA";
+            result = MP42SubtitleFormatSSA;
             break;
         case 'c608':
-            result = @"CEA-608";
+            result = MP42ClosedCaptionFormatCEA608;
             break;
         case kDVCNTSCCodecType:
         case kDVCPALCodecType:
-            result = @"DV";
+            result = MP42VideoFormatDV;
             break;
         case 'm2v1':
-            result = @"MPEG-2";
+            result = MP42VideoFormatMPEG2;
             break;
         case kMotionJPEGACodecType:
         case kMotionJPEGBCodecType:
-            result = @"Motion JPEG";
+            result = MP42VideoFormatMotionJPEG;
             break;
         case TimeCodeMediaType:
-            result = @"Timecode";
+            result = MP42TimeCodeFormat;
             break;
         case kJPEGCodecType:
-            result = @"Photo - JPEG";
+            result = MP42VideoFormatJPEG;
             break;
         default:
             result = @"Unknown";
@@ -931,7 +931,7 @@
 
     if (!dataReader && !_done) {
         dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [dataReader setName:@"QT Demuxer"];
+        [dataReader setName:@"QuickTime Demuxer"];
         [dataReader start];
     }
 }

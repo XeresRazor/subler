@@ -150,7 +150,7 @@
 
 - (void)cancel
 {
-    _cancelled = 1;
+    OSAtomicIncrement32(&_cancelled);
 }
 
 - (void)dealloc

@@ -28,7 +28,7 @@
 
         MP42SubtitleTrack *newTrack = [[MP42SubtitleTrack alloc] init];
 
-        newTrack.format = @"3GPP Text";
+        newTrack.format = MP42SubtitleFormatTx3g;
         newTrack.sourceFormat = @"Srt";
         newTrack.sourceURL = _fileURL;
         newTrack.alternate_group = 2;

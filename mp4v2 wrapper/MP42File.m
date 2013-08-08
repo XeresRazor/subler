@@ -21,11 +21,6 @@ NSString * const MP42Create64BitData = @"64BitData";
 NSString * const MP42Create64BitTime = @"64BitTime";
 NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 
-NSString * const MP42FileTypeMP4 = @"mp4";
-NSString * const MP42FileTypeM4V = @"m4v";
-NSString * const MP42FileTypeM4A = @"m4a";
-NSString * const MP42FileTypeM4B = @"m4b";
-
 @interface MP42File (Private)
 
 - (void) removeMuxedTrack: (MP42Track *)track;
@@ -540,7 +535,7 @@ NSString * const MP42FileTypeM4B = @"m4b";
         }
         else if ([track isMemberOfClass:[MP42VideoTrack class]]) {
             track.alternate_group = 0;
-            if ([track.format isEqualToString:@"Photo - JPEG"])
+            if ([track.format isEqualToString:MP42VideoFormatJPEG])
                 track.enabled = NO;
             else {
                 if (!firstVideoTrack) {
@@ -563,11 +558,11 @@ NSString * const MP42FileTypeM4B = @"m4b";
             chapterTrack = (MP42ChapterTrack*) track;
 
     for (MP42Track * track in tracks)
-        if ([track.format isEqualToString:@"Photo - JPEG"])
+        if ([track.format isEqualToString:MP42VideoFormatJPEG])
             jpegTrack = track.Id;
 
     for (MP42VideoTrack * track in tracks)
-        if ([track.format isEqualToString:@"H.264"])
+        if ([track.format isEqualToString:MP42VideoFormatH264])
             if ((track.origProfile) == 110)
                 decodable = 0;
 

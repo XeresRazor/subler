@@ -716,8 +716,8 @@ static bool GetFirstHeader(FILE* inFile)
 
         MP42Track *newTrack = [[MP42AudioTrack alloc] init];
 
-        newTrack.format = @"AAC";
-        newTrack.sourceFormat = @"AAC";
+        newTrack.format = MP42AudioFormatAAC;
+        newTrack.sourceFormat = MP42AudioFormatAAC;
         newTrack.sourceURL = _fileURL;
 
         if (!inFile)

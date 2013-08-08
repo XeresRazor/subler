@@ -25,9 +25,9 @@
     NSMutableArray *_tracksArray;
     NSMutableArray *_activeTracks;
 
-    CGFloat         _progress;
-    u_int32_t       _cancelled;
-    u_int32_t       _done;
+    CGFloat       _progress;
+    int32_t       _cancelled;
+    int32_t       _done;
 }
 
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError;

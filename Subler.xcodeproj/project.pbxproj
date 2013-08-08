@@ -27,6 +27,7 @@
 		A91F622D0FB0A56F00B96B33 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A91F622C0FB0A56F00B96B33 /* libicucore.dylib */; };
 		A92A4FB812B0F2F300751FA5 /* prefs-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = A92A4FB712B0F2F300751FA5 /* prefs-audio.png */; };
 		A92E3BE4177CB29800E7F7BB /* MP42Image.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E3BE3177CB29800E7F7BB /* MP42Image.m */; };
+		A935764117B3A72900ED8598 /* MP42MediaFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = A935764017B3A72900ED8598 /* MP42MediaFormat.m */; };
 		A936DAFE1682057700D19BDB /* MP42BitmapSubConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A936DAFD1682057700D19BDB /* MP42BitmapSubConverter.m */; };
 		A936E03E130BE10200CA5527 /* MAAttachedWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = A936E03D130BE10200CA5527 /* MAAttachedWindow.m */; };
 		A937137512B76EAD00940FEC /* MP42H264Importer.mm in Sources */ = {isa = PBXBuildFile; fileRef = A937137412B76EAD00940FEC /* MP42H264Importer.mm */; };
@@ -218,7 +219,7 @@
 		A916F4301678DD07003920D6 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = Tesseract/lib/libjpeg.a; sourceTree = "<group>"; };
 		A91A500017B000B0002209FF /* MP42ConverterProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42ConverterProtocol.h; sourceTree = "<group>"; };
 		A91E7DE80F8A2E6800AF387E /* SoundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundViewController.h; path = PropertyView/SoundViewController.h; sourceTree = "<group>"; };
-		A91E7DE90F8A2E6800AF387E /* SoundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SoundViewController.m; path = PropertyView/SoundViewController.m; sourceTree = "<group>"; };
+		A91E7DE90F8A2E6800AF387E /* SoundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SoundViewController.m; path = PropertyView/SoundViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A91E7DED0F8A2F3D00AF387E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/SoundView.xib; sourceTree = "<group>"; };
 		A91ED320176A4BDF0091DC0A /* MP42HtmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42HtmlParser.h; path = "mp4v2 wrapper/MP42HtmlParser.h"; sourceTree = "<group>"; };
 		A91ED321176A4BDF0091DC0A /* MP42HtmlParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42HtmlParser.m; path = "mp4v2 wrapper/MP42HtmlParser.m"; sourceTree = "<group>"; };
@@ -226,6 +227,7 @@
 		A92A4FB712B0F2F300751FA5 /* prefs-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "prefs-audio.png"; path = "images/prefs-audio.png"; sourceTree = "<group>"; };
 		A92E3BE2177CB29800E7F7BB /* MP42Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Image.h; path = "mp4v2 wrapper/MP42Image.h"; sourceTree = "<group>"; };
 		A92E3BE3177CB29800E7F7BB /* MP42Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Image.m; path = "mp4v2 wrapper/MP42Image.m"; sourceTree = "<group>"; };
+		A935764017B3A72900ED8598 /* MP42MediaFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42MediaFormat.m; path = "mp4v2 wrapper/MP42MediaFormat.m"; sourceTree = "<group>"; };
 		A936DAFC1682057700D19BDB /* MP42BitmapSubConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42BitmapSubConverter.h; path = "mp4v2 wrapper/MP42BitmapSubConverter.h"; sourceTree = "<group>"; };
 		A936DAFD1682057700D19BDB /* MP42BitmapSubConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42BitmapSubConverter.m; path = "mp4v2 wrapper/MP42BitmapSubConverter.m"; sourceTree = "<group>"; };
 		A936E03C130BE10200CA5527 /* MAAttachedWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MAAttachedWindow.h; path = Others/MAAttachedWindow.h; sourceTree = "<group>"; };
@@ -235,7 +237,8 @@
 		A93F872F16B2C8DA009B8303 /* MP42XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42XMLReader.h; path = "mp4v2 wrapper/MP42XMLReader.h"; sourceTree = "<group>"; };
 		A93F873016B2C8DA009B8303 /* MP42XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42XMLReader.m; path = "mp4v2 wrapper/MP42XMLReader.m"; sourceTree = "<group>"; };
 		A940E0FD13F130FB007AB5C6 /* MP42AVFImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AVFImporter.h; path = "mp4v2 wrapper/MP42AVFImporter.h"; sourceTree = "<group>"; };
-		A940E0FE13F130FB007AB5C6 /* MP42AVFImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42AVFImporter.m; path = "mp4v2 wrapper/MP42AVFImporter.m"; sourceTree = "<group>"; };
+		A940E0FE13F130FB007AB5C6 /* MP42AVFImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42AVFImporter.m; path = "mp4v2 wrapper/MP42AVFImporter.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		A943E69117B39BCC00D6C093 /* MP42MediaFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42MediaFormat.h; path = "mp4v2 wrapper/MP42MediaFormat.h"; sourceTree = "<group>"; };
 		A9569CE90F616926002F79F8 /* MP42VideoTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42VideoTrack.h; path = "mp4v2 wrapper/MP42VideoTrack.h"; sourceTree = "<group>"; };
 		A9569CEA0F616926002F79F8 /* MP42VideoTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42VideoTrack.m; path = "mp4v2 wrapper/MP42VideoTrack.m"; sourceTree = "<group>"; };
 		A95A60470F4422DB00767D87 /* mp4v2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mp4v2.h; path = mp4v2/mp4v2.h; sourceTree = "<group>"; };
@@ -245,12 +248,12 @@
 		A95FE2FF133E3DCB00D35687 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ffmpeg/lib/libavformat.a; sourceTree = "<group>"; };
 		A95FE300133E3DCB00D35687 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ffmpeg/lib/libavutil.a; sourceTree = "<group>"; };
 		A961475F13F567E10068F161 /* SBQueueController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBQueueController.h; path = Classes/SBQueueController.h; sourceTree = "<group>"; };
-		A961476013F567E10068F161 /* SBQueueController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBQueueController.m; path = Classes/SBQueueController.m; sourceTree = "<group>"; };
+		A961476013F567E10068F161 /* SBQueueController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SBQueueController.m; path = Classes/SBQueueController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A961476113F567E10068F161 /* SBPresetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBPresetManager.h; path = Classes/SBPresetManager.h; sourceTree = "<group>"; };
 		A961476213F567E10068F161 /* SBPresetManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBPresetManager.m; path = Classes/SBPresetManager.m; sourceTree = "<group>"; };
 		A961476613F568210068F161 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Queue.xib; sourceTree = "<group>"; };
 		A9629C810F56F7B6001D6A75 /* MP42ChapterTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42ChapterTrack.h; path = "mp4v2 wrapper/MP42ChapterTrack.h"; sourceTree = "<group>"; };
-		A9629C820F56F7B6001D6A75 /* MP42ChapterTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42ChapterTrack.m; path = "mp4v2 wrapper/MP42ChapterTrack.m"; sourceTree = "<group>"; };
+		A9629C820F56F7B6001D6A75 /* MP42ChapterTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42ChapterTrack.m; path = "mp4v2 wrapper/MP42ChapterTrack.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A9629C830F56F7B6001D6A75 /* MP42File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42File.h; path = "mp4v2 wrapper/MP42File.h"; sourceTree = "<group>"; };
 		A9629C840F56F7B6001D6A75 /* MP42File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42File.m; path = "mp4v2 wrapper/MP42File.m"; sourceTree = "<group>"; };
 		A9629C850F56F7B6001D6A75 /* MP42Metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Metadata.h; path = "mp4v2 wrapper/MP42Metadata.h"; sourceTree = "<group>"; };
@@ -260,7 +263,7 @@
 		A9629C890F56F7B6001D6A75 /* MP42Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Track.h; path = "mp4v2 wrapper/MP42Track.h"; sourceTree = "<group>"; };
 		A9629C8A0F56F7B6001D6A75 /* MP42Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Track.m; path = "mp4v2 wrapper/MP42Track.m"; sourceTree = "<group>"; };
 		A9629C8B0F56F7B6001D6A75 /* MP42Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Utilities.h; path = "mp4v2 wrapper/MP42Utilities.h"; sourceTree = "<group>"; };
-		A9629C8C0F56F7B6001D6A75 /* MP42Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Utilities.m; path = "mp4v2 wrapper/MP42Utilities.m"; sourceTree = "<group>"; };
+		A9629C8C0F56F7B6001D6A75 /* MP42Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42Utilities.m; path = "mp4v2 wrapper/MP42Utilities.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A9629D060F56FB2A001D6A75 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/VideoView.xib; sourceTree = "<group>"; };
 		A9629D080F56FB36001D6A75 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoViewController.m; path = PropertyView/VideoViewController.m; sourceTree = "<group>"; };
 		A9629D090F56FB36001D6A75 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoViewController.h; path = PropertyView/VideoViewController.h; sourceTree = "<group>"; };
@@ -281,9 +284,9 @@
 		A991319913F0615700DCAA12 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		A991319B13F0668300DCAA12 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		A99EAC7A1115BED200D89903 /* MP42FileImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42FileImporter.h; path = "mp4v2 wrapper/MP42FileImporter.h"; sourceTree = "<group>"; };
-		A99EAC7B1115BED200D89903 /* MP42FileImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42FileImporter.m; path = "mp4v2 wrapper/MP42FileImporter.m"; sourceTree = "<group>"; };
+		A99EAC7B1115BED200D89903 /* MP42FileImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42FileImporter.m; path = "mp4v2 wrapper/MP42FileImporter.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A99EACA11115C18000D89903 /* MP42MkvImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42MkvImporter.h; path = "mp4v2 wrapper/MP42MkvImporter.h"; sourceTree = "<group>"; };
-		A99EACA21115C18000D89903 /* MP42MkvImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42MkvImporter.m; path = "mp4v2 wrapper/MP42MkvImporter.m"; sourceTree = "<group>"; };
+		A99EACA21115C18000D89903 /* MP42MkvImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42MkvImporter.m; path = "mp4v2 wrapper/MP42MkvImporter.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A99F4D250F6D5825003BA2B9 /* MP42AudioTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AudioTrack.h; path = "mp4v2 wrapper/MP42AudioTrack.h"; sourceTree = "<group>"; };
 		A99F4D260F6D5825003BA2B9 /* MP42AudioTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42AudioTrack.m; path = "mp4v2 wrapper/MP42AudioTrack.m"; sourceTree = "<group>"; };
 		A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QTKitDecrap.m; path = Others/QTKitDecrap.m; sourceTree = "<group>"; };
@@ -303,7 +306,7 @@
 		A9B46A9D12B79B990040517A /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = Others/RegexKitLite.m; sourceTree = "<group>"; };
 		A9B46AA312B79BB10040517A /* Subler.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Subler.icns; path = images/Subler.icns; sourceTree = "<group>"; };
 		A9B46AA512B79BD00040517A /* MP42AudioConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AudioConverter.h; path = "mp4v2 wrapper/MP42AudioConverter.h"; sourceTree = "<group>"; };
-		A9B46AA612B79BD00040517A /* MP42AudioConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42AudioConverter.m; path = "mp4v2 wrapper/MP42AudioConverter.m"; sourceTree = "<group>"; };
+		A9B46AA612B79BD00040517A /* MP42AudioConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42AudioConverter.m; path = "mp4v2 wrapper/MP42AudioConverter.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A9B46AA712B79BD00040517A /* SubUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SubUtilities.h; path = "mp4v2 wrapper/SubUtilities.h"; sourceTree = "<group>"; };
 		A9B46AA812B79BD00040517A /* SubUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SubUtilities.m; path = "mp4v2 wrapper/SubUtilities.m"; sourceTree = "<group>"; };
 		A9B46AAB12B79BE80040517A /* MatroskaFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MatroskaFile.c; path = "mp4v2 wrapper/muxer/MatroskaFile.c"; sourceTree = "<group>"; };
@@ -313,10 +316,10 @@
 		A9B46AB112B79BF60040517A /* sfifo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sfifo.c; path = "mp4v2 wrapper/sfifo.c"; sourceTree = "<group>"; };
 		A9B46AB212B79BF60040517A /* sfifo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sfifo.h; path = "mp4v2 wrapper/sfifo.h"; sourceTree = "<group>"; };
 		A9B46ABD12B79D1C0040517A /* SBDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBDocument.h; path = Classes/SBDocument.h; sourceTree = "<group>"; };
-		A9B46ABE12B79D1C0040517A /* SBDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBDocument.m; path = Classes/SBDocument.m; sourceTree = "<group>"; };
+		A9B46ABE12B79D1C0040517A /* SBDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SBDocument.m; path = Classes/SBDocument.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A9B46AC112B79E230040517A /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = English; path = English.lproj/SBDocument.xib; sourceTree = "<group>"; };
 		A9B4EE4E1643EBF3009AF6BC /* Subler.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Subler.entitlements; sourceTree = "<group>"; };
-		A9B8E892123A95BA006A6EB8 /* MP42Muxer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Muxer.m; path = "mp4v2 wrapper/MP42Muxer.m"; sourceTree = "<group>"; };
+		A9B8E892123A95BA006A6EB8 /* MP42Muxer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42Muxer.m; path = "mp4v2 wrapper/MP42Muxer.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A9B8E893123A95BA006A6EB8 /* MP42Sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Sample.h; path = "mp4v2 wrapper/MP42Sample.h"; sourceTree = "<group>"; };
 		A9B8E894123A95BA006A6EB8 /* MP42Sample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Sample.m; path = "mp4v2 wrapper/MP42Sample.m"; sourceTree = "<group>"; };
 		A9B8E923123AA03D006A6EB8 /* MP42Muxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Muxer.h; path = "mp4v2 wrapper/MP42Muxer.h"; sourceTree = "<group>"; };
@@ -330,7 +333,7 @@
 		A9C0957F0F7B6C8C00170CAF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		A9C1E8550F31F395003A08F3 /* libmp4v2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmp4v2.a; path = mp4v2/libmp4v2.a; sourceTree = "<group>"; };
 		A9C4ECF512AE562A00BDBB7D /* MP42AACImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AACImporter.h; path = "mp4v2 wrapper/MP42AACImporter.h"; sourceTree = "<group>"; };
-		A9C4ECF612AE562A00BDBB7D /* MP42AACImporter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MP42AACImporter.mm; path = "mp4v2 wrapper/MP42AACImporter.mm"; sourceTree = "<group>"; };
+		A9C4ECF612AE562A00BDBB7D /* MP42AACImporter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; name = MP42AACImporter.mm; path = "mp4v2 wrapper/MP42AACImporter.mm"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		A9C8182C0F74D6E300019BFF /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		A9C9E34113FBC1EB00CA3B4E /* EncodeWorking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EncodeWorking.png; path = images/EncodeWorking.png; sourceTree = "<group>"; };
 		A9D47B5417B239E200900BCA /* EncodeCanceled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EncodeCanceled.png; path = images/EncodeCanceled.png; sourceTree = "<group>"; };
@@ -344,7 +347,7 @@
 		A9ED7C4C1115CFBD00423241 /* MP42Mp4Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Mp4Importer.h; path = "mp4v2 wrapper/MP42Mp4Importer.h"; sourceTree = "<group>"; };
 		A9ED7C4D1115CFBD00423241 /* MP42Mp4Importer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Mp4Importer.m; path = "mp4v2 wrapper/MP42Mp4Importer.m"; sourceTree = "<group>"; };
 		A9ED7C891115D32E00423241 /* MP42QTImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42QTImporter.h; path = "mp4v2 wrapper/MP42QTImporter.h"; sourceTree = "<group>"; };
-		A9ED7C8A1115D32E00423241 /* MP42QTImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42QTImporter.m; path = "mp4v2 wrapper/MP42QTImporter.m"; sourceTree = "<group>"; };
+		A9ED7C8A1115D32E00423241 /* MP42QTImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42QTImporter.m; path = "mp4v2 wrapper/MP42QTImporter.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A9F183DB12C201760035BDE1 /* downmix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = downmix.c; path = "mp4v2 wrapper/muxer/downmix.c"; sourceTree = "<group>"; };
 		A9F183DC12C201760035BDE1 /* downmix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = downmix.h; path = "mp4v2 wrapper/muxer/downmix.h"; sourceTree = "<group>"; };
 		A9F2849D133C9F6E00F10951 /* close.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = close.pdf; path = images/close.pdf; sourceTree = "<group>"; };
@@ -364,7 +367,7 @@
 		CD03087717576AE50093A0BE /* MetadataImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataImporter.h; path = Classes/MetadataImporters/MetadataImporter.h; sourceTree = "<group>"; };
 		CD03087817576AE50093A0BE /* MetadataImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataImporter.m; path = Classes/MetadataImporters/MetadataImporter.m; sourceTree = "<group>"; };
 		CD3F2A861761A143000D4C73 /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMLReader.h; path = Others/XMLReader.h; sourceTree = "<group>"; };
-		CD3F2A871761A143000D4C73 /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMLReader.m; path = Others/XMLReader.m; sourceTree = "<group>"; };
+		CD3F2A871761A143000D4C73 /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = XMLReader.m; path = Others/XMLReader.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		CD4A86AA1234AFA10054970A /* Simple.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Simple.pm; sourceTree = "<group>"; };
 		CD4A86AC1234AFA10054970A /* Roman.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Roman.pm; sourceTree = "<group>"; };
 		CD4A86AF1234AFA10054970A /* Filename.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Filename.pm; sourceTree = "<group>"; };
@@ -688,6 +691,7 @@
 		A9FD5E020F3C7B0400817716 /* mp4v2 */ = {
 			isa = PBXGroup;
 			children = (
+				A95A60470F4422DB00767D87 /* mp4v2.h */,
 				A9629C830F56F7B6001D6A75 /* MP42File.h */,
 				A9629C840F56F7B6001D6A75 /* MP42File.m */,
 				A9629C890F56F7B6001D6A75 /* MP42Track.h */,
@@ -708,9 +712,10 @@
 				A9629C860F56F7B6001D6A75 /* MP42Metadata.m */,
 				A93F872F16B2C8DA009B8303 /* MP42XMLReader.h */,
 				A93F873016B2C8DA009B8303 /* MP42XMLReader.m */,
+				A943E69117B39BCC00D6C093 /* MP42MediaFormat.h */,
+				A935764017B3A72900ED8598 /* MP42MediaFormat.m */,
 				A9629C8B0F56F7B6001D6A75 /* MP42Utilities.h */,
 				A9629C8C0F56F7B6001D6A75 /* MP42Utilities.m */,
-				A95A60470F4422DB00767D87 /* mp4v2.h */,
 				A911049C0F321DFC0013D1E0 /* UniversalDetector.h */,
 				A9C03EB41116DFE700DA6FF6 /* Muxer */,
 			);
@@ -980,6 +985,7 @@
 				A906213B16839AB00057EA0B /* MP42VobSubImporter.m in Sources */,
 				A93F873116B2C8DA009B8303 /* MP42XMLReader.m in Sources */,
 				CDC06FCE1747494D003C1D0A /* iTunesStore.m in Sources */,
+				A935764117B3A72900ED8598 /* MP42MediaFormat.m in Sources */,
 				CDC06FD117475181003C1D0A /* JSONKit.m in Sources */,
 				CD03087417576A550093A0BE /* TheMovieDB3.m in Sources */,
 				CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */,

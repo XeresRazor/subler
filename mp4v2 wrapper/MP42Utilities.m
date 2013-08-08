@@ -14,6 +14,7 @@
 #include <bzlib.h>
 
 #import "SBLanguages.h"
+#import "MP42MediaFormat.h"
 #include "intreadwrite.h"
 #include "avcodec.h"
 
@@ -272,44 +273,44 @@ NSString* getHumanReadableTrackMediaDataName(MP4FileHandle fileHandle, MP4TrackI
     const char* dataName = MP4GetTrackMediaDataName(fileHandle, Id);
     if (dataName) {
         if (!strcmp(dataName, "avc1"))
-            return @"H.264";
+            return MP42VideoFormatH264;
         else if (!strcmp(dataName, "mp4a")) {
             uint8_t audiotype = MP4GetTrackEsdsObjectTypeId(fileHandle, Id);
             if (audiotype == MP4_MPEG4_AUDIO_TYPE)
-                return @"AAC";
+                return MP42AudioFormatAAC;
             else if (audiotype == MP4_MPEG2_AUDIO_TYPE)
-                return @"MP3";
+                return MP42AudioFormatMP3;
             else if (audiotype == 0xA9)
-                return @"DTS";
+                return MP42AudioFormatDTS;
         }
         else if (!strcmp(dataName, "alac"))
-            return @"ALAC";
+            return MP42AudioFormatALAC;
         else if (!strcmp(dataName, "ac-3"))
-            return @"AC-3";
+            return MP42AudioFormatAC3;
         else if (!strcmp(dataName, "mp4v"))
-            return @"MPEG-4 Visual";
+            return MP42VideoFormatMPEG4Visual;
         else if (!strcmp(dataName, "text"))
-            return @"Text";
+            return MP42SubtitleFormatText;
         else if (!strcmp(dataName, "tx3g"))
-            return @"3GPP Text";
+            return MP42SubtitleFormatTx3g;
         else if (!strcmp(dataName, "c608"))
-            return @"CEA-608";
+            return MP42ClosedCaptionFormatCEA608;
         else if (!strcmp(dataName, "c708"))
-            return @"CEA-708";
+            return MP42ClosedCaptionFormatCEA708;
         else if (!strcmp(dataName, "samr"))
-            return @"AMR Narrow Band";
+            return MP42AudioFormatAMR;
         else if (!strcmp(dataName, "jpeg"))
-            return @"Photo - JPEG";
+            return MP42VideoFormatJPEG;
         else if (!strcmp(dataName, "rtp "))
             return @"Hint";
         else if (!strcmp(dataName, "drms"))
-            return @"FairPlay Sound";
+            return MP42AudioFormatFairPlay;
         else if (!strcmp(dataName, "drmi"))
-            return @"FairPlay Video";
+            return MP42VideoFormatFairPlay;
         else if (!strcmp(dataName, "tmcd"))
-            return @"Timecode";
+            return MP42TimeCodeFormat;
         else if (!strcmp(dataName, "mp4s") && !strcmp(type, "subp"))
-            return @"VobSub";
+            return MP42SubtitleFormatVobSub;
 
         else
             return [NSString stringWithUTF8String:dataName];
@@ -711,8 +712,8 @@ int readAC3Config(uint64_t acmod, uint64_t lfeon, UInt32 *channelsCount, UInt32 
 
 BOOL isTrackMuxable(NSString * formatName)
 {
-    NSArray* supportedFormats = [NSArray arrayWithObjects:@"H.264", @"MPEG-4 Visual", @"AAC", @"ALAC", @"AC-3", @"DTS", @"3GPP Text", @"Text",
-                                 @"CEA-608", @"Photo - JPEG", @"VobSub", nil];
+    NSArray* supportedFormats = [NSArray arrayWithObjects:MP42VideoFormatH264, MP42VideoFormatMPEG4Visual, MP42AudioFormatAAC, MP42AudioFormatALAC, MP42AudioFormatAC3, MP42AudioFormatDTS, MP42SubtitleFormatTx3g, MP42SubtitleFormatText,
+                                 MP42ClosedCaptionFormatCEA608, MP42VideoFormatJPEG, MP42SubtitleFormatVobSub, nil];
 
     for (NSString* type in supportedFormats)
         if ([formatName isEqualToString:type])
@@ -722,7 +723,7 @@ BOOL isTrackMuxable(NSString * formatName)
 }
 
 BOOL trackNeedConversion(NSString * formatName) {
-    NSArray* supportedConversionFormats = [NSArray arrayWithObjects:@"Vorbis", @"Flac", @"Mp3", @"True HD", @"ASS", @"SSA", @"Plain Text", @"PGS", nil];
+    NSArray* supportedConversionFormats = [NSArray arrayWithObjects:MP42AudioFormatVorbis, MP42AudioFormatFLAC, MP42AudioFormatMP3, @"True HD", @"ASS", MP42SubtitleFormatSSA, MP42SubtitleFormatText, MP42SubtitleFormatPGS, nil];
 
     for (NSString* type in supportedConversionFormats)
         if ([formatName isEqualToString:type])
@@ -731,9 +732,14 @@ BOOL trackNeedConversion(NSString * formatName) {
     return NO;
 }
 
-BOOL supportedFile(NSString * fileExt) {
-    NSArray *supportedFormat = [NSArray arrayWithObjects:@"scc", @"smi", @"m4v", @"mp4", @"m4a", @"mov", @"mts", @"m2ts",
-                                @"mkv", @"mka", @"mks", @"h264", @"264", @"idx", @"aac", @"ac3", @"srt", nil];
+NSArray *supportedFileFormat()
+{
+    return [NSArray arrayWithObjects:@"scc", @"smi",  @"txt", @"m4v", @"mp4", @"m4a", @"m4a", @"mov", @"mts", @"m2ts",
+    @"mkv", @"mka", @"mks", @"h264", @"264", @"idx", @"aac", @"ac3", @"srt", nil];
+}
+
+BOOL isFileFormatSupported(NSString * fileExt) {
+    NSArray *supportedFormat = supportedFileFormat();
 
     for (NSString *type in supportedFormat)
         if ([fileExt caseInsensitiveCompare:type] == NSOrderedSame)

@@ -75,7 +75,7 @@
     NSData *magicCookie = nil;
     MP4TrackId srcTrackId = [track sourceId];
 
-    const char* trackType = MP4GetTrackType(fileHandle, srcTrackId);
+    const char *trackType = MP4GetTrackType(fileHandle, srcTrackId);
     const char *media_data_name = MP4GetTrackMediaDataName(fileHandle, srcTrackId);
 
     if (MP4_IS_AUDIO_TRACK_TYPE(trackType))

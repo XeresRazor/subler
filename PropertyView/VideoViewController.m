@@ -72,7 +72,7 @@ static NSString *getLevelName(uint8_t level) {
     
     [alternateGroup selectItemAtIndex:track.alternate_group];
 
-    if ([track.format isEqualToString:@"H.264"] && track.origProfile && track.origLevel) {
+    if ([track.format isEqualToString:MP42VideoFormatH264] && track.origProfile && track.origLevel) {
         [profileLevelUnchanged setTitle:[NSString stringWithFormat:@"Current profile: %@ @ %@", 
                                          getProfileName(track.origProfile), getLevelName(track.origLevel)]];
         if ((track.origProfile == track.newProfile) && (track.origLevel == track.newLevel)) {

@@ -235,7 +235,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 if (mkvTrack->Type == TT_AUDIO)
                     newTrack.startOffset = [self matroskaTrackStartTime:mkvTrack Id:i];
 
-                if ([newTrack.format isEqualToString:@"H.264"]) {
+                if ([newTrack.format isEqualToString:MP42VideoFormatH264]) {
                     uint8_t* avcCAtom = (uint8_t *)malloc(mkvTrack->CodecPrivateSize); // mkv stores h.264 avcC in CodecPrivate
                     memcpy(avcCAtom, mkvTrack->CodecPrivate, mkvTrack->CodecPrivateSize);
                     if (mkvTrack->CodecPrivateSize >= 3) {
@@ -397,41 +397,40 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 {
     if (track->CodecID) {
         if (!strcmp(track->CodecID, "V_MPEG4/ISO/AVC"))
-            return @"H.264";
+            return MP42VideoFormatH264;
         else if (!strcmp(track->CodecID, "A_AAC") ||
                  !strcmp(track->CodecID, "A_AAC/MPEG4/LC") ||
                  !strcmp(track->CodecID, "A_AAC/MPEG2/LC"))
-            return @"AAC";
+            return MP42AudioFormatAAC;
         else if (!strcmp(track->CodecID, "A_AC3"))
-            return @"AC-3";
+            return MP42AudioFormatAC3;
         else if (!strcmp(track->CodecID, "V_MPEG4/ISO/SP"))
-            return @"MPEG-4 Visual";
+            return MP42VideoFormatMPEG4Visual;
         else if (!strcmp(track->CodecID, "V_MPEG4/ISO/ASP"))
-            return @"MPEG-4 Visual";
+            return MP42VideoFormatMPEG4Visual;
         else if (!strcmp(track->CodecID, "V_MPEG2"))
-            return @"MPEG-2";
+            return MP42VideoFormatMPEG2;
         else if (!strcmp(track->CodecID, "A_DTS"))
-            return @"DTS";
+            return MP42AudioFormatDTS;
         else if (!strcmp(track->CodecID, "A_VORBIS"))
-            return @"Vorbis";
+            return MP42AudioFormatVorbis;
         else if (!strcmp(track->CodecID, "A_FLAC"))
-            return @"Flac";
+            return MP42AudioFormatFLAC;
         else if (!strcmp(track->CodecID, "A_MPEG/L3"))
-            return @"Mp3";
+            return MP42AudioFormatMP3;
         else if (!strcmp(track->CodecID, "A_TRUEHD"))
             return @"True HD";
         else if (!strcmp(track->CodecID, "A_MLP"))
             return @"MLP";
         else if (!strcmp(track->CodecID, "S_TEXT/UTF8"))
-            return @"Plain Text";
-        else if (!strcmp(track->CodecID, "S_TEXT/ASS"))
-            return @"ASS";
-        else if (!strcmp(track->CodecID, "S_TEXT/SSA"))
-            return @"SSA";
+            return MP42SubtitleFormatText;
+        else if (!strcmp(track->CodecID, "S_TEXT/ASS")
+                 || !strcmp(track->CodecID, "S_TEXT/SSA"))
+            return MP42SubtitleFormatSSA;
         else if (!strcmp(track->CodecID, "S_VOBSUB"))
-            return @"VobSub";
+            return MP42SubtitleFormatVobSub;
         else if (!strcmp(track->CodecID, "S_HDMV/PGS"))
-            return @"PGS";
+            return MP42SubtitleFormatPGS;
 
         else
             return [NSString stringWithUTF8String:track->CodecID];

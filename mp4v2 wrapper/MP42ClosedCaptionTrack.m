@@ -7,6 +7,7 @@
 //
 
 #import "MP42ClosedCaptionTrack.h"
+#import "MP42MediaFormat.h"
 #import "SBLanguages.h"
 
 @implementation MP42ClosedCaptionTrack
@@ -24,8 +25,8 @@
 {
     if ((self = [super init]))
     {
-        name = @"Closed Caption Track";
-        format = @"CEA-608";
+        name = MP42MediaTypeClosedCaption;
+        format = MP42ClosedCaptionFormatCEA608;
     }
 
     return self;

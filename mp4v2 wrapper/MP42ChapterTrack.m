@@ -9,6 +9,7 @@
 #import "MP42ChapterTrack.h"
 #import "SubUtilities.h"
 #import "MP42Utilities.h"
+#import "MP42MediaFormat.h"
 
 @implementation MP42ChapterTrack
 
@@ -17,7 +18,7 @@
     if ((self = [super init]))
     {
         name = @"Chapter Track";
-        format = @"Text";
+        format = MP42SubtitleFormatText;
         language = @"English";
         isEdited = YES;
         muxed = NO;
@@ -36,7 +37,7 @@
         if (!name || [name isEqualToString:@"Text Track"])
             name = @"Chapter Track";
         if (!format)
-            format = @"Text";
+            format = MP42SubtitleFormatText;
         chapters = [[NSMutableArray alloc] init];
 
         MP4Chapter_t *chapter_list = NULL;
@@ -77,7 +78,7 @@
     if ((self = [super init]))
     {
         name = @"Chapter Track";
-        format = @"Text";
+        format = MP42SubtitleFormatText;
         sourceURL = [URL retain];
         language = @"English";
         isEdited = YES;

@@ -7,6 +7,7 @@
 //
 
 #import "MP42VideoTrack.h"
+#import "MP42MediaFormat.h"
 
 @implementation MP42VideoTrack
 
@@ -42,7 +43,7 @@
             vSpacing = 1;
         }
         
-        if ([format isEqualToString:@"H.264"]) {
+        if ([format isEqualToString:MP42VideoFormatH264]) {
             MP4GetTrackH264ProfileLevel(fileHandle, trackID, &origProfile, &origLevel);
             newProfile = origProfile;
             newLevel = origLevel;
@@ -57,7 +58,7 @@
 {
     if ((self = [super init]))
     {
-        name = @"Video Track";
+        name = MP42MediaTypeVideo;
         language = @"Unknown";
     }
 
@@ -101,7 +102,7 @@
                 }
             }
             
-            if ([format isEqualToString:@"H.264"]) {
+            if ([format isEqualToString:MP42VideoFormatH264]) {
                 if ([updatedProperty valueForKey:@"profile"]) {
                     MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*[0].avcC.AVCProfileIndication", newProfile);
                     origProfile = newProfile;

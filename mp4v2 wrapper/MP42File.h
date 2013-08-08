@@ -16,15 +16,12 @@
 #import "MP42ChapterTrack.h"
 #import "MP42Metadata.h"
 #import "MP42Utilities.h"
+#import "MP42MediaFormat.h"
 #import "MP42Muxer.h"
 
 extern NSString * const MP42Create64BitData;
 extern NSString * const MP42Create64BitTime;
 extern NSString * const MP42CreateChaptersPreviewTrack;
-
-extern NSString * const MP42FileTypeMP4;
-extern NSString * const MP42FileTypeM4V;
-extern NSString * const MP42FileTypeM4A;
 
 @interface MP42File : NSObject <NSCoding> {
 @private
