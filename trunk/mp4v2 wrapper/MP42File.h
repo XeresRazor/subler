@@ -32,23 +32,23 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
     NSMutableArray      *_tracksToBeDeleted;
     NSMutableDictionary *_importers;
 
-    BOOL             _hasFileRepresentation;
-    BOOL             _cancelled;
-    BOOL             _operationIsRunning;
+    uint64_t    _size;
+    BOOL        _hasFileRepresentation;
+    BOOL        _cancelled;
 
-    uint64_t _size;
 @protected
     NSMutableArray  *_tracks;
     MP42Metadata    *_metadata;
     MP42Muxer       *_muxer;
 }
 
-@property (readwrite, assign) id delegate;
-@property (readonly) NSURL  *URL;
-@property (readonly) NSMutableArray  *tracks;
-@property (readonly) MP42Metadata    *metadata;
-@property (readonly) BOOL hasFileRepresentation;
-@property (readwrite) BOOL operationIsRunning;
+@property(readwrite, assign) id delegate;
+
+@property(readonly) NSURL *URL;
+@property(readonly) MP42Metadata *metadata;
+@property(readonly, copy) NSMutableArray *tracks;
+
+@property(readonly) BOOL hasFileRepresentation;
 
 - (id)initWithDelegate:(id)del;
 - (id)initWithExistingFile:(NSURL *)URL andDelegate:(id)del;

@@ -179,19 +179,18 @@
         forSaveOperation:(NSSaveOperationType)saveOperation error:(NSError **)outError;
 {
     __block BOOL success = NO;
+    __block int32_t done = 0;
     __block NSError *inError = NULL;
 
     NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"chaptersPreviewTrack"] boolValue])
         [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
-    
+
     [optBar setIndeterminate:YES];
     [optBar startAnimation:self];
     [saveOperationName setStringValue:@"Saving…"];
     [NSApp beginSheet:savingWindow modalForWindow:documentWindow
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];
-
-    mp4File.operationIsRunning = YES;
 
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         switch (saveOperation) {
@@ -214,11 +213,12 @@
             [mp4File optimize];
             _optimize = NO;
         }
-        mp4File.operationIsRunning = NO;
+
+        done = 1;
         [inError retain];
     });
 
-    while ([mp4File operationIsRunning]) {
+    while (!done) {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         @try {
             NSEvent *event = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:[NSDate distantFuture] inMode:NSDefaultRunLoopMode dequeue:YES];
@@ -231,7 +231,7 @@
             [pool drain];
         }
     }
-    
+
     *outError = [inError autorelease];
 
     [attributes release];
