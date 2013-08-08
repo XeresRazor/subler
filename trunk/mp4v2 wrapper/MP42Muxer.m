@@ -42,6 +42,7 @@
 - (BOOL)setup:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
     BOOL noErr = YES;
+    _fileHandle = fileHandle;
 
     for (MP42Track * track in _workingTracks) {
         MP4TrackId dstTrackId = 0;
@@ -356,10 +357,10 @@
     return noErr;
 }
 
-- (void)work:(MP4FileHandle)fileHandle
+- (void)work
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSMutableArray * trackImportersArray = [[NSMutableArray alloc] init];
+    NSMutableArray *trackImportersArray = [[NSMutableArray alloc] init];
 
     NSUInteger done = 0, update = 0;
     CGFloat progress = 0;
@@ -389,7 +390,7 @@
             MP42SampleBuffer * sampleBuffer = nil;
 
             for (int i = 0; i < 100 && (sampleBuffer = [track copyNextSample]) != nil; i++) {
-                if (!MP4WriteSample(fileHandle, sampleBuffer->sampleTrackId,
+                if (!MP4WriteSample(_fileHandle, sampleBuffer->sampleTrackId,
                                     sampleBuffer->sampleData, sampleBuffer->sampleSize,
                                     sampleBuffer->sampleDuration, sampleBuffer->sampleOffset,
                                     sampleBuffer->sampleIsSync))
@@ -428,7 +429,7 @@
         if (_cancelled)
             [importerHelper cancel];
         else
-            [importerHelper cleanUp:fileHandle];
+            [importerHelper cleanUp:_fileHandle];
 
         [importerHelper stopReading];
     }
@@ -441,7 +442,7 @@
         if(helper->converter && track.needConversion) {
             if ([track isMemberOfClass:[MP42AudioTrack class]]) {
                 NSData *magicCookie = [helper->converter magicCookie];
-                MP4SetTrackESConfiguration(fileHandle, track.Id,
+                MP4SetTrackESConfiguration(_fileHandle, track.Id,
                                            [magicCookie bytes],
                                            [magicCookie length]);
             }
@@ -465,7 +466,7 @@
 
 - (void)dealloc
 {
-    [_workingTracks release], _workingTracks = nil;
+    [_workingTracks release];
     [super dealloc];
 }
 
