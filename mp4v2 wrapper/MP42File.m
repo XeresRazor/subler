@@ -254,8 +254,6 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     [fileManager release];
     [pool release];
 
-    self.operationIsRunning = NO;
-
     if ([_delegate respondsToSelector:@selector(endSave:)])
         [_delegate performSelector:@selector(endSave:) withObject:self];
 
@@ -347,15 +345,13 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 
 - (BOOL)updateMP4FileWithAttributes:(NSDictionary *)attributes error:(NSError **)outError
 {
-    BOOL success = YES;
+    BOOL noErr = YES;
 
     // Open the mp4 file
     _fileHandle = MP4Modify([[_fileURL path] UTF8String], 0);
     if (_fileHandle == MP4_INVALID_FILE_HANDLE) {
         if (outError)
-            *outError = MP42Error(@"Unable to open the file",
-                                  nil,
-                                  100);
+            *outError = MP42Error(@"Unable to open the file", nil, 100);
         return NO;
     }
 
@@ -366,34 +362,33 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     // Init the muxer and prepare the work
     _muxer = [[MP42Muxer alloc] initWithDelegate:self];
 
-    for (MP42Track *track in _tracks)
+    for (MP42Track *track in _tracks) {
         if (!track.muxed) {
             // Reopen the file importer is they are not already open
             // this happens when the object was unarchived from a file
-            if (!track.muxer_helper->importer) {
-                NSURL *sourceURL = [track sourceURL];
-                MP42FileImporter *fileImporter = nil;
+            if (!track.muxer_helper->importer && [track sourceURL]) {
+                MP42FileImporter *fileImporter = [_importers valueForKey:[[track sourceURL] path]];
 
-                if ((fileImporter = [_importers valueForKey:[sourceURL path]]))
+                if (fileImporter) {
                     [track setTrackImporterHelper:fileImporter];
+                }
                 else {
-                    fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil andFile:sourceURL error:outError];
-                    if (fileImporter) {
-                        [track setTrackImporterHelper:fileImporter];
-                        [_importers setObject:fileImporter forKey:[sourceURL path]];
-                        [fileImporter release];
-                    }
+                    fileImporter = [[[MP42FileImporter alloc] initWithDelegate:nil andFile:[track sourceURL] error:outError] autorelease];
+                    [track setTrackImporterHelper:fileImporter];
+                    [_importers setObject:fileImporter forKey:[[track sourceURL] path]];
                 }
             }
 
             // Add the track to the muxer
-            [_muxer addTrack:track];
+            if (track.muxer_helper->importer)
+                [_muxer addTrack:track];
+        }
     }
 
-    success = [_muxer setup:_fileHandle error:outError];
+    noErr = [_muxer setup:_fileHandle error:outError];
 
-    if (!success) {
-        [_muxer release],  _muxer = nil;
+    if (!noErr) {
+        [_muxer release], _muxer = nil;
         return NO;
     }
 
@@ -407,8 +402,8 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     updateMoovDuration(_fileHandle);
     for (MP42Track *track in _tracks) {
         if (track.isEdited) {
-            success = [track writeToFile:_fileHandle error:outError];
-            if (!success)
+            noErr = [track writeToFile:_fileHandle error:outError];
+            if (!noErr)
                 break;
         }
     }
@@ -431,7 +426,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     if ([_delegate respondsToSelector:@selector(endSave:)])
         [_delegate performSelector:@selector(endSave:) withObject:self];
 
-    return success;
+    return noErr;
 }
 
 - (void)cancel;
@@ -728,7 +723,6 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 @synthesize tracks = _tracks;
 @synthesize metadata = _metadata;
 @synthesize hasFileRepresentation = _hasFileRepresentation;
-@synthesize operationIsRunning = _operationIsRunning;
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
