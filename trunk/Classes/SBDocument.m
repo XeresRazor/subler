@@ -677,9 +677,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     panel.allowsMultipleSelection = NO;
     panel.canChooseFiles = YES;
     panel.canChooseDirectories = NO;
-    [panel setAllowedFileTypes:[NSArray arrayWithObjects:@"mp4", @"m4v", @"m4a", @"mov",
-                                @"aac", @"h264", @"264", @"ac3",
-                                @"txt", @"srt", @"smi", @"scc", @"mkv", @"mts", @"m2ts", @"idx", nil]];
+    [panel setAllowedFileTypes:supportedFileFormat()];
 
     [panel beginSheetModalForWindow:documentWindow completionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {
@@ -889,7 +887,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
             else if ([[file pathExtension] caseInsensitiveCompare: @"xml"] == NSOrderedSame ||
                      [[file pathExtension] caseInsensitiveCompare: @"nfo"] == NSOrderedSame)
                 [self addMetadata:file];
-            else if (supportedFile([file pathExtension]))
+            else if (isFileFormatSupported([file pathExtension]))
                 [supItems addObject:file];
                      
         }

@@ -57,7 +57,7 @@
             continue;
 
         if([track isMemberOfClass:[MP42AudioTrack class]] && track.needConversion) {
-            track.format = @"AAC";
+            track.format = MP42AudioFormatAAC;
             MP42AudioConverter *audioConverter = [[MP42AudioConverter alloc] initWithTrack:(MP42AudioTrack*)track
                                                                         andMixdownType:[(MP42AudioTrack*)track mixdownType]
                                                                                  error:outError];
@@ -67,8 +67,8 @@
 
             helper->converter = audioConverter;
         }
-        if([track isMemberOfClass:[MP42SubtitleTrack class]] && ([track.format isEqualToString:@"VobSub"] || [track.format isEqualToString:@"PGS"]) && track.needConversion) {
-            track.format = @"3GPP Text";
+        if([track isMemberOfClass:[MP42SubtitleTrack class]] && ([track.format isEqualToString:MP42SubtitleFormatVobSub] || [track.format isEqualToString:MP42SubtitleFormatPGS]) && track.needConversion) {
+            track.format = MP42SubtitleFormatTx3g;
             MP42BitmapSubConverter *subConverter = [[MP42BitmapSubConverter alloc] initWithTrack:(MP42SubtitleTrack*)track
                                                                                        error:outError];
 
@@ -78,10 +78,10 @@
             helper->converter = subConverter;
         }
         else if([track isMemberOfClass:[MP42SubtitleTrack class]] && track.needConversion)
-            track.format = @"3GPP Text";
+            track.format = MP42SubtitleFormatTx3g;
 
         // H.264 video track
-        if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:@"H.264"]) {
+        if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:MP42VideoFormatH264]) {
             if ([magicCookie length] < sizeof(uint8_t) * 6)
                 continue;
 
@@ -122,7 +122,7 @@
         }
 
         // MPEG-4 Visual video track
-        else if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:@"MPEG-4 Visual"]) {
+        else if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:MP42VideoFormatMPEG4Visual]) {
             MP4SetVideoProfileLevel(fileHandle, MPEG4_SP_L3);
             // Add video track
             dstTrackId = MP4AddVideoTrack(fileHandle, timeScale,
@@ -139,7 +139,7 @@
         }
 
         // Photo-JPEG video track
-        else if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:@"Photo - JPEG"]) {
+        else if ([track isMemberOfClass:[MP42VideoTrack class]] && [track.format isEqualToString:MP42VideoFormatJPEG]) {
             // Add video track
             dstTrackId = MP4AddJpegVideoTrack(fileHandle, timeScale,
                                   MP4_INVALID_DURATION, [(MP42VideoTrack*)track width], [(MP42VideoTrack*)track height]);
@@ -148,7 +148,7 @@
         }
 
         // AAC audio track
-        else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"AAC"]) {
+        else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:MP42AudioFormatAAC]) {
             dstTrackId = MP4AddAudioTrack(fileHandle,
                                           timeScale,
                                           1024, MP4_MPEG4_AUDIO_TYPE);
@@ -163,7 +163,7 @@
         }
 
         // AC-3 audio track
-        else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"AC-3"]) {
+        else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:MP42AudioFormatAC3]) {
             if ([magicCookie length] < sizeof(uint64_t) * 6)
                 continue;
 
@@ -182,7 +182,7 @@
         }
 
         // ALAC audio track
-        else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"ALAC"]) {
+        else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:MP42AudioFormatALAC]) {
             dstTrackId = MP4AddALACAudioTrack(fileHandle,
                                           timeScale);
             if ([magicCookie length])
@@ -192,7 +192,7 @@
         }
 
         // DTS audio track
-        else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:@"DTS"]) {
+        else if ([track isMemberOfClass:[MP42AudioTrack class]] && [track.format isEqualToString:MP42AudioFormatDTS]) {
             dstTrackId = MP4AddAudioTrack(fileHandle,
                                           timeScale,
                                           512, 0xA9);
@@ -202,7 +202,7 @@
         }
 
         // 3GPP text track
-        else if ([track isMemberOfClass:[MP42SubtitleTrack class]] && [track.format isEqualToString:@"3GPP Text"]) {
+        else if ([track isMemberOfClass:[MP42SubtitleTrack class]] && [track.format isEqualToString:MP42SubtitleFormatTx3g]) {
             NSSize subSize = NSMakeSize(0, 0);
             NSSize videoSize = NSMakeSize(0, 0);
 
@@ -291,7 +291,7 @@
             [helper->importer setActiveTrack:track];
         }
         // VobSub bitmap track
-        else if ([track isMemberOfClass:[MP42SubtitleTrack class]] && [track.format isEqualToString:@"VobSub"]) {
+        else if ([track isMemberOfClass:[MP42SubtitleTrack class]] && [track.format isEqualToString:MP42SubtitleFormatVobSub]) {
             if ([magicCookie length] < sizeof(uint32_t) * 16)
                 continue;
 
@@ -369,7 +369,7 @@
 
         // Initialize the fifo and the helper queue
         helper->fifo = [[NSMutableArray alloc] initWithCapacity:200];
-        helper->queue = dispatch_queue_create([[NSString stringWithFormat:@"com.subler.queue-%d",track.Id] UTF8String], NULL);
+        helper->queue = dispatch_queue_create([[NSString stringWithFormat:@"com.subler.queue-%d",track.Id] UTF8String], DISPATCH_QUEUE_SERIAL);
 
         if (![trackImportersArray containsObject:helper->importer])
             [trackImportersArray addObject:helper->importer];
@@ -388,8 +388,7 @@
         for (MP42Track *track in _workingTracks) {
             MP42SampleBuffer * sampleBuffer = nil;
 
-            int i = 0;
-            while ( i < 100 && (sampleBuffer = [track copyNextSample]) != nil) {
+            for (int i = 0; i < 100 && (sampleBuffer = [track copyNextSample]) != nil; i++) {
                 if (!MP4WriteSample(fileHandle, sampleBuffer->sampleTrackId,
                                     sampleBuffer->sampleData, sampleBuffer->sampleSize,
                                     sampleBuffer->sampleDuration, sampleBuffer->sampleOffset,
@@ -397,9 +396,7 @@
                     _cancelled = YES;
 
                 [sampleBuffer release];
-                i++;
             }
-            
             done += (track.muxer_helper->done ? 1 : 0);
         }
 
@@ -438,7 +435,7 @@
 
     // Write the converted audio track magic cookie
     // And release the various muxer helpers
-    for (MP42Track * track in _workingTracks) {
+    for (MP42Track *track in _workingTracks) {
         muxer_helper *helper = track.muxer_helper;
 
         if(helper->converter && track.needConversion) {
@@ -463,7 +460,7 @@
 
 - (void)cancel
 {
-    _cancelled = YES;
+    OSAtomicIncrement32(&_cancelled);
 }
 
 - (void)dealloc

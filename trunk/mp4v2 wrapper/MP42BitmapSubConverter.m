@@ -39,7 +39,7 @@ void FFInitFFmpeg()
         while (![inputSamplesBuffer count] && !fileReaderDone)
             usleep(1000);
 
-        if (![inputSamplesBuffer count] && fileReaderDone)
+        if (![inputSamplesBuffer count] || fileReaderDone)
             break;
 
         MP42SampleBuffer *sampleBuffer = nil;
@@ -216,7 +216,7 @@ void FFInitFFmpeg()
         while (![inputSamplesBuffer count] && !fileReaderDone)
             usleep(1000);
 
-        if (![inputSamplesBuffer count] && fileReaderDone)
+        if (![inputSamplesBuffer count] || fileReaderDone)
             break;
 
         MP42SampleBuffer *sampleBuffer = nil;
@@ -335,9 +335,9 @@ void FFInitFFmpeg()
         if (!avCodec) {
             FFInitFFmpeg();
 
-            if (([track.sourceFormat isEqualToString:@"VobSub"]))
+            if (([track.sourceFormat isEqualToString:MP42SubtitleFormatVobSub]))
                 avCodec = avcodec_find_decoder(AV_CODEC_ID_DVD_SUBTITLE);
-            else if (([track.sourceFormat isEqualToString:@"PGS"]))
+            else if (([track.sourceFormat isEqualToString:MP42SubtitleFormatPGS]))
                 avCodec = avcodec_find_decoder(AV_CODEC_ID_HDMV_PGS_SUBTITLE);
 
             avContext = avcodec_alloc_context3(NULL);
@@ -356,13 +356,13 @@ void FFInitFFmpeg()
 
         ocr = [[MP42OCRWrapper alloc] initWithLanguage:[track language]];
 
-        if (([track.sourceFormat isEqualToString:@"VobSub"])) {
+        if (([track.sourceFormat isEqualToString:MP42SubtitleFormatVobSub])) {
             // Launch the vobsub decoder thread.
             decoderThread = [[NSThread alloc] initWithTarget:self selector:@selector(VobSubDecoderThreadMainRoutine:) object:self];
             [decoderThread setName:@"VobSub Decoder"];
             [decoderThread start];
         }
-        else if (([track.sourceFormat isEqualToString:@"PGS"])) {
+        else if (([track.sourceFormat isEqualToString:MP42SubtitleFormatPGS])) {
             // Launch the pgs decoder thread.
             decoderThread = [[NSThread alloc] initWithTarget:self selector:@selector(PGSDecoderThreadMainRoutine:) object:self];
             [decoderThread setName:@"PGS Decoder"];
@@ -410,7 +410,7 @@ void FFInitFFmpeg()
 
 - (void) setDone:(BOOL)status
 {
-    fileReaderDone = YES;
+    fileReaderDone = status;
 }
 
 - (BOOL) encoderDone

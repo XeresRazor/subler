@@ -14,7 +14,7 @@
     NSMutableArray *_workingTracks;
     id              _delegate;
 
-    BOOL            _cancelled;
+    int32_t         _cancelled;
 }
 
 - (id)initWithDelegate:(id)del;

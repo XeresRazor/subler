@@ -8,6 +8,7 @@
 
 #import "MP42AudioTrack.h"
 #import "MP42Utilities.h"
+#import "MP42MediaFormat.h"
 
 extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 
@@ -88,7 +89,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 {
     if ((self = [super init]))
     {
-        name = @"Sound Track";
+        name = MP42MediaTypeAudio;
         language = @"Unknown";
         volume = 1;
         mixdownType = SBDolbyPlIIMixdown;

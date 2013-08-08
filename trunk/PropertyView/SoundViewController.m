@@ -15,9 +15,9 @@
 {
     [alternateGroup selectItemAtIndex:track.alternate_group];
 
-    if ([[track format] isEqualToString:@"AC-3"]) {
+    if ([[track format] isEqualToString:MP42AudioFormatAC3]) {
         for (id fileTrack in [mp4file tracks]) {
-            if ([fileTrack isMemberOfClass:[MP42AudioTrack class]] && [[fileTrack format] isEqualToString:@"AAC"]) {
+            if ([fileTrack isMemberOfClass:[MP42AudioTrack class]] && [[fileTrack format] isEqualToString:MP42AudioFormatAAC]) {
                 NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"Track %d", [fileTrack Id]]
                                                                   action:@selector(setFallbackTrack:)
                                                            keyEquivalent:@""] autorelease];

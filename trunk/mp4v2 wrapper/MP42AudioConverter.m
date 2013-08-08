@@ -10,6 +10,7 @@
 #import "MP42Track.h"
 #import "MP42AudioTrack.h"
 #import "MP42FileImporter.h"
+#import "MP42MediaFormat.h"
 #import "MP42Utilities.h"
 
 #define FIFO_DURATION (0.5f)
@@ -568,7 +569,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
     }
 
     // Check if xiphqt is installed
-    if ([format isEqualToString:@"Flac"]) {
+    if ([format isEqualToString:MP42AudioFormatFLAC]) {
         InstallStatus installStatus = [self installStatusForComponent:@"XiphQT.component" type:ComponentTypeQuickTime version:@"0.1.9"];
 
         if(currentInstallStatus(installStatus) == InstallStatusNotInstalled) {
@@ -620,7 +621,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
             outputChannelCount = 2;
         }
 
-        if (([track.sourceFormat isEqualToString:@"True HD"] || [track.sourceFormat isEqualToString:@"AC-3"]) && inputChannelsCount == 6 ) {
+        if (([track.sourceFormat isEqualToString:@"True HD"] || [track.sourceFormat isEqualToString:MP42AudioFormatAC3]) && inputChannelsCount == 6 ) {
             ichanmap = &hb_smpte_chan_map;
             layout = HB_INPUT_CH_LAYOUT_3F2R | HB_INPUT_CH_LAYOUT_HAS_LFE;
         }
@@ -641,43 +642,43 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
         inputFormat.mChannelsPerFrame = track.channels;
 
         if (track.sourceFormat) {
-            if ([track.sourceFormat isEqualToString:@"AAC"]) {
+            if ([track.sourceFormat isEqualToString:MP42AudioFormatAAC]) {
                 inputFormat.mFormatID = kAudioFormatMPEG4AAC;
 
                 size_t cookieSize;
                 uint8_t * cookie = CreateEsdsFromSetupData((uint8_t *)[srcMagicCookie bytes], [srcMagicCookie length], &cookieSize, 1, true, false);
                 magicCookie = (CFDataRef) [[NSData dataWithBytes:cookie length:cookieSize] retain];
             }
-            else if ([track.sourceFormat isEqualToString:@"ALAC"]) {
+            else if ([track.sourceFormat isEqualToString:MP42AudioFormatALAC]) {
                 inputFormat.mFormatID = kAudioFormatAppleLossless;
                 
                 magicCookie = (CFDataRef) [srcMagicCookie retain];
             }
-            else if ([track.sourceFormat isEqualToString:@"Vorbis"]) {
+            else if ([track.sourceFormat isEqualToString:MP42AudioFormatVorbis]) {
                 inputFormat.mFormatID = 'XiVs';
 
                 magicCookie = createDescExt_XiphVorbis([srcMagicCookie length], [srcMagicCookie bytes]);
             }
-            else if ([track.sourceFormat isEqualToString:@"Flac"]) {
+            else if ([track.sourceFormat isEqualToString:MP42AudioFormatFLAC]) {
                 inputFormat.mFormatID = 'XiFL';
 
                 magicCookie = createDescExt_XiphFLAC([srcMagicCookie length], [srcMagicCookie bytes]);
             }
-            else if ([track.sourceFormat isEqualToString:@"AC-3"]) {
+            else if ([track.sourceFormat isEqualToString:MP42AudioFormatAC3]) {
                 inputFormat.mFormatID = kAudioFormatAC3;
                 inputFormat.mFramesPerPacket = 1536;
             }
-            else if ([track.sourceFormat isEqualToString:@"DTS"]) {
+            else if ([track.sourceFormat isEqualToString:MP42AudioFormatDTS]) {
                 inputFormat.mFormatID = 'DTS ';
             }
-            else if ([track.sourceFormat isEqualToString:@"Mp3"]) {
+            else if ([track.sourceFormat isEqualToString:MP42AudioFormatMP3]) {
                 inputFormat.mFormatID = kAudioFormatMPEGLayer3;
                 inputFormat.mFramesPerPacket = 1152;
             }
             else if ([track.sourceFormat isEqualToString:@"True HD"]) {
                 inputFormat.mFormatID = 'trhd';
             }
-            else if ([track.sourceFormat isEqualToString:@"PCM"]) {
+            else if ([track.sourceFormat isEqualToString:MP42AudioFormatPCM]) {
                 AudioStreamBasicDescription temp = [track.muxer_helper->importer audioDescriptionForTrack:track];
                 if (temp.mFormatID)
                     inputFormat = temp;
@@ -743,7 +744,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
             free(layout);
         }*/
 
-        /*if (([track.sourceFormat isEqualToString:@"True HD"] || [track.sourceFormat isEqualToString:@"AC-3"]) && inputChannelsCount == 6 ) {
+        /*if (([track.sourceFormat isEqualToString:@"True HD"] || [track.sourceFormat isEqualToString:MP42AudioFormatAC3]) && inputChannelsCount == 6 ) {
             SInt32 channelMap[6] = { 2, 0, 1, 4, 5, 3 };
             AudioConverterSetProperty( decoderData.converter, kAudioConverterChannelMap,
                                       sizeof( channelMap ), channelMap );

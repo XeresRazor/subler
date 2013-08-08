@@ -324,10 +324,10 @@
                                                                               error:outError];
 
         for (MP42Track *track in fileImporter.tracks) {
-            if (([track.format isEqualToString:@"AC-3"] || [track.format isEqualToString:@"DTS"]) && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue])
+            if (([track.format isEqualToString:MP42AudioFormatAC3] || [track.format isEqualToString:MP42AudioFormatDTS]) && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue])
                 track.needConversion = YES;
 
-            if ([track.format isEqualToString:@"VobSub"] && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBSubtitleConvertBitmap"] boolValue])
+            if ([track.format isEqualToString:MP42SubtitleFormatVobSub] && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBSubtitleConvertBitmap"] boolValue])
                 track.needConversion = YES;
 
             [track setTrackImporterHelper:fileImporter];
@@ -577,9 +577,7 @@
     panel.allowsMultipleSelection = YES;
     panel.canChooseFiles = YES;
     panel.canChooseDirectories = YES;
-    [panel setAllowedFileTypes:[NSArray arrayWithObjects:@"mp4", @"m4v", @"m4a", @"mov",
-                                @"aac", @"h264", @"264", @"ac3",
-                                @"txt", @"srt", @"smi", @"scc", @"mkv", nil]];
+    [panel setAllowedFileTypes:supportedFileFormat()];
 
     [panel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {

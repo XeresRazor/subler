@@ -51,75 +51,75 @@
         FourCharCode code = CMFormatDescriptionGetMediaSubType(formatDescription);
         switch (code) {
             case kCMVideoCodecType_H264:
-                result = @"H.264";
+                result = MP42VideoFormatH264;
                 break;
             case kCMVideoCodecType_MPEG4Video:
-                result = @"MPEG-4 Visual";
+                result = MP42VideoFormatMPEG4Visual;
                 break;
             case kCMVideoCodecType_MPEG2Video:
-                result = @"MPEG-2";
+                result = MP42VideoFormatMPEG2;
                 break;
             case kCMVideoCodecType_MPEG1Video:
-                result = @"MPEG-1";
+                result = MP42VideoFormatMPEG1;
                 break;
             case kCMVideoCodecType_AppleProRes422:
             case kCMVideoCodecType_AppleProRes422HQ:
             case kCMVideoCodecType_AppleProRes422LT:
             case kCMVideoCodecType_AppleProRes422Proxy:
             case kCMVideoCodecType_AppleProRes4444:
-                result = @"Apple ProRes";
+                result = MP42VideoFormatProRes;
                 break;
             case kCMVideoCodecType_SorensonVideo3:
-                result = @"Sorenson Video 3";
+                result = MP42VideoFormatSorenson3;
                 break;
             case 'png ':
-                result = @"PNG";
+                result = MP42VideoFormatPNG;
                 break;
             case kAudioFormatMPEG4AAC:
-                result = @"AAC";
+                result = MP42AudioFormatAAC;
                 break;
             case kAudioFormatMPEG4AAC_HE:
             case kAudioFormatMPEG4AAC_HE_V2:
-                result = @"HE-AAC";
+                result = MP42AudioFormatHEAAC;
                 break;
             case kAudioFormatLinearPCM:
-                result = @"PCM";
+                result = MP42AudioFormatPCM;
                 break;
             case kAudioFormatAppleLossless:
-                result = @"ALAC";
+                result = MP42AudioFormatALAC;
                 break;
             case kAudioFormatAC3:
             case 'ms \0':
-                result = @"AC-3";
+                result = MP42AudioFormatAC3;
                 break;
             case kAudioFormatMPEGLayer1:
             case kAudioFormatMPEGLayer2:
             case kAudioFormatMPEGLayer3:
-                result = @"MP3";
+                result = MP42AudioFormatMP3;
                 break;
             case kAudioFormatAMR:
-                result = @"AMR Narrow Band";
+                result = MP42AudioFormatAMR;
                 break;
             case kAudioFormatAppleIMA4:
                 result = @"IMA 4:1";
                 break;
             case kCMTextFormatType_QTText:
-                result = @"Text";
+                result = MP42SubtitleFormatText;
                 break;
             case kCMTextFormatType_3GText:
-                result = @"3GPP Text";
+                result = MP42SubtitleFormatTx3g;
                 break;
             case 'SRT ':
-                result = @"Text";
+                result = MP42SubtitleFormatText;
                 break;
             case 'SSA ':
-                result = @"SSA";
+                result = MP42SubtitleFormatSSA;
                 break;
             case kCMClosedCaptionFormatType_CEA608:
-                result = @"CEA-608";
+                result = MP42ClosedCaptionFormatCEA608;
                 break;
             case kCMClosedCaptionFormatType_CEA708:
-                result = @"CEA-708";
+                result = MP42ClosedCaptionFormatCEA708;
                 break;
             case kCMClosedCaptionFormatType_ATSC:
                 result = @"ATSC/52 part-4";
@@ -128,14 +128,14 @@
             case kCMTimeCodeFormatType_TimeCode64:
             case kCMTimeCodeFormatType_Counter32:
             case kCMTimeCodeFormatType_Counter64:
-                result = @"Timecode";
+                result = MP42TimeCodeFormat;
                 break;
             case kCMVideoCodecType_JPEG:
-                result = @"Photo - JPEG";
+                result = MP42VideoFormatJPEG;
                 break;
             case kCMVideoCodecType_DVCNTSC:
             case kCMVideoCodecType_DVCPAL:
-                result = @"DV";
+                result = MP42VideoFormatDV;
                 break;
             case kCMVideoCodecType_DVCProPAL:
             case kCMVideoCodecType_DVCPro50NTSC:

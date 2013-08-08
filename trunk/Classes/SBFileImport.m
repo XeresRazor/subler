@@ -46,13 +46,13 @@
             else
                 [_importCheckArray addObject: [NSNumber numberWithBool:NO]];
 
-            if ([[object format] isEqualToString:@"AC-3"] &&
+            if ([[object format] isEqualToString:MP42AudioFormatAC3] &&
                 [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue])
                 [_actionArray addObject:[NSNumber numberWithInteger:[[[NSUserDefaults standardUserDefaults]
                                                                  valueForKey:@"SBAudioMixdown"] integerValue]]];
-            else if ([[object format] isEqualToString:@"DTS"])
+            else if ([[object format] isEqualToString:MP42AudioFormatDTS])
                 [_actionArray addObject:[NSNumber numberWithInteger:1]];
-            else if ([[object format] isEqualToString:@"VobSub"] &&
+            else if ([[object format] isEqualToString:MP42SubtitleFormatVobSub] &&
                      [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBSubtitleConvertBitmap"] boolValue])
                 [_actionArray addObject:[NSNumber numberWithInteger:1]];
             else if (!trackNeedConversion([object format]))
@@ -135,7 +135,7 @@
                     [item setEnabled:NO];
                 [[actionCell menu] addItem:item];
                 
-                NSArray *formatArray = [NSArray arrayWithObjects:@"3GPP Text", nil];
+                NSArray *formatArray = [NSArray arrayWithObjects:MP42SubtitleFormatTx3g, nil];
                 for (NSString* format in formatArray) {
                     item = [[[NSMenuItem alloc] initWithTitle:format action:NULL keyEquivalent:@""] autorelease];
                     [item setTag:tag++];
