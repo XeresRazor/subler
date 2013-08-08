@@ -25,21 +25,22 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
 
 @interface MP42File : NSObject <NSCoding> {
 @private
-    MP4FileHandle  fileHandle;
-    NSURL          *fileURL;
-    id delegate;
+    MP4FileHandle   _fileHandle;
+    NSURL          *_fileURL;
+    id              _delegate;
 
-    NSMutableArray  *tracksToBeDeleted;
-    NSMutableArray  *fileImporters;
-    BOOL             hasFileRepresentation;
-    BOOL             isCancelled;
-    BOOL             operationIsRunning;
+    NSMutableArray      *_tracksToBeDeleted;
+    NSMutableDictionary *_importers;
+
+    BOOL             _hasFileRepresentation;
+    BOOL             _cancelled;
+    BOOL             _operationIsRunning;
 
     uint64_t _size;
 @protected
-    NSMutableArray  *tracks;
-    MP42Metadata    *metadata;
-    MP42Muxer       *muxer;
+    NSMutableArray  *_tracks;
+    MP42Metadata    *_metadata;
+    MP42Muxer       *_muxer;
 }
 
 @property (readwrite, assign) id delegate;
@@ -47,37 +48,37 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
 @property (readonly) NSMutableArray  *tracks;
 @property (readonly) MP42Metadata    *metadata;
 @property (readonly) BOOL hasFileRepresentation;
-@property (atomic, readwrite) BOOL operationIsRunning;
+@property (readwrite) BOOL operationIsRunning;
 
-- (id)   initWithDelegate:(id)del;
-- (id)   initWithExistingFile:(NSURL *)URL andDelegate:(id)del;
+- (id)initWithDelegate:(id)del;
+- (id)initWithExistingFile:(NSURL *)URL andDelegate:(id)del;
 
-- (NSUInteger) movieDuration;
-- (MP42ChapterTrack*) chapters;
+- (NSUInteger)movieDuration;
+- (MP42ChapterTrack*)chapters;
 
-- (NSUInteger) tracksCount;
-- (id)   trackAtIndex:(NSUInteger)index;
+- (NSUInteger)tracksCount;
+- (id)trackAtIndex:(NSUInteger)index;
 
-- (void) addTrack:(id)object;
+- (void)addTrack:(id)object;
 
-- (void) removeTrackAtIndex:(NSUInteger)index;
-- (void) removeTracksAtIndexes:(NSIndexSet *)indexes;
-- (void) moveTrackAtIndex:(NSUInteger)index toIndex:(NSUInteger)newIndex;
+- (void)removeTrackAtIndex:(NSUInteger)index;
+- (void)removeTracksAtIndexes:(NSIndexSet *)indexes;
+- (void)moveTrackAtIndex:(NSUInteger)index toIndex:(NSUInteger)newIndex;
 
 - (uint64_t)estimatedDataLength;
 
-- (void) iTunesFriendlyTrackGroups;
+- (void)iTunesFriendlyTrackGroups;
 
-- (BOOL) writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError;
-- (BOOL) updateMP4FileWithAttributes:(NSDictionary *)attributes error:(NSError **)outError;
-- (BOOL) optimize;
+- (BOOL)writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError;
+- (BOOL)updateMP4FileWithAttributes:(NSDictionary *)attributes error:(NSError **)outError;
+- (BOOL)optimize;
 
-- (void) cancel;
+- (void)cancel;
 
 @end
 
 @interface NSObject (MP42FileDelegateMethod)
-- (void)progressStatus: (CGFloat)progress;
+- (void)progressStatus:(CGFloat)progress;
 - (void)endSave:(id)sender;
 
 @end
