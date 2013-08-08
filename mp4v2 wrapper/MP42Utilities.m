@@ -712,8 +712,7 @@ int readAC3Config(uint64_t acmod, uint64_t lfeon, UInt32 *channelsCount, UInt32 
 
 BOOL isTrackMuxable(NSString * formatName)
 {
-    NSArray* supportedFormats = [NSArray arrayWithObjects:MP42VideoFormatH264, MP42VideoFormatMPEG4Visual, MP42AudioFormatAAC, MP42AudioFormatALAC, MP42AudioFormatAC3, MP42AudioFormatDTS, MP42SubtitleFormatTx3g, MP42SubtitleFormatText,
-                                 MP42ClosedCaptionFormatCEA608, MP42VideoFormatJPEG, MP42SubtitleFormatVobSub, nil];
+    NSArray* supportedFormats = [NSArray arrayWithObjects:MP42VideoFormatH264, MP42VideoFormatMPEG4Visual, MP42AudioFormatAAC, MP42AudioFormatALAC, MP42AudioFormatAC3, MP42AudioFormatDTS, MP42SubtitleFormatTx3g, MP42SubtitleFormatText, MP42ClosedCaptionFormatCEA608, MP42VideoFormatJPEG, MP42SubtitleFormatVobSub, nil];
 
     for (NSString* type in supportedFormats)
         if ([formatName isEqualToString:type])
@@ -723,7 +722,7 @@ BOOL isTrackMuxable(NSString * formatName)
 }
 
 BOOL trackNeedConversion(NSString * formatName) {
-    NSArray* supportedConversionFormats = [NSArray arrayWithObjects:MP42AudioFormatVorbis, MP42AudioFormatFLAC, MP42AudioFormatMP3, @"True HD", @"ASS", MP42SubtitleFormatSSA, MP42SubtitleFormatText, MP42SubtitleFormatPGS, nil];
+    NSArray* supportedConversionFormats = [NSArray arrayWithObjects:MP42AudioFormatVorbis, MP42AudioFormatFLAC, MP42AudioFormatMP3, MP42AudioFormatTrueHD, MP42SubtitleFormatSSA, MP42SubtitleFormatText, MP42SubtitleFormatPGS, nil];
 
     for (NSString* type in supportedConversionFormats)
         if ([formatName isEqualToString:type])

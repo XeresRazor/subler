@@ -39,7 +39,7 @@ void FFInitFFmpeg()
         while (![inputSamplesBuffer count] && !fileReaderDone)
             usleep(1000);
 
-        if (![inputSamplesBuffer count] || fileReaderDone)
+        if (![inputSamplesBuffer count] && fileReaderDone)
             break;
 
         MP42SampleBuffer *sampleBuffer = nil;
@@ -216,7 +216,7 @@ void FFInitFFmpeg()
         while (![inputSamplesBuffer count] && !fileReaderDone)
             usleep(1000);
 
-        if (![inputSamplesBuffer count] || fileReaderDone)
+        if (![inputSamplesBuffer count] && fileReaderDone)
             break;
 
         MP42SampleBuffer *sampleBuffer = nil;

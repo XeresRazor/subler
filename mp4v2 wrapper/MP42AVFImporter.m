@@ -680,8 +680,8 @@
         AVAssetReaderOutput *assetReaderOutput = demuxHelper->assetReaderOutput;
 
         while (!_cancelled) {
-            while ([helper->fifo count] >= 300) {
-                usleep(200);
+            while ([helper->fifo count] >= 300 && !_cancelled) {
+                usleep(500);
             }
             CMSampleBufferRef sampleBuffer = [assetReaderOutput copyNextSampleBuffer];
             if (sampleBuffer) {

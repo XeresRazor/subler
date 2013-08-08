@@ -863,8 +863,8 @@
         sampleCount = QTSampleTableGetNumberOfSamples(sampleTable);
 
         for (sampleIndex = 1; sampleIndex <= sampleCount && !_cancelled; sampleIndex++) {
-            while ([helper->fifo count] >= 300) {
-                usleep(200);
+            while ([helper->fifo count] >= 300 && !_cancelled) {
+                usleep(500);
             }
 
             TimeValue64 sampleDecodeTime = 0;

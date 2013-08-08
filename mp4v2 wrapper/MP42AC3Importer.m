@@ -355,8 +355,8 @@ static bool GetFirstHeader(FILE* inFile)
     int64_t currentSize = 0;
 
     while (LoadNextAc3Frame(inFile, sampleBuffer, &sampleSize, false) && !_cancelled) {
-        while ([helper->fifo count] >= 200) {
-            usleep(200);
+        while ([helper->fifo count] >= 200 && !_cancelled) {
+            usleep(500);
         }
 
         MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
