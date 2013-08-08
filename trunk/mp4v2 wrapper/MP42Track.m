@@ -105,7 +105,7 @@
             [_helper->demuxer_context release];
         if (_helper->converter)
             [_helper->converter release];
-        
+
         free(_helper);
     }
 

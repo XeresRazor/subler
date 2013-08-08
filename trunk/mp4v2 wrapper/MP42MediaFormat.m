@@ -49,6 +49,7 @@ NSString *const MP42AudioFormatFLAC = @"FLAC";
 NSString *const MP42AudioFormatALAC = @"ALAC";
 NSString *const MP42AudioFormatAC3 = @"AC-3";
 NSString *const MP42AudioFormatDTS = @"DTS";
+NSString *const MP42AudioFormatTrueHD = @"True HD";
 NSString *const MP42AudioFormatAMR = @"AMR Narrow Band";
 NSString *const MP42AudioFormatPCM = @"PCM";
 NSString *const MP42AudioFormatFairPlay = @"FairPlay Sound";

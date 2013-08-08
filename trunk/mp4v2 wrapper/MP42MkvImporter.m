@@ -419,7 +419,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
         else if (!strcmp(track->CodecID, "A_MPEG/L3"))
             return MP42AudioFormatMP3;
         else if (!strcmp(track->CodecID, "A_TRUEHD"))
-            return @"True HD";
+            return MP42AudioFormatTrueHD;
         else if (!strcmp(track->CodecID, "A_MLP"))
             return @"MLP";
         else if (!strcmp(track->CodecID, "S_TEXT/UTF8"))
@@ -625,14 +625,9 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 track = fTrack;
             }
         }
-        
-        while ([helper->fifo count] >= 200) {
-            usleep(200);
-        }
 
-        if (demuxHelper == nil) {
-            NSLog(@"demuxHelper is nil, aborting");
-            return;
+        while ([helper->fifo count] >= 200 && !_cancelled) {
+            usleep(500);
         }
 
         TrackInfo *trackInfo = mkv_GetTrackInfo(matroskaFile, Track);

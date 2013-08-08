@@ -51,6 +51,7 @@ extern NSString *const MP42AudioFormatFLAC;
 extern NSString *const MP42AudioFormatALAC;
 extern NSString *const MP42AudioFormatAC3;
 extern NSString *const MP42AudioFormatDTS;
+extern NSString *const MP42AudioFormatTrueHD;
 extern NSString *const MP42AudioFormatAMR;
 extern NSString *const MP42AudioFormatPCM;
 extern NSString *const MP42AudioFormatFairPlay;

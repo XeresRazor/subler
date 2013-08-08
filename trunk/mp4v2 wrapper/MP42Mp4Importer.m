@@ -237,8 +237,8 @@
         muxer_helper *helper = track.muxer_helper;
 
         while (!_cancelled) {
-            while ([helper->fifo count] >= 200) {
-                usleep(200);
+            while ([helper->fifo count] >= 200 && !_cancelled) {
+                usleep(500);
             }
 
             MP4TrackId srcTrackId = [track sourceId];
