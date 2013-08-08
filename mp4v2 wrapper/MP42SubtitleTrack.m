@@ -246,10 +246,12 @@ struct style_record {
             if ([sampleText characterAtIndex:[sampleText length] - 1] == '\n')
                 [sampleText deleteCharactersInRange:NSMakeRange([sampleText length] - 1, 1)];
 
-            [srtFile appendFormat:@"%lu\n%@ --> %@\n", (unsigned long)srtSampleNumber++,
+            if (sampleText) {
+                [srtFile appendFormat:@"%lu\n%@ --> %@\n", (unsigned long)srtSampleNumber++,
                                                       SRTStringFromTime(time, timeScale, ','), SRTStringFromTime(time + sampleDuration, timeScale, ',')];
-            [srtFile appendString:sampleText];
-            [srtFile appendString:@"\n\n"];
+                [srtFile appendString:sampleText];
+                [srtFile appendString:@"\n\n"];
+            }
 		}
 
         time += sampleDuration;
