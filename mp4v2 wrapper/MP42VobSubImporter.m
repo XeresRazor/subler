@@ -307,7 +307,7 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
         int i, sampleCount = [vobTrack->samples count];
         
         for (i = 0; i < sampleCount && !_cancelled; i++) {
-            while ([helper->fifo count] >= 20 && !_cancelled) {
+            while ([helper->fifo isFull] && !_cancelled) {
                 usleep(2000);
             }
 
@@ -366,10 +366,8 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
                 if(track.needConversion)
                     sample->sampleSourceTrack = track;
                 
-                dispatch_async(helper->queue, ^{
-                    [helper->fifo addObject:sample];
-                    [sample release];
-                });
+                [helper->fifo enqueue:sample];
+                [sample release];
             }
             
             MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
@@ -383,11 +381,9 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
             if(track.needConversion)
                 sample->sampleSourceTrack = track;
             
-            dispatch_async(helper->queue, ^{
-                [helper->fifo addObject:sample];
-                [sample release];
-            });
-            
+            [helper->fifo enqueue:sample];
+            [sample release];
+
             lastTime = endTime;
             
             _progress = ((i / (CGFloat) sampleCount ) * 100 / tracksNumber) + (tracksDone / (CGFloat) tracksNumber * 100);
@@ -395,14 +391,8 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
         tracksDone++;
     }
 
-    _done = 1;
+    [self setDone: YES];
     [pool release];
-}
-
-
-- (MP42SampleBuffer*)nextSampleForTrack:(MP42Track *)track
-{
-    return [[self copyNextSample] autorelease];
 }
 
 - (void)startReading

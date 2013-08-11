@@ -1477,6 +1477,9 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     DpbInit(&h264_dpb);
     
     while ( (LoadNal(&nal) != false) && !_cancelled) {
+        while ([helper->fifo isFull] && !_cancelled)
+            usleep(500);
+
         uint32_t header_size;
         header_size = nal.buffer[2] == 1 ? 3 : 4;
         bool boundary = h264_detect_boundary(nal.buffer, 
@@ -1502,10 +1505,8 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
                 if(track.needConversion)
                     sample->sampleSourceTrack = track;
                 
-                dispatch_async(helper->queue, ^{
-                    [helper->fifo addObject:sample];
-                    [sample release];
-                });
+                [helper->fifo enqueue:sample];
+                [sample release];
 
                 sampleId++;
                 DpbAdd( &h264_dpb, poc, slice_is_idr );
@@ -1592,10 +1593,8 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
         if(track.needConversion)
             sample->sampleSourceTrack = track;
 
-        dispatch_async(helper->queue, ^{
-            [helper->fifo addObject:sample];
-            [sample release];
-        });
+        [helper->fifo enqueue:sample];
+        [sample release];
 
         DpbAdd(&h264_dpb, h264_dec.pic_order_cnt, slice_is_idr);
     }
@@ -1603,8 +1602,7 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     DpbFlush(&h264_dpb);
     free(nal_buffer);
 
-    _done = 1;
-
+    [self setDone: YES];
     [pool release];
 }
 

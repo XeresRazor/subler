@@ -17,6 +17,7 @@
 #import "MP42Metadata.h"
 #import "MP42Utilities.h"
 #import "MP42MediaFormat.h"
+#import "MP42Fifo.h"
 #import "MP42Muxer.h"
 
 extern NSString * const MP42Create64BitData;

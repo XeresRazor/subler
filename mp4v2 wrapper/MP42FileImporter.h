@@ -36,17 +36,19 @@
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track;
 - (NSSize)sizeForTrack:(MP42Track *)track;
-- (NSData*)magicCookieForTrack:(MP42Track *)track;
+- (NSData *)magicCookieForTrack:(MP42Track *)track;
 - (AudioStreamBasicDescription)audioDescriptionForTrack:(MP42Track *)track;
 
 - (void)setActiveTrack:(MP42Track *)track;
 - (void)startReading;
 - (void)stopReading;
 
-- (MP42SampleBuffer*)copyNextSample;
+- (MP42SampleBuffer *)copyNextSample;
 
 - (CGFloat)progress;
+
 - (BOOL)done;
+- (void)setDone:(BOOL)status;
 
 - (void)cancel;
 

@@ -12,17 +12,17 @@
 @protocol MP42ConverterProtocol <NSObject>
 
 @optional
-- (NSData*) magicCookie;
+- (NSData *)magicCookie;
 
 @required
-- (void) setOutputTrack: (NSUInteger) outputTrackId;
-- (void) addSample: (MP42SampleBuffer*)sample;
-- (MP42SampleBuffer*) copyEncodedSample;
+- (void)setOutputTrack:(NSUInteger)outputTrackId;
+- (void)addSample:(MP42SampleBuffer *)sample;
+- (MP42SampleBuffer *)copyEncodedSample;
 
-- (BOOL) needMoreSample;
+- (BOOL)needMoreSample;
 
-- (BOOL) encoderDone;
-- (void) setDone:(BOOL)status;
+- (BOOL)encoderDone;
+- (void)setDone:(BOOL)status;
 
 
 @end

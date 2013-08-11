@@ -16,6 +16,7 @@
 #import "MP42H264Importer.h"
 #import "MP42VobSubImporter.h"
 #import "MP42Track.h"
+#import "MP42Fifo.h"
 
 #if !__LP64__
 #import "MP42QTImporter.h"
@@ -66,8 +67,6 @@
         }
     }
 
-
-
     return self;
 }
 
@@ -81,7 +80,7 @@
     return NSMakeSize(0,0);
 }
 
-- (NSData*)magicCookieForTrack:(MP42Track *)track
+- (NSData *)magicCookieForTrack:(MP42Track *)track
 {
     return nil;
 }
@@ -101,21 +100,18 @@
 
 - (void)startReading
 {
-    for (MP42Track* track in _activeTracks) {
-        dispatch_retain(track.muxer_helper->queue);
-        [track.muxer_helper->fifo retain];
-    }
+    for (MP42Track *track in _activeTracks)
+        track.muxer_helper->fifo = [[MP42Fifo alloc] init];
 }
 
 - (void)stopReading
 {
+    // wait until the demuxer thread exits
     while (!_done)
         usleep(2000);
 
-    for (MP42Track* track in _activeTracks) {        
-        dispatch_release(track.muxer_helper->queue);
+    for (MP42Track *track in _activeTracks)
         [track.muxer_helper->fifo release];
-    }
 }
 
 - (BOOL)done
@@ -123,12 +119,11 @@
     return _done;
 }
 
-- (MP42SampleBuffer*)copyNextSample
-{
-    return nil;
+- (void)setDone:(BOOL)status {
+    OSAtomicIncrement32(&_done);
 }
 
-- (MP42SampleBuffer*)nextSampleForTrack:(MP42Track *)track
+- (MP42SampleBuffer*)copyNextSample
 {
     return nil;
 }
@@ -161,7 +156,6 @@
 	[_fileURL release], _fileURL = nil;
     [super dealloc];
 }
-
 
 @synthesize metadata = _metadata;
 @synthesize tracks = _tracksArray;

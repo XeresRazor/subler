@@ -11,7 +11,6 @@
 #import "SBLanguages.h"
 #import "MP42File.h"
 
-
 @implementation MP42SrtImporter
 
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
@@ -34,12 +33,12 @@
         newTrack.alternate_group = 2;
         newTrack.language = getFilenameLanguage((CFStringRef)[_fileURL path]);
 
-        ss = [[SBSubSerializer alloc] init];
+        _ss = [[SBSubSerializer alloc] init];
         if ([[_fileURL pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame) {
-            success = LoadSRTFromPath([_fileURL path], ss, &duration);
+            success = LoadSRTFromPath([_fileURL path], _ss, &duration);
         }
         else if ([[_fileURL pathExtension] caseInsensitiveCompare: @"smi"] == NSOrderedSame) {
-            success = LoadSMIFromPath([_fileURL path], ss, 1);
+            success = LoadSMIFromPath([_fileURL path], _ss, 1);
         }
 
         [newTrack setDuration:duration];
@@ -54,13 +53,13 @@
             return nil;
         }
 
-        [ss setFinished:YES];
+        [_ss setFinished:YES];
         
-        if ([ss positionInformation]) {
+        if ([_ss positionInformation]) {
             newTrack.verticalPlacement = YES;
-            verticalPlacement = YES;
+            _verticalPlacement = YES;
         }
-        if ([ss forced])
+        if ([_ss forced])
             newTrack.someSamplesAreForced = YES;
 
         [_tracksArray addObject:newTrack];
@@ -80,62 +79,59 @@
       return NSMakeSize([(MP42SubtitleTrack*)track trackWidth], [(MP42SubtitleTrack*) track trackHeight]);
 }
 
-- (NSData*)magicCookieForTrack:(MP42Track *)track
+- (void)demux:(id)sender
 {
-    return nil;
-}
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    MP42SampleBuffer *sample;
+    MP4TrackId dstTrackId = [[_activeTracks lastObject] Id];
 
-- (MP42SampleBuffer*)nextSampleForTrack:(MP42Track *)track
-{
-    return [[self copyNextSample] autorelease];
+    for (MP42SubtitleTrack *track in _activeTracks) {
+        CGSize trackSize;
+        trackSize.width = track.trackWidth;
+        trackSize.height = track.trackHeight;
+
+        muxer_helper *helper = track.muxer_helper;
+
+        while (![_ss isEmpty]) {
+            SBSubLine *sl = [_ss getSerializedPacket];
+
+            if ([sl->line isEqualToString:@"\n"]) {
+                sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO);
+            }
+            else {
+                int top = (sl->top == INT_MAX) ? trackSize.height : sl->top;
+                sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, sl->forced, _verticalPlacement, trackSize, top);
+            }
+            
+            while ([helper->fifo isFull] && !_cancelled)
+                usleep(500);
+
+            [helper->fifo enqueue:sample];
+            [sample release];
+        }
+    }
+
+    _progress = 100.0;
+
+    [self setDone: YES];
+    [pool release];
 }
 
 - (void)startReading
 {
     [super startReading];
-
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    MP42SampleBuffer *sample;
-    MP4TrackId dstTrackId = [[_activeTracks lastObject] Id];
-
-    for (MP42Track * track in _activeTracks) {
-        muxer_helper *helper = track.muxer_helper;
-        while (![ss isEmpty]) {
-            SBSubLine *sl = [ss getSerializedPacket];
-
-            if ([sl->line isEqualToString:@"\n"]) {
-                if ((sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO)))
-                    dispatch_async(helper->queue, ^{
-                        [helper->fifo addObject:sample];
-                        [sample release];
-                    });
-            }
-            else {
-            CGSize trackSize;
-            trackSize.width = [(MP42SubtitleTrack*)[_tracksArray lastObject] trackWidth];
-            trackSize.height = [(MP42SubtitleTrack*)[_tracksArray lastObject] trackHeight];
-
-            int top = (sl->top == INT_MAX) ? trackSize.height : sl->top;
-
-            if ((sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, sl->forced, verticalPlacement, trackSize, top)))
-                dispatch_async(helper->queue, ^{
-                    [helper->fifo addObject:sample];
-                    [sample release];
-                });
-            }
-        }
-    }
     
-    _done = 1;
-    _progress = 100.0;
-
-    [pool release];
-    return;
+    if (!_dataReader && !_done) {
+        _dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_dataReader setName:@"Srt Demuxer"];
+        [_dataReader start];
+    }
 }
 
 - (void) dealloc
 {
-    [ss release];
+    [_dataReader release];
+    [_ss release];
 
     [super dealloc];
 }

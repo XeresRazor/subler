@@ -10,11 +10,11 @@
 #import "MP42FileImporter.h"
 
 @interface MP42MkvImporter : MP42FileImporter {
-    struct MatroskaFile	*matroskaFile;
-	struct StdIoStream  *ioStream;
-    u_int64_t fileDuration;
+    struct MatroskaFile	*_matroskaFile;
+	struct StdIoStream  *_ioStream;
 
-    NSThread *dataReader;
+    u_int64_t   _fileDuration;
+    NSThread    *_dataReader;
     
 }
 

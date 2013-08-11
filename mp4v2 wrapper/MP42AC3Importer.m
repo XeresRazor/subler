@@ -10,6 +10,7 @@
 #import "SBLanguages.h"
 #import "MP42File.h"
 #import "MP42Utilities.h"
+#import "MP42Fifo.h"
 
 #include <sys/stat.h>
 
@@ -355,7 +356,7 @@ static bool GetFirstHeader(FILE* inFile)
     int64_t currentSize = 0;
 
     while (LoadNextAc3Frame(inFile, sampleBuffer, &sampleSize, false) && !_cancelled) {
-        while ([helper->fifo count] >= 200 && !_cancelled) {
+        while ([helper->fifo isFull] && !_cancelled) {
             usleep(500);
         }
 
@@ -374,10 +375,8 @@ static bool GetFirstHeader(FILE* inFile)
         if(track.needConversion)
             sample->sampleSourceTrack = track;
 
-        dispatch_async(helper->queue, ^{
-            [helper->fifo addObject:sample];
-            [sample release];
-        });
+        [helper->fifo enqueue:sample];
+        [sample release];
 
         sampleId++;
         sampleSize = sizeof(sampleBuffer);
@@ -386,7 +385,7 @@ static bool GetFirstHeader(FILE* inFile)
         _progress = (currentSize / (CGFloat) size) * 100;
     }
 
-    _done = 1;
+    [self setDone: YES];
     [pool release];
 }
 

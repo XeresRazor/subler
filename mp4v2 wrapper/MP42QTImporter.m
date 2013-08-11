@@ -101,7 +101,7 @@
                 [(MP42VideoTrack*)newTrack setTrackWidth: dimension.width];
                 [(MP42VideoTrack*)newTrack setTrackHeight: dimension.height];
 
-                long count;
+                long pcount, ccount;
                 // Get the sample description
                 SampleDescriptionHandle desc = (SampleDescriptionHandle) NewHandle(0);
                 GetMediaSampleDescription(media, 1, desc);
@@ -111,18 +111,23 @@
 				[(MP42VideoTrack*)newTrack setWidth: (**imgDesc).width];
 				[(MP42VideoTrack*)newTrack setHeight: (**imgDesc).height];
 
-                // Read pixel aspect ratio
-                CountImageDescriptionExtensionType(imgDesc, kPixelAspectRatioImageDescriptionExtension, &count);
-                if (count > 0) {
+                // Read pixel aspect ratio and clean aperture
+                CountImageDescriptionExtensionType(imgDesc, kPixelAspectRatioImageDescriptionExtension, &pcount);
+                CountImageDescriptionExtensionType(imgDesc, kCleanApertureImageDescriptionExtension, &ccount);
+                if (pcount > 0) {
                     Handle pasp = NewHandle(0);
                     GetImageDescriptionExtension(imgDesc, &pasp, kPixelAspectRatioImageDescriptionExtension, 1);
                     [(MP42VideoTrack*)newTrack setHSpacing:CFSwapInt32BigToHost(((PixelAspectRatioImageDescriptionExtension*)(*pasp))->hSpacing)];
                     [(MP42VideoTrack*)newTrack setVSpacing: CFSwapInt32BigToHost(((PixelAspectRatioImageDescriptionExtension*)(*pasp))->vSpacing)];
                     DisposeHandle(pasp);
                 }
+                if (ccount > 0) {
+                    // To-Do
+                }
+
 				// Hack to setup PASP if none exists
-				else if (dimension.width != (**imgDesc).width) { 
-					AVRational dar, invPixelSize, sar;
+                if (!pcount && !ccount && dimension.width != (**imgDesc).width) {
+					AVRational dar, sar, invPixelSize;
 					dar			   = (AVRational){dimension.width, dimension.height};
 					invPixelSize   = (AVRational){(**imgDesc).width, (**imgDesc).height};
 					sar = av_mul_q(dar, invPixelSize);
@@ -863,7 +868,7 @@
         sampleCount = QTSampleTableGetNumberOfSamples(sampleTable);
 
         for (sampleIndex = 1; sampleIndex <= sampleCount && !_cancelled; sampleIndex++) {
-            while ([helper->fifo count] >= 300 && !_cancelled) {
+            while ([helper->fifo isFull] && !_cancelled) {
                 usleep(500);
             }
 
@@ -906,10 +911,8 @@
             if(track.needConversion)
                 sample->sampleSourceTrack = track;
 
-            dispatch_async(helper->queue, ^{
-                [helper->fifo addObject:sample];
-                [sample release];
-            });
+            [helper->fifo enqueue:sample];
+            [sample release];
 
             _progress = ((demuxHelper->currentSampleId / (CGFloat) demuxHelper->totalSampleNumber ) * 100 / tracksNumber) +
             (tracksDone / (CGFloat) tracksNumber * 100);
@@ -921,7 +924,7 @@
         QTSampleTableRelease(sampleTable);
     }
 
-    _done = 1;
+    [self setDone: YES];
     [pool release];
 }
 
