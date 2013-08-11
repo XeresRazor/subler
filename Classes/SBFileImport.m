@@ -60,8 +60,11 @@
             else if ([object isMemberOfClass:[MP42AudioTrack class]])
                 [_actionArray addObject:[NSNumber numberWithInteger:[[[NSUserDefaults standardUserDefaults]
                                                                  valueForKey:@"SBAudioMixdown"] integerValue]]];
+            else if ([object isMemberOfClass:[MP42ChapterTrack class]])
+                [_actionArray addObject:[NSNumber numberWithInteger:0]];
             else
                 [_actionArray addObject:[NSNumber numberWithInteger:1]];
+
         }
         else {
             [_importCheckArray addObject: [NSNumber numberWithBool:YES]];
