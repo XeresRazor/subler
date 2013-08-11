@@ -62,6 +62,10 @@ int compare_color(rgba_color c1, rgba_color c2) {
     return newObject;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"Style: %d\n, Location: %d, Length: %d", _style, _location, _length];
+}
+
 @synthesize style = _style;
 @synthesize color = _color;
 @synthesize type = _type;
@@ -178,14 +182,16 @@ int compare_color(rgba_color c1, rgba_color c2) {
         if (currentStyle.location != nextStyle.location) {
             currentStyle.length = nextStyle.location - currentStyle.location;
             if (currentStyle.style || compare_color(currentStyle.color, nextStyle.color))
-                [serializedStyles addObject:[[currentStyle copy] autorelease]];
+                if (currentStyle.length)
+                    [serializedStyles addObject:[[currentStyle copy] autorelease]];
+
             currentStyle.location = nextStyle.location;
         }
         if (nextStyle.type == kTagOpen) {
             if (nextStyle.style == kStyleColor)
                 currentStyle.color = nextStyle.color;
             else
-            currentStyle.style |= nextStyle.style;
+                currentStyle.style |= nextStyle.style;
         }
         else if (nextStyle.type == kTagClose) {
             if (nextStyle.style == kStyleColor)
@@ -197,7 +203,8 @@ int compare_color(rgba_color c1, rgba_color c2) {
 
     if (currentStyle.style || compare_color(currentStyle.color, _defaultColor)) {
         currentStyle.length = [_text length] - currentStyle.location;
-        [serializedStyles addObject:[[currentStyle copy] autorelease]];
+        if (currentStyle.length)
+            [serializedStyles addObject:[[currentStyle copy] autorelease]];
     }
 
     [currentStyle release];
