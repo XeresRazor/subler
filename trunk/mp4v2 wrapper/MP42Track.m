@@ -10,6 +10,7 @@
 #import "MP42Utilities.h"
 #import "MP42FileImporter.h"
 #import "MP42Sample.h"
+#import "MP42Fifo.h"
 #import "SBLanguages.h"
 
 @implementation MP42Track
@@ -328,17 +329,12 @@
     _helper->importer = importer;
 }
 
-- (MP42SampleBuffer*)copyNextSample {
+- (MP42SampleBuffer *)copyNextSample {
     __block MP42SampleBuffer *sample = nil;
 
     if (_helper->converter) {
         while ([_helper->converter needMoreSample] && [_helper->fifo count]) {
-            dispatch_sync(_helper->queue, ^{
-                sample = [_helper->fifo objectAtIndex:0];
-                [sample retain];
-                [_helper->fifo removeObjectAtIndex:0];
-            });
-
+            sample = [_helper->fifo deque];
             [_helper->converter addSample:sample];
             [sample release];
         }
@@ -356,13 +352,8 @@
         if ([_helper->importer done] && ![_helper->fifo count])
             _helper->done = YES;
 
-        if ([_helper->fifo count]) {
-            dispatch_sync(_helper->queue, ^{
-                sample = [_helper->fifo objectAtIndex:0];
-                [sample retain];
-                [_helper->fifo removeObjectAtIndex:0];
-            });
-        }
+        if ([_helper->fifo count])
+            sample = [_helper->fifo deque];
     }
 
     return sample;

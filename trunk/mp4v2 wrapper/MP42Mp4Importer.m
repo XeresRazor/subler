@@ -237,7 +237,7 @@
         muxer_helper *helper = track.muxer_helper;
 
         while (!_cancelled) {
-            while ([helper->fifo count] >= 200 && !_cancelled) {
+            while ([helper->fifo isFull] && !_cancelled) {
                 usleep(500);
             }
 
@@ -273,19 +273,15 @@
             if(track.needConversion)
                 sample->sampleSourceTrack = track;
 
-            dispatch_async(helper->queue, ^{
-                [helper->fifo addObject:sample];
-                [sample release];
-            });
+            [helper->fifo enqueue:sample];
+            [sample release];
 
             _progress = ((demuxHelper->currentSampleId / (CGFloat) demuxHelper->totalSampleNumber ) * 100 / tracksNumber) +
                         (tracksDone / (CGFloat) tracksNumber * 100);
         }
     }
 
-    if (tracksDone >= tracksNumber)
-        _done = 1;
-
+    [self setDone: YES];
     [pool release];
 }
 

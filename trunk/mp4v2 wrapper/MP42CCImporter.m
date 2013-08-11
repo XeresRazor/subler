@@ -154,6 +154,10 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
     }
 
     for (SBTextSample *ccSample in sampleArray) {
+        while ([helper->fifo isFull] && !_cancelled) {
+            usleep(500);
+        }
+
         NSArray  *bytesArray   = nil;
         MP4Duration sampleDuration = 0;
         bytesArray = [ccSample.title componentsSeparatedByRegex:splitBytes];
@@ -193,10 +197,8 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
             sample->sampleIsSync = 1;
             sample->sampleTrackId = dstTrackId;
 
-            dispatch_async(helper->queue, ^{
-                [helper->fifo addObject:sample];
-                [sample release];
-            });
+            [helper->fifo enqueue:sample];
+            [sample release];
 
             frameDrop += ccSample.timestamp;
             minutesDrop += frameDrop;
@@ -229,16 +231,14 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
         sample->sampleIsSync = 1;
         sample->sampleTrackId = dstTrackId;
 
-        dispatch_async(helper->queue, ^{
-            [helper->fifo addObject:sample];
-            [sample release];
-        });
+        [helper->fifo enqueue:sample];
+        [sample release];
 
         i++;
     }
 
     [sampleArray release];
-    _done = 1;
+    [self setDone: YES];
 
     [pool release];
 }

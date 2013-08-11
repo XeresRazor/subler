@@ -385,7 +385,7 @@ void FFInitFFmpeg()
     }
 }
 
-- (MP42SampleBuffer*)copyEncodedSample
+- (MP42SampleBuffer *)copyEncodedSample
 {
     MP42SampleBuffer *sample;
     if (![outputSamplesBuffer count]) {

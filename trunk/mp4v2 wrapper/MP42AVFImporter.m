@@ -680,7 +680,7 @@
         AVAssetReaderOutput *assetReaderOutput = demuxHelper->assetReaderOutput;
 
         while (!_cancelled) {
-            while ([helper->fifo count] >= 300 && !_cancelled) {
+            while ([helper->fifo isFull] && !_cancelled) {
                 usleep(500);
             }
             CMSampleBufferRef sampleBuffer = [assetReaderOutput copyNextSampleBuffer];
@@ -754,10 +754,8 @@
                     sample->sampleIsSync = sync;
                     sample->sampleTrackId = track.Id;
 
-                    dispatch_async(helper->queue, ^{
-                        [helper->fifo addObject:sample];
-                        [sample release];
-                    });
+                    [helper->fifo enqueue:sample];
+                    [sample release];
 
                     currentDataLength += sampleSize;
                 }
@@ -895,10 +893,8 @@
                         if(track.needConversion)
                             sample->sampleSourceTrack = track;
 
-                        dispatch_async(helper->queue, ^{
-                            [helper->fifo addObject:sample];
-                            [sample release];
-                        });
+                        [helper->fifo enqueue:sample];
+                        [sample release];
 
                         currentDataLength += sampleSize;
                     }
@@ -926,7 +922,7 @@
     }
 
     [assetReader release];
-    _done = 1;
+    [self setDone: YES];
     [pool release];
 }
 

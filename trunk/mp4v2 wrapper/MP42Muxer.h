@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "mp4v2.h"
+
 @class MP42Track;
 
 @interface MP42Muxer : NSObject {

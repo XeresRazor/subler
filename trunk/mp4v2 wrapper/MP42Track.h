@@ -12,17 +12,15 @@
 
 @class MP42FileImporter;
 @class MP42SampleBuffer;
+@class MP42Fifo;
 
 typedef struct muxer_helper {
     MP42FileImporter *importer;
+    BOOL done;
 
     id demuxer_context;
     id <MP42ConverterProtocol> converter;
-
-    NSMutableArray *fifo;
-    dispatch_queue_t queue;
-
-    BOOL done;
+    MP42Fifo *fifo;
 } muxer_helper;
 
 @interface MP42Track : NSObject <NSCoding> {

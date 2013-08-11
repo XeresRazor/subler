@@ -42,15 +42,15 @@
     BOOL                   fileReaderDone;
 }
 
-- (id) initWithTrack: (MP42SubtitleTrack*) track error:(NSError **)outError;
+- (id)initWithTrack:(MP42SubtitleTrack *)track error:(NSError **)outError;
 
-- (void) setOutputTrack: (NSUInteger) outputTrackId;
-- (void) addSample: (MP42SampleBuffer*)sample;
-- (MP42SampleBuffer*) copyEncodedSample;
+- (void)setOutputTrack:(NSUInteger)outputTrackId;
+- (void)addSample: (MP42SampleBuffer *)sample;
+- (MP42SampleBuffer *)copyEncodedSample;
 
-- (BOOL) needMoreSample;
+- (BOOL)needMoreSample;
 
-- (BOOL) encoderDone;
-- (void) setDone:(BOOL)status;
+- (BOOL)encoderDone;
+- (void)setDone:(BOOL)status;
 
 @end

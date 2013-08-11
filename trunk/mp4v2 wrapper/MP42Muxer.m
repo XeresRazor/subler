@@ -364,15 +364,9 @@
     NSUInteger done = 0, update = 0;
     CGFloat progress = 0;
 
-    for (MP42Track * track in _workingTracks) {
-        muxer_helper *helper = track.muxer_helper;
-
-        // Initialize the fifo and the helper queue
-        helper->fifo = [[NSMutableArray alloc] initWithCapacity:200];
-        helper->queue = dispatch_queue_create([[NSString stringWithFormat:@"com.subler.queue-%d",track.Id] UTF8String], DISPATCH_QUEUE_SERIAL);
-
-        if (![trackImportersArray containsObject:helper->importer])
-            [trackImportersArray addObject:helper->importer];
+    for (MP42Track *track in _workingTracks) {
+        if (![trackImportersArray containsObject:track.muxer_helper->importer])
+            [trackImportersArray addObject:track.muxer_helper->importer];
     }
 
     for (id importerHelper in trackImportersArray)
@@ -386,7 +380,7 @@
 
         // Iterate the tracks array and mux the samples
         for (MP42Track *track in _workingTracks) {
-            MP42SampleBuffer * sampleBuffer = nil;
+            MP42SampleBuffer *sampleBuffer = nil;
 
             for (int i = 0; i < 100 && (sampleBuffer = [track copyNextSample]) != nil; i++) {
                 if (!MP4WriteSample(_fileHandle, sampleBuffer->sampleTrackId,
@@ -446,9 +440,6 @@
                                            [magicCookie length]);
             }
         }
-
-        dispatch_release(helper->queue);
-        [helper->fifo release];
 
         if (helper->converter)
             [helper->converter setDone:YES];
