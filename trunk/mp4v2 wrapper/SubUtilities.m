@@ -999,9 +999,8 @@ NSString* removeNewLines(NSString* string) {
         [mutableString deleteCharactersInRange:NSMakeRange([mutableString length] -1, 1)];
 
     NSMutableString *mutableString2 = [NSMutableString stringWithString:mutableString];
-    NSUInteger       replacedCount  = 0;
 
-    replacedCount = [mutableString2 replaceOccurrencesOfString:@"\n" withString:@" " options:0 range:NSMakeRange(0,[mutableString2 length])];
+    NSUInteger replacedCount = [mutableString2 replaceOccurrencesOfString:@"\n" withString:@" " options:0 range:NSMakeRange(0,[mutableString2 length])];
     if (replacedCount >= 2)
         return mutableString2;
     else
@@ -1036,14 +1035,13 @@ void createTboxAtom(u_int8_t* buffer, u_int16_t top, u_int16_t left, u_int16_t b
     buffer[13] = bottom & 0xFF;
     buffer[14] = right >> 8;
     buffer[15] = right & 0xFF;
-
 }
 
-MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString* string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, CGSize trackSize, int top)
+MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString *string, MP4Duration duration, BOOL forced, BOOL verticalPlacement, CGSize trackSize, int top)
 {
     u_int8_t *sampleData = NULL, *styleAtom = NULL;
     size_t styleSize = 0, sampleSize = 0, stringLength = 0;
-    u_int8_t pos = 0;
+    u_int64_t pos = 0;
 
     string = removeNewLines(string);
     string = createStyleAtomForString(string, &styleAtom, &styleSize);
