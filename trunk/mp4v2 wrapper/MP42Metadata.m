@@ -1214,38 +1214,41 @@ static const genreType_t genreType_strings[] = {
 
     MP4TagsSetSortTVShow(tags, [[tagsDict valueForKey:@"Sort TV Show"] UTF8String]);
 
-    uint32_t j;
-    for (j = 0; j < tags->artworkCount; j++)
-        MP4TagsRemoveArtwork(tags, j);
-
-    if ([artworks count] && isArtworkEdited) {
-        uint32_t i;
-        for (i = 0; i < [artworks count]; i++) {
-            MP42Image *artwork;
-            MP4TagArtwork newArtwork;
-            NSArray *representations;
-            NSData *bitmapData;
-
-            artwork = [artworks objectAtIndex:i];
-            if (artwork.data) {
-                newArtwork.data = (void *)[artwork.data bytes];
-                newArtwork.size = [artwork.data length];
-                newArtwork.type = artwork.type;
+    
+    if (isArtworkEdited) {
+        uint32_t j;
+        for (j = 0; j < tags->artworkCount; j++)
+            MP4TagsRemoveArtwork(tags, j);
+        
+        if ([artworks count]) {
+            uint32_t i;
+            for (i = 0; i < [artworks count]; i++) {
+                MP42Image *artwork;
+                MP4TagArtwork newArtwork;
+                NSArray *representations;
+                NSData *bitmapData;
+                
+                artwork = [artworks objectAtIndex:i];
+                if (artwork.data) {
+                    newArtwork.data = (void *)[artwork.data bytes];
+                    newArtwork.size = [artwork.data length];
+                    newArtwork.type = artwork.type;
+                }
+                else {
+                    representations = [artwork.image representations];
+                    bitmapData = [NSBitmapImageRep representationOfImageRepsInArray:representations
+                                                                          usingType:NSPNGFileType properties:nil];
+                    
+                    newArtwork.data = (void *)[bitmapData bytes];
+                    newArtwork.size = [bitmapData length];
+                    newArtwork.type = MP4_ART_PNG;
+                }
+                
+                if (tags->artworkCount > i)
+                    MP4TagsSetArtwork(tags, i, &newArtwork);
+                else
+                    MP4TagsAddArtwork(tags, &newArtwork);
             }
-            else {
-                representations = [artwork.image representations];
-                bitmapData = [NSBitmapImageRep representationOfImageRepsInArray:representations
-                                                                      usingType:NSPNGFileType properties:nil];
-
-                newArtwork.data = (void *)[bitmapData bytes];
-                newArtwork.size = [bitmapData length];
-                newArtwork.type = MP4_ART_PNG;
-            }
-
-            if (tags->artworkCount > i)
-                MP4TagsSetArtwork(tags, i, &newArtwork);
-            else
-                MP4TagsAddArtwork(tags, &newArtwork);
         }
     }
 
