@@ -671,7 +671,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [self updateChangeCount:NSChangeDone];
 }
 
-- (IBAction) selectFile: (id) sender
+- (IBAction)selectFile:(id)sender
 {
     NSOpenPanel *panel = [NSOpenPanel openPanel];
     panel.allowsMultipleSelection = NO;
@@ -687,7 +687,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
                 [self addChapterTrack:[panel.URLs objectAtIndex: 0]];
             else
                 [self performSelectorOnMainThread:@selector(showImportSheet:)
-                                       withObject:[panel.URLs objectAtIndex: 0] waitUntilDone: NO];
+                                       withObject:panel.URLs waitUntilDone: NO];
         }
     }];
 }
