@@ -420,8 +420,8 @@
             // Update the UI
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSInteger itemIndex = [filesArray indexOfObject:item];
-                [countLabel setStringValue:[NSString stringWithFormat:@"Processing file %d of %d.",itemIndex + 1, [filesArray count]]];
-                [[NSApp dockTile] setBadgeLabel:[NSString stringWithFormat:@"%d", [filesArray count] - itemIndex]];
+                [countLabel setStringValue:[NSString stringWithFormat:@"Processing file %ld of %lu.",(long)itemIndex + 1, (unsigned long)[filesArray count]]];
+                [[NSApp dockTile] setBadgeLabel:[NSString stringWithFormat:@"%lu", (unsigned long)[filesArray count] - itemIndex]];
                 [tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
             });
 
@@ -461,7 +461,7 @@
                     // Update the UI
                     dispatch_async(dispatch_get_main_queue(), ^{
                         NSInteger itemIndex = [filesArray indexOfObject:item];
-                        [countLabel setStringValue:[NSString stringWithFormat:@"Optimizing file %d of %d.",itemIndex + 1, [filesArray count]]];
+                        [countLabel setStringValue:[NSString stringWithFormat:@"Optimizing file %ld of %lu.",(long)itemIndex + 1, (unsigned long)[filesArray count]]];
                     });
 
                     success = [mp4File optimize];
@@ -704,7 +704,7 @@
         }
 
         if (status != SBQueueStatusWorking) {
-            [countLabel setStringValue:[NSString stringWithFormat:@"%d files in queue.", [filesArray count]]];
+            [countLabel setStringValue:[NSString stringWithFormat:@"%lu files in queue.", (unsigned long)[filesArray count]]];
             [self updateDockTile];
         }
     }
@@ -741,7 +741,7 @@
         }
 
         if (status != SBQueueStatusWorking) {
-            [countLabel setStringValue:[NSString stringWithFormat:@"%d files in queue.", [filesArray count]]];
+            [countLabel setStringValue:[NSString stringWithFormat:@"%lu files in queue.", (unsigned long)[filesArray count]]];
             [self updateDockTile];
         }
     }

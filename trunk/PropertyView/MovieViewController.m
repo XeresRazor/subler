@@ -304,7 +304,7 @@ NSString *MetadataPBoardType = @"MetadataPBoardType";
     for (MP42Metadata *set in [presetManager presets]) {
         newItem = [[NSMenuItem alloc] initWithTitle:[set presetName] action:@selector(applySet:) keyEquivalent:@""];
         if (i < 9)
-            [newItem setKeyEquivalent:[NSString stringWithFormat:@"%d", i+1]];
+            [newItem setKeyEquivalent:[NSString stringWithFormat:@"%lu", (unsigned long)i+1]];
 
         [newItem setTarget:self];
         [newItem setTag:i++];

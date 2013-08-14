@@ -63,7 +63,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"Style: %d\n, Location: %d, Length: %d", _style, _location, _length];
+    return [NSString stringWithFormat:@"Style: %ld\n, Location: %lu, Length: %lu", (long)_style, (unsigned long)_location, (unsigned long)_length];
 }
 
 @synthesize style = _style;
