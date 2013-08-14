@@ -215,6 +215,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 - (BOOL)optimize
 {
     __block BOOL noErr = NO;
+    __block BOOL done = NO;
 
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSError *error;
@@ -233,9 +234,10 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             noErr = MP4Optimize([[_fileURL path] UTF8String], [[tempURL path] UTF8String]);
+            done = YES;
         });
 
-        while (!noErr) {
+        while (!done) {
             unsigned long long fileSize = [[[fileManager attributesOfItemAtPath:[tempURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
             [self progressStatus:((CGFloat)fileSize / originalFileSize) * 100];
             usleep(450000);
