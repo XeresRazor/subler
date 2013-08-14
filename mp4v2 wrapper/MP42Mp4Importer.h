@@ -11,8 +11,7 @@
 #import "mp4v2.h"
 
 @interface MP42Mp4Importer : MP42FileImporter {
-    MP4FileHandle   fileHandle;
-    NSThread        *dataReader;
+    MP4FileHandle   _fileHandle;
 }
 
 @end

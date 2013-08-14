@@ -44,7 +44,7 @@
     BOOL noErr = YES;
     _fileHandle = fileHandle;
 
-    for (MP42Track * track in _workingTracks) {
+    for (MP42Track *track in _workingTracks) {
         MP4TrackId dstTrackId = 0;
         NSData *magicCookie;
         NSInteger timeScale;
@@ -88,7 +88,7 @@
 
             NSSize size = [helper->importer sizeForTrack:track];
 
-            uint8_t* avcCAtom = (uint8_t*)[magicCookie bytes];
+            uint8_t *avcCAtom = (uint8_t*)[magicCookie bytes];
             dstTrackId = MP4AddH264VideoTrack(fileHandle, timeScale,
                                               MP4_INVALID_DURATION,
                                               size.width, size.height,
@@ -417,32 +417,22 @@
         update++;
     }
 
+    // Write the converted audio track magic cookie
+    for (MP42Track *track in _workingTracks) {
+        if(track.muxer_helper->converter && track.needConversion && [track isMemberOfClass:[MP42AudioTrack class]]) {
+            NSData *magicCookie = [track.muxer_helper->converter magicCookie];
+            MP4SetTrackESConfiguration(_fileHandle, track.Id,
+                                       [magicCookie bytes],
+                                       [magicCookie length]);
+        }
+    }
+
     // Stop the importers and clean ups
     for (id importerHelper in trackImportersArray) {
         if (_cancelled)
-            [importerHelper cancel];
+            [importerHelper cancelReading];
         else
             [importerHelper cleanUp:_fileHandle];
-
-        [importerHelper stopReading];
-    }
-
-    // Write the converted audio track magic cookie
-    // And release the various muxer helpers
-    for (MP42Track *track in _workingTracks) {
-        muxer_helper *helper = track.muxer_helper;
-
-        if(helper->converter && track.needConversion) {
-            if ([track isMemberOfClass:[MP42AudioTrack class]]) {
-                NSData *magicCookie = [helper->converter magicCookie];
-                MP4SetTrackESConfiguration(_fileHandle, track.Id,
-                                           [magicCookie bytes],
-                                           [magicCookie length]);
-            }
-        }
-
-        if (helper->converter)
-            [helper->converter setDone:YES];
     }
 
     [trackImportersArray release];

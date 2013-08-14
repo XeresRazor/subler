@@ -15,8 +15,6 @@
 
     NSMutableData *aacInfo;
     u_int32_t samplesPerSecond;
-
-    NSThread *dataReader;
 }
 
 @end

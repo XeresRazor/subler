@@ -20,6 +20,7 @@ typedef struct muxer_helper {
 
     id demuxer_context;
     id <MP42ConverterProtocol> converter;
+
     MP42Fifo *fifo;
 } muxer_helper;
 

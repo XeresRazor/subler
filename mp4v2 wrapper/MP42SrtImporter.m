@@ -121,16 +121,15 @@
 {
     [super startReading];
     
-    if (!_dataReader && !_done) {
-        _dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [_dataReader setName:@"Srt Demuxer"];
-        [_dataReader start];
+    if (!_demuxerThread && !_done) {
+        _demuxerThread = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_demuxerThread setName:@"Srt Demuxer"];
+        [_demuxerThread start];
     }
 }
 
 - (void) dealloc
 {
-    [_dataReader release];
     [_ss release];
 
     [super dealloc];

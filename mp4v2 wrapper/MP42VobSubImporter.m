@@ -223,10 +223,10 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
         _delegate = del;
         _fileURL = [URL retain];
 
-        tracks = LoadVobSubSubtitles([URL URLByDeletingLastPathComponent], [URL lastPathComponent]);
-        _tracksArray = [[NSMutableArray alloc] initWithCapacity:[tracks count]];
+        _VobSubTracks = LoadVobSubSubtitles([URL URLByDeletingLastPathComponent], [URL lastPathComponent]);
+        _tracksArray = [[NSMutableArray alloc] initWithCapacity:[_VobSubTracks count]];
 
-        for (SBVobSubTrack *track in tracks) {
+        for (SBVobSubTrack *track in _VobSubTracks) {
             MP42SubtitleTrack *newTrack = [[MP42SubtitleTrack alloc] init];
 
             newTrack.format = MP42SubtitleFormatVobSub;
@@ -265,7 +265,7 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
 
 - (NSData*)magicCookieForTrack:(MP42Track *)track
 {
-    SBVobSubTrack *vobTrack = [tracks objectAtIndex:track.sourceId];
+    SBVobSubTrack *vobTrack = [_VobSubTracks objectAtIndex:track.sourceId];
     NSMutableData *magicCookie = nil;
 
     for (NSString *line in vobTrack->privateData) {
@@ -300,7 +300,7 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
     for (MP42Track * track in _activeTracks) {
         muxer_helper *helper = track.muxer_helper;
 
-        SBVobSubTrack *vobTrack = [tracks objectAtIndex:track.sourceId];
+        SBVobSubTrack *vobTrack = [_VobSubTracks objectAtIndex:track.sourceId];
         SBVobSubSample *firstSample = nil;
         
         uint32_t lastTime = 0;
@@ -363,8 +363,6 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
                 sample->sampleTimestamp = startTime;
                 sample->sampleIsSync = YES;
                 sample->sampleTrackId = track.Id;
-                if(track.needConversion)
-                    sample->sampleSourceTrack = track;
                 
                 [helper->fifo enqueue:sample];
                 [sample release];
@@ -378,8 +376,6 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
             sample->sampleTimestamp = startTime;
             sample->sampleIsSync = YES;
             sample->sampleTrackId = track.Id;
-            if(track.needConversion)
-                sample->sampleSourceTrack = track;
             
             [helper->fifo enqueue:sample];
             [sample release];
@@ -399,17 +395,16 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
 {
     [super startReading];
 
-    if (!dataReader && !_done) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [dataReader setName:@"VobSub Demuxer"];
-        [dataReader start];
+    if (!_demuxerThread && !_done) {
+        _demuxerThread = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_demuxerThread setName:@"VobSub Demuxer"];
+        [_demuxerThread start];
     }
 }
 
 - (void) dealloc
 {
-    [dataReader release];
-    [tracks release];
+    [_VobSubTracks release];
 
     [super dealloc];
 }

@@ -854,8 +854,6 @@ static bool GetFirstHeader(FILE* inFile)
         sample->sampleTimestamp = 0;
         sample->sampleIsSync = 1;
         sample->sampleTrackId = dstTrackId;
-        if(track.needConversion)
-            sample->sampleSourceTrack = track;
 
         [helper->fifo enqueue:sample];
         [sample release];
@@ -875,16 +873,15 @@ static bool GetFirstHeader(FILE* inFile)
 {
     [super startReading];
 
-    if (!dataReader && !_done) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [dataReader setName:@"AAC Demuxer"];
-        [dataReader start];
+    if (!_demuxerThread && !_done) {
+        _demuxerThread = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_demuxerThread setName:@"AAC Demuxer"];
+        [_demuxerThread start];
     }
 }
 
 - (void) dealloc
 {
-    [dataReader release];
     [aacInfo release];
     fclose(inFile);
 

@@ -57,7 +57,7 @@
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track
 {
-    return MP4GetTrackTimeScale(fileHandle, [track sourceId]);
+    return MP4GetTrackTimeScale(_fileHandle, [track sourceId]);
 }
 
 - (NSSize)sizeForTrack:(MP42Track *)track
@@ -69,25 +69,25 @@
 
 - (NSData*)magicCookieForTrack:(MP42Track *)track
 {
-    if (!fileHandle)
-        fileHandle = MP4Read([[_fileURL path] UTF8String]);
+    if (!_fileHandle)
+        _fileHandle = MP4Read([[_fileURL path] UTF8String]);
 
     NSData *magicCookie = nil;
     MP4TrackId srcTrackId = [track sourceId];
 
-    const char *trackType = MP4GetTrackType(fileHandle, srcTrackId);
-    const char *media_data_name = MP4GetTrackMediaDataName(fileHandle, srcTrackId);
+    const char *trackType = MP4GetTrackType(_fileHandle, srcTrackId);
+    const char *media_data_name = MP4GetTrackMediaDataName(_fileHandle, srcTrackId);
 
     if (MP4_IS_AUDIO_TRACK_TYPE(trackType))
     {
         if (!strcmp(media_data_name, "ac-3")) {
             uint64_t fscod, bsid, bsmod, acmod, lfeon, bit_rate_code;
-            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.fscod", &fscod);
-            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.bsid", &bsid);
-            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.bsmod", &bsmod);
-            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.acmod", &acmod);
-            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.lfeon", &lfeon);
-            MP4GetTrackIntegerProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.bit_rate_code", &bit_rate_code);
+            MP4GetTrackIntegerProperty(_fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.fscod", &fscod);
+            MP4GetTrackIntegerProperty(_fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.bsid", &bsid);
+            MP4GetTrackIntegerProperty(_fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.bsmod", &bsmod);
+            MP4GetTrackIntegerProperty(_fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.acmod", &acmod);
+            MP4GetTrackIntegerProperty(_fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.lfeon", &lfeon);
+            MP4GetTrackIntegerProperty(_fileHandle, srcTrackId, "mdia.minf.stbl.stsd.ac-3.dac3.bit_rate_code", &bit_rate_code);
 
             NSMutableData *ac3Info = [[NSMutableData alloc] init];
             [ac3Info appendBytes:&fscod length:sizeof(uint64_t)];
@@ -100,16 +100,16 @@
             return [ac3Info autorelease];
             
         } else if (!strcmp(media_data_name, "alac")) {
-            if (MP4HaveTrackAtom(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.alac.alac")) {
+            if (MP4HaveTrackAtom(_fileHandle, srcTrackId, "mdia.minf.stbl.stsd.alac.alac")) {
                 uint8_t*     ppValue;
                 uint32_t     pValueSize;
-                MP4GetTrackBytesProperty(fileHandle, srcTrackId, "mdia.minf.stbl.stsd.alac.alac.AppleLosslessMagicCookie", &ppValue, &pValueSize);
+                MP4GetTrackBytesProperty(_fileHandle, srcTrackId, "mdia.minf.stbl.stsd.alac.alac.AppleLosslessMagicCookie", &ppValue, &pValueSize);
                 magicCookie = [NSData dataWithBytes:ppValue length:pValueSize];
             }
         }
         else {
             uint8_t *ppConfig; uint32_t pConfigSize;
-            MP4GetTrackESConfiguration(fileHandle, srcTrackId, &ppConfig, &pConfigSize);
+            MP4GetTrackESConfiguration(_fileHandle, srcTrackId, &ppConfig, &pConfigSize);
             magicCookie = [NSData dataWithBytes:ppConfig length:pConfigSize];
             free(ppConfig);
         }
@@ -118,7 +118,7 @@
 
     else if (!strcmp(trackType, MP4_SUBPIC_TRACK_TYPE)) {
         uint8_t *ppConfig; uint32_t pConfigSize;
-        MP4GetTrackESConfiguration(fileHandle, srcTrackId, &ppConfig, &pConfigSize);
+        MP4GetTrackESConfiguration(_fileHandle, srcTrackId, &ppConfig, &pConfigSize);
 
         UInt32* paletteG = (UInt32 *) ppConfig;
 
@@ -145,17 +145,17 @@
             uint32_t sampleLenFieldSizeMinusOne;
             uint64_t temp;
 
-            if (MP4GetTrackH264ProfileLevel(fileHandle, srcTrackId,
+            if (MP4GetTrackH264ProfileLevel(_fileHandle, srcTrackId,
                                             &AVCProfileIndication,
                                             &AVCLevelIndication) == false) {
                 return nil;
             }
-            if (MP4GetTrackH264LengthSize(fileHandle, srcTrackId,
+            if (MP4GetTrackH264LengthSize(_fileHandle, srcTrackId,
                                           &sampleLenFieldSizeMinusOne) == false) {
                 return nil;
             }
             sampleLenFieldSizeMinusOne--;
-            if (MP4GetTrackIntegerProperty(fileHandle, srcTrackId,
+            if (MP4GetTrackIntegerProperty(_fileHandle, srcTrackId,
                                            "mdia.minf.stbl.stsd.*[0].avcC.profile_compatibility",
                                            &temp) == false) return nil;
             profile_compat = temp & 0xff;
@@ -169,7 +169,7 @@
             uint8_t **seqheader, **pictheader;
             uint32_t *pictheadersize, *seqheadersize;
             uint32_t ix, iy;
-            MP4GetTrackH264SeqPictHeaders(fileHandle, srcTrackId,
+            MP4GetTrackH264SeqPictHeaders(_fileHandle, srcTrackId,
                                           &seqheader, &seqheadersize,
                                           &pictheader, &pictheadersize);
             NSMutableData *seqData = [[NSMutableData alloc] init];
@@ -215,22 +215,17 @@
 - (void)demux:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    if (!fileHandle)
-        fileHandle = MP4Read([[_fileURL path] UTF8String]);
-
     NSInteger tracksNumber = [_activeTracks count];
     NSInteger tracksDone = 0;
     MP4DemuxkHelper *demuxHelper;
 
+    if (!_fileHandle)
+        return;
+
     for (MP42Track *track in _activeTracks) {
-        muxer_helper *helper = track.muxer_helper;
-
-        if (helper->demuxer_context == nil) {
-            demuxHelper = [[MP4DemuxkHelper alloc] init];
-
-            helper->demuxer_context = demuxHelper;
-            demuxHelper->totalSampleNumber = MP4GetTrackNumberOfSamples(fileHandle, track.Id);
-        }
+        track.muxer_helper->demuxer_context = [[MP4DemuxkHelper alloc] init];
+        demuxHelper = track.muxer_helper->demuxer_context;
+        demuxHelper->totalSampleNumber = MP4GetTrackNumberOfSamples(_fileHandle, track.Id);
     }
 
     for (MP42Track * track in _activeTracks) {
@@ -252,7 +247,7 @@
             demuxHelper = helper->demuxer_context;
             demuxHelper->currentSampleId = demuxHelper->currentSampleId + 1;
 
-            if (!MP4ReadSample(fileHandle,
+            if (!MP4ReadSample(_fileHandle,
                                srcTrackId,
                                demuxHelper->currentSampleId,
                                &pBytes, &numBytes,
@@ -270,8 +265,6 @@
             sample->sampleTimestamp = pStartTime;
             sample->sampleIsSync = isSyncSample;
             sample->sampleTrackId = track.Id;
-            if(track.needConversion)
-                sample->sampleSourceTrack = track;
 
             [helper->fifo enqueue:sample];
             [sample release];
@@ -287,33 +280,33 @@
 
 - (void)startReading
 {
-    if (!fileHandle)
-        fileHandle = MP4Read([[_fileURL path] UTF8String]);
-    
+    if (!_fileHandle)
+        _fileHandle = MP4Read([[_fileURL path] UTF8String]);
+
     [super startReading];
 
-    if (!dataReader && !_done) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [dataReader setName:@"MP4 Demuxer"];
-        [dataReader start];
+    if (!_demuxerThread && !_done) {
+        _demuxerThread = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_demuxerThread setName:@"MP4 Demuxer"];
+        [_demuxerThread start];
     }
 }
 
-- (BOOL)cleanUp:(MP4FileHandle) dstFileHandle
+- (BOOL)cleanUp:(MP4FileHandle)dstFileHandle
 {
-    for (MP42Track * track in _activeTracks) {
+    for (MP42Track *track in _activeTracks) {
         MP4TrackId srcTrackId = [track sourceId];
         MP4TrackId dstTrackId = [track Id];
 
         MP4Duration trackDuration = 0;
-        uint32_t i = 1, trackEditCount = MP4GetTrackNumberOfEdits(fileHandle, srcTrackId);
+        uint32_t i = 1, trackEditCount = MP4GetTrackNumberOfEdits(_fileHandle, srcTrackId);
         while (i <= trackEditCount) {
-            MP4Timestamp editMediaStart = MP4GetTrackEditMediaStart(fileHandle, srcTrackId, i);
-            MP4Duration editDuration = MP4ConvertFromMovieDuration(fileHandle,
-                                                                   MP4GetTrackEditDuration(fileHandle, srcTrackId, i),
+            MP4Timestamp editMediaStart = MP4GetTrackEditMediaStart(_fileHandle, srcTrackId, i);
+            MP4Duration editDuration = MP4ConvertFromMovieDuration(_fileHandle,
+                                                                   MP4GetTrackEditDuration(_fileHandle, srcTrackId, i),
                                                                    MP4GetTimeScale(dstFileHandle));
             trackDuration += editDuration;
-            int8_t editDwell = MP4GetTrackEditDwell(fileHandle, srcTrackId, i);
+            int8_t editDwell = MP4GetTrackEditDwell(_fileHandle, srcTrackId, i);
             
             MP4AddTrackEdit(dstFileHandle, dstTrackId, i, editMediaStart, editDuration, editDwell);
             i++;
@@ -322,9 +315,9 @@
             MP4SetTrackIntegerProperty(dstFileHandle, dstTrackId, "tkhd.duration", trackDuration);
         else if (MP4GetSampleRenderingOffset(dstFileHandle, dstTrackId, 1)) {
             uint32_t firstFrameOffset = MP4GetSampleRenderingOffset(dstFileHandle, dstTrackId, 1);
-            MP4Duration editDuration = MP4ConvertFromTrackDuration(fileHandle,
+            MP4Duration editDuration = MP4ConvertFromTrackDuration(_fileHandle,
                                                                    srcTrackId,
-                                                                   MP4GetTrackDuration(fileHandle, srcTrackId),
+                                                                   MP4GetTrackDuration(_fileHandle, srcTrackId),
                                                                    MP4GetTimeScale(dstFileHandle));
             MP4AddTrackEdit(dstFileHandle, dstTrackId, MP4_INVALID_EDIT_ID, firstFrameOffset,
                             editDuration, 0);
@@ -334,12 +327,10 @@
     return YES;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
-    [dataReader release];
-
-    if (fileHandle)
-        MP4Close(fileHandle, 0);
+    if (_fileHandle)
+        MP4Close(_fileHandle, 0);
 
     [super dealloc];
 }

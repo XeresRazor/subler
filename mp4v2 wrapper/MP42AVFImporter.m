@@ -171,18 +171,18 @@
         _delegate = del;
         _fileURL = [URL retain];
 
-        localAsset = [[AVAsset assetWithURL:_fileURL] retain];
+        _localAsset = [[AVAsset assetWithURL:_fileURL] retain];
 
         _tracksArray = [[NSMutableArray alloc] init];
-        NSArray *tracks = [localAsset tracks];
+        NSArray *tracks = [_localAsset tracks];
 
-        NSArray *availableChapter = [localAsset availableChapterLocales];
+        NSArray *availableChapter = [_localAsset availableChapterLocales];
         MP42ChapterTrack *chapters = nil;
 
         if ([tracks count]) {
             for (NSLocale *locale in availableChapter) {
                 chapters = [[MP42ChapterTrack alloc] init];
-                NSArray *chapterList = [localAsset chapterMetadataGroupsWithTitleLocale:locale containingItemsWithCommonKeys:nil];
+                NSArray *chapterList = [_localAsset chapterMetadataGroupsWithTitleLocale:locale containingItemsWithCommonKeys:nil];
                 for (AVTimedMetadataGroup* chapterData in chapterList) {
                     for (AVMetadataItem *item in [chapterData items]) {
                         CMTime time = [item time];
@@ -260,7 +260,7 @@
             newTrack.sourceFormat = newTrack.format;
             newTrack.Id = [track trackID];
             newTrack.sourceURL = _fileURL;
-            newTrack.sourceFileHandle = localAsset;
+            newTrack.sourceFileHandle = _localAsset;
             newTrack.dataLength = [track totalSampleDataLength];
 
             // "name" is undefinited in AVMetadataFormat.h, so read the official track name "tnam", and then "name". On 10.7, "name" is returned as an NSData
@@ -321,12 +321,12 @@
     _metadata = [[MP42Metadata alloc] init];
 
     for (NSString *commonKey in [commonItemsDict allKeys]) {
-        items = [AVMetadataItem metadataItemsFromArray:localAsset.commonMetadata withKey:commonKey keySpace:AVMetadataKeySpaceCommon];
+        items = [AVMetadataItem metadataItemsFromArray:_localAsset.commonMetadata withKey:commonKey keySpace:AVMetadataKeySpaceCommon];
         if ([items count])
             [_metadata setTag:[[items lastObject] value] forKey:[commonItemsDict objectForKey:commonKey]];
     }
     
-    items = [AVMetadataItem metadataItemsFromArray:localAsset.commonMetadata withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
+    items = [AVMetadataItem metadataItemsFromArray:_localAsset.commonMetadata withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
     if ([items count]) {
         id artworkData = [[items lastObject] value];
         if ([artworkData isKindOfClass:[NSData class]]) {
@@ -336,10 +336,10 @@
         }
     }
 
-    NSArray* availableMetadataFormats = [localAsset availableMetadataFormats];
+    NSArray* availableMetadataFormats = [_localAsset availableMetadataFormats];
 
     if ([availableMetadataFormats containsObject:AVMetadataFormatiTunesMetadata]) {
-        NSArray* itunesMetadata = [localAsset metadataForFormat:AVMetadataFormatiTunesMetadata];
+        NSArray* itunesMetadata = [_localAsset metadataForFormat:AVMetadataFormatiTunesMetadata];
         
         NSDictionary *itunesMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
                                             @"Album",               AVMetadataiTunesMetadataKeyAlbum,
@@ -430,7 +430,7 @@
         }
     }
     if ([availableMetadataFormats containsObject:AVMetadataFormatQuickTimeMetadata]) {
-        NSArray* quicktimeMetadata = [localAsset metadataForFormat:AVMetadataFormatQuickTimeMetadata];
+        NSArray* quicktimeMetadata = [_localAsset metadataForFormat:AVMetadataFormatQuickTimeMetadata];
         
         NSDictionary *quicktimeMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
                                                @"Arist",        AVMetadataQuickTimeMetadataKeyAuthor,
@@ -466,7 +466,7 @@
         }
     }
     if ([availableMetadataFormats containsObject:AVMetadataFormatQuickTimeUserData]) {
-        NSArray* quicktimeUserDataMetadata = [localAsset metadataForFormat:AVMetadataFormatQuickTimeUserData];
+        NSArray* quicktimeUserDataMetadata = [_localAsset metadataForFormat:AVMetadataFormatQuickTimeUserData];
         
         NSDictionary *quicktimeUserDataMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
                                                        @"Album",                AVMetadataQuickTimeUserDataKeyAlbum,
@@ -502,7 +502,7 @@
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track
 {
-    AVAssetTrack *assetTrack = [localAsset trackWithTrackID:[track sourceId]];
+    AVAssetTrack *assetTrack = [_localAsset trackWithTrackID:[track sourceId]];
     
     CMFormatDescriptionRef formatDescription = NULL;
     NSArray *formatDescriptions = assetTrack.formatDescriptions;
@@ -529,7 +529,7 @@
 
 - (NSData*)magicCookieForTrack:(MP42Track *)track
 {
-    AVAssetTrack *assetTrack = [localAsset trackWithTrackID:[track sourceId]];
+    AVAssetTrack *assetTrack = [_localAsset trackWithTrackID:[track sourceId]];
 
     CMFormatDescriptionRef formatDescription = NULL;
     NSArray *formatDescriptions = assetTrack.formatDescriptions;
@@ -650,12 +650,12 @@
 
     AVFDemuxHelper *demuxHelper=nil;
     NSError *localError;
-    AVAssetReader *assetReader = [[AVAssetReader alloc] initWithAsset:localAsset error:&localError];
+    AVAssetReader *assetReader = [[AVAssetReader alloc] initWithAsset:_localAsset error:&localError];
 
 	success = (assetReader != nil);
 	if (success) {
         for (MP42Track * track in _activeTracks) {
-            AVAssetReaderOutput *assetReaderOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[localAsset trackWithTrackID:track.sourceId] outputSettings:nil];
+            AVAssetReaderOutput *assetReaderOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[_localAsset trackWithTrackID:track.sourceId] outputSettings:nil];
             if (! [assetReader canAddOutput: assetReaderOutput])
                 NSLog(@"Unable to add the output to assetReader!");
 
@@ -890,8 +890,6 @@
                         sample->sampleTimestamp = sampleTimingInfo.presentationTimeStamp.value;
                         sample->sampleIsSync = sync;
                         sample->sampleTrackId = track.Id;
-                        if(track.needConversion)
-                            sample->sampleSourceTrack = track;
 
                         [helper->fifo enqueue:sample];
                         [sample release];
@@ -930,10 +928,10 @@
 {
     [super startReading];
 
-    if (!dataReader && !_done) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [dataReader setName:@"AVFoundation Demuxer"];
-        [dataReader start];
+    if (!_demuxerThread && !_done) {
+        _demuxerThread = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_demuxerThread setName:@"AVFoundation Demuxer"];
+        [_demuxerThread start];
     }
 }
 
@@ -943,7 +941,7 @@
     int i;
 
     for (MP42Track * track in _activeTracks) {
-        AVAssetTrack *assetTrack = [localAsset trackWithTrackID:track.sourceId];
+        AVAssetTrack *assetTrack = [_localAsset trackWithTrackID:track.sourceId];
         MP4Duration trackDuration = 0;
         MP4Timestamp editDuration;
 
@@ -1011,8 +1009,7 @@
 
 - (void) dealloc
 {
-    [dataReader release];
-    [localAsset release];
+    [_localAsset release];
 
     [super dealloc];
 }

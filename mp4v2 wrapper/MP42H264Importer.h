@@ -33,15 +33,13 @@ typedef struct
 
 @interface MP42H264Importer : MP42FileImporter {
     FILE* inFile;
-    int64_t size;
+    int64_t _size;
 
     NSData *avcC;
     uint32_t timescale;
     uint32_t mp4FrameDuration;
     MP4SampleId samplesWritten;
     h264_dpb_t h264_dpb;
-
-    NSThread *dataReader;
 }
 
 @end

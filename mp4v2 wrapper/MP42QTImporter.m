@@ -50,15 +50,15 @@
 
         if (dispatch_get_current_queue() != dispatch_get_main_queue()) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                sourceFile = [[QTMovie alloc] initWithAttributes:dict
+                _sourceFile = [[QTMovie alloc] initWithAttributes:dict
                                                            error:outError];
             });
         }
         else
-            sourceFile = [[QTMovie alloc] initWithAttributes:dict
+            _sourceFile = [[QTMovie alloc] initWithAttributes:dict
                                                        error:outError];
 
-		if (sourceFile)
+		if (_sourceFile)
 			[self movieLoaded];
 		else {
             [self release];
@@ -72,7 +72,7 @@
 
 -(void) movieLoaded
 {
-    for (QTTrack *track in [sourceFile tracks])
+    for (QTTrack *track in [_sourceFile tracks])
         if ([[track attributeForKey:QTTrackIsChapterTrackAttribute] boolValue])
             _chapterId = [[track attributeForKey:QTTrackIDAttribute] integerValue];
 
@@ -81,7 +81,7 @@
     if (NSClassFromString(@"QTMetadataItem")) //QTMetadataItem is only 10.7+
         [self convertMetadata];
 
-    for (QTTrack *track in [sourceFile tracks]) {
+    for (QTTrack *track in [_sourceFile tracks]) {
         NSString* mediaType = [track attributeForKey:QTTrackMediaTypeAttribute];
         MP42Track *newTrack = nil;
 
@@ -189,7 +189,7 @@
         else if ([mediaType isEqualToString:QTMediaTypeText]) {
             if ([[track attributeForKey:QTTrackIDAttribute] integerValue] == _chapterId) {
                 newTrack = [[MP42ChapterTrack alloc] init];
-                NSArray *chapters = [sourceFile chapters];
+                NSArray *chapters = [_sourceFile chapters];
 
                 for (NSDictionary *dic in chapters) {
                     QTTimeRange time = [[dic valueForKey:QTMovieChapterStartTime] QTTimeRangeValue];
@@ -221,7 +221,7 @@
             newTrack.sourceFormat = newTrack.format;
             newTrack.Id = [[track attributeForKey:QTTrackIDAttribute] integerValue];
             newTrack.sourceURL = _fileURL;
-            newTrack.sourceFileHandle = sourceFile;
+            newTrack.sourceFileHandle = _sourceFile;
             newTrack.name = [track attributeForKey:QTTrackDisplayNameAttribute];
             newTrack.language = [self langForTrack:track];
 
@@ -390,12 +390,12 @@
 
     _metadata = [[MP42Metadata alloc] init];
     for (NSString *commonKey in [commonItemsDict allKeys]) {
-        items = [QTMetadataItem metadataItemsFromArray:[sourceFile commonMetadata] withKey:[commonKey stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
+        items = [QTMetadataItem metadataItemsFromArray:[_sourceFile commonMetadata] withKey:[commonKey stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
         if ([items count])
             [_metadata setTag:[[items lastObject] value] forKey:[commonItemsDict objectForKey:commonKey]];
     }
 
-    items = [QTMetadataItem metadataItemsFromArray:[sourceFile commonMetadata] withKey:[QTMetadataCommonKeyArtwork stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
+    items = [QTMetadataItem metadataItemsFromArray:[_sourceFile commonMetadata] withKey:[QTMetadataCommonKeyArtwork stringByReplacingOccurrencesOfString:@"@" withString:@"©"] keySpace:nil];
     if ([items count]) {
         id artworkData = [[items lastObject] value];
         if ([artworkData isKindOfClass:[NSData class]]) {
@@ -405,10 +405,10 @@
         }
     }
 
-    NSArray* availableMetadataFormats = [sourceFile availableMetadataFormats];
+    NSArray* availableMetadataFormats = [_sourceFile availableMetadataFormats];
 
     if ([availableMetadataFormats containsObject:QTMetadataFormatiTunesMetadata]) {
-        NSArray* itunesMetadata = [sourceFile metadataForFormat:QTMetadataFormatiTunesMetadata];
+        NSArray* itunesMetadata = [_sourceFile metadataForFormat:QTMetadataFormatiTunesMetadata];
 
         NSDictionary *itunesMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
                                             @"Album",               QTMetadataiTunesMetadataKeyAlbum,
@@ -499,7 +499,7 @@
         }
     }
     if ([availableMetadataFormats containsObject:QTMetadataFormatQuickTimeMetadata]) {
-        NSArray* quicktimeMetadata = [sourceFile metadataForFormat:QTMetadataFormatQuickTimeMetadata];
+        NSArray* quicktimeMetadata = [_sourceFile metadataForFormat:QTMetadataFormatQuickTimeMetadata];
 
         NSDictionary *quicktimeMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
                                                @"Arist",        QTMetadataQuickTimeMetadataKeyAuthor,
@@ -534,7 +534,7 @@
         }
     }
     if ([availableMetadataFormats containsObject:QTMetadataFormatQuickTimeUserData]) {
-        NSArray* quicktimeUserDataMetadata = [sourceFile metadataForFormat:QTMetadataFormatQuickTimeUserData];
+        NSArray* quicktimeUserDataMetadata = [_sourceFile metadataForFormat:QTMetadataFormatQuickTimeUserData];
         
         NSDictionary *quicktimeUserDataMetadataDict = [NSDictionary dictionaryWithObjectsAndKeys:
                                                        @"Album",                QTMetadataQuickTimeUserDataKeyAlbum,
@@ -570,7 +570,7 @@
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track
 {
-    Track qtTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
+    Track qtTrack = [[_sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
     Media media = GetTrackMedia(qtTrack);
 
     return GetMediaTimeScale(media);
@@ -587,7 +587,7 @@
 {      
     OSStatus err = noErr;
 
-    QTTrack * qtTrack = [sourceFile trackWithTrackID:[track sourceId]];;
+    QTTrack * qtTrack = [_sourceFile trackWithTrackID:[track sourceId]];;
     NSString* mediaType = [qtTrack attributeForKey:QTTrackMediaTypeAttribute];
     Track qtcTrack = [qtTrack quickTimeTrack];
     Media media = GetTrackMedia(qtcTrack);
@@ -772,9 +772,9 @@
 - (AudioStreamBasicDescription)audioDescriptionForTrack:(MP42Track *)track
 {
     OSStatus err = noErr;
-    NSString* mediaType = [[sourceFile trackWithTrackID:[track sourceId]] attributeForKey:QTTrackMediaTypeAttribute];
+    NSString* mediaType = [[_sourceFile trackWithTrackID:[track sourceId]] attributeForKey:QTTrackMediaTypeAttribute];
     
-    Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
+    Track qtcTrack = [[_sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
     Media media = GetTrackMedia(qtcTrack);
 
     // Audio
@@ -820,17 +820,13 @@
     MovDemuxHelper *demuxHelper = nil;
 
     for (MP42Track *track in _activeTracks) {
-        muxer_helper *helper = track.muxer_helper;
+        track.muxer_helper->demuxer_context = [[MovDemuxHelper alloc] init];
 
-        if (track.muxer_helper->demuxer_context == nil) {
-            helper->demuxer_context = [[MovDemuxHelper alloc] init];
+        Track qtcTrack = [[_sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
+        Media media = GetTrackMedia(qtcTrack);
 
-            Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
-            Media media = GetTrackMedia(qtcTrack);
-
-            demuxHelper = helper->demuxer_context;
-            demuxHelper->totalSampleNumber = GetMediaSampleCount(media);
-        }
+        demuxHelper = track.muxer_helper->demuxer_context;
+        demuxHelper->totalSampleNumber = GetMediaSampleCount(media);
     }
 
     for (MP42Track * track in _activeTracks) {
@@ -838,7 +834,7 @@
             break;
         
         muxer_helper *helper = track.muxer_helper;
-        Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
+        Track qtcTrack = [[_sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
         Media media = GetTrackMedia(qtcTrack);
         demuxHelper = helper->demuxer_context;
 
@@ -908,8 +904,6 @@
             sample->sampleTimestamp = demuxHelper->currentTime;
             sample->sampleIsSync = !(sampleFlags & mediaSampleNotSync);
             sample->sampleTrackId = track.Id;
-            if(track.needConversion)
-                sample->sampleSourceTrack = track;
 
             [helper->fifo enqueue:sample];
             [sample release];
@@ -932,17 +926,17 @@
 {
     [super startReading];
 
-    if (!dataReader && !_done) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [dataReader setName:@"QuickTime Demuxer"];
-        [dataReader start];
+    if (!_demuxerThread && !_done) {
+        _demuxerThread = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_demuxerThread setName:@"QuickTime Demuxer"];
+        [_demuxerThread start];
     }
 }
 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
 {
     for (MP42Track * track in _activeTracks) {
-        Track qtcTrack = [[sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
+        Track qtcTrack = [[_sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
 
         TimeValue editTrackStart, editTrackDuration;
         TimeValue64 editDisplayStart, trackDuration = 0;
@@ -962,7 +956,7 @@
 
         while (editTrackDuration > 0) {
             editDisplayStart = TrackTimeToMediaTime(editTrackStart, qtcTrack);
-            editTrackDuration = (editTrackDuration / (double)GetMovieTimeScale([sourceFile quickTimeMovie])) * MP4GetTimeScale(fileHandle);
+            editTrackDuration = (editTrackDuration / (double)GetMovieTimeScale([_sourceFile quickTimeMovie])) * MP4GetTimeScale(fileHandle);
             editDwell = GetTrackEditRate64(qtcTrack, editTrackStart);
 
             if (demuxHelper->minDisplayOffset < 0 && editDisplayStart != -1)
@@ -990,8 +984,7 @@
 
 - (void) dealloc
 {
-    [dataReader release];
-    [sourceFile release];
+    [_sourceFile release];
 
     [super dealloc];
 }

@@ -14,8 +14,6 @@
 	struct StdIoStream  *_ioStream;
 
     u_int64_t   _fileDuration;
-    NSThread    *_dataReader;
-    
 }
 
 @end

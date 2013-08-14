@@ -101,14 +101,7 @@
 
 - (void) dealloc
 {
-    if (_helper) {
-        if (_helper->demuxer_context)
-            [_helper->demuxer_context release];
-        if (_helper->converter)
-            [_helper->converter release];
-
-        free(_helper);
-    }
+    free(_helper);
 
     [updatedProperty release];
     [format release];
@@ -323,14 +316,11 @@
 
 - (void)setTrackImporterHelper:(MP42FileImporter *)importer
 {
-    if (_helper == NULL)
-        _helper = calloc(1, sizeof(muxer_helper));
-    
-    _helper->importer = importer;
+    self.muxer_helper->importer = importer;
 }
 
 - (MP42SampleBuffer *)copyNextSample {
-    __block MP42SampleBuffer *sample = nil;
+    MP42SampleBuffer *sample = nil;
 
     if (_helper->converter) {
         while ([_helper->converter needMoreSample] && [_helper->fifo count]) {
@@ -339,17 +329,16 @@
             [sample release];
         }
 
-        if (![_helper->fifo count] && [_helper->importer done])
-            [_helper->converter setDone:YES];
+        if ([_helper->fifo isEmpty] && [_helper->importer done])
+            [_helper->converter setInputDone];
 
         if ([_helper->converter encoderDone])
             _helper->done = YES;
 
         sample = [_helper->converter copyEncodedSample];
-        return sample;
     }
     else {
-        if ([_helper->importer done] && ![_helper->fifo count])
+        if ([_helper->fifo isEmpty] && [_helper->importer done])
             _helper->done = YES;
 
         if ([_helper->fifo count])

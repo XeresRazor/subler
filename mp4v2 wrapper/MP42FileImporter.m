@@ -104,14 +104,17 @@
         track.muxer_helper->fifo = [[MP42Fifo alloc] init];
 }
 
-- (void)stopReading
+- (void)cancelReading
 {
+    OSAtomicIncrement32(&_cancelled);
+
     // wait until the demuxer thread exits
     while (!_done)
         usleep(2000);
 
+    // stop all the related converters
     for (MP42Track *track in _activeTracks)
-        [track.muxer_helper->fifo release];
+        [track.muxer_helper->converter cancel];
 }
 
 - (BOOL)done
@@ -121,11 +124,6 @@
 
 - (void)setDone:(BOOL)status {
     OSAtomicIncrement32(&_done);
-}
-
-- (MP42SampleBuffer*)copyNextSample
-{
-    return nil;
 }
 
 - (CGFloat)progress
@@ -143,17 +141,20 @@
     return [_tracksArray containsObject:track];
 }
 
-- (void)cancel
-{
-    OSAtomicIncrement32(&_cancelled);
-}
-
 - (void)dealloc
 {
+    for (MP42Track *track in _activeTracks) {
+        [track.muxer_helper->demuxer_context release];
+        [track.muxer_helper->fifo release];
+        [track.muxer_helper->converter release];
+    }
+
     [_metadata release], _metadata = nil;
     [_tracksArray release], _tracksArray = nil;
     [_activeTracks release], _activeTracks = nil;
 	[_fileURL release], _fileURL = nil;
+    [_demuxerThread release], _demuxerThread = nil;
+
     [super dealloc];
 }
 

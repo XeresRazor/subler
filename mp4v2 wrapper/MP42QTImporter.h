@@ -12,8 +12,7 @@
 #import <QTKit/QTKit.h>
 
 @interface MP42QTImporter : MP42FileImporter {
-    QTMovie     *sourceFile;
-    NSThread    *dataReader;
+    QTMovie *_sourceFile;
 }
 
 @end
