@@ -137,8 +137,8 @@
 	[metadata setTag:[aEpisode retrieveForPath:@"SeasonNumber.text"] forKey:@"TV Season"];
 	[metadata setTag:[aEpisode retrieveForPath:@"EpisodeNumber.text"] forKey:@"TV Episode #"];
 
-    NSString *episodeID = [NSString stringWithFormat:@"%d%02d", [[aEpisode retrieveForPath:@"SeasonNumber.text"] integerValue],
-                            [[aEpisode retrieveForPath:@"EpisodeNumber.text"] integerValue]];
+    NSString *episodeID = [NSString stringWithFormat:@"%ld%02ld", (long)[[aEpisode retrieveForPath:@"SeasonNumber.text"] integerValue],
+                            (long)[[aEpisode retrieveForPath:@"EpisodeNumber.text"] integerValue]];
 	[metadata setTag:episodeID forKey:@"TV Episode ID"];
 
 	[metadata setTag:[aEpisode retrieveForPath:@"SeasonNumber.text"] forKey:@"TV Season"];
