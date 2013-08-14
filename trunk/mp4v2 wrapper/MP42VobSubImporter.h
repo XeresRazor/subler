@@ -9,8 +9,7 @@
 #import "MP42FileImporter.h"
 
 @interface MP42VobSubImporter : MP42FileImporter {
-    NSThread *dataReader;
-    NSArray *tracks;
+    NSArray *_VobSubTracks;
 }
 
 @end

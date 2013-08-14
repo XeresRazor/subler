@@ -19,13 +19,10 @@
     NSThread *decoderThread;
     NSThread *encoderThread;
 
-    MP42OCRWrapper *ocr;
-    
+    MP42OCRWrapper          *ocr;
 	AVCodec                 *avCodec;
 	AVCodecContext          *avContext;
 	AVSubtitle              subtitle;
-    BOOL readerDone;
-    BOOL encoderDone;
 
     NSUInteger  trackId;
 
@@ -39,7 +36,8 @@
     uint8_t                 *codecData;
     unsigned int            bufferSize;
     
-    BOOL                   fileReaderDone;
+    int32_t     _readerDone;
+    int32_t     _encoderDone;
 }
 
 - (id)initWithTrack:(MP42SubtitleTrack *)track error:(NSError **)outError;
@@ -48,9 +46,10 @@
 - (void)addSample: (MP42SampleBuffer *)sample;
 - (MP42SampleBuffer *)copyEncodedSample;
 
+- (void)cancel;
 - (BOOL)needMoreSample;
 
 - (BOOL)encoderDone;
-- (void)setDone:(BOOL)status;
+- (void)setInputDone;
 
 @end

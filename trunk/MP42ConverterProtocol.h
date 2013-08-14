@@ -16,13 +16,15 @@
 
 @required
 - (void)setOutputTrack:(NSUInteger)outputTrackId;
+
 - (void)addSample:(MP42SampleBuffer *)sample;
 - (MP42SampleBuffer *)copyEncodedSample;
 
-- (BOOL)needMoreSample;
-
+- (void)cancel;
 - (BOOL)encoderDone;
-- (void)setDone:(BOOL)status;
+
+- (BOOL)needMoreSample;
+- (void)setInputDone;
 
 
 @end

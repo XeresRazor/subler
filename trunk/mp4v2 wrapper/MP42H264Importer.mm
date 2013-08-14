@@ -11,7 +11,7 @@
 #import "MP42File.h"
 #include <sys/stat.h>
 
-#define DEBUG_H264
+//#define DEBUG_H264
 
 static const framerate_t framerates[] =
 { { 2398, 24000, 1001 },
@@ -174,8 +174,8 @@ static uint8_t exp_golomb_bits[256] = {
     0, 
 };
 
-static const char*  ProgName = "Subler";
-static int Verbosity = 1;
+static const char *ProgName = "Subler";
+static int Verbosity = 0;
 
 #include "mp4v2.h"
 #include <assert.h>
@@ -1117,11 +1117,11 @@ static bool remove_unused_sei_messages (nal_reader_t *nal,
         }
         if (nal->buffer_on - buffer_on <= 2) {
             //fprintf(stderr, "extra bytes after SEI message\n");
-//#if 0
+#if 0
             memset(nal->buffer + buffer_on, 0,
                    nal->buffer_on - buffer_on); 
             nal->buffer_on = buffer_on;
-//#endif
+#endif
             
             return true;
         }
@@ -1246,7 +1246,7 @@ static bool LoadNal (nal_reader_t *nal)
 NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height, uint8_t *profile, uint8_t *level)
 {
     // track configuration info
-    NSMutableData * avcCData = [[NSMutableData alloc] init];
+    NSMutableData *avcCData = [[NSMutableData alloc] init];
     uint8_t AVCProfileIndication = 0;
     uint8_t profile_compat = 0;
     uint8_t AVCLevelIndication = 0;
@@ -1274,7 +1274,7 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
             // fprintf(stderr, "%s: Could not find sequence header\n", ProgName);
             fclose(inFile);
             [avcCData release];
-            return 0;
+            return nil;
         }
         uint32_t header_size = nal.buffer[2] == 1 ? 3 : 4;
 
@@ -1345,7 +1345,7 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     }
 
     fclose(inFile);
-    return [avcCData copy];
+    return avcCData;
 }
 
 @implementation MP42H264Importer
@@ -1369,7 +1369,7 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 
         struct stat st;
         stat([[_fileURL path] UTF8String], &st);
-        size = st.st_size * 8;
+        _size = st.st_size;
 
         uint32_t tw, th;
         uint8_t profile, level;
@@ -1406,10 +1406,10 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 
 - (NSSize)sizeForTrack:(MP42Track *)track
 {
-      return NSMakeSize([(MP42VideoTrack*)track trackWidth], [(MP42VideoTrack*) track trackHeight]);
+    return NSMakeSize([(MP42VideoTrack*)track trackWidth], [(MP42VideoTrack*) track trackHeight]);
 }
 
-- (NSData*)magicCookieForTrack:(MP42Track *)track
+- (NSData *)magicCookieForTrack:(MP42Track *)track
 {
     return avcC;
 }
@@ -1425,6 +1425,7 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     MP4TrackId dstTrackId = [track Id];
 
     framerate_t * framerate;
+    int64_t currentSize = 0;
 
     for (framerate = (framerate_t*) framerates; framerate->code; framerate++)
         if([track sourceId] == framerate->code)
@@ -1432,7 +1433,6 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 
     timescale = framerate->timescale;
     mp4FrameDuration = framerate->duration;
-
 
     // the current syntactical object
     // typically 1:1 with a sample
@@ -1471,11 +1471,11 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     bool slice_is_idr = false;
     int32_t poc = 0;
     uint32_t dflags = 0;
-    
+
     // now process the rest of the video stream
     memset(&h264_dec, 0, sizeof(h264_dec));
     DpbInit(&h264_dpb);
-    
+
     while ( (LoadNal(&nal) != false) && !_cancelled) {
         while ([helper->fifo isFull] && !_cancelled)
             usleep(500);
@@ -1502,11 +1502,12 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
                 sample->sampleTimestamp = 0;
                 sample->sampleIsSync = nal_is_sync;
                 sample->sampleTrackId = dstTrackId;
-                if(track.needConversion)
-                    sample->sampleSourceTrack = track;
                 
                 [helper->fifo enqueue:sample];
                 [sample release];
+                
+                currentSize += nal_buffer_size;
+                _progress = (currentSize / (CGFloat) _size) * 100;
 
                 sampleId++;
                 DpbAdd( &h264_dpb, poc, slice_is_idr );
@@ -1537,19 +1538,19 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
                     //MP4AddH264SequenceParameterSet(mp4File, trackId, 
                     //                               nal.buffer + header_size, 
                     //                               nal.buffer_on - header_size);
-                    break;
+                    //break;
                 case H264_NAL_TYPE_PIC_PARAM:
                     // doesn't get added to sample buffer
                     //MP4AddH264PictureParameterSet(mp4File, trackId, 
                     //                              nal.buffer + header_size, 
                     //                              nal.buffer_on - header_size);
-                    break;
+                    //break;
                 case H264_NAL_TYPE_FILLER_DATA:
                     // doesn't get copied
-                    break;
+                    //break;
                 case H264_NAL_TYPE_SEI:
-                    copy_nal_to_buffer = remove_unused_sei_messages(&nal, header_size);
-                    break;
+                    //copy_nal_to_buffer = remove_unused_sei_messages(&nal, header_size);
+                    //break;
                 case H264_NAL_TYPE_ACCESS_UNIT: 
                     // note - may not want to copy this - not needed
                 default:
@@ -1578,10 +1579,10 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 
     if (nal_buffer_size != 0) {
         samplesWritten++;
-    
-        void* sampleData = malloc(nal_buffer_size);
+
+        void *sampleData = malloc(nal_buffer_size);
         memcpy(sampleData, nal_buffer, nal_buffer_size);
-        
+
         MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
         sample->sampleData = sampleData;
         sample->sampleSize = nal_buffer_size;
@@ -1590,11 +1591,12 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
         sample->sampleTimestamp = 0;
         sample->sampleIsSync = nal_is_sync;
         sample->sampleTrackId = dstTrackId;
-        if(track.needConversion)
-            sample->sampleSourceTrack = track;
 
         [helper->fifo enqueue:sample];
         [sample release];
+        
+        currentSize += nal_buffer_size;
+        _progress = (currentSize / (CGFloat) _size) * 100;
 
         DpbAdd(&h264_dpb, h264_dec.pic_order_cnt, slice_is_idr);
     }
@@ -1602,7 +1604,7 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     DpbFlush(&h264_dpb);
     free(nal_buffer);
 
-    [self setDone: YES];
+    [self setDone:YES];
     [pool release];
 }
 
@@ -1636,16 +1638,16 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 - (void)startReading
 {
     [super startReading];
-    if (!dataReader && !_done) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [dataReader setName:@"H264 Demuxer"];
-        [dataReader start];
+
+    if (!_demuxerThread && !_done) {
+        _demuxerThread = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_demuxerThread setName:@"H264 Demuxer"];
+        [_demuxerThread start];
     }
 }
 
 - (void) dealloc
 {
-    [dataReader release];
     [avcC release];
     fclose(inFile);
 

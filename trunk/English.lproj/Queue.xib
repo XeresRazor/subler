@@ -51,13 +51,13 @@
 			<object class="NSWindowTemplate" id="1005">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{90, 562}, {488, 421}}</string>
+				<string key="NSWindowRect">{{233, 759}, {488, 421}}</string>
 				<int key="NSWTFlags">1618477056</int>
 				<string key="NSWindowTitle">Queue</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
-				<string key="NSWindowContentMinSize">{430, 200}</string>
+				<string key="NSWindowContentMinSize">{434, 200}</string>
 				<object class="NSView" key="NSWindowView" id="1006">
 					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -226,6 +226,7 @@
 									<string key="NSFrame">{{543, 1}, {15, 275}}</string>
 									<reference key="NSSuperview" ref="785720780"/>
 									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:1214</string>
 									<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 									<reference key="NSTarget" ref="785720780"/>
@@ -684,7 +685,7 @@
 					<reference key="NSNextKeyView" ref="428686001"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
-				<string key="NSMinSize">{430, 222}</string>
+				<string key="NSMinSize">{434, 222}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<string key="NSFrameAutosaveName">SBQueuePosition</string>
 				<bool key="NSWindowIsRestorable">YES</bool>

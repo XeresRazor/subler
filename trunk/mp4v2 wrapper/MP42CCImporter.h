@@ -10,7 +10,6 @@
 #import "MP42FileImporter.h"
 
 @interface MP42CCImporter : MP42FileImporter {
-    NSThread *dataReader;
 }
 
 @end

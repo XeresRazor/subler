@@ -13,7 +13,6 @@
 
 @interface MP42SrtImporter : MP42FileImporter {
     SBSubSerializer *_ss;
-    NSThread        *_dataReader;
 
     BOOL    _verticalPlacement;
 }

@@ -154,9 +154,10 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
     }
 
     for (SBTextSample *ccSample in sampleArray) {
-        while ([helper->fifo isFull] && !_cancelled) {
+        while ([helper->fifo isFull] && !_cancelled)
             usleep(500);
-        }
+        if (_cancelled)
+            break;
 
         NSArray  *bytesArray   = nil;
         MP4Duration sampleDuration = 0;
@@ -235,6 +236,7 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
         [sample release];
 
         i++;
+        _progress = ((CGFloat)i / [sampleArray count]) * 100;
     }
 
     [sampleArray release];
@@ -247,22 +249,11 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
 {
     [super startReading];
 
-    if (!dataReader && !_done) {
-        dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [dataReader setName:@"ClosedCaption Demuxer"];
-        [dataReader start];
+    if (!_demuxerThread && !_done) {
+        _demuxerThread = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_demuxerThread setName:@"Closed Caption Demuxer"];
+        [_demuxerThread start];
     }
-}
-
-- (CGFloat)progress {
-    return 100.0;
-}
-
-- (void) dealloc
-{
-    [dataReader release];
-
-    [super dealloc];
 }
 
 @end

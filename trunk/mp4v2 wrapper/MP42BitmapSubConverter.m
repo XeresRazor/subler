@@ -36,10 +36,10 @@ void FFInitFFmpeg()
     MP42SampleBuffer* subSample;
 
     while(1) {
-        while (![inputSamplesBuffer count] && !fileReaderDone)
+        while (![inputSamplesBuffer count] && !_readerDone)
             usleep(1000);
 
-        if (![inputSamplesBuffer count] && fileReaderDone)
+        if (![inputSamplesBuffer count] && _readerDone)
             break;
 
         MP42SampleBuffer *sampleBuffer = nil;
@@ -203,7 +203,7 @@ void FFInitFFmpeg()
         }
     }
 
-    encoderDone = YES;
+    _encoderDone = YES;
     [pool drain];
 }
 
@@ -213,10 +213,10 @@ void FFInitFFmpeg()
     MP42SampleBuffer* subSample;
 
     while(1) {
-        while (![inputSamplesBuffer count] && !fileReaderDone)
+        while (![inputSamplesBuffer count] && !_readerDone)
             usleep(1000);
 
-        if (![inputSamplesBuffer count] && fileReaderDone)
+        if (![inputSamplesBuffer count] && _readerDone)
             break;
 
         MP42SampleBuffer *sampleBuffer = nil;
@@ -325,7 +325,7 @@ void FFInitFFmpeg()
         }
     }
 
-    encoderDone = YES;
+    _encoderDone = YES;
     [pool drain];
 }
 
@@ -400,6 +400,14 @@ void FFInitFFmpeg()
     return sample;
 }
 
+- (void)cancel
+{
+    _readerDone = YES;
+
+    while (!_encoderDone)
+        usleep(500);
+}
+
 - (BOOL)needMoreSample
 {
     if ([inputSamplesBuffer count] > 10)
@@ -408,14 +416,14 @@ void FFInitFFmpeg()
     return YES;
 }
 
-- (void) setDone:(BOOL)status
+- (void)setInputDone
 {
-    fileReaderDone = status;
+    _readerDone = YES;
 }
 
-- (BOOL) encoderDone
+- (BOOL)encoderDone
 {
-    return encoderDone;
+    return _encoderDone;
 }
 
 - (void) dealloc

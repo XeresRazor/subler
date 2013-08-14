@@ -10,25 +10,28 @@
 
 @implementation MP42Fifo
 
-- (id)init
-{
+- (NSString *)queueName {
+    static int32_t queueCount = 0;
+    return [NSString stringWithFormat:@"com.subler.fifo-%d", queueCount++];
+}
+
+- (id)init {
     self = [super init];
     if (self) {
         _size = 300;
         _iSize = _size * 4;
-        _queue = dispatch_queue_create("com.subler.fifo", DISPATCH_QUEUE_SERIAL);
+        _queue = dispatch_queue_create([[self queueName] UTF8String], DISPATCH_QUEUE_SERIAL);
         _array = (id *) malloc(sizeof(id) * _iSize);
     }
     return self;
 }
 
-- (id)initWithCapacity:(NSUInteger)numItems;
-{
+- (id)initWithCapacity:(NSUInteger)numItems {
     self = [super init];
     if (self) {
-        _queue = dispatch_queue_create("com.subler.fifo", DISPATCH_QUEUE_SERIAL);
         _size = numItems;
         _iSize = numItems * 4;
+        _queue = dispatch_queue_create([[self queueName] UTF8String], DISPATCH_QUEUE_SERIAL);
         _array = (id *) malloc(sizeof(id) * _iSize);
     }
     return self;
@@ -69,8 +72,7 @@
     return !_count;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     while ([self count])
         [[self deque] release];
 

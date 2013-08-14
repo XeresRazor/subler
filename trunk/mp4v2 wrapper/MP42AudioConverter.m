@@ -11,6 +11,7 @@
 #import "MP42AudioTrack.h"
 #import "MP42FileImporter.h"
 #import "MP42MediaFormat.h"
+#import "MP42Fifo.h"
 #import "MP42Utilities.h"
 
 #define FIFO_DURATION (0.5f)
@@ -192,7 +193,7 @@ OSStatus EncoderDataProc(AudioConverterRef              inAudioConverter,
 	return err;
 }
 
-- (void) EncoderThreadMainRoutine: (id) sender
+- (void)EncoderThreadMainRoutine:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
@@ -356,11 +357,11 @@ OSStatus EncoderDataProc(AudioConverterRef              inAudioConverter,
         sample->sampleTimestamp = outputPos;
         sample->sampleIsSync = YES;
         sample->sampleTrackId = trackId;
-        
-        @synchronized(outputSamplesBuffer) {
-            [outputSamplesBuffer addObject:sample];
-        }
 
+        while ([_outputSamplesBuffer isFull] && !_cancelled)
+            usleep(500);
+
+        [_outputSamplesBuffer enqueue:sample];
         [sample release];
 
 		outputPos += ioOutputDataPackets;
@@ -403,11 +404,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
         return err;
     }
     else {
-        @synchronized(afio->inputSamplesBuffer) {
-            afio->sample = [afio->inputSamplesBuffer objectAtIndex:0];
-            [afio->sample retain];
-            [afio->inputSamplesBuffer removeObjectAtIndex:0];
-        }
+        afio->sample = [afio->inputSamplesBuffer deque];
     }
 
     // advance input file packet position
@@ -432,7 +429,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 	return err;
 }
 
-- (void) DecoderThreadMainRoutine: (id) sender
+- (void)DecoderThreadMainRoutine:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     OSStatus    err;
@@ -444,7 +441,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 	decoderData.srcFormat = decoderData.inputFormat;    
     decoderData.numPacketsPerRead = 1;
     decoderData.pktDescs = (AudioStreamPacketDescription*)malloc(decoderData.numPacketsPerRead);
-    decoderData.inputSamplesBuffer = inputSamplesBuffer;
+    decoderData.inputSamplesBuffer = _inputSamplesBuffer;
 
     // set up our output buffers
 	AudioStreamPacketDescription* outputPktDescs = NULL;
@@ -554,7 +551,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
     return;
 }
 
-- (BOOL) errorMessageForFormat:(NSString*)format error:(NSError **)outError
+- (BOOL)errorMessageForFormat:(NSString *)format error:(NSError **)outError
 {
     // Check if perian is installed
     InstallStatus installStatus = [self installStatusForComponent:@"Perian.component" type:ComponentTypeQuickTime version:@"1.2"];
@@ -594,7 +591,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
     return YES;
 }
 
-- (id) initWithTrack: (MP42AudioTrack*) track andMixdownType: (NSString*) mixdownType error:(NSError **)outError
+- (id)initWithTrack:(MP42AudioTrack *)track andMixdownType:(NSString *) mixdownType error:(NSError **)outError
 {
     if ((self = [super init])) {
         OSStatus err;
@@ -629,8 +626,8 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
             ichanmap = &hb_qt_chan_map;
         }
 
-        outputSamplesBuffer = [[NSMutableArray alloc] init];
-        inputSamplesBuffer = [[NSMutableArray alloc] init];
+        _outputSamplesBuffer = [[MP42Fifo alloc] init];
+        _inputSamplesBuffer = [[MP42Fifo alloc] init];
 
         // Decoder initialization
         CFDataRef   magicCookie = NULL;
@@ -776,57 +773,59 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
     return self;
 }
 
-- (void) setOutputTrack: (NSUInteger) outputTrackId {
+- (void)setOutputTrack:(NSUInteger) outputTrackId {
     trackId = outputTrackId;
 }
 
-- (void) addSample:(MP42SampleBuffer*)sample
+- (void)addSample:(MP42SampleBuffer *)sample
 {
-    @synchronized(inputSamplesBuffer) {
-        [inputSamplesBuffer addObject:sample];
-    }
+    [_inputSamplesBuffer enqueue:sample];
 }
 
-- (MP42SampleBuffer*) copyEncodedSample
+- (MP42SampleBuffer *)copyEncodedSample
 {
-    MP42SampleBuffer *sample;
-    if (![outputSamplesBuffer count]) {
+    if (![_outputSamplesBuffer count])
         return nil;
-    }
-    @synchronized(outputSamplesBuffer) {
-        sample = [outputSamplesBuffer objectAtIndex:0];
-        [sample retain];
-        [outputSamplesBuffer removeObjectAtIndex:0];
-    }
-    
-    return sample;
+
+    return [_outputSamplesBuffer deque];
 }
 
-- (BOOL) needMoreSample
+- (BOOL)needMoreSample
 {
-    if ([inputSamplesBuffer count] > 300)
+    if ([_inputSamplesBuffer isFull])
         return NO;
     
     return YES;
 }
 
-- (void) setDone:(BOOL)status
+- (void)setInputDone
 {
-    decoderData.fileReaderDone = status;
-    encoderData.fileReaderDone = status;
+    decoderData.fileReaderDone = YES;
+    encoderData.fileReaderDone = YES;
 }
 
-- (BOOL) encoderDone
+- (void)cancel
 {
-    return encoderDone;
+    OSAtomicIncrement32(&_cancelled);
+
+    decoderData.fileReaderDone = YES;
+    encoderData.fileReaderDone = YES;
+
+    while (!(readerDone && encoderDone))
+        usleep(500);
 }
 
-- (NSData*) magicCookie
+- (BOOL)encoderDone
+{
+    return encoderDone && [_outputSamplesBuffer isEmpty];
+}
+
+- (NSData *)magicCookie
 {
     return [[outputMagicCookie retain] autorelease];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     sfifo_close(&fifo);
 
@@ -835,14 +834,15 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
     free(encoderData.srcBuffer);
     free(encoderData.pktDescs);
-    
+
     [outputMagicCookie release];
 
     [decoderThread release];
     [encoderThread release];
 
-    [outputSamplesBuffer release];
-    [inputSamplesBuffer release];
+    [_outputSamplesBuffer release];
+    [_inputSamplesBuffer release];
+
     [super dealloc];
 }
 

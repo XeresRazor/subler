@@ -24,6 +24,7 @@
 
     NSMutableArray *_tracksArray;
     NSMutableArray *_activeTracks;
+    NSThread       *_demuxerThread;
 
     CGFloat       _progress;
     int32_t       _cancelled;
@@ -40,17 +41,14 @@
 - (AudioStreamBasicDescription)audioDescriptionForTrack:(MP42Track *)track;
 
 - (void)setActiveTrack:(MP42Track *)track;
-- (void)startReading;
-- (void)stopReading;
 
-- (MP42SampleBuffer *)copyNextSample;
+- (void)startReading;
+- (void)cancelReading;
 
 - (CGFloat)progress;
 
 - (BOOL)done;
 - (void)setDone:(BOOL)status;
-
-- (void)cancel;
 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle;
 

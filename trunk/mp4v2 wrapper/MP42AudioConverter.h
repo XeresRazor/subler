@@ -15,6 +15,7 @@
 #import <CoreAudio/CoreAudio.h>
 
 @class MP42SampleBuffer;
+@class MP42Fifo;
 @class MP42AudioTrack;
 
 extern NSString * const SBMonoMixdown;
@@ -30,18 +31,18 @@ struct AudioFileIO
     AudioStreamBasicDescription outputFormat;
 
     sfifo_t          *fifo;
-    
+
 	SInt64          pos;
 	char *			srcBuffer;
 	UInt32			srcBufferSize;
 	UInt32			srcSizePerPacket;
 	UInt32			numPacketsPerRead;
+
     AudioStreamBasicDescription     srcFormat;
 	AudioStreamPacketDescription    *pktDescs;
-    
-    NSMutableArray * inputSamplesBuffer;
-    NSMutableArray * outputSamplesBuffer;
-    
+
+    MP42Fifo      *inputSamplesBuffer;
+
     MP42SampleBuffer      *sample;
     int                   fileReaderDone;
 } AudioFileIO;
@@ -57,6 +58,8 @@ struct AudioFileIO
     BOOL readerDone;
     BOOL encoderDone;
 
+    int32_t       _cancelled;
+
     NSUInteger  trackId;
     Float64     sampleRate;
     NSUInteger  inputChannelsCount;
@@ -65,23 +68,27 @@ struct AudioFileIO
     NSUInteger  layout;
     hb_chan_map_t *ichanmap;
 
-    NSMutableArray * inputSamplesBuffer;
-    NSMutableArray * outputSamplesBuffer;
+    MP42Fifo    *_inputSamplesBuffer;
+    MP42Fifo    *_outputSamplesBuffer;
+
     NSData * outputMagicCookie;
 
     struct AudioFileIO decoderData;
     struct AudioFileIO encoderData;
 }
 
-- (id) initWithTrack: (MP42AudioTrack*) track andMixdownType: (NSString*) mixdownType error:(NSError **)outError;
-- (void) setOutputTrack: (NSUInteger) outputTrackId;
-- (void) addSample: (MP42SampleBuffer*)sample;
-- (MP42SampleBuffer*) copyEncodedSample;
+- (id)initWithTrack:(MP42AudioTrack*)track andMixdownType:(NSString *)mixdownType error:(NSError **)outError;
+- (void)setOutputTrack:(NSUInteger)outputTrackId;
 
-- (NSData*) magicCookie;
-- (BOOL) needMoreSample;
+- (void)addSample:(MP42SampleBuffer *)sample;
+- (MP42SampleBuffer *)copyEncodedSample;
 
-- (BOOL) encoderDone;
-- (void) setDone:(BOOL)status;
+- (NSData *)magicCookie;
+
+- (void)cancel;
+- (BOOL)encoderDone;
+
+- (BOOL)needMoreSample;
+- (void)setInputDone;
 
 @end

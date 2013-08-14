@@ -47,10 +47,9 @@ u_int32_t MP4AV_Ac3GetSamplingRate(u_int8_t* pHdr);
 
 @implementation MatroskaDemuxHelper
 
--(id)init
+- (id)init
 {
-    if ((self = [super init]))
-    {
+    if ((self = [super init])) {
         queue = [[NSMutableArray alloc] init];
         offsetsArray = [[NSMutableArray alloc] init];
         
@@ -138,11 +137,11 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     return 1;
 }
 
-@interface MP42MkvImporter (Private)
-    - (MP42Metadata*) readMatroskaMetadata;
-    - (NSString*) matroskaCodecIDToHumanReadableName:(TrackInfo *)track;
-    - (NSString*) matroskaTrackName:(TrackInfo *)track;
-    - (uint64_t) matroskaTrackStartTime:(TrackInfo *)track Id:(MP4TrackId)Id;
+@interface MP42MkvImporter ()
+    - (MP42Metadata *)readMatroskaMetadata;
+    - (NSString *)matroskaCodecIDToHumanReadableName:(TrackInfo *)track;
+    - (NSString *)matroskaTrackName:(TrackInfo *)track;
+    - (uint64_t)matroskaTrackStartTime:(TrackInfo *)track Id:(MP4TrackId)Id;
 @end
 
 @implementation MP42MkvImporter
@@ -306,7 +305,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     return self;
 }
 
-- (MP42Metadata*) readMatroskaMetadata
+- (MP42Metadata *)readMatroskaMetadata
 {
     MP42Metadata *mkvMetadata = [[MP42Metadata alloc] init];
 
@@ -350,7 +349,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     }
 }
 
-- (uint64_t*)copyGuessedTrackDataLength
+- (uint64_t *)copyGuessedTrackDataLength
 {
     uint64_t    *trackSizes = NULL;
     uint64_t    *trackTimestamp;
@@ -393,7 +392,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     return trackSizes;
 }
 
-- (NSString*) matroskaCodecIDToHumanReadableName:(TrackInfo *)track
+- (NSString *)matroskaCodecIDToHumanReadableName:(TrackInfo *)track
 {
     if (track->CodecID) {
         if (!strcmp(track->CodecID, "V_MPEG4/ISO/AVC"))
@@ -440,7 +439,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     }
 }
 
-- (NSString*) matroskaTrackName:(TrackInfo *)track
+- (NSString *)matroskaTrackName:(TrackInfo *)track
 {    
     if(track->Name && strlen(track->Name))
         return [NSString stringWithUTF8String:track->Name];
@@ -448,7 +447,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
         return nil;
 }
 
-- (uint64_t) matroskaTrackStartTime:(TrackInfo *)track Id:(MP4TrackId)Id
+- (uint64_t)matroskaTrackStartTime:(TrackInfo *)track Id:(MP4TrackId)Id
 {
     uint64_t        StartTime, EndTime, FilePos;
     uint32_t        Track, FrameSize, FrameFlags;
@@ -585,9 +584,6 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    if (!_matroskaFile)
-        return;
-
     uint64_t        StartTime, EndTime, FilePos;
     uint32_t        Track, FrameSize, FrameFlags;
     uint8_t         *frame = NULL;
@@ -602,14 +598,9 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     /* mask other tracks because we don't need them */
     unsigned int TrackMask = ~0;
 
-    for (MP42Track* track in _activeTracks){
-        muxer_helper *helper = track.muxer_helper;
-
+    for (MP42Track *track in _activeTracks) {
         TrackMask &= ~(1 << [track sourceId]);
-        if (helper->demuxer_context == nil) {
-            demuxHelper = [[MatroskaDemuxHelper alloc] init];
-            helper->demuxer_context = demuxHelper;
-        }
+        track.muxer_helper->demuxer_context = [[MatroskaDemuxHelper alloc] init];
     }
 
     mkv_SetTrackMask(_matroskaFile, TrackMask);
@@ -644,8 +635,6 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 sample->sampleTimestamp = StartTime;
                 sample->sampleIsSync = YES;
                 sample->sampleTrackId = track.Id;
-                if(track.needConversion)
-                    sample->sampleSourceTrack = track;
 
                 [helper->fifo enqueue:sample];
                 [sample release];
@@ -657,7 +646,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 if (strcmp(trackInfo->CodecID, "S_VOBSUB") && strcmp(trackInfo->CodecID, "S_HDMV/PGS")) {
                     if (!demuxHelper->ss)
                         demuxHelper->ss = [[SBSubSerializer alloc] init];
-                    
+
                     NSString *string = [[[NSString alloc] initWithBytes:frame length:FrameSize encoding:NSUTF8StringEncoding] autorelease];
                     if (!strcmp(trackInfo->CodecID, "S_TEXT/ASS") || !strcmp(trackInfo->CodecID, "S_TEXT/SSA"))
                         string = StripSSALine(string);
@@ -671,7 +660,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 }
                 else {
                     MP42SampleBuffer *nextSample = [[MP42SampleBuffer alloc] init];
-                    
+
                     nextSample->sampleDuration = 0;
                     nextSample->sampleOffset = 0;
                     nextSample->sampleTimestamp = StartTime;
@@ -679,32 +668,28 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                     nextSample->sampleSize = FrameSize;
                     nextSample->sampleIsSync = YES;
                     nextSample->sampleTrackId = track.Id;
-                    if(track.needConversion)
-                        nextSample->sampleSourceTrack = track;
-                    
+
                     // PGS are usually stored with just the start time, and blank samples to fill the gaps
                     if (!strcmp(trackInfo->CodecID, "S_HDMV/PGS")) {
                         if (!demuxHelper->previousSample) {
                             demuxHelper->previousSample = [[MP42SampleBuffer alloc] init];
-                            demuxHelper->previousSample.sampleDuration = StartTime / 1000000;
-                            demuxHelper->previousSample.sampleOffset = 0;
-                            demuxHelper->previousSample.sampleTimestamp = 0;
-                            demuxHelper->previousSample.sampleIsSync = YES;
-                            demuxHelper->previousSample.sampleTrackId = track.Id;
-                            if(track.needConversion)
-                                demuxHelper->previousSample.sampleSourceTrack = track;
+                            demuxHelper->previousSample->sampleDuration = StartTime / 1000000;
+                            demuxHelper->previousSample->sampleOffset = 0;
+                            demuxHelper->previousSample->sampleTimestamp = 0;
+                            demuxHelper->previousSample->sampleIsSync = YES;
+                            demuxHelper->previousSample->sampleTrackId = track.Id;
                         }
                         else {
-                            if (nextSample->sampleTimestamp < demuxHelper->previousSample.sampleTimestamp) {
+                            if (nextSample->sampleTimestamp < demuxHelper->previousSample->sampleTimestamp) {
                                 // Out of order samples? swap the next with the previous
                                 MP42SampleBuffer *temp = nextSample;
                                 nextSample = demuxHelper->previousSample;
                                 demuxHelper->previousSample = temp;
                             }
 
-                            demuxHelper->previousSample.sampleDuration = (nextSample->sampleTimestamp - demuxHelper->previousSample.sampleTimestamp) / 1000000;
+                            demuxHelper->previousSample->sampleDuration = (nextSample->sampleTimestamp - demuxHelper->previousSample->sampleTimestamp) / 1000000;
                         }
-                        
+
                         [helper->fifo enqueue:demuxHelper->previousSample];
                         [demuxHelper->previousSample release];
 
@@ -720,8 +705,6 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                             sample->sampleData = calloc(1, 2);
                             sample->sampleIsSync = YES;
                             sample->sampleTrackId = track.Id;
-                            if(track.needConversion)
-                                sample->sampleSourceTrack = track;
                             
                             [helper->fifo enqueue:sample];
                             [sample release];
@@ -801,10 +784,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 else
                     continue;
             }
-        }        
+        }
     }
 
-    for (MP42Track* track in _activeTracks) {
+    for (MP42Track *track in _activeTracks) {
         muxer_helper *helper = track.muxer_helper;
         demuxHelper = helper->demuxer_context;
 
@@ -895,11 +878,15 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
                 if (!sample)
                     break;
 
+                demuxHelper->current_time += sample->sampleDuration;
+                sample->sampleTimestamp = demuxHelper->current_time;
+
                 while ([helper->fifo isFull] && !_cancelled)
                     usleep(500);
                     
                 [helper->fifo enqueue:sample];
                 [sample release];
+
                 demuxHelper->samplesWritten++;
             }
         }
@@ -916,10 +903,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     if (!_matroskaFile)
         return;
 
-    if (!_dataReader && !_done) {
-        _dataReader = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
-        [_dataReader setName:@"Matroska Demuxer"];
-        [_dataReader start];
+    if (!_demuxerThread && !_done) {
+        _demuxerThread = [[NSThread alloc] initWithTarget:self selector:@selector(demux:) object:self];
+        [_demuxerThread setName:@"Matroska Demuxer"];
+        [_demuxerThread start];
     }
 }
 
@@ -951,8 +938,6 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 
 - (void) dealloc
 {
-    [_dataReader release];
-
 	/* close matroska parser */ 
     closeMatroskaFile(_matroskaFile, _ioStream);
 
