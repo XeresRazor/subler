@@ -133,8 +133,12 @@
 
 - (BOOL)saveQueueToDisk
 {
-    return [NSKeyedArchiver archiveRootObject:filesArray
-                                       toFile:[[self queueURL] path]];
+    __block BOOL success = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        success = [NSKeyedArchiver archiveRootObject:filesArray
+                                              toFile:[[self queueURL] path]];
+    });
+    return success;
 }
 
 - (NSMenuItem*)prepareDestPopupItem:(NSURL*) dest
@@ -229,7 +233,7 @@
     }
 }
 
-- (NSArray*)loadSubtitles:(NSURL*)url
+- (NSArray *)loadSubtitles:(NSURL*)url
 {
     NSError *outError;
     NSMutableArray *tracksArray = [[NSMutableArray alloc] init];
@@ -249,16 +253,14 @@
                 result = [subtitleFilename compare:movieFilename options:NSCaseInsensitiveSearch range:range];
 
                 if (result == NSOrderedSame) {
-                    MP42FileImporter *fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil
+                    MP42FileImporter *fileImporter = [[[MP42FileImporter alloc] initWithDelegate:nil
                                                                                         andFile:dirUrl
-                                                                                          error:&outError];
+                                                                                          error:&outError] autorelease];
 
                     for (MP42Track *track in fileImporter.tracks) {
                         [track setTrackImporterHelper:fileImporter];
-                        [[fileImporter retain] autorelease];
                         [tracksArray addObject:track];
                     }
-                    [fileImporter release];
                 }
             }
         }
@@ -340,8 +342,9 @@
 
     // Search for external subtitles files
     NSArray *subtitles = [self loadSubtitles:url];
-    for (MP42SubtitleTrack *subTrack in subtitles)
+    for (MP42SubtitleTrack *subTrack in subtitles) {
         [mp4File addTrack:subTrack];
+    }
 
     // Search for metadata
     if ([MetadataOption state]) {
@@ -410,8 +413,8 @@
             if (item == nil)
                 break;
 
-            NSURL * url = [item URL];
-            NSURL * destURL = nil;
+            NSURL *url = [item URL];
+            NSURL *destURL = nil;
             MP42File *mp4File = [item mp4File];
             [mp4File setDelegate:self];
 
@@ -482,6 +485,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSInteger itemIndex = [filesArray indexOfObject:item];
                 [tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                [self saveQueueToDisk];
             });
 
             [pool release];
