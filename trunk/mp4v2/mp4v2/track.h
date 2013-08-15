@@ -391,6 +391,15 @@ MP4TrackId MP4AddPixelAspectRatio(
     uint32_t      vSpacing );
 
 MP4V2_EXPORT
+MP4TrackId MP4AddCleanAperture(
+    MP4FileHandle hFile,
+	MP4TrackId trackId,
+	uint32_t cleanApertureWidthN, uint32_t cleanApertureWidthD,
+	uint32_t cleanApertureHeightN, uint32_t cleanApertureHeightD,
+	uint32_t horizOffN, uint32_t horizOffD,
+	uint32_t vertOffN, uint32_t vertOffD );
+
+MP4V2_EXPORT
 MP4TrackId MP4AddColr(
     MP4FileHandle hFile,
     MP4TrackId    refTrackId,

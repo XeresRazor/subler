@@ -117,12 +117,26 @@
                 if (pcount > 0) {
                     Handle pasp = NewHandle(0);
                     GetImageDescriptionExtension(imgDesc, &pasp, kPixelAspectRatioImageDescriptionExtension, 1);
+
                     [(MP42VideoTrack*)newTrack setHSpacing:CFSwapInt32BigToHost(((PixelAspectRatioImageDescriptionExtension*)(*pasp))->hSpacing)];
                     [(MP42VideoTrack*)newTrack setVSpacing: CFSwapInt32BigToHost(((PixelAspectRatioImageDescriptionExtension*)(*pasp))->vSpacing)];
+
                     DisposeHandle(pasp);
                 }
                 if (ccount > 0) {
-                    // To-Do
+                    Handle clap = NewHandle(0);
+                    GetImageDescriptionExtension(imgDesc, &clap, kCleanApertureImageDescriptionExtension, 1);
+
+                    [(MP42VideoTrack*)newTrack setCleanApertureWidthN:CFSwapInt32BigToHost(((CleanApertureImageDescriptionExtension*)(*clap))->cleanApertureWidthN)];
+                    [(MP42VideoTrack*)newTrack setCleanApertureWidthD: CFSwapInt32BigToHost(((CleanApertureImageDescriptionExtension*)(*clap))->cleanApertureWidthD)];
+                    [(MP42VideoTrack*)newTrack setCleanApertureHeightN: CFSwapInt32BigToHost(((CleanApertureImageDescriptionExtension*)(*clap))->cleanApertureHeightN)];
+                    [(MP42VideoTrack*)newTrack setCleanApertureHeightD: CFSwapInt32BigToHost(((CleanApertureImageDescriptionExtension*)(*clap))->cleanApertureHeightD)];
+                    [(MP42VideoTrack*)newTrack setHorizOffN: CFSwapInt32BigToHost(((CleanApertureImageDescriptionExtension*)(*clap))->horizOffN)];
+                    [(MP42VideoTrack*)newTrack setHorizOffD: CFSwapInt32BigToHost(((CleanApertureImageDescriptionExtension*)(*clap))->horizOffD)];
+                    [(MP42VideoTrack*)newTrack setVertOffN: CFSwapInt32BigToHost(((CleanApertureImageDescriptionExtension*)(*clap))->vertOffN)];
+                    [(MP42VideoTrack*)newTrack setVertOffD: CFSwapInt32BigToHost(((CleanApertureImageDescriptionExtension*)(*clap))->vertOffD)];
+
+                    DisposeHandle(clap);
                 }
 
 				// Hack to setup PASP if none exists
