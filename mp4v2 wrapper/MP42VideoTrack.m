@@ -42,13 +42,23 @@
             hSpacing = 1;
             vSpacing = 1;
         }
-        
+
+        if (MP4HaveTrackAtom(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap")) {
+            MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.cleanApertureWidthN", &cleanApertureWidthN);
+            MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.cleanApertureWidthD", &cleanApertureWidthD);
+            MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.cleanApertureHeightN", &cleanApertureHeightN);
+            MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.cleanApertureHeightD", &cleanApertureHeightD);
+            MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.horizOffN", &horizOffN);
+            MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.horizOffD", &horizOffD);
+            MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.vertOffN", &vertOffN);
+            MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.vertOffD", &vertOffD);
+        }
+
         if ([format isEqualToString:MP42VideoFormatH264]) {
             MP4GetTrackH264ProfileLevel(fileHandle, trackID, &origProfile, &origLevel);
             newProfile = origProfile;
             newLevel = origLevel;
         }
-        
     }
 
     return self;
@@ -101,7 +111,26 @@
                         MP4AddPixelAspectRatio(fileHandle, Id, hSpacing, vSpacing);
                 }
             }
-            
+
+            if (cleanApertureWidthN >= 1 && cleanApertureHeightN >= 1) {
+                    if (MP4HaveTrackAtom(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap")) {
+                        MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.cleanApertureWidthN", cleanApertureWidthN);
+                        MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.cleanApertureWidthD", cleanApertureWidthD);
+                        
+                        MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.cleanApertureHeightN", cleanApertureHeightN);
+                        MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.cleanApertureHeightD", cleanApertureHeightD);
+                        
+                        MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.horizOffN", horizOffN);
+                        MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.horizOffD", horizOffD);
+                        
+                        MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.vertOffN", vertOffN);
+                        MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*.clap.vertOffD", vertOffD);
+                    }
+                    else
+                        MP4AddCleanAperture(fileHandle, Id, cleanApertureWidthN, cleanApertureWidthD, cleanApertureHeightN, cleanApertureHeightD,
+                                            horizOffN, horizOffD, vertOffN, vertOffD);
+            }
+
             if ([format isEqualToString:MP42VideoFormatH264]) {
                 if ([updatedProperty valueForKey:@"profile"]) {
                     MP4SetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.*[0].avcC.AVCProfileIndication", newProfile);
@@ -156,6 +185,9 @@
 
 @synthesize offsetX;
 @synthesize offsetY;
+
+@synthesize cleanApertureHeightD, cleanApertureHeightN, cleanApertureWidthD, cleanApertureWidthN;
+@synthesize horizOffD, horizOffN, vertOffD, vertOffN;
 
 @synthesize origProfile;
 @synthesize origLevel;
