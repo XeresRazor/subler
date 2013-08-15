@@ -187,8 +187,12 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     if (trackNeedConversion(track.format))
         track.needConversion = YES;
 
-    if (track.muxer_helper->importer)
-        [_importers setObject:track.muxer_helper->importer forKey:[[track sourceURL] path]];
+    if (track.muxer_helper->importer) {
+        if ([_importers objectForKey:[[track sourceURL] path]])
+            [track setTrackImporterHelper:[_importers objectForKey:[[track sourceURL] path]]];
+        else
+            [_importers setObject:track.muxer_helper->importer forKey:[[track sourceURL] path]];
+    }
 
     [_tracks addObject:track];
 }
