@@ -14,7 +14,6 @@
 - (void)_copySelectionFromTableView:(NSTableView *)tableView;
 - (void)_cutSelectionFromTableView:(NSTableView *)tableView;
 - (void)_pasteToTableView:(NSTableView *)tableView;
-
 @end
 
 @interface SBTableView : NSTableView<SBTableViewDelegate> {

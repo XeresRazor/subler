@@ -18,6 +18,7 @@ enum {
     SBQueueItemStatusFailed,
     SBQueueItemStatusCancelled,
 };
+
 typedef NSInteger SBQueueItemStatus;
 
 
@@ -31,19 +32,20 @@ typedef NSInteger SBQueueItemStatus;
     BOOL humanEdited;
 }
 
+@property (atomic, readonly) MP42File *mp4File;
 @property (atomic, readonly) NSDictionary *attributes;
 @property (atomic, readonly) NSURL *URL;
-@property (atomic, readonly) NSURL *destURL;
-@property (atomic, readonly) MP42File *mp4File;
+@property (atomic, retain, readwrite) NSURL *destURL;
+
 @property (atomic, readwrite) SBQueueItemStatus status;
 
-- (id)initWithURL:(NSURL*)URL;
-+ (id)itemWithURL:(NSURL*)URL;
+- (id)initWithURL:(NSURL *)URL;
++ (id)itemWithURL:(NSURL *)URL;
 
-- (id)initWithMP4:(MP42File*)MP4;
-- (id)initWithMP4:(MP42File*)MP4 url:(NSURL*)URL attributes:(NSDictionary*)dict;
+- (id)initWithMP4:(MP42File *)MP4;
+- (id)initWithMP4:(MP42File *)MP4 url:(NSURL *)URL attributes:(NSDictionary *)dict;
 
-+ (id)itemWithMP4:(MP42File*)MP4;
-+ (id)itemWithMP4:(MP42File*)MP4 url:(NSURL*)URL attributes:(NSDictionary*)dict;
++ (id)itemWithMP4:(MP42File *)MP4;
++ (id)itemWithMP4:(MP42File *)MP4 url:(NSURL *)URL attributes:(NSDictionary *)dict;
 
 @end

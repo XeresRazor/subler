@@ -8,6 +8,8 @@
 
 #import "SBQueueController.h"
 #import "SBQueueItem.h"
+#import "SBDocument.h"
+
 #import "MP42File.h"
 #import "MP42FileImporter.h"
 #import "MP42Image.h"
@@ -36,7 +38,7 @@
 @synthesize status;
 
 
-+ (SBQueueController*)sharedManager
++ (SBQueueController *)sharedManager
 {
     static dispatch_once_t pred;
     static SBQueueController *sharedManager = nil;
@@ -51,7 +53,7 @@
     {
         queue = dispatch_queue_create("org.subler.Queue", NULL);
 
-        NSURL* queueURL = [self queueURL];
+        NSURL *queueURL = [self queueURL];
 
         if ([[NSFileManager defaultManager] fileExistsAtPath:[queueURL path]]) {
             @try {
@@ -133,15 +135,10 @@
 
 - (BOOL)saveQueueToDisk
 {
-    __block BOOL success = YES;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        success = [NSKeyedArchiver archiveRootObject:filesArray
-                                              toFile:[[self queueURL] path]];
-    });
-    return success;
+    return [NSKeyedArchiver archiveRootObject:filesArray toFile:[[self queueURL] path]];
 }
 
-- (NSMenuItem*)prepareDestPopupItem:(NSURL*) dest
+- (NSMenuItem *)prepareDestPopupItem:(NSURL*) dest
 {
     NSMenuItem *folderItem = [[NSMenuItem alloc] initWithTitle:[dest lastPathComponent] action:@selector(destination:) keyEquivalent:@""];
     [folderItem setTag:10];
@@ -310,7 +307,7 @@
     return metadata;
 }
 
-- (MP42File*)prepareQueueItem:(NSURL*)url error:(NSError**)outError {
+- (MP42File *)prepareQueueItem:(NSURL*)url error:(NSError**)outError {
     NSString *type;
     MP42File *mp4File = nil;
 
@@ -367,18 +364,13 @@
     return [mp4File autorelease];
 }
 
-- (SBQueueItem*)firstItemInQueue
+- (SBQueueItem *)firstItemInQueue
 {
-    __block SBQueueItem *next = nil;
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        for (SBQueueItem *item in filesArray)
-            if (([item status] != SBQueueItemStatusCompleted) && ([item status] != SBQueueItemStatusFailed)) {
-                next = item;
-                break;
-            }
-    });
+    for (SBQueueItem *item in filesArray)
+        if (([item status] != SBQueueItemStatusCompleted) && ([item status] != SBQueueItemStatusFailed))
+            return item;
 
-    return next;
+    return nil;
 }
 
 - (void)start:(id)sender
@@ -408,17 +400,20 @@
 
         for (;;) {
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+            __block SBQueueItem *item = nil;
 
-            SBQueueItem *item = [self firstItemInQueue];
+            // Get the first item available in the queue
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                item = [self firstItemInQueue];
+                [item retain];
+                [item setStatus:SBQueueItemStatusWorking];
+            });
+
             if (item == nil)
                 break;
 
-            NSURL *url = [item URL];
-            NSURL *destURL = nil;
-            MP42File *mp4File = [item mp4File];
-            [mp4File setDelegate:self];
-
-            [item setStatus:SBQueueItemStatusWorking];
+            _currentMP4 = [item mp4File];
+            [_currentMP4 setDelegate:self];
 
             // Update the UI
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -428,34 +423,33 @@
                 [tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
             });
 
-            if ([item destURL])
-                destURL = [item destURL];
-            else if (!mp4File && destination && customDestination) {
-                destURL = [[[destination URLByAppendingPathComponent:[url lastPathComponent]] URLByDeletingPathExtension] URLByAppendingPathExtension:@"mp4"];
+            // Set the destination url
+            if (![item destURL]) {
+                if (!_currentMP4 && destination && customDestination)
+                    item.destURL = [[[destination URLByAppendingPathComponent:[item.URL lastPathComponent]] URLByDeletingPathExtension] URLByAppendingPathExtension:@"mp4"];
+                else
+                    item.destURL = [[item.URL URLByDeletingPathExtension] URLByAppendingPathExtension:@"mp4"];
             }
-            else
-                destURL = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:@"mp4"];
 
             // The file has been added directly to the queue
-            if (!mp4File && url) {
-                mp4File = [self prepareQueueItem:url error:&outError];
-            }
+            if (!_currentMP4 && item.URL)
+                _currentMP4 = [self prepareQueueItem:item.URL error:&outError];
 
-            currentItem = mp4File;
-
-            // We have an existing mp4 file
-            if ([mp4File hasFileRepresentation] && !isCancelled)
-                success = [mp4File updateMP4FileWithAttributes:attributes error:&outError];
-            else if (mp4File) {
-                // Write the file to disk
-                if (destURL)
+            // We have an existing mp4 file, update it
+            if (!_cancelled) {
+                if ([_currentMP4 hasFileRepresentation])
+                    success = [_currentMP4 updateMP4FileWithAttributes:attributes error:&outError];
+                // Write the new file to disk
+                else if (_currentMP4 && item.destURL) {
                     [attributes addEntriesFromDictionary:[item attributes]];
-                    success = [mp4File writeToUrl:destURL
-                                   withAttributes:attributes
-                                            error:&outError];
+                    success = [_currentMP4 writeToUrl:[item destURL]
+                                       withAttributes:attributes
+                                                error:&outError];
+                }
             }
 
-            if (isCancelled) {
+            // Check results
+            if (_cancelled) {
                 [item setStatus:SBQueueItemStatusCancelled];
                 status = SBQueueStatusCancelled;
             }
@@ -467,9 +461,10 @@
                         [countLabel setStringValue:[NSString stringWithFormat:@"Optimizing file %ld of %lu.",(long)itemIndex + 1, (unsigned long)[filesArray count]]];
                     });
 
-                    success = [mp4File optimize];
+                    success = [_currentMP4 optimize];
                 }
             }
+
             if (success)
                 [item setStatus:SBQueueItemStatusCompleted];
             else {
@@ -488,6 +483,7 @@
                 [self saveQueueToDisk];
             });
 
+            [item release];
             [pool release];
 
             if (status == SBQueueStatusCancelled)
@@ -500,12 +496,12 @@
 #endif
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            currentItem = nil;
+            _currentMP4 = nil;
 
             if (status == SBQueueStatusCancelled) {
                 [countLabel setStringValue:@"Cancelled."];
                 status = SBQueueStatusCancelled;
-                isCancelled = NO;
+                _cancelled = NO;
             }
             else {
                 [countLabel setStringValue:@"Done."];
@@ -534,8 +530,8 @@
 
 - (void)stop:(id)sender
 {
-    isCancelled = YES;
-    [currentItem cancel];
+    _cancelled = YES;
+    [_currentMP4 cancel];
 }
 
 - (IBAction)toggleStartStop:(id)sender
@@ -715,6 +711,29 @@
     [rowIndexes release];
 }
 
+- (IBAction)edit:(id)sender
+{
+    SBQueueItem *item = [[filesArray objectAtIndex:[tableView clickedRow]] retain];
+    
+    [self removeItems:[NSArray arrayWithObject:item]];
+    [self updateUI];
+
+    MP42File *mp4;
+    if (!item.mp4File)
+        mp4 = [self prepareQueueItem:item.URL error:NULL];
+    else
+        mp4 = item.mp4File;
+
+    SBDocument *doc = [[NSDocumentController sharedDocumentController] openUntitledDocumentAndDisplay:YES error:NULL];
+    [doc setMp4File:mp4];
+}
+
+- (IBAction)showInFinder:(id)sender
+{
+    SBQueueItem *item = [filesArray objectAtIndex:[tableView clickedRow]];
+    [[NSWorkspace sharedWorkspace] selectFile:[item.destURL path] inFileViewerRootedAtPath:nil];
+}
+
 - (IBAction)removeSelectedItems:(id)sender
 {
     [self _deleteSelectionFromTableView:tableView];
@@ -739,7 +758,7 @@
 #endif
         }
         else {
-            NSArray* items = [filesArray objectsAtIndexes:indexes];
+            NSArray *items = [filesArray objectsAtIndexes:indexes];
             [self removeItems:items];
             [tableView reloadData];
         }
@@ -761,6 +780,17 @@
         if ([tableView selectedRow] != -1 || [tableView clickedRow] != -1)
             return YES;
 
+    if (action == @selector(showInFinder:)) {
+        if ([tableView clickedRow] != -1) {
+            SBQueueItem *item = [filesArray objectAtIndex:[tableView clickedRow]];
+            if ([item status] == SBQueueItemStatusCompleted)
+                return YES;
+        }
+    }
+
+    if (action == @selector(edit:))
+        return YES;
+    
     if (action == @selector(removeCompletedItems:))
         return YES;
 

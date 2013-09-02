@@ -9,9 +9,9 @@
 #import <Cocoa/Cocoa.h>
 
 @class SBPrefsController;
+@class MP42File;
 
-@interface SBDocumentController : NSDocumentController {
-}
+@interface SBDocumentController : NSDocumentController
 
 @end
 

@@ -199,8 +199,8 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
 }
 
 - (id)openDocumentWithContentsOfURL:(NSURL *)absoluteURL display:(BOOL)displayDocument error:(NSError **)outError {
-    SBDocument* doc = nil;
-    
+    SBDocument *doc = nil;
+
     if ([[[absoluteURL path] pathExtension] caseInsensitiveCompare: @"mkv"] == NSOrderedSame ||
         [[[absoluteURL path] pathExtension] caseInsensitiveCompare: @"mka"] == NSOrderedSame ||
         [[[absoluteURL path] pathExtension] caseInsensitiveCompare: @"mks"] == NSOrderedSame ||
@@ -213,5 +213,5 @@ void logCallback(MP4LogLevel loglevel, const char* fmt, va_list ap)
         return [super openDocumentWithContentsOfURL:absoluteURL display:displayDocument error:outError];
     }
 }
-         
+
 @end

@@ -70,5 +70,6 @@
 - (void)showImportSheet:(NSArray *)fileURLs;
 
 - (MP42File *)mp4File;
+- (void)setMp4File:(MP42File *)mp4;
 
 @end
