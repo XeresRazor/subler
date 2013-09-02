@@ -45,15 +45,16 @@ typedef NSInteger SBQueueStatus;
 
     NSImage *docImg;
 
-    dispatch_queue_t queue;
-    SBQueueStatus   status;
-    BOOL            isCancelled;
-    id              currentItem;
+    dispatch_queue_t    queue;
+    MP42File           *_currentMP4;
+    SBQueueStatus       status;
+
+    BOOL                _cancelled;
 }
 
 @property (readonly) SBQueueStatus status;
 
-+ (SBQueueController*)sharedManager;
++ (SBQueueController *)sharedManager;
 
 - (void)start:(id)sender;
 - (void)stop:(id)sender;
@@ -64,6 +65,9 @@ typedef NSInteger SBQueueStatus;
 
 - (IBAction)removeSelectedItems:(id)sender;
 - (IBAction)removeCompletedItems:(id)sender;
+
+- (IBAction)edit:(id)sender;
+- (IBAction)showInFinder:(id)sender;
 
 - (IBAction)toggleStartStop:(id)sender;
 - (IBAction)toggleOptions:(id)sender;

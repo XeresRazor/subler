@@ -61,6 +61,7 @@
 					<string key="NSFrameSize">{400, 130}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
+					<reference key="NSNextKeyView"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
@@ -208,6 +209,7 @@
 						<string key="NSFrame">{{156, 13}, {192, 32}}</string>
 						<reference key="NSSuperview" ref="354444888"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="240330854">
 							<int key="NSCellFlags">67108864</int>
@@ -706,6 +708,7 @@
 						<string key="NSFrame">{{236, 24}, {35, 17}}</string>
 						<reference key="NSSuperview" ref="473769673"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSTextFieldCell" key="NSCell" id="349191360">
 							<int key="NSCellFlags">68157504</int>
@@ -795,6 +798,7 @@
 						<string key="NSFrame">{{20, 19}, {25, 21}}</string>
 						<reference key="NSSuperview" ref="572451373"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="167447338">
 							<int key="NSCellFlags">-1543503872</int>
@@ -1009,6 +1013,27 @@
 				<reference key="NSNextKeyView" ref="308773859"/>
 				<string key="NSClassName">NSView</string>
 			</object>
+			<object class="NSMenu" id="533200553">
+				<string key="NSTitle"/>
+				<array class="NSMutableArray" key="NSMenuItems">
+					<object class="NSMenuItem" id="935793020">
+						<reference key="NSMenu" ref="533200553"/>
+						<string key="NSTitle">Show in Finder</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="483758407"/>
+						<reference key="NSMixedImage" ref="522490086"/>
+					</object>
+					<object class="NSMenuItem" id="841377698">
+						<reference key="NSMenu" ref="533200553"/>
+						<string key="NSTitle">Delete</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="483758407"/>
+						<reference key="NSMixedImage" ref="522490086"/>
+					</object>
+				</array>
+			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<bool key="usesAutoincrementingIDs">NO</bool>
@@ -1092,6 +1117,14 @@
 						<reference key="destination" ref="473769673"/>
 					</object>
 					<string key="id">A3V-qO-eaD</string>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">deletePreset:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="841377698"/>
+					</object>
+					<string key="id">28m-Sn-BGs</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -1204,6 +1237,14 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<string key="id">183</string>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">menu</string>
+						<reference key="source" ref="344846826"/>
+						<reference key="destination" ref="533200553"/>
+					</object>
+					<string key="id">mip-SD-ob5</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -1815,6 +1856,25 @@
 						<reference key="object" ref="380237219"/>
 						<reference key="parent" ref="438834815"/>
 					</object>
+					<object class="IBObjectRecord">
+						<string key="id">pzR-CP-Gdo</string>
+						<reference key="object" ref="533200553"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="841377698"/>
+							<reference ref="935793020"/>
+						</array>
+						<reference key="parent" ref="0"/>
+					</object>
+					<object class="IBObjectRecord">
+						<string key="id">VmF-vH-DSp</string>
+						<reference key="object" ref="841377698"/>
+						<reference key="parent" ref="533200553"/>
+					</object>
+					<object class="IBObjectRecord">
+						<string key="id">Vwo-bW-szV</string>
+						<reference key="object" ref="935793020"/>
+						<reference key="parent" ref="533200553"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1899,7 +1959,10 @@
 				<string key="89.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="94.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="99.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="VmF-vH-DSp.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="Vwo-bW-szV.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="hjZ-wQ-Sbb.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="pzR-CP-Gdo.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="wgy-N5-9cB.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>

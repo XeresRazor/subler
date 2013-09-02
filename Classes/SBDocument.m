@@ -898,7 +898,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     return NO;
 }
 
--(void) dealloc
+- (void)dealloc
 {
     [propertyView release];
     [mp4File release];
@@ -906,8 +906,15 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [super dealloc];
 }
 
--(MP42File *) mp4File {
+- (MP42File *)mp4File {
     return mp4File;
+}
+
+- (void)setMp4File:(MP42File *)mp4 {
+    [mp4File autorelease];
+    mp4File = [mp4 retain];
+    [fileTracksTable reloadData];
+    [self tableViewSelectionDidChange:nil];
 }
 
 @end

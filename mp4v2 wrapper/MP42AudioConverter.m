@@ -585,7 +585,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
     
     if (outError)
         *outError = MP42Error(@"Unknown Error.",
-                              @"Something went from in the audio converter",
+                              @"Something went wrong in the audio converter",
                               130);
 
     return YES;
