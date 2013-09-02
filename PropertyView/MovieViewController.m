@@ -81,6 +81,7 @@ NSString *MetadataPBoardType = @"MetadataPBoardType";
 
     dct = [[NSMutableDictionary alloc] init];
 
+    [imageBrowser set_pasteboardTypes:[NSArray arrayWithObjects: NSPasteboardTypeTIFF, NSPasteboardTypePNG, nil]];
     [imageBrowser setZoomValue:1.0];
     [imageBrowser reloadData];
 }
@@ -394,6 +395,27 @@ NSString *MetadataPBoardType = @"MetadataPBoardType";
     NSMutableDictionary *data = [NSUnarchiver unarchiveObjectWithData:archivedData];
 
     [self add:data];
+}
+
+- (void)_pasteToImageBrowserView:(IKImageBrowserView *)ImageBrowserView
+{
+    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+
+    NSArray *classes = [[NSArray alloc] initWithObjects:[NSImage class], nil];
+    NSDictionary *options = [NSDictionary dictionary];
+    NSArray *copiedItems = [pasteboard readObjectsForClasses:classes options:options];
+    if (copiedItems != nil) {
+        for (NSImage *item in copiedItems) {
+            MP42Image *artwork = [[MP42Image alloc] initWithImage:item];
+            [metadata.artworks addObject:artwork];
+            [artwork release];
+        }
+
+        metadata.isArtworkEdited = YES;
+        metadata.isEdited = YES;
+        [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+        [imageBrowser reloadData];
+    }
 }
 
 - (NSAttributedString *) boldString: (NSString *) string

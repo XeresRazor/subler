@@ -11,8 +11,9 @@
 
 #import "MP42File.h"
 #import "SBTableView.h"
+#import "SBImageBrowserView.h"
 
-@interface MovieViewController : NSViewController <SBTableViewDelegate> {
+@interface MovieViewController : NSViewController <SBTableViewDelegate, SBImageBrowserViewDelegate> {
     MP42Metadata            *metadata;
 
     IBOutlet NSPopUpButton  *tagList;
@@ -43,7 +44,7 @@
     NSTableColumn *tabCol;
     CGFloat width;
     
-    IBOutlet IKImageBrowserView *imageBrowser;
+    IBOutlet SBImageBrowserView *imageBrowser;
 
     IBOutlet NSButton       *addArtwork;
     IBOutlet NSButton       *removeArtwork;
