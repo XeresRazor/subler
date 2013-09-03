@@ -225,7 +225,8 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
     // Set the error pointer to the parser's error object
-    *errorPointer = parseError;
+    if (errorPointer)
+        *errorPointer = parseError;
 }
 
 @end
