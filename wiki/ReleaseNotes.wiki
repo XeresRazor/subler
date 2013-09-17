@@ -3,11 +3,11 @@
 
 = Subler 0.20 =
  
-* Updated TheMovieDB api.
-* Added iTunes Store metadata importer.
-* Improved ratings selection.
-* Srt -> tx3g conversion improvement: font color, subtitles position (bottom, top), forced subtitles. (refer to the SrtFileFormat wiki page for an example).
-* Various bug fixed.
+ * Updated TheMovieDB api.
+ * Added iTunes Store metadata importer.
+ * Improved ratings selection.
+ * Srt -> tx3g conversion improvement: font color, subtitles position (bottom, top), forced subtitles. (refer to the SrtFileFormat wiki page for an example).
+ * Various bug fixed.
 
 = Subler 0.19 =
 
