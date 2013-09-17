@@ -8,7 +8,7 @@
 		<item>
             <title>Version 0.20</title>
             <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes019.html
+                http://subler.googlecode.com/svn/doc/rnotes020.html
             </sparkle:releaseNotesLink>
             <pubDate>Tuesday, 17 Sep 2013 1:00:00 +0000</pubDate>
             <enclosure url="http://subler.googlecode.com/files/Subler-0.20.zip" sparkle:version="0.20" length="12610221" type="application/octet-stream" sparkle:dsaSignature="MC4CFQCsdYAQb6ydq0jLuVLOB05iu2Gr/QIVAKSUEvURwmqM9LrtzRhitva53USg" />
