@@ -1274,14 +1274,15 @@ static const genreType_t genreType_strings[] = {
 
         MP4ItmfData* data = &newItem->dataList.elements[0];
 
-		if ([[tagsDict valueForKey:@"Rating"] unsignedIntegerValue] == [[SBRatings defaultManager] unknownIndex]) {
-			if (!ratingiTunesCode) {
-				ratingiTunesCode = [[[SBRatings defaultManager] iTunesCodes] objectAtIndex:[[SBRatings defaultManager] unknownIndex]];
-			}
-		} else {
-			ratingiTunesCode = [[[SBRatings defaultManager] iTunesCodes] objectAtIndex:[[tagsDict valueForKey:@"Rating"] unsignedIntegerValue]];
-		}
-		NSString *ratingString = ratingiTunesCode;
+        if (![[tagsDict valueForKey:@"Rating"] isKindOfClass:[NSNumber class]] ||
+            [[tagsDict valueForKey:@"Rating"] unsignedIntegerValue] == [[SBRatings defaultManager] unknownIndex]) {
+            if (!ratingiTunesCode) {
+                ratingiTunesCode = [[[SBRatings defaultManager] iTunesCodes] objectAtIndex:[[SBRatings defaultManager] unknownIndex]];
+            }
+        } else {
+            ratingiTunesCode = [[[SBRatings defaultManager] iTunesCodes] objectAtIndex:[[tagsDict valueForKey:@"Rating"] unsignedIntegerValue]];
+        }
+        NSString *ratingString = ratingiTunesCode;
         if ([[tagsDict valueForKey:@"Rating Annotation"] length] && [ratingString length]) {
 			ratingString = [NSString stringWithFormat:@"%@%@", ratingString, [tagsDict valueForKey:@"Rating Annotation"]];
 		}
