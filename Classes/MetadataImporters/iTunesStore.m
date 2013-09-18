@@ -191,14 +191,14 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	if (xmlData) {
 		NSXMLDocument *xml = [[NSXMLDocument alloc] initWithData:xmlData options:NSXMLDocumentTidyHTML error:NULL];
 		NSArray *p = [iTunesStore readPeople:@"Actor" fromXML:xml];
-		if (p) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Cast"];
+		if (p && [p count]) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Cast"];
 		p = [iTunesStore readPeople:@"Director" fromXML:xml];
-		if (p) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Director"];
-		if (p) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Artist"];
+		if (p && [p count]) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Director"];
+		if (p && [p count]) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Artist"];
 		p = [iTunesStore readPeople:@"Producer" fromXML:xml];
-		if (p) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Producers"];
+		if (p && [p count]) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Producers"];
 		p = [iTunesStore readPeople:@"Screenwriter" fromXML:xml];
-		if (p) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Screenwriters"];
+		if (p && [p count]) [aMetadata setTag:[p componentsJoinedByString:@", "] forKey:@"Screenwriters"];
 		NSArray *nodes = [xml nodesForXPath:[NSString stringWithFormat:@"//li[@class='copyright']"] error:NULL];
 		for (NSXMLNode *n in nodes) {
 			NSString *copyright = [n stringValue];
@@ -247,6 +247,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 			metadata.mediaKind = 9; // movie
 			[metadata setTag:[r valueForKey:@"trackName"] forKey:@"Name"];
 			[metadata setTag:[r valueForKey:@"artistName"] forKey:@"Director"];
+            [metadata setTag:[r valueForKey:@"artistName"] forKey:@"Artist"];
 		} else if ([[r valueForKey:@"kind"] isEqualToString:@"tv-episode"]) {
 			metadata.mediaKind = 10; // TV show
 			[metadata setTag:[r valueForKey:@"artistName"] forKey:@"TV Show"];
