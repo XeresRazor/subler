@@ -372,7 +372,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
         if (!track.muxed) {
             // Reopen the file importer is they are not already open
             // this happens when the object was unarchived from a file
-            if (!track.muxer_helper->importer && [track sourceURL]) {
+            if (![track isMemberOfClass:[MP42ChapterTrack class]] && !track.muxer_helper->importer && [track sourceURL]) {
                 MP42FileImporter *fileImporter = [_importers valueForKey:[[track sourceURL] path]];
 
                 if (fileImporter) {

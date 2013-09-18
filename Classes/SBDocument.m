@@ -881,18 +881,20 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
                            [NSArray arrayWithObject: [NSURL class]] options: nil];
         NSMutableArray *supItems = [[[NSMutableArray alloc] init] autorelease];
 
-        for (NSURL * file in items) {
+        for (NSURL *file in items) {
             if ([[file pathExtension] caseInsensitiveCompare: @"txt"] == NSOrderedSame)
                 [self addChapterTrack:file];
             else if ([[file pathExtension] caseInsensitiveCompare: @"xml"] == NSOrderedSame ||
                      [[file pathExtension] caseInsensitiveCompare: @"nfo"] == NSOrderedSame)
                 [self addMetadata:file];
-            else if (isFileFormatSupported([file pathExtension]))
+            else if (isFileFormatSupported([file pathExtension])) {
                 [supItems addObject:file];
-                     
+            }
         }
+        
+        if ([supItems count])
+            [self showImportSheet:supItems];
 
-        [self showImportSheet:supItems];
         return YES;
     }
     return NO;
