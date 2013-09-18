@@ -87,6 +87,7 @@
 	[metadata setTag:[r valueForKey:@"title"] forKey:@"Name"];
 	[metadata setTag:[r valueForKey:@"release_date"] forKey:@"Release Date"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[r valueForKey:@"genres"] forKey:@"name"] forKey:@"Genre"];
+    [metadata setTag:[r valueForKey:@"overview"] forKey:@"Description"];
 	[metadata setTag:[r valueForKey:@"overview"] forKey:@"Long Description"];
 	[metadata setTag:[TheMovieDB3 commaJoinedSubentriesOf:[r valueForKey:@"production_companies"] forKey:@"name"] forKey:@"Studio"];
 	NSDictionary *casts = [r valueForKey:@"casts"];
