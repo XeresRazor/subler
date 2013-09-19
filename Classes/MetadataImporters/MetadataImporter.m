@@ -65,8 +65,10 @@
 	}
     NSError *outError = nil;
 	NSData *r = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:&outError];
-    if (outError)
-        //NSLog(@"Error: url content is nil");
+    
+    /*if (outError)
+        NSLog(@"Error: url content is nil");
+     */
 
 	[r writeToFile:filename atomically:NO];
 	return r;
