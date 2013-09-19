@@ -42,10 +42,10 @@
                                                              @"m4v",            @"SBSaveFormat",
                                                              @"NO",             @"mp464bitOffset",
                                                              @"YES",            @"chaptersPreviewTrack",
-                                                             @"iTunes Store",   @"SBMetadataPreference|Movie",
+                                                             @"TheMovieDB",     @"SBMetadataPreference|Movie",
                                                              @"USA (English)",  @"SBMetadataPreference|Movie|iTunes Store|Language",
                                                              @"English",        @"SBMetadataPreference|Movie|TheMovieDB|Language",
-                                                             @"iTunes Store",   @"SBMetadataPreference|TV",
+                                                             @"TheTVDB",        @"SBMetadataPreference|TV",
                                                              @"USA (English)",  @"SBMetadataPreference|TV|iTunes Store|Language",
                                                              @"English",        @"SBMetadataPreference|TV|TheTVDB|Language",
                                                              nil]];
