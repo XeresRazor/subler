@@ -12,6 +12,7 @@
 #import "MP42Metadata.h"
 #import "SBLanguages.h"
 #import "XMLReader.h"
+#import "SBRatings.h"
 
 #define API_KEY @"3498815BE9484A62"
 
@@ -134,6 +135,12 @@
 	[metadata setTag:[aSeries retrieveForPath:@"id.text"] forKey:@"TheTVDB Series ID"];
 	[metadata setTag:[aSeries retrieveForPath:@"SeriesName.text"] forKey:@"TV Show"];
     [metadata setTag:[aSeries retrieveForPath:@"Overview.text"] forKey:@"Series Description"];
+    [metadata setTag:[TheTVDB cleanPeopleList:[aSeries retrieveForPath:@"Genre.text"]] forKey:@"Genre"];
+
+    [metadata setTag:[NSNumber numberWithUnsignedInteger:
+                      [[SBRatings defaultManager] ratingIndexForiTunesCountry:@"USA" media:@"TV" ratingString:[aSeries retrieveForPath:@"ContentRating.text"]]] forKey:@"Rating"];
+
+    [metadata setTag:[aSeries retrieveForPath:@"Network.text"] forKey:@"TV Network"];
 	[metadata setTag:[aEpisode retrieveForPath:@"SeasonNumber.text"] forKey:@"TV Season"];
 	[metadata setTag:[aEpisode retrieveForPath:@"EpisodeNumber.text"] forKey:@"TV Episode #"];
 
