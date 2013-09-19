@@ -726,6 +726,7 @@
 
     SBDocument *doc = [[NSDocumentController sharedDocumentController] openUntitledDocumentAndDisplay:YES error:NULL];
     [doc setMp4File:mp4];
+    [item release];
 }
 
 - (IBAction)showInFinder:(id)sender
