@@ -78,7 +78,7 @@ NSLock *lock;
     return self;
 }
 
-- (NSImage*)image
+- (NSImage *)image
 {
     if (_image)
         return _image;
