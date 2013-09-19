@@ -47,6 +47,26 @@
 			[aMetadata mergeMetadata:r];
 		}
 	}
+
+    // add iTunes artwork
+    NSMutableArray *artworkThumbURLs = [[NSMutableArray alloc] initWithArray:aMetadata.artworkThumbURLs];
+	NSMutableArray *artworkFullsizeURLs = [[NSMutableArray alloc] initWithArray:aMetadata.artworkFullsizeURLs];
+	NSMutableArray *artworkProviderNames = [[NSMutableArray alloc] initWithArray:aMetadata.artworkProviderNames];
+
+	MP42Metadata *iTunesMetadata = [iTunesStore quickiTunesSearchMovie:[[aMetadata tagsDict] valueForKey:@"Name"]];
+	if (iTunesMetadata && [iTunesMetadata artworkThumbURLs] && [iTunesMetadata artworkFullsizeURLs] && ([[iTunesMetadata artworkThumbURLs] count] == [[iTunesMetadata artworkFullsizeURLs] count])) {
+		[artworkThumbURLs addObjectsFromArray:[iTunesMetadata artworkThumbURLs]];
+		[artworkFullsizeURLs addObjectsFromArray:[iTunesMetadata artworkFullsizeURLs]];
+		[artworkProviderNames addObjectsFromArray:[iTunesMetadata artworkProviderNames]];
+	}
+
+    [aMetadata setArtworkThumbURLs:artworkThumbURLs];
+	[aMetadata setArtworkFullsizeURLs:artworkFullsizeURLs];
+	[aMetadata setArtworkProviderNames:artworkProviderNames];
+	[artworkThumbURLs release];
+	[artworkFullsizeURLs release];
+	[artworkProviderNames release];
+
 	return aMetadata;
 }
 
@@ -115,13 +135,7 @@
 	NSMutableArray *artworkThumbURLs = [[NSMutableArray alloc] initWithCapacity:2];
 	NSMutableArray *artworkFullsizeURLs = [[NSMutableArray alloc] initWithCapacity:1];
 	NSMutableArray *artworkProviderNames = [[NSMutableArray alloc] initWithCapacity:1];
-	// add iTunes artwork
-	MP42Metadata *iTunesMetadata = [iTunesStore quickiTunesSearchMovie:[[metadata tagsDict] valueForKey:@"Name"]];
-	if (iTunesMetadata && [iTunesMetadata artworkThumbURLs] && [iTunesMetadata artworkFullsizeURLs] && ([[iTunesMetadata artworkThumbURLs] count] == [[iTunesMetadata artworkFullsizeURLs] count])) {
-		[artworkThumbURLs addObjectsFromArray:[iTunesMetadata artworkThumbURLs]];
-		[artworkFullsizeURLs addObjectsFromArray:[iTunesMetadata artworkFullsizeURLs]];
-		[artworkProviderNames addObjectsFromArray:[iTunesMetadata artworkProviderNames]];
-	}
+
 	// load image variables from configuration
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.themoviedb.org/3/configuration?api_key=%@", API_KEY]];
 	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
