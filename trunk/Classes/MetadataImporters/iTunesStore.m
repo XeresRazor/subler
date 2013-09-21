@@ -77,24 +77,26 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
-		NSArray *results = [iTunesStore metadataForResults:d store:store];
-		if (([results count] == 0) && ![aLanguage isEqualToString:@"USA (English)"]) {
-			return [self searchTVSeries:aSeriesName language:@"USA (English)" seasonNum:aSeasonNum episodeNum:aEpisodeNum];
-		}
-		if (([results count] == 0) && aSeasonNum) {
-			return [self searchTVSeries:aSeriesName language:@"USA (English)" seasonNum:nil episodeNum:aEpisodeNum];
-		}
-		if (aEpisodeNum && ![aEpisodeNum isEqualToString:@""]) {
-			NSEnumerator *resultsEnum = [results objectEnumerator];
-			MP42Metadata *m;
-			while ((m = (MP42Metadata *) [resultsEnum nextObject])) {
-				if ([[[[m tagsDict] valueForKey:@"TV Episode #"] stringValue] isEqualToString:aEpisodeNum]) {
-					return [NSArray arrayWithObject:m];
-				}
-			}
-		}
-		NSArray *resultsSorted = [results sortedArrayUsingFunction:sortMP42Metadata context:NULL];
-		return resultsSorted;
+        if ([d isKindOfClass:[NSDictionary class]]) {
+            NSArray *results = [iTunesStore metadataForResults:d store:store];
+            if (([results count] == 0) && ![aLanguage isEqualToString:@"USA (English)"]) {
+                return [self searchTVSeries:aSeriesName language:@"USA (English)" seasonNum:aSeasonNum episodeNum:aEpisodeNum];
+            }
+            if (([results count] == 0) && aSeasonNum) {
+                return [self searchTVSeries:aSeriesName language:@"USA (English)" seasonNum:nil episodeNum:aEpisodeNum];
+            }
+            if (aEpisodeNum && ![aEpisodeNum isEqualToString:@""]) {
+                NSEnumerator *resultsEnum = [results objectEnumerator];
+                MP42Metadata *m;
+                while ((m = (MP42Metadata *) [resultsEnum nextObject])) {
+                    if ([[[[m tagsDict] valueForKey:@"TV Episode #"] stringValue] isEqualToString:aEpisodeNum]) {
+                        return [NSArray arrayWithObject:m];
+                    }
+                }
+            }
+            NSArray *resultsSorted = [results sortedArrayUsingFunction:sortMP42Metadata context:NULL];
+            return resultsSorted;
+        }
 	}
 	return nil;
 }
@@ -113,10 +115,12 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
-		NSArray *results = [iTunesStore metadataForResults:d store:store];
-		if ([results count] > 0) {
-			return [results objectAtIndex:0];
-		}
+        if ([d isKindOfClass:[NSDictionary class]]) {
+            NSArray *results = [iTunesStore metadataForResults:d store:store];
+            if ([results count] > 0) {
+                return [results objectAtIndex:0];
+            }
+        }
 	}
 	return nil;
 }
@@ -133,10 +137,12 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
-		NSArray *results = [iTunesStore metadataForResults:d store:store];
-		if ([results count] > 0) {
-			return [results objectAtIndex:0];
-		}
+        if ([d isKindOfClass:[NSDictionary class]]) {
+            NSArray *results = [iTunesStore metadataForResults:d store:store];
+            if ([results count] > 0) {
+                return [results objectAtIndex:0];
+            }
+        }
 	}
 	return nil;
 }
@@ -158,7 +164,9 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
-		return [iTunesStore metadataForResults:d store:store];
+        if ([d isKindOfClass:[NSDictionary class]]) {
+            return [iTunesStore metadataForResults:d store:store];
+        }
 	}
 	return nil;
 }
@@ -177,11 +185,13 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
 		NSDictionary *d = [jsonDecoder objectWithData:jsonData];
-		NSArray *resultsArray = [d valueForKey:@"results"];
-		if ([resultsArray count] > 0) {
-			NSDictionary *r = [resultsArray objectAtIndex:0];
-			[aMetadata setTag:[r valueForKey:@"longDescription"] forKey:@"Series Description"];
-		}
+        if ([d isKindOfClass:[NSDictionary class]]) {
+            NSArray *resultsArray = [d valueForKey:@"results"];
+            if ([resultsArray count] > 0) {
+                NSDictionary *r = [resultsArray objectAtIndex:0];
+                [aMetadata setTag:[r valueForKey:@"longDescription"] forKey:@"Series Description"];
+            }
+        }
 	}
 	return aMetadata;
 }
