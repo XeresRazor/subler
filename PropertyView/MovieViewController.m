@@ -401,15 +401,14 @@ NSString *MetadataPBoardType = @"MetadataPBoardType";
 {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
 
-    NSArray *classes = [[NSArray alloc] initWithObjects:[NSImage class], nil];
-    NSDictionary *options = [NSDictionary dictionary];
+    NSArray *classes = [NSArray arrayWithObjects:[NSURL class], [NSImage class], nil];
+    NSDictionary *options = [NSDictionary dictionaryWithObject:[NSImage imageTypes]
+                                                        forKey:NSPasteboardURLReadingContentsConformToTypesKey];
     NSArray *copiedItems = [pasteboard readObjectsForClasses:classes options:options];
+
     if (copiedItems != nil) {
-        for (NSImage *item in copiedItems) {
-            MP42Image *artwork = [[MP42Image alloc] initWithImage:item];
-            [metadata.artworks addObject:artwork];
-            [artwork release];
-        }
+        for (id item in copiedItems)
+            [self addArtwork:item];
 
         metadata.isArtworkEdited = YES;
         metadata.isEdited = YES;
@@ -695,7 +694,43 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [imageBrowser reloadData];
 }
 
-- (IBAction) selectArtwork: (id) sender
+- (BOOL)addArtwork:(id)item
+{
+    NSString *type;
+    NSError *error;
+
+    if ([item isKindOfClass:[NSURL class]]) {
+        if ([item getResourceValue:&type forKey:NSURLTypeIdentifierKey error:&error]) {
+            if (UTTypeConformsTo((CFStringRef)type, (CFStringRef)@"public.jpeg")) {
+                MP42Image *artwork = [[MP42Image alloc] initWithData:[NSData dataWithContentsOfURL:item] type:MP42_ART_JPEG];
+                [metadata.artworks addObject:artwork];
+                [artwork release];
+            }
+            else {
+                NSImage * artworkImage = [[NSImage alloc] initWithContentsOfURL:item];
+                MP42Image *artwork = [[MP42Image alloc] initWithImage:artworkImage];
+                [metadata.artworks addObject:artwork];
+                
+                [artwork release];
+                [artworkImage release];
+            }
+            return YES;
+        }
+    }
+    else if ([item isKindOfClass:[NSImage class]]) {
+        MP42Image *artwork = [[MP42Image alloc] initWithImage:item];
+        [metadata.artworks addObject:artwork];
+        [artwork release];
+        return YES;
+    }
+    else if ([item isKindOfClass:[MP42Image class]]) {
+        [metadata.artworks addObject:item];
+    }
+
+    return NO;
+}
+
+- (IBAction)selectArtwork:(id)sender
 {
     NSOpenPanel *panel = [NSOpenPanel openPanel];
     panel.allowsMultipleSelection = YES;
@@ -706,27 +741,8 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [panel beginSheetModalForWindow: [[self view] window] completionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {
             
-            for (NSURL *url in [panel URLs]) {
-                NSString *type;
-
-                if ([url getResourceValue:&type forKey:NSURLTypeIdentifierKey error:NULL]) {
-                    if (UTTypeConformsTo((CFStringRef)type, (CFStringRef)@"public.jpeg")) {
-                        MP42Image *artwork = [[MP42Image alloc] initWithData:[NSData dataWithContentsOfURL:url] type:MP42_ART_JPEG];
-
-                        [metadata.artworks addObject:artwork];
-
-                        [artwork release];
-                    }
-                    else {
-                        NSImage * artworkImage = [[NSImage alloc] initWithContentsOfURL:url];
-                        MP42Image *artwork = [[MP42Image alloc] initWithImage:artworkImage];
-                        [metadata.artworks addObject:artwork];
-                        
-                        [artwork release];
-                        [artworkImage release];
-                    }
-                }
-            }
+            for (NSURL *url in [panel URLs])
+                [self addArtwork:url];
 
             metadata.isArtworkEdited = YES;
             metadata.isEdited = YES;
@@ -746,43 +762,29 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     return NSDragOperationGeneric;
 }
 
-- (BOOL)performDragOperation:(id )sender
+- (BOOL)performDragOperation:(id)sender
 {
-	NSArray * files = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+    BOOL edited = NO;
+    NSPasteboard *pasteboard = [sender draggingPasteboard];
 
-    for (NSString *file in files) {
-        NSURL *url = [NSURL fileURLWithPath:file];
-        NSString *type;
-        NSError *error;
+    NSArray *classes = [NSArray arrayWithObjects:[NSURL class], [NSImage class], nil];
+    NSDictionary *options = [NSDictionary dictionaryWithObject:[NSImage imageTypes]
+                                                        forKey:NSPasteboardURLReadingContentsConformToTypesKey];
+    NSArray *draggedItems = [pasteboard readObjectsForClasses:classes options:options];
 
-        if ([url getResourceValue:&type forKey:NSURLTypeIdentifierKey error:&error]) {
-        if (UTTypeConformsTo((CFStringRef)type, (CFStringRef)@"public.image")) {
-            if (UTTypeConformsTo((CFStringRef)type, (CFStringRef)@"public.jpeg")) {
-                MP42Image *artwork = [[MP42Image alloc] initWithData:[NSData dataWithContentsOfURL:url] type:MP42_ART_JPEG];
+    if (draggedItems) {
+        for (id dragItem in draggedItems)
+            edited = [self addArtwork:dragItem];
 
-                [metadata.artworks addObject:artwork];
+        if (edited) {
+            metadata.isArtworkEdited = YES;
+            metadata.isEdited = YES;
+            [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+            [imageBrowser reloadData];
 
-                [artwork release];
-            }
-            else {
-                NSImage * artworkImage = [[NSImage alloc] initWithContentsOfURL:url];
-                MP42Image *artwork = [[MP42Image alloc] initWithImage:artworkImage];
-                [metadata.artworks addObject:artwork];
-
-                [artwork release];
-                [artworkImage release];
-            }
-        }
+            return YES;
         }
     }
-
-    metadata.isArtworkEdited = YES;
-    metadata.isEdited = YES;
-    [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
-    [imageBrowser reloadData];
-
-	if ([metadata.artworks count])
-        return YES;
 
 	return NO;
 }
@@ -792,7 +794,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 	[imageBrowser reloadData];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 
