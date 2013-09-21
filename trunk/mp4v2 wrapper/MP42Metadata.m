@@ -504,6 +504,11 @@ static const genreType_t genreType_strings[] = {
     NSString *regexPositive = @"YES|Yes|yes|1|2";
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 
+    if ([value isKindOfClass:[NSNull class]]) {
+        [tagsDict removeObjectForKey:key];
+        return YES;
+    }
+
     if ([key isEqualToString:@"HD Video"]) {
         if ([value isKindOfClass:[NSNumber class]])
             hdVideo = [value integerValue];
