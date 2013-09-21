@@ -171,8 +171,10 @@
 	NSArray *resultsArray = [dict valueForKey:@"results"];
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:[resultsArray count]];
 	for (NSDictionary *r in resultsArray) {
-        MP42Metadata *metadata = [TheMovieDB3 metadataForResult:r language:nil];
-        [returnArray addObject:metadata];
+        if ([r isKindOfClass:[NSDictionary class]]) {
+            MP42Metadata *metadata = [TheMovieDB3 metadataForResult:r language:nil];
+            [returnArray addObject:metadata];
+        }
 	}
     return [returnArray autorelease];
 }

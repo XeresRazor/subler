@@ -189,7 +189,7 @@
 	[artworkFullsizeURLs release];
 	[artworkProviderNames release];
 	// TheTVDB does not provide the following fields normally associated with TV shows in MP42Metadata:
-	// "TV Network", "Genre", "Copyright", "Comments", "Rating", "Producers", "Artist"
+	// "Copyright", "Comments", "Producers", "Artist"
 	return [metadata autorelease];
 }
 
