@@ -49,7 +49,6 @@
 
 #pragma mark Initialization
 - (id)initWithDelegate:(id)del;
-+ (NSDictionary *) parseFilename: (NSString *) filename;
 
 #pragma mark Metadata provider
 - (void) createLanguageMenus;
