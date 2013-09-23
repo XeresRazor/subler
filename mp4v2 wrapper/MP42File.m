@@ -270,33 +270,38 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 {
     BOOL success = YES;
 
-    if(!url) {
-        if (outError)
-            *outError = MP42Error(@"Invalid path.", @"The destination path cannot be empty.", 100);
-
+    if (!url && outError) {
+        *outError = MP42Error(@"Invalid path.", @"The destination path cannot be empty.", 100);
         return NO;
     }
-    
+
     if ([self hasFileRepresentation]) {
+        __block BOOL noErr = YES;
+
         if (![_fileURL isEqualTo:url]) {
             __block BOOL done = NO;
             NSFileManager *fileManager = [[NSFileManager alloc] init];
-            unsigned long long originalFileSize = [[[fileManager attributesOfItemAtPath:[_fileURL path] error:outError] valueForKey:NSFileSize] unsignedLongLongValue];
+            unsigned long long originalFileSize = [[[fileManager attributesOfItemAtPath:[_fileURL path] error:NULL] valueForKey:NSFileSize] unsignedLongLongValue];
 
             dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                done = [fileManager copyItemAtURL:_fileURL toURL:url error:outError];
+                noErr = [fileManager copyItemAtURL:_fileURL toURL:url error:outError];
+                done = YES;
             });
 
             while (!done) {
-                unsigned long long fileSize = [[[fileManager attributesOfItemAtPath:[url path] error:outError] valueForKey:NSFileSize] unsignedLongLongValue];
+                unsigned long long fileSize = [[[fileManager attributesOfItemAtPath:[url path] error:NULL] valueForKey:NSFileSize] unsignedLongLongValue];
                 [self progressStatus:((CGFloat)fileSize / originalFileSize) * 100];
                 usleep(450000);
             }
             [fileManager release];
         }
 
-        _fileURL = [url retain];
-        success = [self updateMP4FileWithAttributes:attributes error:outError];
+        if (noErr) {
+            _fileURL = [url retain];
+            success = [self updateMP4FileWithAttributes:attributes error:outError];
+        }
+        else
+            success = NO;
     }
     else {
         _fileURL = [url retain];
