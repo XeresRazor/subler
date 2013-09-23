@@ -17,6 +17,7 @@
 }
 
 #pragma mark Helper routines
++ (NSDictionary *) parseFilename: (NSString *) filename;
 + (NSString *) urlEncoded:(NSString *)s;
 + (NSData *) downloadDataOrGetFromCache:(NSURL *)url;
 

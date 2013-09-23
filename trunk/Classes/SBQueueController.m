@@ -13,7 +13,6 @@
 #import "MP42File.h"
 #import "MP42FileImporter.h"
 #import "MP42Image.h"
-#import "SBMetadataSearchController.h"
 #import "MetadataImporter.h"
 
 #define SublerBatchTableViewDataType @"SublerBatchTableViewDataType"
@@ -285,7 +284,7 @@
     MP42Metadata *metadata = nil;
 
     // Parse FileName and search for metadata
-    NSDictionary *parsed = [SBMetadataSearchController parseFilename:[url lastPathComponent]];
+    NSDictionary *parsed = [MetadataImporter parseFilename:[url lastPathComponent]];
     if ([@"movie" isEqualToString:(NSString *) [parsed valueForKey:@"type"]]) {
 		currentSearcher = [MetadataImporter defaultMovieProvider];
 		NSString *language = [MetadataImporter defaultMovieLanguage];
