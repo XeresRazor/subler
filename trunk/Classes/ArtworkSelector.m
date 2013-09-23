@@ -7,8 +7,8 @@
 //
 
 #import "ArtworkSelector.h"
-
 #import "MetadataImporter.h"
+#import "MP42Image.h"
 
 #pragma mark IKImageBrowserItem data source objects
 
@@ -133,8 +133,7 @@
 
 - (IBAction) addArtwork:(id)sender {
     if ([delegate respondsToSelector:@selector(selectArtworkDone:)]) {
-        NSURL *u = [[images objectAtIndex:[[imageBrowser selectionIndexes] firstIndex]] url];
-        [delegate performSelector:@selector(selectArtworkDone:) withObject:[[u retain] autorelease]];
+        [delegate performSelector:@selector(selectArtworkDone:) withObject:[[[imageBrowser selectionIndexes] retain] autorelease]];
     }
 }
 

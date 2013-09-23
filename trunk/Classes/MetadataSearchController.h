@@ -40,7 +40,6 @@
 
     IBOutlet NSButton            *addButton;
 
-    NSData                       *artworkData;
     id                           artworkSelectorWindow;
 
     IBOutlet NSProgressIndicator *progress;
@@ -72,10 +71,10 @@
 
 #pragma mark Select artwork
 - (void) selectArtwork;
-- (void) selectArtworkDone:(NSURL *)url;
+- (void) selectArtworkDone:(NSIndexSet *)indexes;
 
 #pragma mark Load artwork
-- (void) loadArtwork;
+- (void) loadArtworks:(NSIndexSet *)indexes;
 
 #pragma mark Finishing up
 - (void) addMetadata;
