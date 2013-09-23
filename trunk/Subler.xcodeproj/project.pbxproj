@@ -18,11 +18,8 @@
 		A906213B16839AB00057EA0B /* MP42VobSubImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A906213A16839AB00057EA0B /* MP42VobSubImporter.m */; };
 		A90B023B10F3290A000416F3 /* Prefs.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90B023910F3290A000416F3 /* Prefs.xib */; };
 		A91103E40F321DBA0013D1E0 /* libuniversaldetector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A91103930F321CF60013D1E0 /* libuniversaldetector.a */; };
-		A911064B0F323D450013D1E0 /* SBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A911064A0F323D450013D1E0 /* SBAppDelegate.m */; };
 		A916F42F1678D8DA003920D6 /* libtesseract.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A916F42D1678D89F003920D6 /* libtesseract.a */; };
 		A916F4311678DD07003920D6 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A916F4301678DD07003920D6 /* libjpeg.a */; };
-		A91E7DEA0F8A2E6800AF387E /* SBSoundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A91E7DE90F8A2E6800AF387E /* SBSoundViewController.m */; };
-		A91E7DEE0F8A2F3D00AF387E /* SoundView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A91E7DEC0F8A2F3D00AF387E /* SoundView.xib */; };
 		A91ED322176A4BDF0091DC0A /* MP42HtmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A91ED321176A4BDF0091DC0A /* MP42HtmlParser.m */; };
 		A91F622D0FB0A56F00B96B33 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A91F622C0FB0A56F00B96B33 /* libicucore.dylib */; };
 		A92A4FB812B0F2F300751FA5 /* prefs-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = A92A4FB712B0F2F300751FA5 /* prefs-audio.png */; };
@@ -46,8 +43,6 @@
 		A9629C900F56F7B6001D6A75 /* MP42SubtitleTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9629C880F56F7B6001D6A75 /* MP42SubtitleTrack.m */; };
 		A9629C910F56F7B6001D6A75 /* MP42Track.m in Sources */ = {isa = PBXBuildFile; fileRef = A9629C8A0F56F7B6001D6A75 /* MP42Track.m */; };
 		A9629C920F56F7B6001D6A75 /* MP42Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A9629C8C0F56F7B6001D6A75 /* MP42Utilities.m */; };
-		A9629D070F56FB2A001D6A75 /* VideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9629D050F56FB2A001D6A75 /* VideoView.xib */; };
-		A9629D0A0F56FB36001D6A75 /* SBVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9629D080F56FB36001D6A75 /* SBVideoViewController.m */; };
 		A96371B8164695070083BB80 /* ToolbarRemoveTemplate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A96371B7164695070083BB80 /* ToolbarRemoveTemplate@2x.png */; };
 		A9707B9317B139780010F3DB /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD56966E12FAAFA90029FADB /* Quartz.framework */; };
 		A975644D132A325C0051ED08 /* info.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A975644A132A325C0051ED08 /* info.pdf */; };
@@ -70,6 +65,18 @@
 		A99EACA31115C18000D89903 /* MP42MkvImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A99EACA21115C18000D89903 /* MP42MkvImporter.m */; };
 		A99EEA3F12B801AE002367D3 /* SBDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B46AC012B79E230040517A /* SBDocument.xib */; };
 		A99F4D270F6D5825003BA2B9 /* MP42AudioTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A99F4D260F6D5825003BA2B9 /* MP42AudioTrack.m */; };
+		A9AB484917F0AEA2000AA72E /* SBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB484817F0AEA2000AA72E /* SBAppDelegate.m */; };
+		A9AB485417F0AEAC000AA72E /* SBChapterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB484B17F0AEAC000AA72E /* SBChapterViewController.m */; };
+		A9AB485517F0AEAC000AA72E /* SBEmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB484D17F0AEAC000AA72E /* SBEmptyViewController.m */; };
+		A9AB485617F0AEAC000AA72E /* SBMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB484F17F0AEAC000AA72E /* SBMovieViewController.m */; };
+		A9AB485717F0AEAC000AA72E /* SBSoundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB485117F0AEAC000AA72E /* SBSoundViewController.m */; };
+		A9AB485817F0AEAC000AA72E /* SBVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB485317F0AEAC000AA72E /* SBVideoViewController.m */; };
+		A9AB486417F0AEFD000AA72E /* ChapterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9AB485A17F0AEFD000AA72E /* ChapterView.xib */; };
+		A9AB486517F0AEFD000AA72E /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9AB485C17F0AEFD000AA72E /* EmptyView.xib */; };
+		A9AB486617F0AEFD000AA72E /* MovieView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9AB485E17F0AEFD000AA72E /* MovieView.xib */; };
+		A9AB486717F0AEFD000AA72E /* SoundView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9AB486017F0AEFD000AA72E /* SoundView.xib */; };
+		A9AB486817F0AEFD000AA72E /* VideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9AB486217F0AEFD000AA72E /* VideoView.xib */; };
+		A9AB486B17F0AF22000AA72E /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB486A17F0AF22000AA72E /* JSONKit.m */; };
 		A9AEF83B167C808600FDDBB3 /* QTKitDecrap.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */; };
 		A9B3411C1679CA3E00E6EE0C /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9B3411B1679CA3E00E6EE0C /* QTKit.framework */; };
 		A9B46A8C12B79B240040517A /* SBFileImport.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A7F12B79B240040517A /* SBFileImport.m */; };
@@ -109,12 +116,6 @@
 		A9F284A0133C9F6E00F10951 /* close.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A9F2849D133C9F6E00F10951 /* close.pdf */; };
 		A9F284A1133C9F6E00F10951 /* close-over.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A9F2849E133C9F6E00F10951 /* close-over.pdf */; };
 		A9F284A2133C9F6E00F10951 /* close-pressed.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A9F2849F133C9F6E00F10951 /* close-pressed.pdf */; };
-		A9FD5D340F3C69BE00817716 /* SBChapterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9FD5D330F3C69BE00817716 /* SBChapterViewController.m */; };
-		A9FD5D420F3C6A6300817716 /* SBEmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9FD5D410F3C6A6300817716 /* SBEmptyViewController.m */; };
-		A9FD5DA40F3C6F8100817716 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9FD5DA30F3C6F8100817716 /* EmptyView.xib */; };
-		A9FD5DA60F3C6F8A00817716 /* ChapterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9FD5DA50F3C6F8A00817716 /* ChapterView.xib */; };
-		A9FD5EC70F3C8A4800817716 /* MovieView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9FD5EC50F3C8A4800817716 /* MovieView.xib */; };
-		A9FD5ECF0F3C8AF100817716 /* SBMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9FD5ECE0F3C8AF100817716 /* SBMovieViewController.m */; };
 		CD03087417576A550093A0BE /* TheMovieDB3.m in Sources */ = {isa = PBXBuildFile; fileRef = CD03087317576A550093A0BE /* TheMovieDB3.m */; };
 		CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CD03087817576AE50093A0BE /* MetadataImporter.m */; };
 		CD3F2A881761A143000D4C73 /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CD3F2A871761A143000D4C73 /* XMLReader.m */; };
@@ -124,7 +125,6 @@
 		CD71FEA612F1B62600F0A98D /* MetadataSearch.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD71FEA412F1B62600F0A98D /* MetadataSearch.xib */; };
 		CD71FF1D12F1C4A900F0A98D /* TheTVDB.m in Sources */ = {isa = PBXBuildFile; fileRef = CD71FF1C12F1C4A900F0A98D /* TheTVDB.m */; };
 		CDC06FCE1747494D003C1D0A /* iTunesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC06FCD1747494D003C1D0A /* iTunesStore.m */; };
-		CDC06FD117475181003C1D0A /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC06FD017475181003C1D0A /* JSONKit.m */; };
 		CDDC1954175AFD870005CD98 /* Ratings.json in Resources */ = {isa = PBXBuildFile; fileRef = CDDC1953175AFD870005CD98 /* Ratings.json */; };
 		CDDC1957175B05C50005CD98 /* SBRatings.m in Sources */ = {isa = PBXBuildFile; fileRef = CDDC1956175B05C50005CD98 /* SBRatings.m */; };
 		CDE8E452174CBBD4009410B5 /* iTunesStores.json in Resources */ = {isa = PBXBuildFile; fileRef = CDE8E451174CBBD4009410B5 /* iTunesStores.json */; };
@@ -215,14 +215,8 @@
 		A90B023A10F3290A000416F3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Prefs.xib; sourceTree = "<group>"; };
 		A91103850F321CF60013D1E0 /* UniversalDetector.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UniversalDetector.xcodeproj; path = UniversalDetector/UniversalDetector.xcodeproj; sourceTree = "<group>"; };
 		A911049C0F321DFC0013D1E0 /* UniversalDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UniversalDetector.h; path = UniversalDetector/UniversalDetector.h; sourceTree = "<group>"; };
-		A91106490F323D450013D1E0 /* SBAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAppDelegate.h; sourceTree = "<group>"; };
-		A911064A0F323D450013D1E0 /* SBAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAppDelegate.m; sourceTree = "<group>"; };
 		A916F42D1678D89F003920D6 /* libtesseract.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtesseract.a; path = Tesseract/lib/libtesseract.a; sourceTree = "<group>"; };
 		A916F4301678DD07003920D6 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = Tesseract/lib/libjpeg.a; sourceTree = "<group>"; };
-		A91A500017B000B0002209FF /* MP42ConverterProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42ConverterProtocol.h; sourceTree = "<group>"; };
-		A91E7DE80F8A2E6800AF387E /* SBSoundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBSoundViewController.h; path = PropertyView/SBSoundViewController.h; sourceTree = "<group>"; };
-		A91E7DE90F8A2E6800AF387E /* SBSoundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SBSoundViewController.m; path = PropertyView/SBSoundViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		A91E7DED0F8A2F3D00AF387E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/SoundView.xib; sourceTree = "<group>"; };
 		A91ED320176A4BDF0091DC0A /* MP42HtmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42HtmlParser.h; path = "mp4v2 wrapper/MP42HtmlParser.h"; sourceTree = "<group>"; };
 		A91ED321176A4BDF0091DC0A /* MP42HtmlParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42HtmlParser.m; path = "mp4v2 wrapper/MP42HtmlParser.m"; sourceTree = "<group>"; };
 		A91F622C0FB0A56F00B96B33 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
@@ -270,9 +264,6 @@
 		A9629C8A0F56F7B6001D6A75 /* MP42Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Track.m; path = "mp4v2 wrapper/MP42Track.m"; sourceTree = "<group>"; };
 		A9629C8B0F56F7B6001D6A75 /* MP42Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Utilities.h; path = "mp4v2 wrapper/MP42Utilities.h"; sourceTree = "<group>"; };
 		A9629C8C0F56F7B6001D6A75 /* MP42Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42Utilities.m; path = "mp4v2 wrapper/MP42Utilities.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		A9629D060F56FB2A001D6A75 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/VideoView.xib; sourceTree = "<group>"; };
-		A9629D080F56FB36001D6A75 /* SBVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBVideoViewController.m; path = PropertyView/SBVideoViewController.m; sourceTree = "<group>"; };
-		A9629D090F56FB36001D6A75 /* SBVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBVideoViewController.h; path = PropertyView/SBVideoViewController.h; sourceTree = "<group>"; };
 		A96371B7164695070083BB80 /* ToolbarRemoveTemplate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ToolbarRemoveTemplate@2x.png"; path = "images/ToolbarRemoveTemplate@2x.png"; sourceTree = "<group>"; };
 		A975644A132A325C0051ED08 /* info.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = info.pdf; path = images/info.pdf; sourceTree = "<group>"; };
 		A975644B132A325C0051ED08 /* info-over.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "info-over.pdf"; path = "images/info-over.pdf"; sourceTree = "<group>"; };
@@ -295,6 +286,26 @@
 		A99EACA21115C18000D89903 /* MP42MkvImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42MkvImporter.m; path = "mp4v2 wrapper/MP42MkvImporter.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A99F4D250F6D5825003BA2B9 /* MP42AudioTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AudioTrack.h; path = "mp4v2 wrapper/MP42AudioTrack.h"; sourceTree = "<group>"; };
 		A99F4D260F6D5825003BA2B9 /* MP42AudioTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42AudioTrack.m; path = "mp4v2 wrapper/MP42AudioTrack.m"; sourceTree = "<group>"; };
+		A9AB484717F0AEA2000AA72E /* SBAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBAppDelegate.h; path = Classes/SBAppDelegate.h; sourceTree = "<group>"; };
+		A9AB484817F0AEA2000AA72E /* SBAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBAppDelegate.m; path = Classes/SBAppDelegate.m; sourceTree = "<group>"; };
+		A9AB484A17F0AEAC000AA72E /* SBChapterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBChapterViewController.h; path = Classes/PropertyView/SBChapterViewController.h; sourceTree = "<group>"; };
+		A9AB484B17F0AEAC000AA72E /* SBChapterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBChapterViewController.m; path = Classes/PropertyView/SBChapterViewController.m; sourceTree = "<group>"; };
+		A9AB484C17F0AEAC000AA72E /* SBEmptyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBEmptyViewController.h; path = Classes/PropertyView/SBEmptyViewController.h; sourceTree = "<group>"; };
+		A9AB484D17F0AEAC000AA72E /* SBEmptyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBEmptyViewController.m; path = Classes/PropertyView/SBEmptyViewController.m; sourceTree = "<group>"; };
+		A9AB484E17F0AEAC000AA72E /* SBMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBMovieViewController.h; path = Classes/PropertyView/SBMovieViewController.h; sourceTree = "<group>"; };
+		A9AB484F17F0AEAC000AA72E /* SBMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBMovieViewController.m; path = Classes/PropertyView/SBMovieViewController.m; sourceTree = "<group>"; };
+		A9AB485017F0AEAC000AA72E /* SBSoundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBSoundViewController.h; path = Classes/PropertyView/SBSoundViewController.h; sourceTree = "<group>"; };
+		A9AB485117F0AEAC000AA72E /* SBSoundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBSoundViewController.m; path = Classes/PropertyView/SBSoundViewController.m; sourceTree = "<group>"; };
+		A9AB485217F0AEAC000AA72E /* SBVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBVideoViewController.h; path = Classes/PropertyView/SBVideoViewController.h; sourceTree = "<group>"; };
+		A9AB485317F0AEAC000AA72E /* SBVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBVideoViewController.m; path = Classes/PropertyView/SBVideoViewController.m; sourceTree = "<group>"; };
+		A9AB485917F0AED0000AA72E /* MP42ConverterProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MP42ConverterProtocol.h; path = "mp4v2 wrapper/MP42ConverterProtocol.h"; sourceTree = "<group>"; };
+		A9AB485B17F0AEFD000AA72E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Classes/PropertyView/English.lproj/ChapterView.xib; sourceTree = "<group>"; };
+		A9AB485D17F0AEFD000AA72E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Classes/PropertyView/English.lproj/EmptyView.xib; sourceTree = "<group>"; };
+		A9AB485F17F0AEFD000AA72E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Classes/PropertyView/English.lproj/MovieView.xib; sourceTree = "<group>"; };
+		A9AB486117F0AEFD000AA72E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Classes/PropertyView/English.lproj/SoundView.xib; sourceTree = "<group>"; };
+		A9AB486317F0AEFD000AA72E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Classes/PropertyView/English.lproj/VideoView.xib; sourceTree = "<group>"; };
+		A9AB486917F0AF22000AA72E /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = Others/JSONKit.h; sourceTree = "<group>"; };
+		A9AB486A17F0AF22000AA72E /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = Others/JSONKit.m; sourceTree = "<group>"; };
 		A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QTKitDecrap.m; path = Others/QTKitDecrap.m; sourceTree = "<group>"; };
 		A9B3411B1679CA3E00E6EE0C /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
 		A9B3411D1679D2E000E6EE0C /* QTKitDecrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QTKitDecrap.h; path = Others/QTKitDecrap.h; sourceTree = "<group>"; };
@@ -359,15 +370,6 @@
 		A9F2849D133C9F6E00F10951 /* close.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = close.pdf; path = images/close.pdf; sourceTree = "<group>"; };
 		A9F2849E133C9F6E00F10951 /* close-over.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "close-over.pdf"; path = "images/close-over.pdf"; sourceTree = "<group>"; };
 		A9F2849F133C9F6E00F10951 /* close-pressed.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "close-pressed.pdf"; path = "images/close-pressed.pdf"; sourceTree = "<group>"; };
-		A9FD5CE30F3C64D000817716 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/EmptyView.xib; sourceTree = "<group>"; };
-		A9FD5D320F3C69BE00817716 /* SBChapterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBChapterViewController.h; path = PropertyView/SBChapterViewController.h; sourceTree = "<group>"; };
-		A9FD5D330F3C69BE00817716 /* SBChapterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBChapterViewController.m; path = PropertyView/SBChapterViewController.m; sourceTree = "<group>"; };
-		A9FD5D380F3C69EE00817716 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/ChapterView.xib; sourceTree = "<group>"; };
-		A9FD5D400F3C6A6300817716 /* SBEmptyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBEmptyViewController.h; path = PropertyView/SBEmptyViewController.h; sourceTree = "<group>"; };
-		A9FD5D410F3C6A6300817716 /* SBEmptyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBEmptyViewController.m; path = PropertyView/SBEmptyViewController.m; sourceTree = "<group>"; };
-		A9FD5EC60F3C8A4800817716 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PropertyView/English.lproj/MovieView.xib; sourceTree = "<group>"; };
-		A9FD5ECD0F3C8AF100817716 /* SBMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBMovieViewController.h; path = PropertyView/SBMovieViewController.h; sourceTree = "<group>"; };
-		A9FD5ECE0F3C8AF100817716 /* SBMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBMovieViewController.m; path = PropertyView/SBMovieViewController.m; sourceTree = "<group>"; };
 		CD03087217576A550093A0BE /* TheMovieDB3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TheMovieDB3.h; path = Classes/MetadataImporters/TheMovieDB3.h; sourceTree = "<group>"; };
 		CD03087317576A550093A0BE /* TheMovieDB3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TheMovieDB3.m; path = Classes/MetadataImporters/TheMovieDB3.m; sourceTree = "<group>"; };
 		CD03087717576AE50093A0BE /* MetadataImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataImporter.h; path = Classes/MetadataImporters/MetadataImporter.h; sourceTree = "<group>"; };
@@ -389,8 +391,6 @@
 		CD71FF1C12F1C4A900F0A98D /* TheTVDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TheTVDB.m; path = Classes/MetadataImporters/TheTVDB.m; sourceTree = "<group>"; };
 		CDC06FCC1747494D003C1D0A /* iTunesStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunesStore.h; path = Classes/MetadataImporters/iTunesStore.h; sourceTree = "<group>"; };
 		CDC06FCD1747494D003C1D0A /* iTunesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iTunesStore.m; path = Classes/MetadataImporters/iTunesStore.m; sourceTree = "<group>"; };
-		CDC06FCF17475181003C1D0A /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
-		CDC06FD017475181003C1D0A /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		CDDC1953175AFD870005CD98 /* Ratings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Ratings.json; sourceTree = "<group>"; };
 		CDDC1955175B05C50005CD98 /* SBRatings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBRatings.h; path = Classes/SBRatings.h; sourceTree = "<group>"; };
 		CDDC1956175B05C50005CD98 /* SBRatings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBRatings.m; path = Classes/SBRatings.m; sourceTree = "<group>"; };
@@ -507,8 +507,8 @@
 				CD56963112FAAD680029FADB /* SBArtworkSelector.m */,
 				A9B46A8212B79B240040517A /* SBPrefsController.h */,
 				A9B46A8312B79B240040517A /* SBPrefsController.m */,
-				A91106490F323D450013D1E0 /* SBAppDelegate.h */,
-				A911064A0F323D450013D1E0 /* SBAppDelegate.m */,
+				A9AB484717F0AEA2000AA72E /* SBAppDelegate.h */,
+				A9AB484817F0AEA2000AA72E /* SBAppDelegate.m */,
 				CD71FF1A12F1C46900F0A98D /* MetadataImporters */,
 				A9FD5D150F3C692400817716 /* PropertyView */,
 				A9FD5E020F3C7B0400817716 /* mp4v2 */,
@@ -519,8 +519,8 @@
 		2A37F4AFFDCFA73011CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				CDC06FCF17475181003C1D0A /* JSONKit.h */,
-				CDC06FD017475181003C1D0A /* JSONKit.m */,
+				A9AB486917F0AF22000AA72E /* JSONKit.h */,
+				A9AB486A17F0AF22000AA72E /* JSONKit.m */,
 				CD3F2A861761A143000D4C73 /* XMLReader.h */,
 				CD3F2A871761A143000D4C73 /* XMLReader.m */,
 				A9B3411D1679D2E000E6EE0C /* QTKitDecrap.h */,
@@ -612,18 +612,18 @@
 		A961475E13F5676E0068F161 /* NIBs */ = {
 			isa = PBXGroup;
 			children = (
-				A90B023910F3290A000416F3 /* Prefs.xib */,
 				A9B46AC012B79E230040517A /* SBDocument.xib */,
+				A9AB485A17F0AEFD000AA72E /* ChapterView.xib */,
+				A9AB485C17F0AEFD000AA72E /* EmptyView.xib */,
+				A9AB485E17F0AEFD000AA72E /* MovieView.xib */,
+				A9AB486017F0AEFD000AA72E /* SoundView.xib */,
+				A9AB486217F0AEFD000AA72E /* VideoView.xib */,
 				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
-				A9629D050F56FB2A001D6A75 /* VideoView.xib */,
-				A91E7DEC0F8A2F3D00AF387E /* SoundView.xib */,
-				A9FD5DA30F3C6F8100817716 /* EmptyView.xib */,
-				A9FD5DA50F3C6F8A00817716 /* ChapterView.xib */,
-				A9FD5EC50F3C8A4800817716 /* MovieView.xib */,
 				A9C055360F6D395B00AF15B5 /* FileImport.xib */,
 				CD71FEA412F1B62600F0A98D /* MetadataSearch.xib */,
 				CD4E6E5B12F744210095C84F /* ArtworkSelector.xib */,
 				A961476513F568210068F161 /* Queue.xib */,
+				A90B023910F3290A000416F3 /* Prefs.xib */,
 			);
 			name = NIBs;
 			sourceTree = "<group>";
@@ -656,7 +656,7 @@
 				A937137412B76EAD00940FEC /* MP42H264Importer.mm */,
 				A906213916839AB00057EA0B /* MP42VobSubImporter.h */,
 				A906213A16839AB00057EA0B /* MP42VobSubImporter.m */,
-				A91A500017B000B0002209FF /* MP42ConverterProtocol.h */,
+				A9AB485917F0AED0000AA72E /* MP42ConverterProtocol.h */,
 				A9B46AA512B79BD00040517A /* MP42AudioConverter.h */,
 				A9B46AA612B79BD00040517A /* MP42AudioConverter.m */,
 				A936DAFC1682057700D19BDB /* MP42BitmapSubConverter.h */,
@@ -678,16 +678,16 @@
 		A9FD5D150F3C692400817716 /* PropertyView */ = {
 			isa = PBXGroup;
 			children = (
-				A9FD5D400F3C6A6300817716 /* SBEmptyViewController.h */,
-				A9FD5D410F3C6A6300817716 /* SBEmptyViewController.m */,
-				A9FD5ECD0F3C8AF100817716 /* SBMovieViewController.h */,
-				A9FD5ECE0F3C8AF100817716 /* SBMovieViewController.m */,
-				A9629D090F56FB36001D6A75 /* SBVideoViewController.h */,
-				A9629D080F56FB36001D6A75 /* SBVideoViewController.m */,
-				A91E7DE80F8A2E6800AF387E /* SBSoundViewController.h */,
-				A91E7DE90F8A2E6800AF387E /* SBSoundViewController.m */,
-				A9FD5D320F3C69BE00817716 /* SBChapterViewController.h */,
-				A9FD5D330F3C69BE00817716 /* SBChapterViewController.m */,
+				A9AB484A17F0AEAC000AA72E /* SBChapterViewController.h */,
+				A9AB484B17F0AEAC000AA72E /* SBChapterViewController.m */,
+				A9AB484C17F0AEAC000AA72E /* SBEmptyViewController.h */,
+				A9AB484D17F0AEAC000AA72E /* SBEmptyViewController.m */,
+				A9AB484E17F0AEAC000AA72E /* SBMovieViewController.h */,
+				A9AB484F17F0AEAC000AA72E /* SBMovieViewController.m */,
+				A9AB485017F0AEAC000AA72E /* SBSoundViewController.h */,
+				A9AB485117F0AEAC000AA72E /* SBSoundViewController.m */,
+				A9AB485217F0AEAC000AA72E /* SBVideoViewController.h */,
+				A9AB485317F0AEAC000AA72E /* SBVideoViewController.m */,
 				A9B46A8412B79B240040517A /* SBTableView.h */,
 				A9B46A8512B79B240040517A /* SBTableView.m */,
 				A960E96117D4B00900FC6ED9 /* SBImageBrowserView.h */,
@@ -879,21 +879,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9AB486617F0AEFD000AA72E /* MovieView.xib in Resources */,
 				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
+				A9AB486717F0AEFD000AA72E /* SoundView.xib in Resources */,
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
 				A9D47B5817B239E200900BCA /* EncodeCanceled.png in Resources */,
 				A99EEA3F12B801AE002367D3 /* SBDocument.xib in Resources */,
+				A9AB486517F0AEFD000AA72E /* EmptyView.xib in Resources */,
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				A9D47B5917B239E200900BCA /* EncodeCanceled@2x.png in Resources */,
-				A9FD5DA40F3C6F8100817716 /* EmptyView.xib in Resources */,
-				A9FD5DA60F3C6F8A00817716 /* ChapterView.xib in Resources */,
-				A9FD5EC70F3C8A4800817716 /* MovieView.xib in Resources */,
 				A984DB740F52DD4B001A20B2 /* dsa_pub.pem in Resources */,
-				A9629D070F56FB2A001D6A75 /* VideoView.xib in Resources */,
 				A9C055370F6D395B00AF15B5 /* FileImport.xib in Resources */,
 				A95C881D0F827BFB00F51A22 /* ToolbarRemoveTemplate.png in Resources */,
-				A91E7DEE0F8A2F3D00AF387E /* SoundView.xib in Resources */,
 				A90B023B10F3290A000416F3 /* Prefs.xib in Resources */,
+				A9AB486417F0AEFD000AA72E /* ChapterView.xib in Resources */,
+				A9AB486817F0AEFD000AA72E /* VideoView.xib in Resources */,
 				A92A4FB812B0F2F300751FA5 /* prefs-audio.png in Resources */,
 				A9B46AA412B79BB10040517A /* Subler.icns in Resources */,
 				CD71FEA612F1B62600F0A98D /* MetadataSearch.xib in Resources */,
@@ -940,21 +940,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D15AC320486D014006FF6A4 /* main.mm in Sources */,
-				A911064B0F323D450013D1E0 /* SBAppDelegate.m in Sources */,
-				A9FD5D340F3C69BE00817716 /* SBChapterViewController.m in Sources */,
-				A9FD5D420F3C6A6300817716 /* SBEmptyViewController.m in Sources */,
-				A9FD5ECF0F3C8AF100817716 /* SBMovieViewController.m in Sources */,
 				A9629C8D0F56F7B6001D6A75 /* MP42ChapterTrack.m in Sources */,
 				A9629C8E0F56F7B6001D6A75 /* MP42File.m in Sources */,
 				A9629C8F0F56F7B6001D6A75 /* MP42Metadata.m in Sources */,
 				A9629C900F56F7B6001D6A75 /* MP42SubtitleTrack.m in Sources */,
 				A9629C910F56F7B6001D6A75 /* MP42Track.m in Sources */,
+				A9AB485617F0AEAC000AA72E /* SBMovieViewController.m in Sources */,
 				A9629C920F56F7B6001D6A75 /* MP42Utilities.m in Sources */,
-				A9629D0A0F56FB36001D6A75 /* SBVideoViewController.m in Sources */,
 				A9569CEB0F616926002F79F8 /* MP42VideoTrack.m in Sources */,
 				A99F4D270F6D5825003BA2B9 /* MP42AudioTrack.m in Sources */,
 				A9BB60D80F834E0A005CD0BB /* mbs.cpp in Sources */,
-				A91E7DEA0F8A2E6800AF387E /* SBSoundViewController.m in Sources */,
 				A905E58A0FB05A8100B926FF /* MP42ClosedCaptionTrack.m in Sources */,
 				A99EAC7C1115BED200D89903 /* MP42FileImporter.m in Sources */,
 				A99EACA31115C18000D89903 /* MP42MkvImporter.m in Sources */,
@@ -967,6 +962,7 @@
 				A9D825A912ABF72D00C1AA54 /* MP42CCImporter.m in Sources */,
 				A9EBA68912AE28DF0092D645 /* MP42AC3Importer.m in Sources */,
 				A9C4ECF712AE562A00BDBB7D /* MP42AACImporter.mm in Sources */,
+				A9AB484917F0AEA2000AA72E /* SBAppDelegate.m in Sources */,
 				A937137512B76EAD00940FEC /* MP42H264Importer.mm in Sources */,
 				A9B46A8C12B79B240040517A /* SBFileImport.m in Sources */,
 				A9B46A8E12B79B240040517A /* SBPrefsController.m in Sources */,
@@ -975,14 +971,18 @@
 				A9B46A9E12B79B990040517A /* ButtonToolbarItem.m in Sources */,
 				A9B46AA212B79B990040517A /* RegexKitLite.m in Sources */,
 				A9B46AA912B79BD00040517A /* MP42AudioConverter.m in Sources */,
+				A9AB486B17F0AF22000AA72E /* JSONKit.m in Sources */,
 				A9B46AAA12B79BD00040517A /* SubUtilities.m in Sources */,
 				A9B46AAF12B79BE80040517A /* MatroskaFile.c in Sources */,
+				A9AB485417F0AEAC000AA72E /* SBChapterViewController.m in Sources */,
+				A9AB485817F0AEAC000AA72E /* SBVideoViewController.m in Sources */,
 				A9B46AB012B79BE80040517A /* MatroskaParser.c in Sources */,
 				A9B46AB312B79BF60040517A /* sfifo.c in Sources */,
 				A9B46ABF12B79D1C0040517A /* SBDocument.m in Sources */,
 				A9F183DD12C201760035BDE1 /* downmix.c in Sources */,
 				CD71FEA312F1B5AF00F0A98D /* SBMetadataSearchController.m in Sources */,
 				CD71FF1D12F1C4A900F0A98D /* TheTVDB.m in Sources */,
+				A9AB485717F0AEAC000AA72E /* SBSoundViewController.m in Sources */,
 				CD56963212FAAD680029FADB /* SBArtworkSelector.m in Sources */,
 				A936E03E130BE10200CA5527 /* MAAttachedWindow.m in Sources */,
 				A90327E4133F68C5004E0D41 /* MP42OCRWrapper.mm in Sources */,
@@ -997,7 +997,6 @@
 				A93F873116B2C8DA009B8303 /* MP42XMLReader.m in Sources */,
 				CDC06FCE1747494D003C1D0A /* iTunesStore.m in Sources */,
 				A935764117B3A72900ED8598 /* MP42MediaFormat.m in Sources */,
-				CDC06FD117475181003C1D0A /* JSONKit.m in Sources */,
 				CD03087417576A550093A0BE /* TheMovieDB3.m in Sources */,
 				CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */,
 				CDDC1957175B05C50005CD98 /* SBRatings.m in Sources */,
@@ -1005,6 +1004,7 @@
 				CD3F2A881761A143000D4C73 /* XMLReader.m in Sources */,
 				A91ED322176A4BDF0091DC0A /* MP42HtmlParser.m in Sources */,
 				A92E3BE4177CB29800E7F7BB /* MP42Image.m in Sources */,
+				A9AB485517F0AEAC000AA72E /* SBEmptyViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1051,14 +1051,6 @@
 			name = Prefs.xib;
 			sourceTree = "<group>";
 		};
-		A91E7DEC0F8A2F3D00AF387E /* SoundView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A91E7DED0F8A2F3D00AF387E /* English */,
-			);
-			name = SoundView.xib;
-			sourceTree = "<group>";
-		};
 		A961476513F568210068F161 /* Queue.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1067,10 +1059,42 @@
 			name = Queue.xib;
 			sourceTree = "<group>";
 		};
-		A9629D050F56FB2A001D6A75 /* VideoView.xib */ = {
+		A9AB485A17F0AEFD000AA72E /* ChapterView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				A9629D060F56FB2A001D6A75 /* English */,
+				A9AB485B17F0AEFD000AA72E /* English */,
+			);
+			name = ChapterView.xib;
+			sourceTree = "<group>";
+		};
+		A9AB485C17F0AEFD000AA72E /* EmptyView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A9AB485D17F0AEFD000AA72E /* English */,
+			);
+			name = EmptyView.xib;
+			sourceTree = "<group>";
+		};
+		A9AB485E17F0AEFD000AA72E /* MovieView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A9AB485F17F0AEFD000AA72E /* English */,
+			);
+			name = MovieView.xib;
+			sourceTree = "<group>";
+		};
+		A9AB486017F0AEFD000AA72E /* SoundView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A9AB486117F0AEFD000AA72E /* English */,
+			);
+			name = SoundView.xib;
+			sourceTree = "<group>";
+		};
+		A9AB486217F0AEFD000AA72E /* VideoView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A9AB486317F0AEFD000AA72E /* English */,
 			);
 			name = VideoView.xib;
 			sourceTree = "<group>";
@@ -1089,30 +1113,6 @@
 				A9C055330F6D394F00AF15B5 /* English */,
 			);
 			name = FileImport.xib;
-			sourceTree = "<group>";
-		};
-		A9FD5DA30F3C6F8100817716 /* EmptyView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A9FD5CE30F3C64D000817716 /* English */,
-			);
-			name = EmptyView.xib;
-			sourceTree = "<group>";
-		};
-		A9FD5DA50F3C6F8A00817716 /* ChapterView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A9FD5D380F3C69EE00817716 /* English */,
-			);
-			name = ChapterView.xib;
-			sourceTree = "<group>";
-		};
-		A9FD5EC50F3C8A4800817716 /* MovieView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A9FD5EC60F3C8A4800817716 /* English */,
-			);
-			name = MovieView.xib;
 			sourceTree = "<group>";
 		};
 		CD4E6E5B12F744210095C84F /* ArtworkSelector.xib */ = {
