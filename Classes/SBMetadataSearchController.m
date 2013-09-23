@@ -284,16 +284,26 @@
 
             [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
                 dispatch_group_async(group, dispatch_get_global_queue(0, 0), ^{
-                    NSData *artworkData = [[MetadataImporter downloadDataOrGetFromCache:[selectedResult.artworkFullsizeURLs objectAtIndex:idx]] retain];
-                    MP42Image *artwork = [[MP42Image alloc] initWithData:artworkData type:MP42_ART_JPEG];
+                    NSData *artworkData = [MetadataImporter downloadDataOrGetFromCache:[selectedResult.artworkFullsizeURLs objectAtIndex:idx]];
 
-                    if (artworkData && [artworkData length])
+                    // Hack, download smaller iTunes version if big iTunes version is not available
+                    if (!artworkData) {
+                        NSString *provider = [selectedResult.artworkProviderNames objectAtIndex:idx];
+                        if ([provider isEqualToString:@"iTunes"]) {
+                            NSURL *url = [selectedResult.artworkFullsizeURLs objectAtIndex:idx];
+                            url = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:@"600x600-75.jpg"];
+                            artworkData = [MetadataImporter downloadDataOrGetFromCache:url];
+                        }
+                    }
+
+                    // Add artwork to metadata object
+                    if (artworkData && [artworkData length]) {
+                        MP42Image *artwork = [[MP42Image alloc] initWithData:artworkData type:MP42_ART_JPEG];
                         dispatch_sync(dispatch_get_main_queue(), ^{
                             [selectedResult.artworks addObject:artwork];
                         });
-
-                    [artworkData release];
-                    [artwork release];
+                        [artwork release];
+                    }
                 });
             }];
 
