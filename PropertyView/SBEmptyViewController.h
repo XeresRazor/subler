@@ -1,15 +1,15 @@
 //
-//  PropertyViewController.m
+//  PropertyViewController.h
 //  Subler
 //
 //  Created by Damiano Galassi on 06/02/09.
 //  Copyright 2009 Damiano Galassi. All rights reserved.
 //
 
-#import "EmptyViewController.h"
+#import <Cocoa/Cocoa.h>
 
 
-@implementation EmptyViewController
-
+@interface SBEmptyViewController : NSViewController {
+}
 
 @end

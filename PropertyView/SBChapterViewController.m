@@ -6,11 +6,11 @@
 //  Copyright 2009 Damiano Galassi. All rights reserved.
 //
 
-#import "ChapterViewController.h"
+#import "SBChapterViewController.h"
 #import "MP42Utilities.h"
 #import "SubUtilities.h"
 
-@implementation ChapterViewController
+@implementation SBChapterViewController
 
 - (void) awakeFromNib
 {

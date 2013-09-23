@@ -8,18 +8,18 @@
 
 NSString *MetadataPBoardType = @"MetadataPBoardType";
 
-#import "MovieViewController.h"
+#import "SBMovieViewController.h"
 #import "SBTableView.h"
 #import "SBPresetManager.h"
 #import "SBRatings.h"
 #import "MP42Image.h"
 
-@interface MovieViewController (Private)
+@interface SBMovieViewController (Private)
 - (void) updateSetsMenu: (id)sender;
 
 @end
 
-@implementation MovieViewController
+@implementation SBMovieViewController
 
 - (void)awakeFromNib
 {

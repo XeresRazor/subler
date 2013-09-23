@@ -6,10 +6,10 @@
 //  Copyright 2009 Damiano Galassi. All rights reserved.
 //
 
-#import "VideoViewController.h"
+#import "SBVideoViewController.h"
 #import "MP42File.h"
 
-@implementation VideoViewController
+@implementation SBVideoViewController
 
 static NSString *getProfileName(uint8_t profile) {
     switch (profile) {
