@@ -46,7 +46,7 @@ void print_help()
 
 void print_version()
 {
-    printf("\t\tversion 0.19\n");
+    printf("\t\tversion 0.22\n");
 }
 
 int main (int argc, const char * argv[]) {
@@ -342,7 +342,7 @@ int main (int argc, const char * argv[]) {
                                                                                 andFile:sourceURL
                                                                                 error:&outError];
 
-            for (MP42Track * track in [fileImporter tracksArray]) {
+            for (MP42Track * track in [fileImporter tracks]) {
                 if (language)
                     [track setLanguage:language];
                 if (delay)
@@ -440,7 +440,7 @@ int main (int argc, const char * argv[]) {
                     value = [value stringByReplacingOccurrencesOfString:right_escaped withString:right_normal];
                     value = [value stringByReplacingOccurrencesOfString:semicolon_escaped withString:semicolon_normal];
 
-                    if(key != nil) {
+                    if (key != nil) {
                         if (value != nil && [value length] > 0) {                  
                             [mp4File.metadata setTag:value forKey:key];
                         }
