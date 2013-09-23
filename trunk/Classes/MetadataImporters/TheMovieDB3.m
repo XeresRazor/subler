@@ -8,7 +8,7 @@
 
 #import "TheMovieDB3.h"
 #import "MP42Metadata.h"
-#import "MetadataSearchController.h"
+#import "SBMetadataSearchController.h"
 #import "JSONKit.h"
 #import "iTunesStore.h"
 #import "SBLanguages.h"

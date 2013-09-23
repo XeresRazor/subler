@@ -9,11 +9,19 @@
 #import "MP42Image.h"
 #import <Quartz/Quartz.h>
 
-NSLock *lock;
-
 @implementation MP42Image
 
-- (id)initWithImage:(NSImage*)image
+- (id)initWithURL:(NSURL *)url type:(NSInteger)type
+{
+    if (self = [super init]) {
+        _url = [url retain];
+        _type = type;
+    }
+
+    return self;
+}
+
+- (id)initWithImage:(NSImage *)image
 {
     if (self = [super init])
         _image = [image retain];
@@ -21,7 +29,7 @@ NSLock *lock;
     return self;
 }
 
-- (id)initWithData:(NSData*)data type:(NSInteger)type
+- (id)initWithData:(NSData *)data type:(NSInteger)type
 {
     if (self = [super init]) {
         _data = [data retain];
@@ -41,6 +49,40 @@ NSLock *lock;
     return self;
 }
 
+- (NSImage *)imageFromData:(NSData *)data
+{
+    NSImage *image = nil;
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:data];
+    if (imageRep != nil) {
+        image = [[NSImage alloc] initWithSize:[imageRep size]];
+        [image addRepresentation:imageRep];
+    }
+
+    return [image autorelease];
+}
+
+- (NSData *)data {
+    if (_data)
+        return _data;
+    else if (_url) {
+        NSError *outError = nil;
+        _data = [[NSData dataWithContentsOfURL:_url options:NSDataReadingUncached error:&outError] retain];
+    }
+
+    return _data;
+}
+
+- (NSImage *)image
+{
+    if (_image)
+        return _image;
+    else if (self.data) {
+        _image = [[self imageFromData:_data] retain];
+    }
+
+    return _image;
+}
+
 - (NSString *)imageRepresentationType
 {
     return IKImageBrowserNSImageRepresentationType;
@@ -51,7 +93,7 @@ NSLock *lock;
     return [self.image description];
 }
 
-- (id) imageRepresentation
+- (id)imageRepresentation
 {
     return self.image;
 }
@@ -78,21 +120,6 @@ NSLock *lock;
     return self;
 }
 
-- (NSImage *)image
-{
-    if (_image)
-        return _image;
-    else if (_data) {
-        NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:_data];
-        if (imageRep != nil) {
-            _image = [[NSImage alloc] initWithSize:[imageRep size]];
-            [_image addRepresentation:imageRep];
-        }
-    }
-
-    return _image;
-}
-
 - (void)dealloc
 {
     [_image release];
@@ -101,6 +128,7 @@ NSLock *lock;
     [super dealloc];
 }
 
+@synthesize url = _url;
 @synthesize data = _data;
 @synthesize type = _type;
 

@@ -11,7 +11,7 @@
 @class SBTableView;
 @class MP42Metadata;
 
-@interface MetadataSearchController : NSWindowController<NSTableViewDelegate> {
+@interface SBMetadataSearchController : NSWindowController<NSTableViewDelegate> {
     id                            delegate;
     NSDictionary                 *detailBoldAttr;
 
@@ -89,6 +89,6 @@
 
 @end
 
-@interface NSObject (MetadataSearchControllerDelegateMethod)
+@interface NSObject (SBMetadataSearchControllerDelegateMethod)
 - (void)metadataImportDone:(MP42Metadata*) metadataToBeImported;
 @end

@@ -6,7 +6,7 @@
 //  Copyright 2011 Douglas Stebila. All rights reserved.
 //
 
-#import "ArtworkSelector.h"
+#import "SBArtworkSelector.h"
 #import "MetadataImporter.h"
 #import "MP42Image.h"
 
@@ -77,7 +77,7 @@
 
 #pragma mark -
 
-@implementation ArtworkSelector
+@implementation SBArtworkSelector
 
 #pragma mark Initialization
 

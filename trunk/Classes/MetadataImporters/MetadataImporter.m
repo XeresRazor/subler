@@ -8,7 +8,7 @@
 
 #import "MetadataImporter.h"
 
-#import "MetadataSearchController.h"
+#import "SBMetadataSearchController.h"
 #import "MP42Metadata.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "SBLanguages.h"
@@ -113,7 +113,7 @@
 
 #pragma mark Asynchronous searching
 
-- (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback {
+- (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -125,7 +125,7 @@
     });
 }
 
-- (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum callback:(MetadataSearchController *)aCallback {
+- (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -137,7 +137,7 @@
     });
 }
 
-- (void) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback {
+- (void) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -149,7 +149,7 @@
     });
 }
 
-- (void) searchMovie:(NSString *)aMovieTitle language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback {
+- (void) searchMovie:(NSString *)aMovieTitle language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -161,7 +161,7 @@
     });
 }
 
-- (void) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback {
+- (void) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];

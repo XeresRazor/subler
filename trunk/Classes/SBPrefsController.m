@@ -6,7 +6,7 @@
 //
 
 #import "SBPrefsController.h"
-#import "MetadataSearchController.h"
+#import "SBMetadataSearchController.h"
 #import "SBPresetManager.h"
 #import "SBTableView.h"
 #import "MP42Metadata.h"
@@ -114,11 +114,11 @@
 }
 
 - (IBAction) clearRecentSearches:(id) sender {
-    [MetadataSearchController clearRecentSearches];
+    [SBMetadataSearchController clearRecentSearches];
 }
 
 - (IBAction) deleteCachedMetadata:(id) sender {
-    [MetadataSearchController deleteCachedMetadata];
+    [SBMetadataSearchController deleteCachedMetadata];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView {

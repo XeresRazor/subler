@@ -6,16 +6,16 @@
 //  Copyright 2011 Douglas Stebila. All rights reserved.
 //
 
-#import "MetadataSearchController.h"
+#import "SBMetadataSearchController.h"
 #import "MP42File.h"
 #import "SBDocument.h"
-#import "ArtworkSelector.h"
+#import "SBArtworkSelector.h"
 #import "RegexKitLite.h"
 #import "SBLanguages.h"
 #import "MetadataImporter.h"
 #import "MP42Image.h"
 
-@implementation MetadataSearchController
+@implementation SBMetadataSearchController
 
 #pragma mark Initialization
 
@@ -61,7 +61,7 @@
     }
     if (!filename) return;
 
-    NSDictionary *parsed = [MetadataSearchController parseFilename:filename];
+    NSDictionary *parsed = [SBMetadataSearchController parseFilename:filename];
     if (!parsed) return;
     
     if ([@"movie" isEqualToString:(NSString *) [parsed valueForKey:@"type"]]) {
@@ -330,7 +330,7 @@
         if ([selectedResult.artworkThumbURLs count] == 1) {
             [self loadArtworks:[NSIndexSet indexSetWithIndex:0]];
         } else {
-            artworkSelectorWindow = [[ArtworkSelector alloc] initWithDelegate:self imageURLs:selectedResult.artworkThumbURLs artworkProviderNames:selectedResult.artworkProviderNames];
+            artworkSelectorWindow = [[SBArtworkSelector alloc] initWithDelegate:self imageURLs:selectedResult.artworkThumbURLs artworkProviderNames:selectedResult.artworkProviderNames];
             [NSApp beginSheet:[artworkSelectorWindow window] modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:nil];
         }
     } else {
