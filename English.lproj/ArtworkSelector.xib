@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">12F30</string>
-		<string key="IBDocument.InterfaceBuilderVersion">4488.2</string>
+		<string key="IBDocument.SystemVersion">12F37</string>
+		<string key="IBDocument.InterfaceBuilderVersion">4510</string>
 		<string key="IBDocument.AppKitVersion">1187.39</string>
 		<string key="IBDocument.HIToolboxVersion">626.00</string>
 		<dictionary class="NSMutableDictionary" key="IBDocument.PluginVersions">
-			<string key="com.apple.InterfaceBuilder.CocoaPlugin">4488.2</string>
-			<string key="com.apple.imagekit.ibplugin">3334</string>
+			<string key="com.apple.InterfaceBuilder.CocoaPlugin">4510</string>
+			<string key="com.apple.imagekit.ibplugin">3336</string>
 		</dictionary>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IKImageBrowserView</string>
@@ -51,7 +51,7 @@
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<string key="NSWindowContentMinSize">{480, 380}</string>
 				<object class="NSView" key="NSWindowView" id="701531447">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSScrollView" id="421502901">
@@ -226,7 +226,8 @@
 											</set>
 											<string key="NSFrameSize">{438, 274}</string>
 											<reference key="NSSuperview" ref="598985484"/>
-											<reference key="NSNextKeyView" ref="253066266"/>
+											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="691449417"/>
 											<bool key="NSViewWantsBestResolutionOpenGLSurface">YES</bool>
 											<bool key="constrainsToOriginalSize">NO</bool>
 											<bool key="cellsHaveSubtitle">YES</bool>
@@ -235,7 +236,7 @@
 											<bool key="shadowsCells">YES</bool>
 											<bool key="animates">NO</bool>
 											<bool key="allowsReordering">NO</bool>
-											<bool key="allowsMultipleSelection">NO</bool>
+											<bool key="allowsMultipleSelection">YES</bool>
 											<bool key="allowsEmptySelection">YES</bool>
 											<float key="cellWidth">148</float>
 											<float key="cellHeight">148</float>
@@ -245,6 +246,7 @@
 									</array>
 									<string key="NSFrame">{{1, 1}, {438, 274}}</string>
 									<reference key="NSSuperview" ref="421502901"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="68512545"/>
 									<reference key="NSDocView" ref="68512545"/>
 									<object class="NSColor" key="NSBGColor">
@@ -263,6 +265,7 @@
 									<int key="NSvFlags">-2147483392</int>
 									<string key="NSFrame">{{424, 1}, {15, 250}}</string>
 									<reference key="NSSuperview" ref="421502901"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="198124637"/>
 									<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 									<reference key="NSTarget" ref="421502901"/>
@@ -275,6 +278,7 @@
 									<int key="NSvFlags">-2147483392</int>
 									<string key="NSFrame">{{-100, -100}, {438, 15}}</string>
 									<reference key="NSSuperview" ref="421502901"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="598985484"/>
 									<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 									<int key="NSsFlags">1</int>
@@ -285,7 +289,8 @@
 							</array>
 							<string key="NSFrame">{{20, 84}, {440, 276}}</string>
 							<reference key="NSSuperview" ref="701531447"/>
-							<reference key="NSNextKeyView" ref="598985484"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="253066266"/>
 							<int key="NSsFlags">133650</int>
 							<reference key="NSVScroller" ref="691449417"/>
 							<reference key="NSHScroller" ref="253066266"/>
@@ -300,6 +305,8 @@
 							<int key="NSvFlags">289</int>
 							<string key="NSFrame">{{336, 12}, {130, 32}}</string>
 							<reference key="NSSuperview" ref="701531447"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="359731390">
 								<int key="NSCellFlags">603979776</int>
@@ -325,6 +332,7 @@
 							<int key="NSvFlags">289</int>
 							<string key="NSFrame">{{364, 49}, {96, 18}}</string>
 							<reference key="NSSuperview" ref="701531447"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="975846198"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="107394511">
@@ -348,6 +356,7 @@
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{14, 12}, {172, 32}}</string>
 							<reference key="NSSuperview" ref="701531447"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="713820838"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="947344759">
@@ -370,6 +379,7 @@
 							<int key="NSvFlags">289</int>
 							<string key="NSFrame">{{240, 12}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="701531447"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="209197730"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="132791343">
@@ -389,6 +399,8 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{480, 380}</string>
+					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="421502901"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
@@ -665,7 +677,92 @@
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">ArtworkSelector</string>
+					<string key="superclassName">NSWindowController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="addArtwork:">id</string>
+						<string key="addNoArtwork:">id</string>
+						<string key="loadMoreArtwork:">id</string>
+						<string key="zoomSliderDidChange:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="addArtwork:">
+							<string key="name">addArtwork:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="addNoArtwork:">
+							<string key="name">addNoArtwork:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="loadMoreArtwork:">
+							<string key="name">loadMoreArtwork:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="zoomSliderDidChange:">
+							<string key="name">zoomSliderDidChange:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="addArtworkButton">NSButton</string>
+						<string key="imageBrowser">IKImageBrowserView</string>
+						<string key="loadMoreArtworkButton">NSButton</string>
+						<string key="slider">NSSlider</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="addArtworkButton">
+							<string key="name">addArtworkButton</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="imageBrowser">
+							<string key="name">imageBrowser</string>
+							<string key="candidateClassName">IKImageBrowserView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="loadMoreArtworkButton">
+							<string key="name">loadMoreArtworkButton</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="slider">
+							<string key="name">slider</string>
+							<string key="candidateClassName">NSSlider</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ArtworkSelector.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">IKImageBrowserView</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="_dataSource">id</string>
+						<string key="_delegate">id</string>
+						<string key="_dragDestinationDelegate">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="_dataSource">
+							<string key="name">_dataSource</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="_delegate">
+							<string key="name">_delegate</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="_dragDestinationDelegate">
+							<string key="name">_dragDestinationDelegate</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/IKImageBrowserView.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">YES</bool>

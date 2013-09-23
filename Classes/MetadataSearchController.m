@@ -328,8 +328,7 @@
 - (void) selectArtwork {
     if (selectedResult.artworkThumbURLs && [selectedResult.artworkThumbURLs count]) {
         if ([selectedResult.artworkThumbURLs count] == 1) {
-            selectedResult.artworkURL = [selectedResult.artworkFullsizeURLs objectAtIndex:0];
-            [self loadArtwork];
+            [self loadArtworks:[NSIndexSet indexSetWithIndex:0]];
         } else {
             artworkSelectorWindow = [[ArtworkSelector alloc] initWithDelegate:self imageURLs:selectedResult.artworkThumbURLs artworkProviderNames:selectedResult.artworkProviderNames];
             [NSApp beginSheet:[artworkSelectorWindow window] modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:nil];
@@ -339,21 +338,18 @@
     }
 }
 
-- (void) selectArtworkDone:(NSURL *)url {
-    NSUInteger i = [selectedResult.artworkThumbURLs indexOfObject:url];
-    if (i != NSNotFound) {
-        [NSApp endSheet:[artworkSelectorWindow window]];
-        [[artworkSelectorWindow window] orderOut:self];
-        [artworkSelectorWindow autorelease]; artworkSelectorWindow = nil;
-        selectedResult.artworkURL = [selectedResult.artworkFullsizeURLs objectAtIndex:i];
-    }
-    [self loadArtwork];
+- (void) selectArtworkDone:(NSIndexSet *)indexes {
+    [NSApp endSheet:[artworkSelectorWindow window]];
+    [[artworkSelectorWindow window] orderOut:self];
+    [artworkSelectorWindow autorelease]; artworkSelectorWindow = nil;
+
+    [self loadArtworks:indexes];
 }
 
 #pragma mark Load artwork
 
-- (void) loadArtwork {
-    if (selectedResult.artworkURL) {
+- (void) loadArtworks:(NSIndexSet *)indexes {
+    if (indexes) {
         [progress startAnimation:self];
         [progress setHidden:NO];
         [progressText setStringValue:@"Downloading artwork…"];
@@ -367,15 +363,26 @@
         [metadataTable setEnabled:NO];
 
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-			artworkData = [[MetadataImporter downloadDataOrGetFromCache:selectedResult.artworkURL] retain];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (artworkData && [artworkData length]) {
+            dispatch_group_t group = dispatch_group_create();
+
+            [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+                dispatch_group_async(group, dispatch_get_global_queue(0, 0), ^{
+                    NSData *artworkData = [[MetadataImporter downloadDataOrGetFromCache:[selectedResult.artworkFullsizeURLs objectAtIndex:idx]] retain];
                     MP42Image *artwork = [[MP42Image alloc] initWithData:artworkData type:MP42_ART_JPEG];
-                    [selectedResult.artworks addObject:artwork];
+
+                    if (artworkData && [artworkData length])
+                        dispatch_sync(dispatch_get_main_queue(), ^{
+                            [selectedResult.artworks addObject:artwork];
+                        });
+
                     [artworkData release];
                     [artwork release];
-                }
+                });
+            }];
+
+            dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+            dispatch_release(group);
+            dispatch_sync(dispatch_get_main_queue(), ^{
                 [self addMetadata];
             });
         });
