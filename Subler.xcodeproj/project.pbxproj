@@ -119,8 +119,8 @@
 		CD03087917576AE50093A0BE /* MetadataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CD03087817576AE50093A0BE /* MetadataImporter.m */; };
 		CD3F2A881761A143000D4C73 /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CD3F2A871761A143000D4C73 /* XMLReader.m */; };
 		CD4E6E5D12F744210095C84F /* ArtworkSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD4E6E5B12F744210095C84F /* ArtworkSelector.xib */; };
-		CD56963212FAAD680029FADB /* ArtworkSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56963112FAAD680029FADB /* ArtworkSelector.m */; };
-		CD71FEA312F1B5AF00F0A98D /* MetadataSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD71FEA212F1B5AF00F0A98D /* MetadataSearchController.m */; };
+		CD56963212FAAD680029FADB /* SBArtworkSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56963112FAAD680029FADB /* SBArtworkSelector.m */; };
+		CD71FEA312F1B5AF00F0A98D /* SBMetadataSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD71FEA212F1B5AF00F0A98D /* SBMetadataSearchController.m */; };
 		CD71FEA612F1B62600F0A98D /* MetadataSearch.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD71FEA412F1B62600F0A98D /* MetadataSearch.xib */; };
 		CD71FF1D12F1C4A900F0A98D /* TheTVDB.m in Sources */ = {isa = PBXBuildFile; fileRef = CD71FF1C12F1C4A900F0A98D /* TheTVDB.m */; };
 		CDC06FCE1747494D003C1D0A /* iTunesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC06FCD1747494D003C1D0A /* iTunesStore.m */; };
@@ -379,11 +379,11 @@
 		CD4A86AF1234AFA10054970A /* Filename.pm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = Filename.pm; sourceTree = "<group>"; };
 		CD4A86B01234AFA10054970A /* ParseFilename.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = ParseFilename.pl; sourceTree = "<group>"; };
 		CD4E6E5C12F744210095C84F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ArtworkSelector.xib; sourceTree = "<group>"; };
-		CD56963012FAAD680029FADB /* ArtworkSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArtworkSelector.h; path = Classes/ArtworkSelector.h; sourceTree = "<group>"; };
-		CD56963112FAAD680029FADB /* ArtworkSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ArtworkSelector.m; path = Classes/ArtworkSelector.m; sourceTree = "<group>"; };
+		CD56963012FAAD680029FADB /* SBArtworkSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBArtworkSelector.h; path = Classes/SBArtworkSelector.h; sourceTree = "<group>"; };
+		CD56963112FAAD680029FADB /* SBArtworkSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBArtworkSelector.m; path = Classes/SBArtworkSelector.m; sourceTree = "<group>"; };
 		CD56966E12FAAFA90029FADB /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
-		CD71FEA112F1B5AF00F0A98D /* MetadataSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataSearchController.h; path = Classes/MetadataSearchController.h; sourceTree = "<group>"; };
-		CD71FEA212F1B5AF00F0A98D /* MetadataSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataSearchController.m; path = Classes/MetadataSearchController.m; sourceTree = "<group>"; };
+		CD71FEA112F1B5AF00F0A98D /* SBMetadataSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBMetadataSearchController.h; path = Classes/SBMetadataSearchController.h; sourceTree = "<group>"; };
+		CD71FEA212F1B5AF00F0A98D /* SBMetadataSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBMetadataSearchController.m; path = Classes/SBMetadataSearchController.m; sourceTree = "<group>"; };
 		CD71FEA512F1B62600F0A98D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MetadataSearch.xib; sourceTree = "<group>"; };
 		CD71FF1B12F1C4A900F0A98D /* TheTVDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TheTVDB.h; path = Classes/MetadataImporters/TheTVDB.h; sourceTree = "<group>"; };
 		CD71FF1C12F1C4A900F0A98D /* TheTVDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TheTVDB.m; path = Classes/MetadataImporters/TheTVDB.m; sourceTree = "<group>"; };
@@ -501,10 +501,10 @@
 				A961476213F567E10068F161 /* SBPresetManager.m */,
 				A9B46A7E12B79B240040517A /* SBFileImport.h */,
 				A9B46A7F12B79B240040517A /* SBFileImport.m */,
-				CD71FEA112F1B5AF00F0A98D /* MetadataSearchController.h */,
-				CD71FEA212F1B5AF00F0A98D /* MetadataSearchController.m */,
-				CD56963012FAAD680029FADB /* ArtworkSelector.h */,
-				CD56963112FAAD680029FADB /* ArtworkSelector.m */,
+				CD71FEA112F1B5AF00F0A98D /* SBMetadataSearchController.h */,
+				CD71FEA212F1B5AF00F0A98D /* SBMetadataSearchController.m */,
+				CD56963012FAAD680029FADB /* SBArtworkSelector.h */,
+				CD56963112FAAD680029FADB /* SBArtworkSelector.m */,
 				A9B46A8212B79B240040517A /* SBPrefsController.h */,
 				A9B46A8312B79B240040517A /* SBPrefsController.m */,
 				A91106490F323D450013D1E0 /* SBAppDelegate.h */,
@@ -981,9 +981,9 @@
 				A9B46AB312B79BF60040517A /* sfifo.c in Sources */,
 				A9B46ABF12B79D1C0040517A /* SBDocument.m in Sources */,
 				A9F183DD12C201760035BDE1 /* downmix.c in Sources */,
-				CD71FEA312F1B5AF00F0A98D /* MetadataSearchController.m in Sources */,
+				CD71FEA312F1B5AF00F0A98D /* SBMetadataSearchController.m in Sources */,
 				CD71FF1D12F1C4A900F0A98D /* TheTVDB.m in Sources */,
-				CD56963212FAAD680029FADB /* ArtworkSelector.m in Sources */,
+				CD56963212FAAD680029FADB /* SBArtworkSelector.m in Sources */,
 				A936E03E130BE10200CA5527 /* MAAttachedWindow.m in Sources */,
 				A90327E4133F68C5004E0D41 /* MP42OCRWrapper.mm in Sources */,
 				A940E0FF13F130FB007AB5C6 /* MP42AVFImporter.m in Sources */,

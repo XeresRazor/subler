@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class MetadataSearchController;
+@class SBMetadataSearchController;
 @class MP42Metadata;
 
 @interface MetadataImporter : NSObject {
-    MetadataSearchController *mCallback;
+    SBMetadataSearchController *mCallback;
     BOOL isCancelled;
 }
 
@@ -29,11 +29,11 @@
 + (NSString *) defaultTVLanguage;
 
 #pragma mark Asynchronous searching
-- (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback;
-- (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum callback:(MetadataSearchController *)aCallback;
-- (void) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback;
-- (void) searchMovie:(NSString *)aMovieTitle language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback;
-- (void) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(MetadataSearchController *)aCallback;
+- (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback;
+- (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum callback:(SBMetadataSearchController *)aCallback;
+- (void) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback;
+- (void) searchMovie:(NSString *)aMovieTitle language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback;
+- (void) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback;
 - (void) cancel;
 
 #pragma Methods to be overridden

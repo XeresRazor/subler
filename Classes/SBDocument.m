@@ -17,8 +17,8 @@
 #import "SoundViewController.h"
 #import "ChapterViewController.h"
 #import "SBFileImport.h"
-#import "MetadataSearchController.h"
-#import "ArtworkSelector.h"
+#import "SBMetadataSearchController.h"
+#import "SBArtworkSelector.h"
 
 #define SublerTableViewDataType @"SublerTableViewDataType"
 
@@ -616,7 +616,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (IBAction) searchMetadata: (id) sender
 {
-    importWindow = [[MetadataSearchController alloc] initWithDelegate:self];
+    importWindow = [[SBMetadataSearchController alloc] initWithDelegate:self];
     
     [NSApp beginSheet:[importWindow window] modalForWindow:documentWindow
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];

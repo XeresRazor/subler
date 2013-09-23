@@ -20,15 +20,20 @@ typedef enum MP42TagArtworkType_e {
 
 @interface MP42Image : NSObject <NSCoding> {
     NSImage *_image;
-    NSData *_data;
+
+    NSURL   *_url;
+    NSData  *_data;
+
     NSInteger _type;
 }
 
-- (id)initWithImage:(NSImage*)image;
-- (id)initWithData:(NSData*)data type:(NSInteger)type;
+- (id)initWithURL:(NSURL *)url  type:(NSInteger)type;
+- (id)initWithImage:(NSImage *)image;
+- (id)initWithData:(NSData *)data type:(NSInteger)type;
 - (id)initWithBytes:(const void*)bytes length:(NSUInteger)length type:(NSInteger)type;
 
 @property(readonly) NSImage *image;
+@property(readonly) NSURL *url;
 @property(readonly) NSData *data;
 @property(readonly) NSInteger type;
 

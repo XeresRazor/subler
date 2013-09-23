@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
-@interface ArtworkSelector : NSWindowController {
+@interface SBArtworkSelector : NSWindowController {
 
     id                               delegate;
     IBOutlet IKImageBrowserView     *imageBrowser;
@@ -36,6 +36,6 @@
 
 @end
 
-@interface NSObject (ArtworkSelectorDelegateMethod)
+@interface NSObject (SBArtworkSelectorDelegateMethod)
 - (void)selectArtworkDone:(NSURL *)url;
 @end

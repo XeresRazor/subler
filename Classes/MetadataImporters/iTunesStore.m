@@ -7,7 +7,7 @@
 //
 
 #import "iTunesStore.h"
-#import "MetadataSearchController.h"
+#import "SBMetadataSearchController.h"
 #import "MP42File.h"
 #import "JSONKit.h"
 #import "SBRatings.h"
