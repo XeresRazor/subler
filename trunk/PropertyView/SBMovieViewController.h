@@ -13,7 +13,7 @@
 #import "SBTableView.h"
 #import "SBImageBrowserView.h"
 
-@interface MovieViewController : NSViewController <SBTableViewDelegate, SBImageBrowserViewDelegate> {
+@interface SBMovieViewController : NSViewController <SBTableViewDelegate, SBImageBrowserViewDelegate> {
     MP42Metadata            *metadata;
 
     IBOutlet NSPopUpButton  *tagList;

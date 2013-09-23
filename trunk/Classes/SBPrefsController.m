@@ -10,7 +10,7 @@
 #import "SBPresetManager.h"
 #import "SBTableView.h"
 #import "MP42Metadata.h"
-#import "MovieViewController.h"
+#import "SBMovieViewController.h"
 #import "SBRatings.h"
 
 #define TOOLBAR_GENERAL     @"TOOLBAR_GENERAL"
@@ -171,7 +171,7 @@
         [self closePopOver:sender];
         
         SBPresetManager *presetManager = [SBPresetManager sharedManager];
-        _controller = [[MovieViewController alloc] initWithNibName:@"MovieView" bundle:nil];
+        _controller = [[SBMovieViewController alloc] initWithNibName:@"MovieView" bundle:nil];
         [_controller setMetadata:[[presetManager presets] objectAtIndex:_currentRow]];
         
         if (NSClassFromString(@"NSPopover")) {

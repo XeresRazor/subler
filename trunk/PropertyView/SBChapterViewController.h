@@ -12,7 +12,7 @@
 
 @class SBTableView;
 
-@interface ChapterViewController : NSViewController {
+@interface SBChapterViewController : NSViewController {
     MP42ChapterTrack *track;
 
     NSDictionary* detailBoldAttr;

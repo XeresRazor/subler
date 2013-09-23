@@ -8,14 +8,14 @@
 #import <Cocoa/Cocoa.h>
 #import "MAAttachedWindow.h"
 
-@class MovieViewController;
+@class SBMovieViewController;
 @class SBTableView;
 
 @interface SBPrefsController : NSWindowController <NSToolbarDelegate, NSWindowDelegate> {
     IBOutlet NSView *generalView, *advancedView, *setsView;
 
     id _popover;
-    MovieViewController *_controller;
+    SBMovieViewController *_controller;
     NSInteger _currentRow;
 
     IBOutlet SBTableView *tableView;

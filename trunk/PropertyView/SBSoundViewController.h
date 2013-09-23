@@ -11,7 +11,7 @@
 @class MP42AudioTrack;
 @class MP42File;
 
-@interface SoundViewController : NSViewController {
+@interface SBSoundViewController : NSViewController {
     MP42AudioTrack *track;
     MP42File       *mp4file;
 

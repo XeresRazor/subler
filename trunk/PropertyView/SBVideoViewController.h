@@ -12,7 +12,7 @@
 @class MP42VideoTrack;
 @class MP42SubtitleTrack;
 
-@interface VideoViewController : NSViewController {
+@interface SBVideoViewController : NSViewController {
     MP42VideoTrack *track;
     MP42File       *mp4file;
 

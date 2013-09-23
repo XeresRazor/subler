@@ -6,10 +6,10 @@
 //  Copyright 2009 Damiano Galassi. All rights reserved.
 //
 
-#import "SoundViewController.h"
+#import "SBSoundViewController.h"
 #import "MP42File.h"
 
-@implementation SoundViewController
+@implementation SBSoundViewController
 
 - (void) awakeFromNib
 {
