@@ -348,15 +348,15 @@ OSStatus EncoderDataProc(AudioConverterRef              inAudioConverter,
 		}
         
         MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-        sample->sampleData = malloc(fillBufList.mBuffers[0].mDataByteSize);
-        memcpy(sample->sampleData, outputBuffer, fillBufList.mBuffers[0].mDataByteSize);
+        sample->data = malloc(fillBufList.mBuffers[0].mDataByteSize);
+        memcpy(sample->data, outputBuffer, fillBufList.mBuffers[0].mDataByteSize);
 
-        sample->sampleSize = fillBufList.mBuffers[0].mDataByteSize;
-        sample->sampleDuration = 1024;
-        sample->sampleOffset = 0;
-        sample->sampleTimestamp = outputPos;
-        sample->sampleIsSync = YES;
-        sample->sampleTrackId = trackId;
+        sample->size = fillBufList.mBuffers[0].mDataByteSize;
+        sample->duration = 1024;
+        sample->offset = 0;
+        sample->timestamp = outputPos;
+        sample->isSync = YES;
+        sample->trackId = trackId;
 
         while ([_outputSamplesBuffer isFull] && !_cancelled)
             usleep(500);
@@ -411,15 +411,15 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 	afio->pos += *ioNumberDataPackets;
 
     // put the data pointer into the buffer list
-	ioData->mBuffers[0].mData = afio->sample->sampleData;
-	ioData->mBuffers[0].mDataByteSize = afio->sample->sampleSize;
+	ioData->mBuffers[0].mData = afio->sample->data;
+	ioData->mBuffers[0].mDataByteSize = afio->sample->size;
 	ioData->mBuffers[0].mNumberChannels = afio->srcFormat.mChannelsPerFrame;
 
 	if (outDataPacketDescription) {
 		if (afio->pktDescs) {
             afio->pktDescs->mStartOffset = 0;
             afio->pktDescs->mVariableFramesInPacket = *ioNumberDataPackets;
-            afio->pktDescs->mDataByteSize = afio->sample->sampleSize;
+            afio->pktDescs->mDataByteSize = afio->sample->size;
 			*outDataPacketDescription = afio->pktDescs;
         }
 		else
@@ -810,6 +810,9 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
     decoderData.fileReaderDone = YES;
     encoderData.fileReaderDone = YES;
+
+    [_inputSamplesBuffer cancel];
+    [_outputSamplesBuffer cancel];
 
     while (!(readerDone && encoderDone))
         usleep(500);

@@ -294,12 +294,10 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
 
     NSData *subFileData = [NSData dataWithContentsOfURL:subFileURL];
 
-    NSInteger tracksNumber = [_activeTracks count];
+    NSInteger tracksNumber = [_inputTracks count];
     NSInteger tracksDone = 0;
 
-    for (MP42Track * track in _activeTracks) {
-        muxer_helper *helper = track.muxer_helper;
-
+    for (MP42Track *track in _inputTracks) {
         SBVobSubTrack *vobTrack = [_VobSubTracks objectAtIndex:track.sourceId];
         SBVobSubSample *firstSample = nil;
         
@@ -307,10 +305,6 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
         int i, sampleCount = [vobTrack->samples count];
         
         for (i = 0; i < sampleCount && !_cancelled; i++) {
-            while ([helper->fifo isFull] && !_cancelled) {
-                usleep(2000);
-            }
-
             SBVobSubSample *currentSample = [vobTrack->samples objectAtIndex:i];
             int offset = currentSample->fileOffset;
             int nextOffset;
@@ -356,32 +350,32 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
             if(lastTime != startTime) {
                 //insert a sample with no real data, to clear the subs
                 MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-                sample->sampleSize = 2;
-                sample->sampleData = calloc(1, 2);
-                sample->sampleDuration = startTime - lastTime;
-                sample->sampleOffset = 0;
-                sample->sampleTimestamp = startTime;
-                sample->sampleIsSync = YES;
-                sample->sampleTrackId = track.Id;
+                sample->size = 2;
+                sample->data = calloc(1, 2);
+                sample->duration = startTime - lastTime;
+                sample->offset = 0;
+                sample->timestamp = startTime;
+                sample->isSync = YES;
+                sample->trackId = track.sourceId;
                 
-                [helper->fifo enqueue:sample];
+                [self enqueue:sample];
                 [sample release];
             }
-            
+
             MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-            sample->sampleData = extracted;
-            sample->sampleSize = size;
-            sample->sampleDuration = duration;
-            sample->sampleOffset = 0;
-            sample->sampleTimestamp = startTime;
-            sample->sampleIsSync = YES;
-            sample->sampleTrackId = track.Id;
-            
-            [helper->fifo enqueue:sample];
+            sample->data = extracted;
+            sample->size = size;
+            sample->duration = duration;
+            sample->offset = 0;
+            sample->timestamp = startTime;
+            sample->isSync = YES;
+            sample->trackId = track.sourceId;
+
+            [self enqueue:sample];
             [sample release];
 
             lastTime = endTime;
-            
+
             _progress = ((i / (CGFloat) sampleCount ) * 100 / tracksNumber) + (tracksDone / (CGFloat) tracksNumber * 100);
         }
         tracksDone++;

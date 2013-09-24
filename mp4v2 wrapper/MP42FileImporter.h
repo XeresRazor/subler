@@ -23,7 +23,8 @@
     MP42Metadata   *_metadata;
 
     NSMutableArray *_tracksArray;
-    NSMutableArray *_activeTracks;
+    NSMutableArray *_inputTracks;
+    NSMutableArray *_outputsTracks;
     NSThread       *_demuxerThread;
 
     CGFloat       _progress;
@@ -44,6 +45,8 @@
 
 - (void)startReading;
 - (void)cancelReading;
+
+- (void)enqueue:(MP42SampleBuffer *)sample;
 
 - (CGFloat)progress;
 

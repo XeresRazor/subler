@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "MP42VideoTrack.h"
 
-@interface MP42ClosedCaptionTrack : MP42VideoTrack {
-}
+@interface MP42ClosedCaptionTrack : MP42VideoTrack
 
 @end

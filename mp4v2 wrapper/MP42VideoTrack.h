@@ -30,30 +30,30 @@
     uint8_t newProfile, newLevel;
 }
 
-@property(readwrite) uint64_t width;
-@property(readwrite) uint64_t height;
+@property(nonatomic, readwrite) uint64_t width;
+@property(nonatomic, readwrite) uint64_t height;
 
-@property(readwrite) float trackWidth;
-@property(readwrite) float trackHeight;
+@property(nonatomic, readwrite) float trackWidth;
+@property(nonatomic, readwrite) float trackHeight;
 
-@property(readwrite) uint64_t hSpacing;
-@property(readwrite) uint64_t vSpacing;
+@property(nonatomic, readwrite) uint64_t hSpacing;
+@property(nonatomic, readwrite) uint64_t vSpacing;
 
-@property(readwrite) uint64_t cleanApertureWidthN;
-@property(readwrite) uint64_t cleanApertureWidthD;
-@property(readwrite) uint64_t cleanApertureHeightN;
-@property(readwrite) uint64_t cleanApertureHeightD;
-@property(readwrite) uint64_t horizOffN;
-@property(readwrite) uint64_t horizOffD;
-@property(readwrite) uint64_t vertOffN;
-@property(readwrite) uint64_t vertOffD;
+@property(nonatomic, readwrite) uint64_t cleanApertureWidthN;
+@property(nonatomic, readwrite) uint64_t cleanApertureWidthD;
+@property(nonatomic, readwrite) uint64_t cleanApertureHeightN;
+@property(nonatomic, readwrite) uint64_t cleanApertureHeightD;
+@property(nonatomic, readwrite) uint64_t horizOffN;
+@property(nonatomic, readwrite) uint64_t horizOffD;
+@property(nonatomic, readwrite) uint64_t vertOffN;
+@property(nonatomic, readwrite) uint64_t vertOffD;
 
-@property(readwrite) uint32_t offsetX;
-@property(readwrite) uint32_t offsetY;
+@property(nonatomic, readwrite) uint32_t offsetX;
+@property(nonatomic, readwrite) uint32_t offsetY;
 
-@property(readwrite) uint8_t origProfile;
-@property(readwrite) uint8_t origLevel;
-@property(readwrite) uint8_t newProfile;
-@property(readwrite) uint8_t newLevel;
+@property(nonatomic, readwrite) uint8_t origProfile;
+@property(nonatomic, readwrite) uint8_t origLevel;
+@property(nonatomic, readwrite) uint8_t newProfile;
+@property(nonatomic, readwrite) uint8_t newLevel;
 
 @end

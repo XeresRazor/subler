@@ -170,7 +170,7 @@
                     [item setEnabled:NO];
                 [[actionCell menu] addItem:item];
                 
-                NSArray *formatArray = [NSArray arrayWithObjects:@"AAC - Dolby Pro Logic II", @"AAC - Dolby Pro Logic", @"AAC - Stereo", @"AAC - Mono", @"AAC - Multi-channel", nil];
+                NSArray *formatArray = [NSArray arrayWithObjects:@"AAC - Dolby Pro Logic II", @"AAC - Dolby Pro Logic", @"AAC - Stereo", @"AAC - Mono", @"AAC - Multi-channel", @"AC-3 + AAC", nil];
                 for (NSString* format in formatArray) {
                     item = [[[NSMenuItem alloc] initWithTitle:format action:NULL keyEquivalent:@""] autorelease];
                     [item setTag:tag++];
@@ -249,6 +249,17 @@
     [[self window] orderOut:self];
 }
 
+- (void)addTrack:(MP42Track *)track toArray:(NSMutableArray *)tracks
+{
+    for (MP42FileImporter *importer in _fileImporters)
+        if ([importer containsTrack:track]) {
+            [track setTrackImporterHelper:importer];
+            break;
+        }
+
+    [tracks addObject:track];
+}
+
 - (IBAction)addTracks:(id)sender
 {
     NSMutableArray *tracks = [[NSMutableArray alloc] init];
@@ -260,10 +271,21 @@
                 NSUInteger conversion = [[_actionArray objectAtIndex:i] integerValue];
 
                 if ([track isMemberOfClass:[MP42AudioTrack class]]) {
-                    if (conversion)
+                    if (conversion == 6) {
+                        MP42AudioTrack *copy = [track copy];
+                        [copy setNeedConversion:YES];
+                        [(MP42AudioTrack *)track setMixdownType:SBDolbyPlIIMixdown];
+
+                        [self addTrack:copy toArray:tracks];
+                        [copy release];
+                    }
+                    else if (conversion)
                         [track setNeedConversion:YES];
                     
-                    switch(conversion) {
+                    switch (conversion) {
+                        case 6:
+                            [track setEnabled:NO];
+                            break;
                         case 5:
                             [(MP42AudioTrack *)track setMixdownType:nil];
                             break;
@@ -277,8 +299,6 @@
                             [(MP42AudioTrack *)track setMixdownType:SBDolbyMixdown];
                             break;
                         case 1:
-                            [(MP42AudioTrack *)track setMixdownType:SBDolbyPlIIMixdown];
-                            break;
                         default:
                             [(MP42AudioTrack *)track setMixdownType:SBDolbyPlIIMixdown];
                             break;
@@ -323,13 +343,7 @@
                     }
                 }
 
-                for (MP42FileImporter *importer in _fileImporters)
-                    if ([importer containsTrack:track]) {
-                        [track setTrackImporterHelper:importer];
-                        break;
-                    }
-
-                [tracks addObject:track];
+                [self addTrack:track toArray:tracks];
             }
         }
         i++;
@@ -337,7 +351,7 @@
 
     MP42Metadata *metadata = nil;
     if ([importMetadata state])
-        metadata = [[[(MP42FileImporter*)[_fileImporters objectAtIndex:0] metadata] retain] autorelease];
+        metadata = [[[(MP42FileImporter *)[_fileImporters objectAtIndex:0] metadata] retain] autorelease];
 
     if ([delegate respondsToSelector:@selector(importDoneWithTracks:andMetadata:)]) 
         [delegate importDoneWithTracks:tracks andMetadata: metadata];

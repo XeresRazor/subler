@@ -11,19 +11,9 @@
 
 @implementation MP42SampleBuffer
 
--(void) dealloc {
-    free(sampleData);
+- (void)dealloc {
+    free(data);
     [super dealloc];
 }
-
-@synthesize  sampleData;
-@synthesize  sampleSize;
-@synthesize  sampleDuration;
-@synthesize  sampleOffset;
-@synthesize  sampleTimestamp;
-@synthesize  sampleTrackId;
-@synthesize  sampleIsSync;
-@synthesize  sampleIsCompressed;
-@synthesize  sampleIsForced;
 
 @end

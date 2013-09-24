@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MP42Track.h"
 
-@interface MP42AudioTrack : MP42Track <NSCoding> {
+@interface MP42AudioTrack : MP42Track <NSCoding, NSCopying> {
     float volume;
     UInt32 channels;
     UInt32 channelLayoutTag;
@@ -17,16 +17,16 @@
     MP4TrackId  fallbackTrackId;
     MP4TrackId  followsTrackId;
 
-    NSString * mixdownType;
+    NSString *mixdownType;
 }
 
-@property float volume;
-@property UInt32 channels;
-@property UInt32 channelLayoutTag;
+@property(nonatomic, readwrite) float volume;
+@property(nonatomic, readwrite) UInt32 channels;
+@property(nonatomic, readwrite) UInt32 channelLayoutTag;
 
-@property MP4TrackId fallbackTrackId;
-@property MP4TrackId followsTrackId;
+@property(nonatomic, readwrite) MP4TrackId fallbackTrackId;
+@property(nonatomic, readwrite) MP4TrackId followsTrackId;
 
-@property(readwrite, retain) NSString *mixdownType;
+@property(nonatomic, readwrite, retain) NSString *mixdownType;
 
 @end

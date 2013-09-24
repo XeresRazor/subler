@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MP42VideoTrack.h"
 
-@interface MP42SubtitleTrack : MP42VideoTrack {
+@interface MP42SubtitleTrack : MP42VideoTrack <NSCoding> {
     BOOL verticalPlacement;
     BOOL someSamplesAreForced;
     BOOL allSamplesAreForced;
@@ -19,9 +19,9 @@
 
 - (BOOL)exportToURL:(NSURL *)url error:(NSError **)error;
 
-@property(readwrite) BOOL verticalPlacement;
-@property(readwrite) BOOL someSamplesAreForced;
-@property(readwrite) BOOL allSamplesAreForced;
+@property(nonatomic, readwrite) BOOL verticalPlacement;
+@property(nonatomic, readwrite) BOOL someSamplesAreForced;
+@property(nonatomic, readwrite) BOOL allSamplesAreForced;
 
 @property MP4TrackId forcedTrackId;
 

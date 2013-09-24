@@ -344,9 +344,7 @@ static bool GetFirstHeader(FILE* inFile)
     if (!inFile)
         inFile = fopen([[_fileURL path] UTF8String], "rb");
 
-    MP42Track *track = [_activeTracks lastObject];
-    muxer_helper *helper = track.muxer_helper;
-    MP4TrackId dstTrackId = [track Id];
+    MP4TrackId trackId = [[_inputTracks lastObject] sourceId];
 
     // parse the Ac3 frames, and write the MP4 samples
     u_int8_t sampleBuffer[8 * 1024];
@@ -356,24 +354,20 @@ static bool GetFirstHeader(FILE* inFile)
     int64_t currentSize = 0;
 
     while (LoadNextAc3Frame(inFile, sampleBuffer, &sampleSize, false) && !_cancelled) {
-        while ([helper->fifo isFull] && !_cancelled) {
-            usleep(500);
-        }
-
         MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
 
         void * sampleDataBuffer = malloc(sampleSize);
         memcpy(sampleDataBuffer, sampleBuffer, sampleSize);
 
-        sample->sampleData = sampleDataBuffer;
-        sample->sampleSize = sampleSize;
-        sample->sampleDuration = MP4_INVALID_DURATION;
-        sample->sampleOffset = 0;
-        sample->sampleTimestamp = 0;
-        sample->sampleIsSync = 1;
-        sample->sampleTrackId = dstTrackId;
+        sample->data = sampleDataBuffer;
+        sample->size = sampleSize;
+        sample->duration = MP4_INVALID_DURATION;
+        sample->offset = 0;
+        sample->timestamp = 0;
+        sample->isSync = 1;
+        sample->trackId = trackId;
 
-        [helper->fifo enqueue:sample];
+        [self enqueue:sample];
         [sample release];
 
         sampleId++;

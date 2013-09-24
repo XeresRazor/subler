@@ -14,7 +14,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 
 @implementation MP42AudioTrack
 
-- (id) initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
     if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle])) {
         MP4GetTrackFloatProperty(fileHandle, Id, "tkhd.volume", &volume);
@@ -85,7 +85,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     return self;
 }
 
-- (id) init
+- (id)init
 {
     if ((self = [super init]))
     {
@@ -98,7 +98,25 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     return self;
 }
 
-- (BOOL) writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
+- (id)copyWithZone:(NSZone *)zone
+{
+    MP42AudioTrack *copy = [super copyWithZone:zone];
+
+    if (copy) {
+        copy->volume = volume;
+        copy->channels = channels;
+        copy->channelLayoutTag = channelLayoutTag;
+
+        copy->fallbackTrackId = fallbackTrackId;
+        copy->followsTrackId = followsTrackId;
+
+        copy->mixdownType = [mixdownType retain];
+    }
+    
+    return copy;
+}
+
+- (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
     if (!fileHandle)
         return NO;
@@ -134,43 +152,43 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     return Id;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [super dealloc];
 }
 
-- (void) setVolume: (float) newVolume
+- (void)setVolume:(float)newVolume
 {
     volume = newVolume;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"volume"];
 }
 
-- (float) volume
+- (float)volume
 {
     return volume;
 }
 
-- (void) setFallbackTrackId: (MP4TrackId) newFallbackTrackId
+- (void)setFallbackTrackId:(MP4TrackId)newFallbackTrackId
 {
     fallbackTrackId = newFallbackTrackId;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"fallback"];
 }
 
-- (MP4TrackId) fallbackTrackId
+- (MP4TrackId)fallbackTrackId
 {
     return fallbackTrackId;
 }
 
-- (void) setFollowsTrackId: (MP4TrackId) newFollowsTrackId
+- (void)setFollowsTrackId:(MP4TrackId)newFollowsTrackId
 {
     followsTrackId = newFollowsTrackId;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"follows"];
 }
 
-- (MP4TrackId) followsTrackId
+- (MP4TrackId)followsTrackId
 {
     return followsTrackId;
 }

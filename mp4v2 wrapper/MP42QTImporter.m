@@ -235,7 +235,6 @@
             newTrack.sourceFormat = newTrack.format;
             newTrack.Id = [[track attributeForKey:QTTrackIDAttribute] integerValue];
             newTrack.sourceURL = _fileURL;
-            newTrack.sourceFileHandle = _sourceFile;
             newTrack.name = [track attributeForKey:QTTrackDisplayNameAttribute];
             newTrack.language = [self langForTrack:track];
 
@@ -828,12 +827,12 @@
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     OSStatus err = noErr;
 
-    NSInteger tracksNumber = [_activeTracks count];
+    NSInteger tracksNumber = [_inputTracks count];
     NSInteger tracksDone = 0;
 
     MovDemuxHelper *demuxHelper = nil;
 
-    for (MP42Track *track in _activeTracks) {
+    for (MP42Track *track in _inputTracks) {
         track.muxer_helper->demuxer_context = [[MovDemuxHelper alloc] init];
 
         Track qtcTrack = [[_sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
@@ -843,7 +842,7 @@
         demuxHelper->totalSampleNumber = GetMediaSampleCount(media);
     }
 
-    for (MP42Track * track in _activeTracks) {
+    for (MP42Track * track in _inputTracks) {
         if (_cancelled)
             break;
         
@@ -878,10 +877,6 @@
         sampleCount = QTSampleTableGetNumberOfSamples(sampleTable);
 
         for (sampleIndex = 1; sampleIndex <= sampleCount && !_cancelled; sampleIndex++) {
-            while ([helper->fifo isFull] && !_cancelled) {
-                usleep(500);
-            }
-
             TimeValue64 sampleDecodeTime = 0;
             ByteCount sampleDataSize = 0;
             MediaSampleFlags sampleFlags = 0;
@@ -911,15 +906,15 @@
             demuxHelper->currentTime = demuxHelper->currentTime + decodeDuration;
 
             MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-            sample->sampleData = sampleData;
-            sample->sampleSize = sampleDataSize;
-            sample->sampleDuration = decodeDuration;
-            sample->sampleOffset = displayOffset -minDisplayOffset;
-            sample->sampleTimestamp = demuxHelper->currentTime;
-            sample->sampleIsSync = !(sampleFlags & mediaSampleNotSync);
-            sample->sampleTrackId = track.Id;
+            sample->data = sampleData;
+            sample->size = sampleDataSize;
+            sample->duration = decodeDuration;
+            sample->offset = displayOffset -minDisplayOffset;
+            sample->timestamp = demuxHelper->currentTime;
+            sample->isSync = !(sampleFlags & mediaSampleNotSync);
+            sample->trackId = track.sourceId;
 
-            [helper->fifo enqueue:sample];
+            [self enqueue:sample];
             [sample release];
 
             _progress = ((demuxHelper->currentSampleId / (CGFloat) demuxHelper->totalSampleNumber ) * 100 / tracksNumber) +
@@ -949,7 +944,7 @@
 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
 {
-    for (MP42Track * track in _activeTracks) {
+    for (MP42Track *track in _inputTracks) {
         Track qtcTrack = [[_sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
 
         TimeValue editTrackStart, editTrackDuration;

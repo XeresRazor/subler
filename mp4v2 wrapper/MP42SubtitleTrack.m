@@ -17,10 +17,9 @@
 @synthesize someSamplesAreForced;
 @synthesize allSamplesAreForced;
 
-- (id) initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
-    if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle]))
-    {
+    if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle])) {
         if (![format isEqualToString:MP42SubtitleFormatVobSub]) {
             MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.tx3g.defTextBoxBottom", &height);
             MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.tx3g.defTextBoxRight", &width);
@@ -48,10 +47,9 @@
     return self;
 }
 
--(id) init
+- (id)init
 {
-    if ((self = [super init]))
-    {
+    if ((self = [super init])) {
         name = MP42MediaTypeSubtitle;
         format = MP42SubtitleFormatTx3g;
     }
@@ -59,10 +57,9 @@
     return self;
 }
 
-- (BOOL) writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
+- (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
-    if (isEdited && !muxed)
-    {
+    if (isEdited && !muxed) {
         if (!Id && (outError != NULL))
             *outError = MP42Error(@"Error: couldn't mux subtitle track",
                                   nil,
@@ -263,19 +260,45 @@ struct style_record {
     return [srtFile writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:error];
 }
 
-- (void) setForcedTrackId: (MP4TrackId) newForcedTrackId
+- (void)setForcedTrackId:(MP4TrackId)newForcedTrackId
 {
     forcedTrackId = newForcedTrackId;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"forced"];
 }
 
-- (MP4TrackId) forcedTrackId
+- (MP4TrackId)forcedTrackId
 {
     return forcedTrackId;
 }
 
-- (void) dealloc
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [super encodeWithCoder:coder];
+
+    [coder encodeInt:1 forKey:@"MP42SubtitleTrackVersion"];
+
+    [coder encodeBool:verticalPlacement forKey:@"verticalPlacement"];
+    [coder encodeBool:someSamplesAreForced forKey:@"someSamplesAreForced"];
+    [coder encodeBool:allSamplesAreForced forKey:@"allSamplesAreForced"];
+
+    [coder encodeInt64:forcedTrackId forKey:@"forcedTrackId"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    self = [super initWithCoder:decoder];
+    
+    verticalPlacement = [decoder decodeBoolForKey:@"verticalPlacement"];
+    someSamplesAreForced = [decoder decodeBoolForKey:@"someSamplesAreForced"];
+    allSamplesAreForced = [decoder decodeBoolForKey:@"allSamplesAreForced"];
+
+    forcedTrackId = [decoder decodeInt64ForKey:@"forcedTrackId"];
+
+    return self;
+}
+
+- (void)dealloc
 {
     [super dealloc];
 }

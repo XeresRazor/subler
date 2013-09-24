@@ -109,8 +109,7 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
 - (void)demux:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    MP4TrackId dstTrackId = [[_activeTracks lastObject] Id];
-    muxer_helper *helper = [[_activeTracks lastObject] muxer_helper];
+    MP4TrackId trackId = [[_inputTracks lastObject] sourceId];
 
     NSString *scc = STStandardizeStringNewlines(STLoadFileWithUnknownEncoding([_fileURL path]));
     if (!scc) return;
@@ -154,8 +153,6 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
     }
 
     for (SBTextSample *ccSample in sampleArray) {
-        while ([helper->fifo isFull] && !_cancelled)
-            usleep(500);
         if (_cancelled)
             break;
 
@@ -190,15 +187,15 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
             memcpy(emptyBuffer, empty, sizeof(u_int8_t)*8);
 
             MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-            sample->sampleData = emptyBuffer;
-            sample->sampleSize = 8;
-            sample->sampleDuration = ccSample.timestamp *= 1001;
-            sample->sampleOffset = 0;
-            sample->sampleTimestamp = 0;
-            sample->sampleIsSync = 1;
-            sample->sampleTrackId = dstTrackId;
+            sample->data = emptyBuffer;
+            sample->size = 8;
+            sample->duration = ccSample.timestamp *= 1001;
+            sample->offset = 0;
+            sample->timestamp = 0;
+            sample->isSync = 1;
+            sample->trackId = trackId;
 
-            [helper->fifo enqueue:sample];
+            [self enqueue:sample];
             [sample release];
 
             frameDrop += ccSample.timestamp;
@@ -224,15 +221,15 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
             sampleDuration = 6;
 
         MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-        sample->sampleData = bytes;
-        sample->sampleSize = byteCount + 8;
-        sample->sampleDuration = sampleDuration * 1001;
-        sample->sampleOffset = 0;
-        sample->sampleTimestamp = 0;
-        sample->sampleIsSync = 1;
-        sample->sampleTrackId = dstTrackId;
+        sample->data = bytes;
+        sample->size = byteCount + 8;
+        sample->duration = sampleDuration * 1001;
+        sample->offset = 0;
+        sample->timestamp = 0;
+        sample->isSync = 1;
+        sample->trackId = trackId;
 
-        [helper->fifo enqueue:sample];
+        [self enqueue:sample];
         [sample release];
 
         i++;
