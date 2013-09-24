@@ -34,10 +34,70 @@
 	return nil;
 }
 
-- (MP42Metadata*) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage {
+- (MP42Metadata *) artworksForResult:(NSDictionary *)r metadata:(MP42Metadata *)aMetadata {
+    // artwork
+	NSMutableArray *artworkThumbURLs = [[NSMutableArray alloc] initWithCapacity:2];
+	NSMutableArray *artworkFullsizeURLs = [[NSMutableArray alloc] initWithCapacity:1];
+	NSMutableArray *artworkProviderNames = [[NSMutableArray alloc] initWithCapacity:1];
+
+    // add iTunes artwork
+    MP42Metadata *iTunesMetadata = [iTunesStore quickiTunesSearchMovie:[[aMetadata tagsDict] valueForKey:@"Name"]];
+	if (iTunesMetadata && [iTunesMetadata artworkThumbURLs] && [iTunesMetadata artworkFullsizeURLs] && ([[iTunesMetadata artworkThumbURLs] count] == [[iTunesMetadata artworkFullsizeURLs] count])) {
+		[artworkThumbURLs addObjectsFromArray:[iTunesMetadata artworkThumbURLs]];
+		[artworkFullsizeURLs addObjectsFromArray:[iTunesMetadata artworkFullsizeURLs]];
+		[artworkProviderNames addObjectsFromArray:[iTunesMetadata artworkProviderNames]];
+	}
+
+    // load image variables from configuration
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.themoviedb.org/3/configuration?api_key=%@", API_KEY]];
+	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
+    NSArray *posters = [r valueForKeyPath:@"images.posters"];
+
+    if (jsonData && posters && [posters isKindOfClass:[NSArray class]]) {
+        JSONDecoder *jsonDecoder = [JSONDecoder decoder];
+		NSDictionary *config = [jsonDecoder objectWithData:jsonData];
+
+		if ([config valueForKey:@"images"]) {
+			NSString *imageBaseUrl = [[config valueForKey:@"images"] valueForKey:@"secure_base_url"];
+			NSString *posterThumbnailSize = [[[config valueForKey:@"images"] valueForKey:@"poster_sizes"] objectAtIndex:0];
+			NSString *backdropThumbnailSize = [[[config valueForKey:@"images"] valueForKey:@"backdrop_sizes"] objectAtIndex:0];
+
+            for (NSDictionary *poster in posters) {
+                if ([poster valueForKey:@"file_path"] && ([poster valueForKey:@"file_path"] != [NSNull null])) {
+                    [artworkThumbURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, posterThumbnailSize, [poster valueForKey:@"file_path"]]]];
+                    [artworkFullsizeURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, @"original", [poster valueForKey:@"file_path"]]]];
+                    [artworkProviderNames addObject:@"TheMovieDB|poster"];
+                }
+            }
+            if (![posters count] && [r valueForKey:@"poster_path"] && ([r valueForKey:@"poster_path"] != [NSNull null])) {
+				[artworkThumbURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, posterThumbnailSize, [r valueForKey:@"poster_path"]]]];
+				[artworkFullsizeURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, @"original", [r valueForKey:@"poster_path"]]]];
+				[artworkProviderNames addObject:@"TheMovieDB|poster"];
+			}
+
+			if ([r valueForKey:@"backdrop_path"] && ([r valueForKey:@"backdrop_path"] != [NSNull null])) {
+				[artworkThumbURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, backdropThumbnailSize, [r valueForKey:@"backdrop_path"]]]];
+				[artworkFullsizeURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, @"original", [r valueForKey:@"backdrop_path"]]]];
+				[artworkProviderNames addObject:@"TheMovieDB|backdrop"];
+			}
+		}
+
+    }
+
+	[aMetadata setArtworkThumbURLs:artworkThumbURLs];
+	[aMetadata setArtworkFullsizeURLs:artworkFullsizeURLs];
+	[aMetadata setArtworkProviderNames:artworkProviderNames];
+	[artworkThumbURLs release];
+	[artworkFullsizeURLs release];
+	[artworkProviderNames release];
+
+    return aMetadata;
+}
+
+- (MP42Metadata *) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage {
 	NSString *lang = [SBLanguages iso6391CodeFor:aLanguage];
 	NSNumber *theMovieDBID = [[aMetadata tagsDict] valueForKey:@"TheMovieDB ID"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.themoviedb.org/3/movie/%@?api_key=%@&language=%@&append_to_response=casts,releases", theMovieDBID, API_KEY, lang]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.themoviedb.org/3/movie/%@?api_key=%@&language=%@&append_to_response=casts,releases,images", theMovieDBID, API_KEY, lang]];
 	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
@@ -46,26 +106,8 @@
 		if (r) {
 			[aMetadata mergeMetadata:r];
 		}
+        aMetadata = [self artworksForResult:d metadata:aMetadata];
 	}
-
-    // add iTunes artwork
-    NSMutableArray *artworkThumbURLs = [[NSMutableArray alloc] initWithArray:aMetadata.artworkThumbURLs];
-	NSMutableArray *artworkFullsizeURLs = [[NSMutableArray alloc] initWithArray:aMetadata.artworkFullsizeURLs];
-	NSMutableArray *artworkProviderNames = [[NSMutableArray alloc] initWithArray:aMetadata.artworkProviderNames];
-
-	MP42Metadata *iTunesMetadata = [iTunesStore quickiTunesSearchMovie:[[aMetadata tagsDict] valueForKey:@"Name"]];
-	if (iTunesMetadata && [iTunesMetadata artworkThumbURLs] && [iTunesMetadata artworkFullsizeURLs] && ([[iTunesMetadata artworkThumbURLs] count] == [[iTunesMetadata artworkFullsizeURLs] count])) {
-		[artworkThumbURLs addObjectsFromArray:[iTunesMetadata artworkThumbURLs]];
-		[artworkFullsizeURLs addObjectsFromArray:[iTunesMetadata artworkFullsizeURLs]];
-		[artworkProviderNames addObjectsFromArray:[iTunesMetadata artworkProviderNames]];
-	}
-
-    [aMetadata setArtworkThumbURLs:artworkThumbURLs];
-	[aMetadata setArtworkFullsizeURLs:artworkFullsizeURLs];
-	[aMetadata setArtworkProviderNames:artworkProviderNames];
-	[artworkThumbURLs release];
-	[artworkFullsizeURLs release];
-	[artworkProviderNames release];
 
 	return aMetadata;
 }
@@ -130,40 +172,7 @@
             }
         }
     }
-    
-	// artwork
-	NSMutableArray *artworkThumbURLs = [[NSMutableArray alloc] initWithCapacity:2];
-	NSMutableArray *artworkFullsizeURLs = [[NSMutableArray alloc] initWithCapacity:1];
-	NSMutableArray *artworkProviderNames = [[NSMutableArray alloc] initWithCapacity:1];
 
-	// load image variables from configuration
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.themoviedb.org/3/configuration?api_key=%@", API_KEY]];
-	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
-	if (jsonData) {
-		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
-		NSDictionary *config = [jsonDecoder objectWithData:jsonData];
-		if ([config valueForKey:@"images"]) {
-			NSString *imageBaseUrl = [[config valueForKey:@"images"] valueForKey:@"secure_base_url"];
-			NSString *posterThumbnailSize = [[[config valueForKey:@"images"] valueForKey:@"poster_sizes"] objectAtIndex:0];
-			NSString *backdropThumbnailSize = [[[config valueForKey:@"images"] valueForKey:@"backdrop_sizes"] objectAtIndex:0];
-			if ([r valueForKey:@"poster_path"] && ([r valueForKey:@"poster_path"] != [NSNull null])) {
-				[artworkThumbURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, posterThumbnailSize, [r valueForKey:@"poster_path"]]]];
-				[artworkFullsizeURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, @"original", [r valueForKey:@"poster_path"]]]];
-				[artworkProviderNames addObject:@"TheMovieDB|poster"];
-			}
-			if ([r valueForKey:@"backdrop_path"] && ([r valueForKey:@"backdrop_path"] != [NSNull null])) {
-				[artworkThumbURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, backdropThumbnailSize, [r valueForKey:@"backdrop_path"]]]];
-				[artworkFullsizeURLs addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", imageBaseUrl, @"original", [r valueForKey:@"backdrop_path"]]]];
-				[artworkProviderNames addObject:@"TheMovieDB|backdrop"];
-			}
-		}
-	}
-	[metadata setArtworkThumbURLs:artworkThumbURLs];
-	[metadata setArtworkFullsizeURLs:artworkFullsizeURLs];
-	[metadata setArtworkProviderNames:artworkProviderNames];
-	[artworkThumbURLs release];
-	[artworkFullsizeURLs release];
-	[artworkProviderNames release];
     return [metadata autorelease];
 }
 
