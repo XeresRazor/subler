@@ -1,6 +1,12 @@
 #summary Release Notes
 #labels Featured
 
+= Subler 0.23 =
+
+ * Fixed a crash that could occur when searching for metadata with TheMovieDB.
+ * Retrieve TV Network, Genre and Rating from TheTVDB.
+ * Better posters selection with TheMovieDB.
+
 = Subler 0.21-0.22 =
  
  * Fixed a crash that could occur when searching for metadata.
