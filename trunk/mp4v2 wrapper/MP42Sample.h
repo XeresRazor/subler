@@ -13,25 +13,15 @@
 
 @interface MP42SampleBuffer : NSObject {
     @public
-	void         *sampleData;
-    uint64_t      sampleSize;
-    MP4Duration   sampleDuration;
-    int64_t       sampleOffset;
-    MP4Timestamp  sampleTimestamp;
-    MP4TrackId    sampleTrackId;
-    BOOL          sampleIsSync;
-    BOOL          sampleIsCompressed;
-    BOOL          sampleIsForced;
+	void         *data;
+    uint64_t      size;
+    MP4Duration   duration;
+    int64_t       offset;
+    MP4Timestamp  timestamp;
+    MP4TrackId    trackId;
+    BOOL          isSync;
+    BOOL          isCompressed;
+    BOOL          isForced;
 }
-
-@property(readwrite) void         *sampleData;
-@property(readwrite) uint64_t      sampleSize;
-@property(readwrite) MP4Duration   sampleDuration;
-@property(readwrite) int64_t   sampleOffset;
-@property(readwrite) MP4Timestamp  sampleTimestamp;
-@property(readwrite) MP4TrackId    sampleTrackId;
-@property(readwrite) BOOL          sampleIsSync;
-@property(readwrite) BOOL          sampleIsCompressed;
-@property(readwrite) BOOL          sampleIsForced;
 
 @end

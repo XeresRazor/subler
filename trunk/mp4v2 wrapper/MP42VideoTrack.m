@@ -11,10 +11,9 @@
 
 @implementation MP42VideoTrack
 
-- (id) initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
-    if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle]))
-    {
+    if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle])) {
         if ([self isMemberOfClass:[MP42VideoTrack class]]) {
             height = MP4GetTrackVideoHeight(fileHandle, Id);
             width = MP4GetTrackVideoWidth(fileHandle, Id);
@@ -64,10 +63,9 @@
     return self;
 }
 
--(id) init
+- (id)init
 {
-    if ((self = [super init]))
-    {
+    if ((self = [super init])) {
         name = MP42MediaTypeVideo;
         language = @"Unknown";
     }
@@ -75,12 +73,12 @@
     return self;
 }
 
-- (BOOL) writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
+- (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
     if (!fileHandle)
         return NO;
 
-    else if (Id) {
+    if (Id) {
         [super writeToFile:fileHandle error:outError];
 
         if (trackWidth && trackHeight) {
@@ -147,7 +145,7 @@
     return Id;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [super dealloc];
 }
@@ -159,11 +157,11 @@
 @synthesize trackHeight;
 
 
-- (uint64_t) hSpacing {
+- (uint64_t)hSpacing {
     return hSpacing;
 }
 
-- (void) setHSpacing:(uint64_t)newHSpacing
+- (void)setHSpacing:(uint64_t)newHSpacing
 {
     hSpacing = newHSpacing;
     isEdited = YES;
@@ -171,11 +169,11 @@
     
 }
 
-- (uint64_t) vSpacing {
+- (uint64_t)vSpacing {
     return vSpacing;
 }
 
-- (void) setVSpacing:(uint64_t)newVSpacing
+- (void)setVSpacing:(uint64_t)newVSpacing
 {
     vSpacing = newVSpacing;
     isEdited = YES;

@@ -1088,13 +1088,13 @@ MP42SampleBuffer* copySubtitleSample(MP4TrackId subtitleTrackId, NSString *strin
     free(styleAtom);
 
     MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-    sample->sampleData = sampleData;
-    sample->sampleSize = sampleSize;
-    sample->sampleDuration = duration;
-    sample->sampleOffset = 0;
-    sample->sampleTimestamp = duration;
-    sample->sampleIsSync = true;
-    sample->sampleTrackId = subtitleTrackId;
+    sample->data = sampleData;
+    sample->size = sampleSize;
+    sample->duration = duration;
+    sample->offset = 0;
+    sample->timestamp = duration;
+    sample->isSync = true;
+    sample->trackId = subtitleTrackId;
 
     return sample;
 }
@@ -1108,13 +1108,13 @@ MP42SampleBuffer* copyEmptySubtitleSample(MP4TrackId subtitleTrackId, MP4Duratio
     memcpy(sampleData, empty, 2);
 
     MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-    sample->sampleData = sampleData;
-    sample->sampleSize = 2;
-    sample->sampleDuration = duration;
-    sample->sampleOffset = 0;
-    sample->sampleTimestamp = duration;
-    sample->sampleIsSync = true;
-    sample->sampleTrackId = subtitleTrackId;
+    sample->data = sampleData;
+    sample->size = 2;
+    sample->duration = duration;
+    sample->offset = 0;
+    sample->timestamp = duration;
+    sample->isSync = true;
+    sample->trackId = subtitleTrackId;
 
     return sample;
 }

@@ -13,7 +13,7 @@
 
 @implementation MP42ChapterTrack
 
-- (id) init
+- (id)init
 {
     if ((self = [super init]))
     {
@@ -73,7 +73,7 @@
     return self;
 }
 
-- (id) initWithTextFile:(NSURL *)URL
+- (id)initWithTextFile:(NSURL *)URL
 {
     if ((self = [super init]))
     {
@@ -93,12 +93,12 @@
     return self;
 }
 
-+ (id) chapterTrackFromFile:(NSURL *)URL
++ (id)chapterTrackFromFile:(NSURL *)URL
 {
     return [[[MP42ChapterTrack alloc] initWithTextFile:URL] autorelease];
 }
 
-- (void) addChapter:(NSString *)title duration:(uint64_t)timestamp
+- (void)addChapter:(NSString *)title duration:(uint64_t)timestamp
 {
     SBTextSample *newChapter = [[SBTextSample alloc] init];
     newChapter.title = title;
@@ -111,31 +111,31 @@
     [newChapter release];
 }
 
-- (void) removeChapterAtIndex:(NSUInteger)index
+- (void)removeChapterAtIndex:(NSUInteger)index
 {
     [self setIsEdited:YES];
     [chapters removeObjectAtIndex:index];
 }
 
-- (void) setTimestamp:(MP4Duration)timestamp forChapter:(SBTextSample*)chapterSample
+- (void)setTimestamp:(MP4Duration)timestamp forChapter:(SBTextSample *)chapterSample
 {
     [self setIsEdited:YES];
     [chapterSample setTimestamp:timestamp];
     [chapters sortUsingSelector:@selector(compare:)];
 }
 
-- (void) setTitle:(NSString*)title forChapter:(SBTextSample*)chapterSample
+- (void)setTitle:(NSString *)title forChapter:(SBTextSample *)chapterSample
 {
     [self setIsEdited:YES];
     [chapterSample setTitle:title];
 }
 
-- (SBTextSample*) chapterAtIndex:(NSUInteger)index
+- (SBTextSample *)chapterAtIndex:(NSUInteger)index
 {
     return [chapters objectAtIndex:index];
 }
 
-- (BOOL) writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
+- (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
     BOOL success = YES;
 
@@ -237,11 +237,11 @@
 	return [file writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:error];
 }
 
-- (void) setTrackImporterHelper: (MP42FileImporter*) importerHelper
+- (void)setTrackImporterHelper: (MP42FileImporter*) importerHelper
 {
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [chapters release];
     [super dealloc];

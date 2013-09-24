@@ -92,15 +92,25 @@
 }
 
 - (void)setActiveTrack:(MP42Track *)track {
-    if (!_activeTracks)
-        _activeTracks = [[NSMutableArray alloc] init];
-    
-    [_activeTracks addObject:track];
+    if (!_inputTracks) {
+        _inputTracks = [[NSMutableArray alloc] init];
+        _outputsTracks = [[NSMutableArray alloc] init];
+    }
+
+    BOOL alreadyAdded = NO;
+    for (MP42Track *inputTrack in _inputTracks)
+        if (inputTrack.sourceId == track.sourceId)
+            alreadyAdded = YES;
+
+    if (!alreadyAdded)
+        [_inputTracks addObject:track];
+
+    [_outputsTracks addObject:track];
 }
 
 - (void)startReading
 {
-    for (MP42Track *track in _activeTracks)
+    for (MP42Track *track in _outputsTracks)
         track.muxer_helper->fifo = [[MP42Fifo alloc] init];
 }
 
@@ -108,13 +118,26 @@
 {
     OSAtomicIncrement32(&_cancelled);
 
+    for (MP42Track *track in _outputsTracks) {
+        [track.muxer_helper->fifo cancel];
+    }
+
     // wait until the demuxer thread exits
     while (!_done)
         usleep(2000);
 
     // stop all the related converters
-    for (MP42Track *track in _activeTracks)
+    for (MP42Track *track in _outputsTracks) {
         [track.muxer_helper->converter cancel];
+    }
+}
+
+- (void)enqueue:(MP42SampleBuffer *)sample {
+    for (MP42Track *track in _outputsTracks) {
+        if (track.sourceId == sample->trackId) {
+            [track.muxer_helper->fifo enqueue:sample];
+        }
+    }
 }
 
 - (BOOL)done
@@ -136,22 +159,27 @@
     return NO;
 }
 
-- (BOOL)containsTrack:(MP42Track*)track
+- (BOOL)containsTrack:(MP42Track *)track
 {
     return [_tracksArray containsObject:track];
 }
 
 - (void)dealloc
 {
-    for (MP42Track *track in _activeTracks) {
+    for (MP42Track *track in _inputTracks) {
         [track.muxer_helper->demuxer_context release];
+    }
+    
+    for (MP42Track *track in _outputsTracks) {
         [track.muxer_helper->fifo release];
         [track.muxer_helper->converter release];
     }
 
     [_metadata release], _metadata = nil;
     [_tracksArray release], _tracksArray = nil;
-    [_activeTracks release], _activeTracks = nil;
+    [_inputTracks release], _inputTracks = nil;
+    [_outputsTracks release], _outputsTracks = nil;
+
 	[_fileURL release], _fileURL = nil;
     [_demuxerThread release], _demuxerThread = nil;
 

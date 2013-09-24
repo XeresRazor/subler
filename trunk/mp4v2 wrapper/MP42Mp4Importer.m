@@ -215,27 +215,23 @@
 - (void)demux:(id)sender
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    NSInteger tracksNumber = [_activeTracks count];
+    NSInteger tracksNumber = [_inputTracks count];
     NSInteger tracksDone = 0;
     MP4DemuxkHelper *demuxHelper;
 
     if (!_fileHandle)
         return;
 
-    for (MP42Track *track in _activeTracks) {
+    for (MP42Track *track in _inputTracks) {
         track.muxer_helper->demuxer_context = [[MP4DemuxkHelper alloc] init];
         demuxHelper = track.muxer_helper->demuxer_context;
         demuxHelper->totalSampleNumber = MP4GetTrackNumberOfSamples(_fileHandle, track.Id);
     }
 
-    for (MP42Track * track in _activeTracks) {
+    for (MP42Track *track in _inputTracks) {
         muxer_helper *helper = track.muxer_helper;
 
         while (!_cancelled) {
-            while ([helper->fifo isFull] && !_cancelled) {
-                usleep(500);
-            }
-
             MP4TrackId srcTrackId = [track sourceId];
             uint8_t *pBytes = NULL;
             uint32_t numBytes = 0;
@@ -258,15 +254,15 @@
             }
 
             MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-            sample->sampleData = pBytes;
-            sample->sampleSize = numBytes;
-            sample->sampleDuration = duration;
-            sample->sampleOffset = renderingOffset;
-            sample->sampleTimestamp = pStartTime;
-            sample->sampleIsSync = isSyncSample;
-            sample->sampleTrackId = track.Id;
+            sample->data = pBytes;
+            sample->size = numBytes;
+            sample->duration = duration;
+            sample->offset = renderingOffset;
+            sample->timestamp = pStartTime;
+            sample->isSync = isSyncSample;
+            sample->trackId = track.sourceId;
 
-            [helper->fifo enqueue:sample];
+            [self enqueue:sample];
             [sample release];
 
             _progress = ((demuxHelper->currentSampleId / (CGFloat) demuxHelper->totalSampleNumber ) * 100 / tracksNumber) +
@@ -294,7 +290,7 @@
 
 - (BOOL)cleanUp:(MP4FileHandle)dstFileHandle
 {
-    for (MP42Track *track in _activeTracks) {
+    for (MP42Track *track in _inputTracks) {
         MP4TrackId srcTrackId = [track sourceId];
         MP4TrackId dstTrackId = [track Id];
 

@@ -46,12 +46,12 @@ void FFInitFFmpeg()
         @synchronized(inputSamplesBuffer) {
             sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
         }
-        UInt8 *data = (UInt8 *) sampleBuffer->sampleData;
+        UInt8 *data = (UInt8 *) sampleBuffer->data;
         int ret, got_sub;
 
-        if(sampleBuffer->sampleSize < 4)
+        if(sampleBuffer->size < 4)
         {
-            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
+            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, NO);
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];    
             }
@@ -66,20 +66,20 @@ void FFInitFFmpeg()
         }
 
         if (codecData == NULL) {
-            codecData = av_malloc(sampleBuffer->sampleSize + 2);
-            bufferSize = sampleBuffer->sampleSize + 2;
+            codecData = av_malloc(sampleBuffer->size + 2);
+            bufferSize = sampleBuffer->size + 2;
         }
 
         // make sure we have enough space to store the packet
-        codecData = fast_realloc_with_padding(codecData, &bufferSize, sampleBuffer->sampleSize + 2);
+        codecData = fast_realloc_with_padding(codecData, &bufferSize, sampleBuffer->size + 2);
 
         // the header of a spu PS packet starts 0x000001bd
         // if it's raw spu data, the 1st 2 bytes are the length of the data
         if (data[0] + data[1] == 0) {
             // remove the MPEG framing
-            sampleBuffer->sampleSize = ExtractVobSubPacket(codecData, data, bufferSize, NULL, -1);
+            sampleBuffer->size = ExtractVobSubPacket(codecData, data, bufferSize, NULL, -1);
         } else {
-            memcpy(codecData, sampleBuffer->sampleData, sampleBuffer->sampleSize);
+            memcpy(codecData, sampleBuffer->data, sampleBuffer->size);
         }
 
         AVPacket pkt;
@@ -91,7 +91,7 @@ void FFInitFFmpeg()
         if (ret < 0 || !got_sub) {
             NSLog(@"Error decoding DVD subtitle %d / %ld", ret, (long)bufferSize);
             
-            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
+            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, NO);
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];
             }
@@ -179,9 +179,9 @@ void FFInitFFmpeg()
             NSString *text = [ocr performOCROnCGImage:cgImage];
 
             if (text)
-                subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced, NO, CGSizeMake(0,0), 0);
+                subSample = copySubtitleSample(trackId, text, sampleBuffer->duration, forced, NO, CGSizeMake(0,0), 0);
             else
-                subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, forced);
+                subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, forced);
 
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];
@@ -229,13 +229,13 @@ void FFInitFFmpeg()
 
         AVPacket pkt;
         av_init_packet(&pkt);
-        pkt.data = sampleBuffer->sampleData;
-        pkt.size = sampleBuffer->sampleSize;
+        pkt.data = sampleBuffer->data;
+        pkt.size = sampleBuffer->size;
 
         ret = avcodec_decode_subtitle2(avContext, &subtitle, &got_sub, &pkt);
 
         if (ret < 0 || !got_sub || !subtitle.num_rects) {
-            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, NO);
+            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, NO);
 
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];
@@ -301,9 +301,9 @@ void FFInitFFmpeg()
             CGColorSpaceRelease(colorSpace);
 
             if ((text = [ocr performOCROnCGImage:cgImage]))
-                subSample = copySubtitleSample(trackId, text, sampleBuffer->sampleDuration, forced, NO, CGSizeMake(0,0), 0);
+                subSample = copySubtitleSample(trackId, text, sampleBuffer->duration, forced, NO, CGSizeMake(0,0), 0);
             else
-                subSample = copyEmptySubtitleSample(trackId, sampleBuffer->sampleDuration, forced);
+                subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, forced);
 
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];

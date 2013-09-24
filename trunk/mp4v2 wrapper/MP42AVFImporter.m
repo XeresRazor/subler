@@ -260,7 +260,6 @@
             newTrack.sourceFormat = newTrack.format;
             newTrack.Id = [track trackID];
             newTrack.sourceURL = _fileURL;
-            newTrack.sourceFileHandle = _localAsset;
             newTrack.dataLength = [track totalSampleDataLength];
 
             // "name" is undefinited in AVMetadataFormat.h, so read the official track name "tnam", and then "name". On 10.7, "name" is returned as an NSData
@@ -654,7 +653,7 @@
 
 	success = (assetReader != nil);
 	if (success) {
-        for (MP42Track * track in _activeTracks) {
+        for (MP42Track * track in _inputTracks) {
             AVAssetReaderOutput *assetReaderOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[_localAsset trackWithTrackID:track.sourceId] outputSettings:nil];
             if (! [assetReader canAddOutput: assetReaderOutput])
                 NSLog(@"Unable to add the output to assetReader!");
@@ -673,16 +672,11 @@
 	if (!success)
 		localError = [assetReader error];
 
-    for (MP42Track * track in _activeTracks) {
-        muxer_helper *helper = track.muxer_helper;
-
+    for (MP42Track * track in _inputTracks) {
         demuxHelper = track.muxer_helper->demuxer_context;
         AVAssetReaderOutput *assetReaderOutput = demuxHelper->assetReaderOutput;
 
         while (!_cancelled) {
-            while ([helper->fifo isFull] && !_cancelled) {
-                usleep(500);
-            }
             CMSampleBufferRef sampleBuffer = [assetReaderOutput copyNextSampleBuffer];
             if (sampleBuffer) {
                 CMItemCount samplesNum = CMSampleBufferGetNumSamples(sampleBuffer);
@@ -746,15 +740,15 @@
                     //NSLog(@"D: %lld, P: %lld, PO: %lld Display: %d", decodeTimeStamp.value, presentationTimeStamp.value, presentationOutputTimeStamp.value, doNotDisplay);
 
                     MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-                    sample->sampleData = sampleData;
-                    sample->sampleSize = sampleSize;
-                    sample->sampleDuration = duration.value;
-                    sample->sampleOffset = -decodeTimeStamp.value + presentationTimeStamp.value;
-                    sample->sampleTimestamp = CMSampleBufferGetOutputPresentationTimeStamp(sampleBuffer).value;
-                    sample->sampleIsSync = sync;
-                    sample->sampleTrackId = track.Id;
+                    sample->data = sampleData;
+                    sample->size = sampleSize;
+                    sample->duration = duration.value;
+                    sample->offset = -decodeTimeStamp.value + presentationTimeStamp.value;
+                    sample->timestamp = CMSampleBufferGetOutputPresentationTimeStamp(sampleBuffer).value;
+                    sample->isSync = sync;
+                    sample->trackId = track.sourceId;
 
-                    [helper->fifo enqueue:sample];
+                    [self enqueue:sample];
                     [sample release];
 
                     currentDataLength += sampleSize;
@@ -883,15 +877,15 @@
                         //NSLog(@"D: %lld, P: %lld, PO: %lld", decodeTimeStamp.value, presentationTimeStamp.value, presentationOutputTimeStamp.value);
                         
                         MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-                        sample->sampleData = sampleData;
-                        sample->sampleSize = sampleSize;
-                        sample->sampleDuration = sampleTimingInfo.duration.value;
-                        sample->sampleOffset = 0; //-sampleTimingInfo.decodeTimeStamp.value + sampleTimingInfo.presentationTimeStamp.value;
-                        sample->sampleTimestamp = sampleTimingInfo.presentationTimeStamp.value;
-                        sample->sampleIsSync = sync;
-                        sample->sampleTrackId = track.Id;
+                        sample->data = sampleData;
+                        sample->size = sampleSize;
+                        sample->duration = sampleTimingInfo.duration.value;
+                        sample->offset = 0; //-sampleTimingInfo.decodeTimeStamp.value + sampleTimingInfo.presentationTimeStamp.value;
+                        sample->timestamp = sampleTimingInfo.presentationTimeStamp.value;
+                        sample->isSync = sync;
+                        sample->trackId = track.sourceId;
 
-                        [helper->fifo enqueue:sample];
+                        [self enqueue:sample];
                         [sample release];
 
                         currentDataLength += sampleSize;
@@ -940,7 +934,7 @@
     uint32_t timescale = MP4GetTimeScale(fileHandle);
     int i;
 
-    for (MP42Track * track in _activeTracks) {
+    for (MP42Track *track in _inputTracks) {
         AVAssetTrack *assetTrack = [_localAsset trackWithTrackID:track.sourceId];
         MP4Duration trackDuration = 0;
         MP4Timestamp editDuration;

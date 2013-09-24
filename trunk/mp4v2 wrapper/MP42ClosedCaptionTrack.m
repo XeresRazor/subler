@@ -12,19 +12,16 @@
 
 @implementation MP42ClosedCaptionTrack
 
-- (id) initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
-    if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle]))
-    {
-    }
+    self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle];
 
     return self;
 }
 
--(id) init
+- (id)init
 {
-    if ((self = [super init]))
-    {
+    if ((self = [super init])) {
         name = MP42MediaTypeClosedCaption;
         format = MP42ClosedCaptionFormatCEA608;
     }
@@ -32,19 +29,17 @@
     return self;
 }
 
-- (BOOL) writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
+- (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
     if (isEdited && !muxed)
-    {
         muxed = YES;
-    }
 
     [super writeToFile:fileHandle error:outError];
 
     return Id;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [super dealloc];
 }

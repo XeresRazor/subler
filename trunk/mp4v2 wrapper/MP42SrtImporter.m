@@ -83,30 +83,24 @@
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     MP42SampleBuffer *sample;
-    MP4TrackId dstTrackId = [[_activeTracks lastObject] Id];
 
-    for (MP42SubtitleTrack *track in _activeTracks) {
+    for (MP42SubtitleTrack *track in _inputTracks) {
         CGSize trackSize;
         trackSize.width = track.trackWidth;
         trackSize.height = track.trackHeight;
 
-        muxer_helper *helper = track.muxer_helper;
-
-        while (![_ss isEmpty]) {
+        while (![_ss isEmpty] && !_cancelled) {
             SBSubLine *sl = [_ss getSerializedPacket];
 
             if ([sl->line isEqualToString:@"\n"]) {
-                sample = copyEmptySubtitleSample(dstTrackId, sl->end_time - sl->begin_time, NO);
+                sample = copyEmptySubtitleSample(track.sourceId, sl->end_time - sl->begin_time, NO);
             }
             else {
                 int top = (sl->top == INT_MAX) ? trackSize.height : sl->top;
-                sample = copySubtitleSample(dstTrackId, sl->line, sl->end_time - sl->begin_time, sl->forced, _verticalPlacement, trackSize, top);
+                sample = copySubtitleSample(track.sourceId, sl->line, sl->end_time - sl->begin_time, sl->forced, _verticalPlacement, trackSize, top);
             }
-            
-            while ([helper->fifo isFull] && !_cancelled)
-                usleep(500);
 
-            [helper->fifo enqueue:sample];
+            [self enqueue:sample];
             [sample release];
         }
     }

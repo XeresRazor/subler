@@ -1420,9 +1420,8 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     if (!inFile)
         inFile = fopen([[_fileURL path] UTF8String], "rb");
 
-    MP42Track *track = [_activeTracks lastObject];
-    muxer_helper *helper = track.muxer_helper;
-    MP4TrackId dstTrackId = [track Id];
+    MP42Track *track = [_inputTracks lastObject];
+    MP4TrackId trackId = [track sourceId];
 
     framerate_t * framerate;
     int64_t currentSize = 0;
@@ -1477,9 +1476,6 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     DpbInit(&h264_dpb);
 
     while ( (LoadNal(&nal) != false) && !_cancelled) {
-        while ([helper->fifo isFull] && !_cancelled)
-            usleep(500);
-
         uint32_t header_size;
         header_size = nal.buffer[2] == 1 ? 3 : 4;
         bool boundary = h264_detect_boundary(nal.buffer, 
@@ -1495,15 +1491,15 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
                 memcpy(sampleData, nal_buffer, nal_buffer_size);
                 
                 MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-                sample->sampleData = sampleData;
-                sample->sampleSize = nal_buffer_size;
-                sample->sampleDuration = mp4FrameDuration;
-                sample->sampleOffset = 0;
-                sample->sampleTimestamp = 0;
-                sample->sampleIsSync = nal_is_sync;
-                sample->sampleTrackId = dstTrackId;
+                sample->data = sampleData;
+                sample->size = nal_buffer_size;
+                sample->duration = mp4FrameDuration;
+                sample->offset = 0;
+                sample->timestamp = 0;
+                sample->isSync = nal_is_sync;
+                sample->trackId = trackId;
                 
-                [helper->fifo enqueue:sample];
+                [self enqueue:sample];
                 [sample release];
                 
                 currentSize += nal_buffer_size;
@@ -1584,15 +1580,15 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
         memcpy(sampleData, nal_buffer, nal_buffer_size);
 
         MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-        sample->sampleData = sampleData;
-        sample->sampleSize = nal_buffer_size;
-        sample->sampleDuration = mp4FrameDuration;
-        sample->sampleOffset = 0;
-        sample->sampleTimestamp = 0;
-        sample->sampleIsSync = nal_is_sync;
-        sample->sampleTrackId = dstTrackId;
+        sample->data = sampleData;
+        sample->size = nal_buffer_size;
+        sample->duration = mp4FrameDuration;
+        sample->offset = 0;
+        sample->timestamp = 0;
+        sample->isSync = nal_is_sync;
+        sample->trackId = trackId;
 
-        [helper->fifo enqueue:sample];
+        [self enqueue:sample];
         [sample release];
         
         currentSize += nal_buffer_size;
@@ -1610,7 +1606,7 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 
 - (BOOL)cleanUp:(MP4FileHandle) fileHandle
 {
-    MP42Track *track = [_activeTracks lastObject];
+    MP42Track *track = [_inputTracks lastObject];
     MP4TrackId trackId = [track Id];
 
     if (h264_dpb.dpb.size_min > 0) {

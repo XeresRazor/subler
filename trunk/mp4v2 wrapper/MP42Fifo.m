@@ -16,13 +16,8 @@
 }
 
 - (id)init {
-    self = [super init];
-    if (self) {
-        _size = 300;
-        _iSize = _size * 4;
-        _queue = dispatch_queue_create([[self queueName] UTF8String], DISPATCH_QUEUE_SERIAL);
-        _array = (id *) malloc(sizeof(id) * _iSize);
-    }
+    self = [self initWithCapacity:300];
+
     return self;
 }
 
@@ -38,6 +33,12 @@
 }
 
 - (void)enqueue:(id)item {
+    while (_count > _size && !_cancelled)
+        usleep(500);
+
+    if (_cancelled)
+        return;
+
     [item retain];
 
     dispatch_sync(_queue, ^{
@@ -72,9 +73,17 @@
     return !_count;
 }
 
-- (void)dealloc {
-    while ([self count])
+- (void)drain {
+    while (![self isEmpty])
         [[self deque] release];
+}
+
+- (void)cancel {
+    OSAtomicIncrement32(&_cancelled);
+}
+
+- (void)dealloc {
+    [self drain];
 
 	free(_array);
     dispatch_release(_queue);

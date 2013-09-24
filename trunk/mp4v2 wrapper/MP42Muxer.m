@@ -372,8 +372,8 @@
     for (id importerHelper in trackImportersArray)
         [importerHelper startReading];
 
-    NSInteger tracksImportersCount = [trackImportersArray count];
-    NSInteger tracksCount = [_workingTracks count];
+    NSUInteger tracksImportersCount = [trackImportersArray count];
+    NSUInteger tracksCount = [_workingTracks count];
 
     for (;;) {
         usleep(1000);
@@ -383,10 +383,10 @@
             MP42SampleBuffer *sampleBuffer = nil;
 
             for (int i = 0; i < 100 && (sampleBuffer = [track copyNextSample]) != nil; i++) {
-                if (!MP4WriteSample(_fileHandle, sampleBuffer->sampleTrackId,
-                                    sampleBuffer->sampleData, sampleBuffer->sampleSize,
-                                    sampleBuffer->sampleDuration, sampleBuffer->sampleOffset,
-                                    sampleBuffer->sampleIsSync))
+                if (!MP4WriteSample(_fileHandle, track.Id,
+                                    sampleBuffer->data, sampleBuffer->size,
+                                    sampleBuffer->duration, sampleBuffer->offset,
+                                    sampleBuffer->isSync))
                     _cancelled = YES;
 
                 [sampleBuffer release];

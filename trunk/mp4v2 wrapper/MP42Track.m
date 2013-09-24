@@ -15,10 +15,9 @@
 
 @implementation MP42Track
 
--(id)init
+- (id)init
 {
-    if ((self = [super init]))
-    {
+    if ((self = [super init])) {
         enabled = YES;
         updatedProperty = [[NSMutableDictionary alloc] init];
         name = @"Unknown Track";
@@ -26,10 +25,9 @@
     return self;
 }
 
--(id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
-	if ((self = [super init]))
-	{
+	if ((self = [super init])) {
 		sourceURL = [URL retain];
 		Id = trackID;
         isEdited = NO;
@@ -60,7 +58,41 @@
     return self;
 }
 
-- (BOOL) writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
+- (id)copyWithZone:(NSZone *)zone
+{
+    MP42Track *copy = [[[self class] alloc] init];
+
+    if (copy) {
+        copy->Id = Id;
+        copy->sourceId = sourceId;
+
+        copy->sourceURL = [sourceURL retain];
+        copy->sourceFormat = [sourceFormat retain];
+        copy->format = [format retain];
+        copy->name = [name retain];
+        copy->language = [language retain];
+        copy->enabled = enabled;
+        copy->alternate_group = alternate_group;
+        copy->startOffset = startOffset;
+
+        copy->_size = _size;
+
+        copy->timescale = timescale;
+        copy->bitrate = bitrate;
+        copy->duration = duration;
+
+        copy->updatedProperty = [updatedProperty mutableCopy];
+
+        if (_helper) {
+            copy->_helper = calloc(1, sizeof(muxer_helper));
+            copy->_helper->importer = _helper->importer;
+        }
+    }
+
+    return copy;
+}
+
+- (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
     BOOL success = YES;
     if (!fileHandle || !Id) {
@@ -99,7 +131,7 @@
     return success;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     free(_helper);
 
@@ -108,29 +140,27 @@
     [sourceURL release];
     [name release];
     [language release];
-    [sourceFileHandle release];
     [super dealloc];
 }
 
-- (NSString *) timeString
+- (NSString *)timeString
 {
-        return SMPTEStringFromTime(duration, 1000);
+    return SMPTEStringFromTime(duration, 1000);
 }
 
 @synthesize sourceURL;
 @synthesize Id;
 @synthesize sourceId;
-@synthesize sourceFileHandle;
 
 @synthesize format;
 @synthesize sourceFormat;
 @synthesize name;
 
-- (NSString *) name {
+- (NSString *)name {
     return name;
 }
 
-- (void) setName: (NSString *) newName
+- (void)setName:(NSString *)newName
 {
     [name autorelease];
     name = [newName retain];
@@ -138,11 +168,11 @@
     [updatedProperty setValue:@"True" forKey:@"name"];
 }
 
-- (NSString *) language {
+- (NSString *)language {
     return language;
 }
 
-- (void) setLanguage: (NSString *) newLang
+- (void)setLanguage:(NSString *)newLang
 {
     [language autorelease];
     language = [newLang retain];
@@ -150,40 +180,40 @@
     [updatedProperty setValue:@"True" forKey:@"language"];
 }
 
-- (BOOL) enabled {
+- (BOOL)enabled {
     return enabled;
 }
 
-- (void) setEnabled: (BOOL) newState
+- (void)setEnabled:(BOOL)newState
 {
     enabled = newState;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"enabled"];
 }
 
-- (uint64_t) alternate_group {
+- (uint64_t)alternate_group {
     return alternate_group;
 }
 
-- (void) setAlternate_group: (uint64_t) newGroup
+- (void)setAlternate_group:(uint64_t)newGroup
 {
     alternate_group = newGroup;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"alternate_group"];
 }
 
-- (int64_t) startOffset {
+- (int64_t)startOffset {
     return startOffset;
 }
 
-- (void) setStartOffset:(int64_t)newOffset
+- (void)setStartOffset:(int64_t)newOffset
 {
     startOffset = newOffset;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"start_offset"];
 }
 
-- (NSString *) formatSummary
+- (NSString *)formatSummary
 {
     return [[format retain] autorelease];
 }
@@ -306,7 +336,7 @@
 
 @synthesize muxer_helper = _helper;
 
-- (muxer_helper*)muxer_helper
+- (muxer_helper *)muxer_helper
 {
     if (_helper == NULL)
         _helper = calloc(1, sizeof(muxer_helper));
