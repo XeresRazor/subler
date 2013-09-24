@@ -1,6 +1,12 @@
 #summary Release Notes
 #labels Featured
 
+= Subler 0.21-0.22 =
+ 
+ * Fixed a crash that could occur when searching for metadata.
+ * Fixed a crash that could occur when adding chapters from a txt file.
+ * Various bug fixed.
+
 = Subler 0.20 =
  
  * Updated TheMovieDB api.
