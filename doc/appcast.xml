@@ -6,6 +6,14 @@
         <description>Most recent changes with links to updates.</description>
         <language>en</language>
 		<item>
+            <title>Version 0.23</title>
+            <sparkle:releaseNotesLink>
+                http://subler.googlecode.com/svn/doc/rnotes023.html
+            </sparkle:releaseNotesLink>
+            <pubDate>Tuesday, 24 Sep 2013 1:00:00 +0000</pubDate>
+            <enclosure url="http://subler.googlecode.com/files/Subler-0-23.zip" sparkle:version="0.23" length="12611612" type="application/octet-stream" sparkle:dsaSignature="MCwCFEVqt1IJr0Zr4PoG2F9KdIr8rGOgAhRhwME+6yHVwhXgpZyeiJerDjZnaQ==" />
+        </item>
+		<item>
             <title>Version 0.22</title>
             <sparkle:releaseNotesLink>
                 http://subler.googlecode.com/svn/doc/rnotes022.html
