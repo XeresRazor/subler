@@ -106,18 +106,22 @@
         }
     }
 
-    if ([updatedProperty valueForKey:@"name"]  || !muxed)
+    if ([updatedProperty valueForKey:@"name"] || !muxed) {
         if (![name isEqualToString:@"Video Track"] &&
             ![name isEqualToString:@"Sound Track"] &&
             ![name isEqualToString:@"Subtitle Track"] &&
             ![name isEqualToString:@"Text Track"] &&
             ![name isEqualToString:@"Chapter Track"] &&
+            ![name isEqualToString:@"Closed Caption Track"] &&
             ![name isEqualToString:@"Unknown Track"] &&
             name != nil) {
             const char* cString = [name cStringUsingEncoding: NSMacOSRomanStringEncoding];
             if (cString)
                 MP4SetTrackName(fileHandle, Id, cString);
         }
+        else
+            MP4SetTrackName(fileHandle, Id, "\0");
+    }
     if ([updatedProperty valueForKey:@"alternate_group"] || !muxed)
         MP4SetTrackIntegerProperty(fileHandle, Id, "tkhd.alternate_group", alternate_group);
     if ([updatedProperty valueForKey:@"start_offset"])
@@ -161,10 +165,17 @@
     return name;
 }
 
+- (NSString *)defaultName {
+    return @"Unknown Track";
+}
+
 - (void)setName:(NSString *)newName
 {
     [name autorelease];
-    name = [newName retain];
+    if ([newName length])
+        name = [newName retain];
+    else
+        name = [self defaultName];
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"name"];
 }

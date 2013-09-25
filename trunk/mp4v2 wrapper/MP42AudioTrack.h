@@ -12,6 +12,7 @@
 @interface MP42AudioTrack : MP42Track <NSCoding, NSCopying> {
     float volume;
     UInt32 channels;
+    UInt32 sourceChannels;
     UInt32 channelLayoutTag;
 
     MP4TrackId  fallbackTrackId;
@@ -22,6 +23,7 @@
 
 @property(nonatomic, readwrite) float volume;
 @property(nonatomic, readwrite) UInt32 channels;
+@property(nonatomic, readwrite) UInt32 sourceChannels;
 @property(nonatomic, readwrite) UInt32 channelLayoutTag;
 
 @property(nonatomic, readwrite) MP4TrackId fallbackTrackId;

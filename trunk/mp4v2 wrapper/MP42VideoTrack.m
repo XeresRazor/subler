@@ -66,7 +66,7 @@
 - (id)init
 {
     if ((self = [super init])) {
-        name = MP42MediaTypeVideo;
+        name = [self defaultName];
         language = @"Unknown";
     }
 
@@ -143,6 +143,10 @@
     }
 
     return Id;
+}
+
+- (NSString *)defaultName {
+    return MP42MediaTypeVideo;
 }
 
 - (void)dealloc
