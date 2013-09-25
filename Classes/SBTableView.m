@@ -25,6 +25,10 @@
             [delegate _deleteSelectionFromTableView:self];
         return;
     }
+    else if (key == 27) {
+        [self deselectAll:self];
+        return;
+    }
     else
         [super keyDown:event];
 }
