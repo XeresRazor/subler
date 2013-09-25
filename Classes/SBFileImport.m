@@ -274,7 +274,7 @@
                     if (conversion == 6) {
                         MP42AudioTrack *copy = [track copy];
                         [copy setNeedConversion:YES];
-                        [(MP42AudioTrack *)track setMixdownType:SBDolbyPlIIMixdown];
+                        [copy setMixdownType:SBDolbyPlIIMixdown];
 
                         [self addTrack:copy toArray:tracks];
                         [copy release];
