@@ -22,7 +22,7 @@
 - (id)init
 {
     if ((self = [super init])) {
-        name = MP42MediaTypeClosedCaption;
+        name = [self defaultName];
         format = MP42ClosedCaptionFormatCEA608;
     }
 
@@ -37,6 +37,10 @@
     [super writeToFile:fileHandle error:outError];
 
     return Id;
+}
+
+- (NSString *)defaultName {
+    return MP42MediaTypeClosedCaption;
 }
 
 - (void)dealloc

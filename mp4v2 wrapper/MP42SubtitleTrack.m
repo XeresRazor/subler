@@ -50,7 +50,7 @@
 - (id)init
 {
     if ((self = [super init])) {
-        name = MP42MediaTypeSubtitle;
+        name = [self defaultName];
         format = MP42SubtitleFormatTx3g;
     }
 
@@ -296,6 +296,10 @@ struct style_record {
     forcedTrackId = [decoder decodeInt64ForKey:@"forcedTrackId"];
 
     return self;
+}
+
+- (NSString *)defaultName {
+    return MP42MediaTypeSubtitle;
 }
 
 - (void)dealloc

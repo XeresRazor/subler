@@ -15,9 +15,8 @@
 
 - (id)init
 {
-    if ((self = [super init]))
-    {
-        name = @"Chapter Track";
+    if ((self = [super init])) {
+        name = [self defaultName];
         format = MP42SubtitleFormatText;
         language = @"English";
         isEdited = YES;
@@ -32,10 +31,9 @@
 
 - (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
-    if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle]))
-    {
+    if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle])) {
         if (!name || [name isEqualToString:@"Text Track"])
-            name = @"Chapter Track";
+            name = [self defaultName];
         if (!format)
             format = MP42SubtitleFormatText;
         chapters = [[NSMutableArray alloc] init];
@@ -77,7 +75,7 @@
 {
     if ((self = [super init]))
     {
-        name = @"Chapter Track";
+        name = [self defaultName];
         format = MP42SubtitleFormatText;
         sourceURL = [URL retain];
         language = @"English";
@@ -239,6 +237,10 @@
 
 - (void)setTrackImporterHelper: (MP42FileImporter*) importerHelper
 {
+}
+
+- (NSString *)defaultName {
+    return @"Chapter Track";
 }
 
 - (void)dealloc

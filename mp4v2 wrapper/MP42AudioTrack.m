@@ -89,7 +89,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 {
     if ((self = [super init]))
     {
-        name = MP42MediaTypeAudio;
+        name = [self defaultName];
         language = @"Unknown";
         volume = 1;
         mixdownType = SBDolbyPlIIMixdown;
@@ -152,6 +152,10 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     return Id;
 }
 
+- (NSString *)defaultName {
+    return MP42MediaTypeAudio;
+}
+
 - (void)dealloc
 {
     [super dealloc];
@@ -203,6 +207,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 }
 
 @synthesize channels;
+@synthesize sourceChannels;
 @synthesize mixdownType;
 @synthesize channelLayoutTag;
 
