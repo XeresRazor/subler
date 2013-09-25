@@ -42,4 +42,10 @@
     return YES;
 }
 
+- (void)dealloc
+{
+    [_pasteboardTypes release];
+    [super dealloc];
+}
+
 @end
