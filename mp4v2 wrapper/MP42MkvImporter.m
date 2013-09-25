@@ -858,7 +858,7 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 
         if (demuxHelper->ss) {
             MP42SampleBuffer *sample = nil;
-            MP4TrackId dstTrackId = track.Id;
+            MP4TrackId dstTrackId = track.sourceId;
             SBSubSerializer *ss = demuxHelper->ss;
 
             [ss setFinished:YES];
