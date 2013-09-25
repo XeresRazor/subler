@@ -81,6 +81,7 @@
         copy->bitrate = bitrate;
         copy->duration = duration;
 
+        [copy->updatedProperty release];
         copy->updatedProperty = [updatedProperty mutableCopy];
 
         if (_helper) {
