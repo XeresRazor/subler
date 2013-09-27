@@ -41,41 +41,59 @@
 	NSString *lang = [SBLanguages iso6391CodeFor:aLanguage];
 	if (!lang) lang = @"en";
 	NSURL *url;
+
 	// search for series
 	url = [NSURL URLWithString:[NSString stringWithFormat:@"http://thetvdb.com/api/GetSeries.php?seriesname=%@", [MetadataImporter urlEncoded:aSeriesName]]];
 	NSData *seriesXML = [MetadataImporter downloadDataOrGetFromCache:url];
 	NSDictionary *series = [XMLReader dictionaryForXMLData:seriesXML error:NULL];
+
 	if (!series) return nil;
-	NSObject *seriesObject = [series retrieveForPath:@"Data.Series"];
-	NSString *seriesID;
+
+	NSArray *seriesObject = [series retrieveForPath:@"Data.Series"];
+	NSMutableArray *seriesIDs = [[NSMutableArray alloc] init];;
 	if ([seriesObject isKindOfClass:[NSArray class]]) {
-		seriesID = [series retrieveForPath:@"Data.Series.0.seriesid.text"];
-	} else {
-		seriesID = [series retrieveForPath:@"Data.Series.seriesid.text"];
+        for (NSDictionary *s in seriesObject)
+            if ([aSeriesName isEqualToString:[s retrieveForPath:@"SeriesName.text"]])
+                [seriesIDs addObject:[s retrieveForPath:@"seriesid.text"]];
+
+        if (![seriesIDs count])
+            [seriesIDs addObject:[series retrieveForPath:@"Data.Series.0.seriesid.text"]];
 	}
-	if (!seriesID || [seriesID isEqualToString:@""]) return nil;
-	url = [NSURL URLWithString:[NSString stringWithFormat:@"http://thetvdb.com/api/%@/series/%@/all/%@.xml", API_KEY, seriesID, lang]];
-	NSData *episodesXML = [MetadataImporter downloadDataOrGetFromCache:url];
-	NSDictionary *episodes = [XMLReader dictionaryForXMLData:episodesXML error:NULL];
-	if (!episodes) return nil;
-	NSArray *episodesArray = [episodes retrieveArrayForPath:@"Data.Episode"];
-	NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:[(NSArray *) episodesArray count]];
-	NSDictionary *thisSeries = [episodes retrieveForPath:@"Data.Series"];
-	for (NSDictionary *episode in episodesArray) {
-		if (aSeasonNum && ![aSeasonNum isEqualToString:@""]) {
-			if ([[episode retrieveForPath:@"SeasonNumber.text"] isEqualToString:aSeasonNum]) {
-				if (aEpisodeNum && ![aEpisodeNum isEqualToString:@""]) {
-					if ([[episode retrieveForPath:@"EpisodeNumber.text"] isEqualToString:aEpisodeNum]) {
-						[results addObject:[TheTVDB metadataForEpisode:episode series:thisSeries]];
-					}
-				} else {
-					[results addObject:[TheTVDB metadataForEpisode:episode series:thisSeries]];
-				}
-			}
-		} else {
-			[results addObject:[TheTVDB metadataForEpisode:episode series:thisSeries]];
-		}
+    else {
+		[seriesIDs addObject:[series retrieveForPath:@"Data.Series.seriesid.text"]];
 	}
+    NSMutableArray *results = [[NSMutableArray alloc] init];
+
+    if ([seriesIDs count]) {
+        for (NSString *seriesID in seriesIDs) {
+            if (!seriesID || [seriesID isEqualToString:@""]) return nil;
+
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"http://thetvdb.com/api/%@/series/%@/all/%@.xml", API_KEY, seriesID, lang]];
+            NSData *episodesXML = [MetadataImporter downloadDataOrGetFromCache:url];
+            NSDictionary *episodes = [XMLReader dictionaryForXMLData:episodesXML error:NULL];
+
+            if (!episodes) return nil;
+
+            NSArray *episodesArray = [episodes retrieveArrayForPath:@"Data.Episode"];
+            NSDictionary *thisSeries = [episodes retrieveForPath:@"Data.Series"];
+
+            for (NSDictionary *episode in episodesArray) {
+                if (aSeasonNum && ![aSeasonNum isEqualToString:@""]) {
+                    if ([[episode retrieveForPath:@"SeasonNumber.text"] isEqualToString:aSeasonNum]) {
+                        if (aEpisodeNum && ![aEpisodeNum isEqualToString:@""]) {
+                            if ([[episode retrieveForPath:@"EpisodeNumber.text"] isEqualToString:aEpisodeNum]) {
+                                [results addObject:[TheTVDB metadataForEpisode:episode series:thisSeries]];
+                            }
+                        } else {
+                            [results addObject:[TheTVDB metadataForEpisode:episode series:thisSeries]];
+                        }
+                    }
+                } else {
+                    [results addObject:[TheTVDB metadataForEpisode:episode series:thisSeries]];
+                }
+            }
+        }
+    }
 	return [results autorelease];
 }
 
