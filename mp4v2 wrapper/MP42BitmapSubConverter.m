@@ -51,7 +51,7 @@ void FFInitFFmpeg()
 
         if(sampleBuffer->size < 4)
         {
-            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, NO);
+            subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, NO);
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];    
             }
@@ -91,7 +91,7 @@ void FFInitFFmpeg()
         if (ret < 0 || !got_sub) {
             NSLog(@"Error decoding DVD subtitle %d / %ld", ret, (long)bufferSize);
             
-            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, NO);
+            subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, NO);
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];
             }
@@ -179,9 +179,9 @@ void FFInitFFmpeg()
             NSString *text = [ocr performOCROnCGImage:cgImage];
 
             if (text)
-                subSample = copySubtitleSample(trackId, text, sampleBuffer->duration, forced, NO, CGSizeMake(0,0), 0);
+                subSample = copySubtitleSample(sampleBuffer->trackId, text, sampleBuffer->duration, forced, NO, CGSizeMake(0,0), 0);
             else
-                subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, forced);
+                subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, forced);
 
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];
@@ -235,7 +235,7 @@ void FFInitFFmpeg()
         ret = avcodec_decode_subtitle2(avContext, &subtitle, &got_sub, &pkt);
 
         if (ret < 0 || !got_sub || !subtitle.num_rects) {
-            subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, NO);
+            subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, NO);
 
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];
@@ -301,9 +301,9 @@ void FFInitFFmpeg()
             CGColorSpaceRelease(colorSpace);
 
             if ((text = [ocr performOCROnCGImage:cgImage]))
-                subSample = copySubtitleSample(trackId, text, sampleBuffer->duration, forced, NO, CGSizeMake(0,0), 0);
+                subSample = copySubtitleSample(sampleBuffer->trackId, text, sampleBuffer->duration, forced, NO, CGSizeMake(0,0), 0);
             else
-                subSample = copyEmptySubtitleSample(trackId, sampleBuffer->duration, forced);
+                subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, forced);
 
             @synchronized(outputSamplesBuffer) {
                 [outputSamplesBuffer addObject:subSample];
@@ -372,10 +372,6 @@ void FFInitFFmpeg()
     }
 
     return self;
-}
-
-- (void)setOutputTrack: (NSUInteger) outputTrackId {
-    trackId = outputTrackId;
 }
 
 - (void)addSample:(MP42SampleBuffer*)sample

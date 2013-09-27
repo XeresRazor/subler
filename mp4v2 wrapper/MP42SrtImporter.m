@@ -28,7 +28,6 @@
         MP42SubtitleTrack *newTrack = [[MP42SubtitleTrack alloc] init];
 
         newTrack.format = MP42SubtitleFormatTx3g;
-        newTrack.sourceFormat = @"Srt";
         newTrack.sourceURL = _fileURL;
         newTrack.alternate_group = 2;
         newTrack.language = getFilenameLanguage((CFStringRef)[_fileURL path]);

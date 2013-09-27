@@ -43,10 +43,6 @@
         }
 
         _tracksArray = [[sourceFile tracks] retain];
-        for (MP42Track * track in _tracksArray) {
-            [track setSourceFormat:[track format]];
-        }
-
         _metadata = [[sourceFile metadata] retain];
 
         [sourceFile release];

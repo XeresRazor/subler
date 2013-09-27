@@ -356,7 +356,6 @@ OSStatus EncoderDataProc(AudioConverterRef              inAudioConverter,
         sample->offset = 0;
         sample->timestamp = outputPos;
         sample->isSync = YES;
-        sample->trackId = trackId;
 
         while ([_outputSamplesBuffer isFull] && !_cancelled)
             usleep(500);
@@ -598,7 +597,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
         // Set the right mixdown to use
         sampleRate = [track.muxer_helper->importer timescaleForTrack:track];
-        inputChannelsCount = [track channels];
+        inputChannelsCount = [track sourceChannels];
         outputChannelCount = [track channels];
 
         if ([mixdownType isEqualToString:SBMonoMixdown] && inputChannelsCount > 1) {
@@ -636,7 +635,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 
         bzero( &inputFormat, sizeof( AudioStreamBasicDescription ) );
         inputFormat.mSampleRate = sampleRate;
-        inputFormat.mChannelsPerFrame = track.channels;
+        inputFormat.mChannelsPerFrame = track.sourceChannels;
 
         if (track.sourceFormat) {
             if ([track.sourceFormat isEqualToString:MP42AudioFormatAAC]) {
@@ -688,10 +687,10 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
         outputFormat.mSampleRate = sampleRate;
         outputFormat.mFormatID = kAudioFormatLinearPCM ;
         outputFormat.mFormatFlags =  kLinearPCMFormatFlagIsFloat | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked;
-        outputFormat.mBytesPerPacket = 4 * track.channels;
+        outputFormat.mBytesPerPacket = 4 * track.sourceChannels;
         outputFormat.mFramesPerPacket = 1;
         outputFormat.mBytesPerFrame = outputFormat.mBytesPerPacket * outputFormat.mFramesPerPacket;
-        outputFormat.mChannelsPerFrame = track.channels;
+        outputFormat.mChannelsPerFrame = track.sourceChannels;
         outputFormat.mBitsPerChannel = 32;
 
         // initialize the decoder
@@ -773,10 +772,6 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
     return self;
 }
 
-- (void)setOutputTrack:(NSUInteger) outputTrackId {
-    trackId = outputTrackId;
-}
-
 - (void)addSample:(MP42SampleBuffer *)sample
 {
     [_inputSamplesBuffer enqueue:sample];
@@ -794,7 +789,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 {
     if ([_inputSamplesBuffer isFull])
         return NO;
-    
+
     return YES;
 }
 

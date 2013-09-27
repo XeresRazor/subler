@@ -24,8 +24,6 @@
 	AVCodecContext          *avContext;
 	AVSubtitle              subtitle;
 
-    NSUInteger  trackId;
-
     NSMutableArray * inputSamplesBuffer;
     NSMutableArray * outputSamplesBuffer;
 
@@ -42,7 +40,6 @@
 
 - (id)initWithTrack:(MP42SubtitleTrack *)track error:(NSError **)outError;
 
-- (void)setOutputTrack:(NSUInteger)outputTrackId;
 - (void)addSample: (MP42SampleBuffer *)sample;
 - (MP42SampleBuffer *)copyEncodedSample;
 

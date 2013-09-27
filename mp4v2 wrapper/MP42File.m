@@ -184,8 +184,21 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
         }
     }
 
-    if (trackNeedConversion(track.format))
+    if (trackNeedConversion(track.format) || track.needConversion) {
         track.needConversion = YES;
+        track.sourceFormat = track.format;
+        if ([track isMemberOfClass:[MP42AudioTrack class]]) {
+            MP42AudioTrack *audioTrack = (MP42AudioTrack *)track;
+            track.format = MP42AudioFormatAAC;
+            audioTrack.sourceChannels = audioTrack.channels;
+            if ([audioTrack.mixdownType isEqualToString:SBMonoMixdown])
+                audioTrack.channels = 1;
+            else if (audioTrack.mixdownType)
+                audioTrack.channels = 2;
+        }
+        else if ([track isMemberOfClass:[MP42SubtitleTrack class]])
+            track.format = MP42SubtitleFormatTx3g;
+    }
 
     if (track.muxer_helper->importer) {
         if ([_importers objectForKey:[[track sourceURL] path]])

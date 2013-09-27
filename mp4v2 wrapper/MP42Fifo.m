@@ -10,14 +10,8 @@
 
 @implementation MP42Fifo
 
-- (NSString *)queueName {
-    static int32_t queueCount = 0;
-    return [NSString stringWithFormat:@"com.subler.fifo-%d", queueCount++];
-}
-
 - (id)init {
     self = [self initWithCapacity:300];
-
     return self;
 }
 
@@ -25,38 +19,37 @@
     self = [super init];
     if (self) {
         _size = numItems;
-        _iSize = numItems * 4;
-        _queue = dispatch_queue_create([[self queueName] UTF8String], DISPATCH_QUEUE_SERIAL);
-        _array = (id *) malloc(sizeof(id) * _iSize);
+        _array = (id *) malloc(sizeof(id) * _size);
+        _sem = dispatch_semaphore_create(_size);
     }
     return self;
 }
 
 - (void)enqueue:(id)item {
-    while (_count > _size && !_cancelled)
-        usleep(500);
+    if (_cancelled) return;
 
-    if (_cancelled)
-        return;
+    dispatch_semaphore_wait(_sem, DISPATCH_TIME_FOREVER);
 
     [item retain];
 
-    dispatch_sync(_queue, ^{
-        _array[_tail++ % _iSize] = item;
-        OSAtomicIncrement32(&_count);
-    });
+    _array[_tail++] = item;
+
+    if (_tail == _size)
+        _tail = 0;
+
+    OSAtomicIncrement32(&_count);
 }
 
 - (id)deque {
-    __block id item;
+    if (!_count) return nil;
 
-    if (!_count)
-        return nil;
+    id item = _array[_head++];
 
-    dispatch_sync(_queue, ^{
-        item = _array[_head++ % _iSize];
-        OSAtomicDecrement32(&_count);
-    });
+    if (_head == _size)
+        _head = 0;
+
+    OSAtomicDecrement32(&_count);
+    dispatch_semaphore_signal(_sem);
 
     return item;
 }
@@ -66,7 +59,7 @@
 }
 
 - (BOOL)isFull {
-    return (_count > _size);
+    return (_count >= _size);
 }
 
 - (BOOL)isEmpty {
@@ -80,13 +73,14 @@
 
 - (void)cancel {
     OSAtomicIncrement32(&_cancelled);
+    [self drain];
 }
 
 - (void)dealloc {
     [self drain];
 
 	free(_array);
-    dispatch_release(_queue);
+    dispatch_release(_sem);
 
     [super dealloc];
 }
