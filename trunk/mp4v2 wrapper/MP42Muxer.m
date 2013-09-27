@@ -58,9 +58,8 @@
             continue;
 
         if([track isMemberOfClass:[MP42AudioTrack class]] && track.needConversion) {
-            track.format = MP42AudioFormatAAC;
-            MP42AudioConverter *audioConverter = [[MP42AudioConverter alloc] initWithTrack:(MP42AudioTrack*)track
-                                                                        andMixdownType:[(MP42AudioTrack*)track mixdownType]
+            MP42AudioConverter *audioConverter = [[MP42AudioConverter alloc] initWithTrack:(MP42AudioTrack *)track
+                                                                        andMixdownType:[(MP42AudioTrack *)track mixdownType]
                                                                                  error:outError];
 
             if (audioConverter == nil)
@@ -68,9 +67,8 @@
 
             helper->converter = audioConverter;
         }
-        if([track isMemberOfClass:[MP42SubtitleTrack class]] && ([track.format isEqualToString:MP42SubtitleFormatVobSub] || [track.format isEqualToString:MP42SubtitleFormatPGS]) && track.needConversion) {
-            track.format = MP42SubtitleFormatTx3g;
-            MP42BitmapSubConverter *subConverter = [[MP42BitmapSubConverter alloc] initWithTrack:(MP42SubtitleTrack*)track
+        if([track isMemberOfClass:[MP42SubtitleTrack class]] && ([track.sourceFormat isEqualToString:MP42SubtitleFormatVobSub] || [track.sourceFormat isEqualToString:MP42SubtitleFormatPGS]) && track.needConversion) {
+            MP42BitmapSubConverter *subConverter = [[MP42BitmapSubConverter alloc] initWithTrack:(MP42SubtitleTrack *)track
                                                                                        error:outError];
 
             if (subConverter == nil)
@@ -349,9 +347,6 @@
 
         MP4SetTrackDurationPerChunk(fileHandle, dstTrackId, timeScale / 8);
         track.Id = dstTrackId;
-
-        if (helper->converter)
-            [helper->converter setOutputTrack:track.Id];
     }
 
     return noErr;

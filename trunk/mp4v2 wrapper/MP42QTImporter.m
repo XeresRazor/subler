@@ -232,7 +232,6 @@
 
         if (newTrack) {
             newTrack.format = [self formatForTrack:track];
-            newTrack.sourceFormat = newTrack.format;
             newTrack.Id = [[track attributeForKey:QTTrackIDAttribute] integerValue];
             newTrack.sourceURL = _fileURL;
             newTrack.name = [track attributeForKey:QTTrackDisplayNameAttribute];

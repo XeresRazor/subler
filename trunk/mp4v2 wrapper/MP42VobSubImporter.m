@@ -230,7 +230,6 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
             MP42SubtitleTrack *newTrack = [[MP42SubtitleTrack alloc] init];
 
             newTrack.format = MP42SubtitleFormatVobSub;
-            newTrack.sourceFormat = MP42SubtitleFormatVobSub;
             newTrack.sourceURL = _fileURL;
             newTrack.alternate_group = 2;
             newTrack.Id = count++;

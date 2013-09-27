@@ -227,7 +227,6 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 
             if (newTrack) {
                 newTrack.format = [self matroskaCodecIDToHumanReadableName:mkvTrack];
-                newTrack.sourceFormat = [self matroskaCodecIDToHumanReadableName:mkvTrack];
                 newTrack.Id = i;
                 newTrack.sourceURL = _fileURL;
                 newTrack.dataLength = trackSizes[i];

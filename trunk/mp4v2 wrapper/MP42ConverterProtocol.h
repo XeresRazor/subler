@@ -15,8 +15,6 @@
 - (NSData *)magicCookie;
 
 @required
-- (void)setOutputTrack:(NSUInteger)outputTrackId;
-
 - (void)addSample:(MP42SampleBuffer *)sample;
 - (MP42SampleBuffer *)copyEncodedSample;
 

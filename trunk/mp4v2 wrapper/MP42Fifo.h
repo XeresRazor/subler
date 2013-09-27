@@ -16,11 +16,10 @@
 
     int32_t     _count;
     int32_t     _size;
-    int32_t     _iSize;
 
     int32_t     _cancelled;
 
-    dispatch_queue_t _queue;
+    dispatch_semaphore_t _sem;
 }
 
 - (id)init;

@@ -170,7 +170,7 @@
                     [item setEnabled:NO];
                 [[actionCell menu] addItem:item];
                 
-                NSArray *formatArray = [NSArray arrayWithObjects:@"AAC - Dolby Pro Logic II", @"AAC - Dolby Pro Logic", @"AAC - Stereo", @"AAC - Mono", @"AAC - Multi-channel", @"AC-3 + AAC", nil];
+                NSArray *formatArray = [NSArray arrayWithObjects:@"AAC - Dolby Pro Logic II", @"AAC - Dolby Pro Logic", @"AAC - Stereo", @"AAC - Mono", @"AAC - Multi-channel", @"AAC + AC-3", nil];
                 for (NSString* format in formatArray) {
                     item = [[[NSMenuItem alloc] initWithTitle:format action:NULL keyEquivalent:@""] autorelease];
                     [item setTag:tag++];
