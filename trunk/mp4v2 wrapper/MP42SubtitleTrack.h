@@ -10,11 +10,12 @@
 #import "MP42VideoTrack.h"
 
 @interface MP42SubtitleTrack : MP42VideoTrack <NSCoding> {
-    BOOL verticalPlacement;
-    BOOL someSamplesAreForced;
-    BOOL allSamplesAreForced;
+    BOOL _verticalPlacement;
+    BOOL _someSamplesAreForced;
+    BOOL _allSamplesAreForced;
 
-    MP4TrackId  forcedTrackId;
+    MP4TrackId  _forcedTrackId;
+    MP42Track  *_forcedTrack;
 }
 
 - (BOOL)exportToURL:(NSURL *)url error:(NSError **)error;
@@ -23,6 +24,7 @@
 @property(nonatomic, readwrite) BOOL someSamplesAreForced;
 @property(nonatomic, readwrite) BOOL allSamplesAreForced;
 
-@property MP4TrackId forcedTrackId;
+@property(nonatomic, readonly)  MP4TrackId forcedTrackId;
+@property(nonatomic, readwrite, assign) MP42Track *forcedTrack;
 
 @end

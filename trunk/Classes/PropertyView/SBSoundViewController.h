@@ -15,18 +15,21 @@
     MP42AudioTrack *track;
     MP42File       *mp4file;
 
+    NSMutableArray *_fallbacks;
+    NSMutableArray *_follows;
+
     IBOutlet NSSlider *volume;
     IBOutlet NSPopUpButton *alternateGroup;
     IBOutlet NSPopUpButton *fallback;
     IBOutlet NSPopUpButton *follows;
 }
 
-- (void) setTrack:(MP42AudioTrack *) soundTrack;
-- (void) setFile:(MP42File *) mp4;
+- (void)setTrack:(MP42AudioTrack *)soundTrack;
+- (void)setFile:(MP42File *)mp4;
 
-- (IBAction) setTrackVolume: (id) sender;
-- (IBAction) setAltenateGroup: (id) sender;
-- (IBAction) setFallbackTrack: (id) sender;
-- (IBAction) setFollowsTrack: (id) sender;
+- (IBAction)setTrackVolume:(id)sender;
+- (IBAction)setAltenateGroup:(id)sender;
+- (IBAction)setFallbackTrack:(id)sender;
+- (IBAction)setFollowsTrack:(id)sender;
 
 @end

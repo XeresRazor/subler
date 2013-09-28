@@ -146,10 +146,29 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 - (void)removeTracksAtIndexes:(NSIndexSet *)indexes
 {
     NSUInteger index = [indexes firstIndex];
-    while (index != NSNotFound) {    
+    while (index != NSNotFound) {
         MP42Track *track = [_tracks objectAtIndex:index];
+
+        // track is muxed, it needs to be removed from the file
         if (track.muxed)
             [_tracksToBeDeleted addObject:track];
+
+        // Remove the reference
+        for (MP42Track *ref in _tracks) {
+            if ([ref isMemberOfClass:[MP42AudioTrack class]]) {
+                MP42AudioTrack *a = (MP42AudioTrack *)ref;
+                if (a.fallbackTrack == track)
+                    a.fallbackTrack = nil;
+                if (a.followsTrack == track)
+                    a.followsTrack = nil;
+            }
+            if ([ref isMemberOfClass:[MP42SubtitleTrack class]]) {
+                MP42SubtitleTrack *a = (MP42SubtitleTrack *)ref;
+                if (a.forcedTrack == track)
+                    a.forcedTrack = nil;
+            }
+        }
+
         index = [indexes indexGreaterThanIndex:index];
     }
 

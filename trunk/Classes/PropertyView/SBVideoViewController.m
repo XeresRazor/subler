@@ -56,7 +56,7 @@ static NSString *getLevelName(uint8_t level) {
     }
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     [sampleWidth setStringValue: [NSString stringWithFormat:@"%lld", track.width]];
     [sampleHeight setStringValue: [NSString stringWithFormat:@"%lld", track.height]];
@@ -113,19 +113,32 @@ static NSString *getLevelName(uint8_t level) {
             [forcedSubs selectItemWithTag:2];
         }
         
-        for (id fileTrack in [mp4file tracks]) {
+        _forced = [[NSMutableArray alloc] init];
+        
+        NSInteger i = 1;
+        NSInteger selectedItem = 0;
+        for (MP42SubtitleTrack *fileTrack in [mp4file tracks]) {
             if ([fileTrack isMemberOfClass:[MP42SubtitleTrack class]]) {
-                NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"Track %d", [fileTrack Id]]
+                NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ - %@ - %@",
+                                                                          fileTrack.Id ? [NSString stringWithFormat:@"%d", fileTrack.Id] : @"NA",
+                                                                          fileTrack.name,
+                                                                          fileTrack.language]
                                                                   action:@selector(setForcedTrack:)
                                                            keyEquivalent:@""] autorelease];
                 [newItem setTarget:self];
-                [newItem setTag: [fileTrack Id]];
+                [newItem setTag:i];
                 [[forced menu] addItem:newItem];
+                [_forced addObject:fileTrack];
+                
+                if ((fileTrack.Id && ((MP42SubtitleTrack *)track).forcedTrackId == fileTrack.Id) ||
+                    ((MP42SubtitleTrack *)track).forcedTrack == fileTrack) {
+                    selectedItem = i;
+                }
+                i++;
             }
         }
-    
-        [forced selectItemWithTag:[(MP42SubtitleTrack*)track forcedTrackId]];
-
+        
+        [forced selectItemWithTag:selectedItem];
     }
     else {
         [forcedSubs setEnabled:NO];
@@ -134,17 +147,17 @@ static NSString *getLevelName(uint8_t level) {
     }
 }
 
-- (void) setTrack:(MP42VideoTrack *) videoTrack
+- (void)setTrack:(MP42VideoTrack *)videoTrack
 {
     track = videoTrack;
 }
 
-- (void) setFile:(MP42File *) mp4
+- (void)setFile:(MP42File *)mp4
 {
     mp4file = mp4;
 }
 
-- (IBAction) setSize: (id) sender
+- (IBAction)setSize:(id)sender
 {
     NSInteger i;
 
@@ -190,7 +203,7 @@ static NSString *getLevelName(uint8_t level) {
     }
 }
 
-- (IBAction) setPixelAspect: (id) sender
+- (IBAction)setPixelAspect:(id)sender
 {
     NSInteger i;
     
@@ -215,7 +228,7 @@ static NSString *getLevelName(uint8_t level) {
 }
 
 
-- (IBAction) setAltenateGroup: (id) sender
+- (IBAction)setAltenateGroup:(id)sender
 {
     uint8_t tagName = [[sender selectedItem] tag];
     
@@ -225,7 +238,7 @@ static NSString *getLevelName(uint8_t level) {
     }
 }
 
-- (IBAction) setProfileLevel: (id) sender
+- (IBAction)setProfileLevel:(id)sender
 {
     NSInteger tagName = [[sender selectedItem] tag];
     switch (tagName) {
@@ -260,7 +273,7 @@ static NSString *getLevelName(uint8_t level) {
     track.isEdited = YES;
 }
 
-- (IBAction) setForcedSubtitles: (id) sender
+- (IBAction)setForcedSubtitles:(id)sender
 {
     if ([track isKindOfClass:[MP42SubtitleTrack class]]) {
         MP42SubtitleTrack * subTrack = (MP42SubtitleTrack*)track;
@@ -288,19 +301,28 @@ static NSString *getLevelName(uint8_t level) {
     }
 }
 
-- (IBAction) setForcedTrack: (id) sender
+- (IBAction)setForcedTrack:(id)sender
 {
-    if ([track isKindOfClass:[MP42SubtitleTrack class]]) {
-        MP42SubtitleTrack * subTrack = (MP42SubtitleTrack*)track;
+    NSInteger index = [sender tag];
 
-        uint8_t tagName = [sender tag];
-    
-        if (subTrack.forcedTrackId != tagName) {
-            subTrack.forcedTrackId = tagName;
+    if (index) {
+        MP42SubtitleTrack *subTrack = [_forced objectAtIndex:index-1];
+
+        if (subTrack != ((MP42SubtitleTrack *)track).forcedTrack) {
+            ((MP42SubtitleTrack *)track).forcedTrack = subTrack;
             [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
         }
     }
+    else {
+        ((MP42SubtitleTrack *)track).forcedTrack = nil;
+        [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+    }
 }
 
+- (void)dealloc
+{
+    [_forced release];
+    [super dealloc];
+}
 
 @end
