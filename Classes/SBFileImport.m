@@ -275,6 +275,8 @@
                         MP42AudioTrack *copy = [track copy];
                         [copy setNeedConversion:YES];
                         [copy setMixdownType:SBDolbyPlIIMixdown];
+                        
+                        [(MP42AudioTrack *)track setFallbackTrack:copy];
 
                         [self addTrack:copy toArray:tracks];
                         [copy release];

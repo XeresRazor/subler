@@ -11,55 +11,80 @@
 
 @implementation SBSoundViewController
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     [alternateGroup selectItemAtIndex:track.alternate_group];
 
+    _fallbacks = [[NSMutableArray alloc] init];
+
     if ([[track format] isEqualToString:MP42AudioFormatAC3]) {
-        for (id fileTrack in [mp4file tracks]) {
+        NSInteger i = 1;
+        NSInteger selectedItem = 0;
+        for (MP42Track *fileTrack in [mp4file tracks]) {
             if ([fileTrack isMemberOfClass:[MP42AudioTrack class]] && [[fileTrack format] isEqualToString:MP42AudioFormatAAC]) {
-                NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"Track %d", [fileTrack Id]]
+                NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ - %@ - %@",
+                                                                          fileTrack.Id ? [NSString stringWithFormat:@"%d", fileTrack.Id] : @"NA",
+                                                                          fileTrack.name,
+                                                                          fileTrack.language]
                                                                   action:@selector(setFallbackTrack:)
                                                            keyEquivalent:@""] autorelease];
                 [newItem setTarget:self];
-                [newItem setTag: [fileTrack Id]];
+                [newItem setTag:i];
                 [[fallback menu] addItem:newItem];
+                [_fallbacks addObject:fileTrack];
+                
+                if ((fileTrack.Id && track.fallbackTrackId == fileTrack.Id) || track.fallbackTrack == fileTrack) {
+                    selectedItem = i;
+                }
+                i++;
             }
         }
-
-        [fallback selectItemWithTag:track.fallbackTrackId];
+        [fallback selectItemWithTag:selectedItem];
     }
     else {
         [fallback setEnabled:NO];
     }
+
+    _follows = [[NSMutableArray alloc] init];
     
-    for (id fileTrack in [mp4file tracks]) {
+    NSInteger i = 1;
+    NSInteger selectedItem = 0;
+    for (MP42Track *fileTrack in [mp4file tracks]) {
         if ([fileTrack isMemberOfClass:[MP42SubtitleTrack class]]) {
-            NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"Track %d", [fileTrack Id]]
+            NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ - %@ - %@",
+                                                                      fileTrack.Id ? [NSString stringWithFormat:@"%d", fileTrack.Id] : @"NA",
+                                                                      fileTrack.name,
+                                                                      fileTrack.language]
                                                               action:@selector(setFollowsTrack:)
                                                        keyEquivalent:@""] autorelease];
             [newItem setTarget:self];
-            [newItem setTag: [fileTrack Id]];
+            [newItem setTag:i];
             [[follows menu] addItem:newItem];
+            [_follows addObject:fileTrack];
+
+            if ((fileTrack.Id && track.followsTrackId == fileTrack.Id) || track.followsTrack == fileTrack) {
+                selectedItem = i;
+            }
+            i++;
         }
     }
 
-    [follows selectItemWithTag:track.followsTrackId];
+    [follows selectItemWithTag:selectedItem];
 
     [volume setFloatValue:track.volume * 100];
 }
 
-- (void) setFile:(MP42File *) mp4
+- (void)setFile:(MP42File *)mp4
 {
     mp4file = mp4;
 }
 
-- (void) setTrack:(MP42AudioTrack *) soundTrack
+- (void)setTrack:(MP42AudioTrack *)soundTrack
 {
     track = soundTrack;
 }
 
-- (IBAction) setTrackVolume: (id) sender
+- (IBAction)setTrackVolume:(id)sender
 {
     float value = [sender doubleValue] / 100;
     if (track.volume != value) {
@@ -68,27 +93,42 @@
     }
 }
 
-- (IBAction) setFallbackTrack: (id) sender
+- (IBAction)setFallbackTrack:(id)sender
 {
-    uint8_t tagName = [sender tag];
+    NSInteger index = [sender tag];
 
-    if (track.fallbackTrackId != tagName) {
-        track.fallbackTrackId = tagName;
-        [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
-    }    
-}
+    if (index) {
+        MP42AudioTrack *audioTrack = [_fallbacks objectAtIndex:index-1];
 
-- (IBAction) setFollowsTrack: (id) sender
-{
-    uint8_t tagName = [sender tag];
-    
-    if (track.followsTrackId != tagName) {
-        track.followsTrackId = tagName;
+        if (audioTrack != track.fallbackTrack) {
+            track.fallbackTrack = audioTrack;
+            [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+        }
+    }
+    else {
+        track.fallbackTrack = nil;
         [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
     }
 }
 
-- (IBAction) setAltenateGroup: (id) sender
+- (IBAction)setFollowsTrack:(id)sender
+{
+    NSInteger index = [sender tag];
+
+    if (index) {
+        MP42SubtitleTrack *subTrack = [_follows objectAtIndex:index-1];
+
+        if (subTrack != track.followsTrack) {
+            track.followsTrack = subTrack;
+            [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+        }    }
+    else {
+        track.followsTrack = nil;
+        [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
+    }
+}
+
+- (IBAction)setAltenateGroup:(id)sender
 {
     uint8_t tagName = [[sender selectedItem] tag];
     
@@ -96,6 +136,14 @@
         track.alternate_group = tagName;
         [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
     }
+}
+
+- (void)dealloc
+{
+    [_fallbacks release];
+    [_follows release];
+    
+    [super dealloc];
 }
 
 @end

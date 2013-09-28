@@ -17,7 +17,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 - (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
     if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle])) {
-        MP4GetTrackFloatProperty(fileHandle, Id, "tkhd.volume", &volume);
+        MP4GetTrackFloatProperty(fileHandle, Id, "tkhd.volume", &_volume);
 
         u_int8_t audioType = 
 		MP4GetTrackEsdsObjectTypeId(fileHandle, Id);
@@ -32,7 +32,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
                                                &pAacConfig,
                                                &aacConfigLength) == true)
                     if (pAacConfig != NULL || aacConfigLength >= 2) {
-                        channels = MP4AV_AacConfigGetChannels(pAacConfig);
+                        _channels = MP4AV_AacConfigGetChannels(pAacConfig);
                         free(pAacConfig);
                     }
             } else if ((audioType == MP4_PCM16_LITTLE_ENDIAN_AUDIO_TYPE) ||
@@ -45,14 +45,14 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 
                 if (frameDuration != 0) {
                     // assumes track time scale == sampling rate
-                    channels = samplesPerFrame / frameDuration;
+                    _channels = samplesPerFrame / frameDuration;
                 }
             }
         }
         if (audioType == 0xA9) {
             uint64_t channels_count = 0;
             MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.mp4a.channels", &channels_count);
-            channels = channels_count;
+            _channels = channels_count;
         }
         else if (MP4HaveTrackAtom(fileHandle, Id, "mdia.minf.stbl.stsd.ac-3.dac3")) {
             uint64_t acmod, lfeon;
@@ -60,24 +60,24 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
             MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.ac-3.dac3.acmod", &acmod);
             MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.ac-3.dac3.lfeon", &lfeon);
 
-            readAC3Config(acmod, lfeon, &channels, &channelLayoutTag);
+            readAC3Config(acmod, lfeon, &_channels, &_channelLayoutTag);
         }
         else if (MP4HaveTrackAtom(fileHandle, Id, "mdia.minf.stbl.stsd.alac")) {
             uint64_t channels_count = 0;
             MP4GetTrackIntegerProperty(fileHandle, Id, "mdia.minf.stbl.stsd.alac.channels", &channels_count);
-            channels = channels_count;
+            _channels = channels_count;
         }
 
         if (MP4HaveTrackAtom(fileHandle, Id, "tref.fall")) {
             uint64_t fallbackId = 0;
             MP4GetTrackIntegerProperty(fileHandle, Id, "tref.fall.entries.trackId", &fallbackId);
-            fallbackTrackId = (MP4TrackId) fallbackId;
+            _fallbackTrackId = (MP4TrackId) fallbackId;
         }
         
         if (MP4HaveTrackAtom(fileHandle, Id, "tref.folw")) {
             uint64_t followsId = 0;
             MP4GetTrackIntegerProperty(fileHandle, Id, "tref.folw.entries.trackId", &followsId);
-            followsTrackId = (MP4TrackId) followsId;
+            _followsTrackId = (MP4TrackId) followsId;
         }
 
     }
@@ -91,8 +91,8 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     {
         name = [self defaultName];
         language = @"Unknown";
-        volume = 1;
-        mixdownType = SBDolbyPlIIMixdown;
+        _volume = 1;
+        _mixdownType = SBDolbyPlIIMixdown;
     }
 
     return self;
@@ -103,14 +103,14 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     MP42AudioTrack *copy = [super copyWithZone:zone];
 
     if (copy) {
-        copy->volume = volume;
-        copy->channels = channels;
-        copy->channelLayoutTag = channelLayoutTag;
+        copy->_volume = _volume;
+        copy->_channels = _channels;
+        copy->_channelLayoutTag = _channelLayoutTag;
 
-        copy->fallbackTrackId = fallbackTrackId;
-        copy->followsTrackId = followsTrackId;
+        copy->_fallbackTrackId = _fallbackTrackId;
+        copy->_followsTrackId = _followsTrackId;
 
-        copy->mixdownType = [mixdownType retain];
+        copy->_mixdownType = [_mixdownType retain];
     }
     
     return copy;
@@ -124,29 +124,35 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     if (Id)
         [super writeToFile:fileHandle error:outError];
 
-    if ([updatedProperty valueForKey:@"volume"])
-        MP4SetTrackFloatProperty(fileHandle, Id, "tkhd.volume", volume);
+    if ([updatedProperty valueForKey:@"volume"] || !muxed)
+        MP4SetTrackFloatProperty(fileHandle, Id, "tkhd.volume", _volume);
 
-    if ([updatedProperty valueForKey:@"fallback"]) {
-        if (MP4HaveTrackAtom(fileHandle, Id, "tref.fall") && (fallbackTrackId == 0)) {
+    if ([updatedProperty valueForKey:@"fallback"] || !muxed) {
+        if (_fallbackTrack)
+            _fallbackTrackId = _fallbackTrack.Id;
+
+        if (MP4HaveTrackAtom(fileHandle, Id, "tref.fall") && (_fallbackTrackId == 0)) {
             MP4RemoveAllTrackReferences(fileHandle, "tref.fall", Id);
         }
-        else if (MP4HaveTrackAtom(fileHandle, Id, "tref.fall") && (fallbackTrackId)) {
-            MP4SetTrackIntegerProperty(fileHandle, Id, "tref.fall.entries.trackId", fallbackTrackId);
+        else if (MP4HaveTrackAtom(fileHandle, Id, "tref.fall") && (_fallbackTrackId)) {
+            MP4SetTrackIntegerProperty(fileHandle, Id, "tref.fall.entries.trackId", _fallbackTrackId);
         }
-        else if (fallbackTrackId)
-            MP4AddTrackReference(fileHandle, "tref.fall", fallbackTrackId, Id);
+        else if (_fallbackTrackId)
+            MP4AddTrackReference(fileHandle, "tref.fall", _fallbackTrackId, Id);
     }
     
-    if ([updatedProperty valueForKey:@"follows"]) {
-        if (MP4HaveTrackAtom(fileHandle, Id, "tref.folw") && (followsTrackId == 0)) {
+    if ([updatedProperty valueForKey:@"follows"] || !muxed) {
+        if (_followsTrack)
+            _followsTrackId = _followsTrack.Id;
+
+        if (MP4HaveTrackAtom(fileHandle, Id, "tref.folw") && (_followsTrackId == 0)) {
             MP4RemoveAllTrackReferences(fileHandle, "tref.folw", Id);
         }
-        else if (MP4HaveTrackAtom(fileHandle, Id, "tref.folw") && (followsTrackId)) {
-            MP4SetTrackIntegerProperty(fileHandle, Id, "tref.folw.entries.trackId", followsTrackId);
+        else if (MP4HaveTrackAtom(fileHandle, Id, "tref.folw") && (_followsTrackId)) {
+            MP4SetTrackIntegerProperty(fileHandle, Id, "tref.folw.entries.trackId", _followsTrackId);
         }
-        else if (followsTrackId)
-            MP4AddTrackReference(fileHandle, "tref.folw", followsTrackId, Id);
+        else if (_followsTrackId)
+            MP4AddTrackReference(fileHandle, "tref.folw", _followsTrackId, Id);
     }
 
     return Id;
@@ -163,53 +169,57 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 
 - (void)setVolume:(float)newVolume
 {
-    volume = newVolume;
+    _volume = newVolume;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"volume"];
 }
 
 - (float)volume
 {
-    return volume;
+    return _volume;
 }
 
-- (void)setFallbackTrackId:(MP4TrackId)newFallbackTrackId
+- (void)setFallbackTrack:(MP42Track *)newFallbackTrack
 {
-    fallbackTrackId = newFallbackTrackId;
+    _fallbackTrack = newFallbackTrack;
+    _fallbackTrackId = 0;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"fallback"];
 }
 
-- (MP4TrackId)fallbackTrackId
+- (MP42Track *)fallbackTrack
 {
-    return fallbackTrackId;
+    return _fallbackTrack;
 }
 
-- (void)setFollowsTrackId:(MP4TrackId)newFollowsTrackId
+- (void)setFollowsTrack:(MP42Track *)newFollowsTrack
 {
-    followsTrackId = newFollowsTrackId;
+    _followsTrack = newFollowsTrack;
+    _followsTrackId = 0;
     isEdited = YES;
     [updatedProperty setValue:@"True" forKey:@"follows"];
 }
 
-- (MP4TrackId)followsTrackId
+- (MP42Track *)followsTrack
 {
-    return followsTrackId;
+    return _followsTrack;
 }
 
 - (NSString *)formatSummary
 {
-    return [NSString stringWithFormat:@"%@, %u ch", format, (unsigned int)channels];
+    return [NSString stringWithFormat:@"%@, %u ch", format, (unsigned int)_channels];
 }
 
 - (NSString *)description {
-    return [[super description] stringByAppendingFormat:@", %u ch", (unsigned int)channels];
+    return [[super description] stringByAppendingFormat:@", %u ch", (unsigned int)_channels];
 }
 
-@synthesize channels;
-@synthesize sourceChannels;
-@synthesize mixdownType;
-@synthesize channelLayoutTag;
+@synthesize channels = _channels;
+@synthesize sourceChannels = _sourceChannels;
+@synthesize mixdownType = _mixdownType;
+@synthesize channelLayoutTag = _channelLayoutTag;
+@synthesize fallbackTrackId = _fallbackTrackId;
+@synthesize followsTrackId = _followsTrackId;
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
@@ -217,28 +227,28 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     
     [coder encodeInt:1 forKey:@"MP42AudioTrackVersion"];
 
-    [coder encodeFloat:volume forKey:@"volume"];
+    [coder encodeFloat:_volume forKey:@"volume"];
 
-    [coder encodeInt64:channels forKey:@"channels"];
-    [coder encodeInt64:channelLayoutTag forKey:@"channelLayoutTag"];
+    [coder encodeInt64:_channels forKey:@"channels"];
+    [coder encodeInt64:_channelLayoutTag forKey:@"channelLayoutTag"];
     
-    [coder encodeInt64:fallbackTrackId forKey:@"fallbackTrackId"];
+    [coder encodeInt64:_fallbackTrackId forKey:@"fallbackTrackId"];
 
-    [coder encodeObject:mixdownType forKey:@"mixdownType"];
+    [coder encodeObject:_mixdownType forKey:@"mixdownType"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder
 {
     self = [super initWithCoder:decoder];
 
-    volume = [decoder decodeFloatForKey:@"volume"];
+    _volume = [decoder decodeFloatForKey:@"volume"];
 
-    channels = [decoder decodeInt64ForKey:@"channels"];
-    channelLayoutTag = [decoder decodeInt64ForKey:@"channelLayoutTag"];
+    _channels = [decoder decodeInt64ForKey:@"channels"];
+    _channelLayoutTag = [decoder decodeInt64ForKey:@"channelLayoutTag"];
 
-    fallbackTrackId = [decoder decodeInt64ForKey:@"fallbackTrackId"];
+    _fallbackTrackId = [decoder decodeInt64ForKey:@"fallbackTrackId"];
 
-    mixdownType = [[decoder decodeObjectForKey:@"mixdownType"] retain];
+    _mixdownType = [[decoder decodeObjectForKey:@"mixdownType"] retain];
 
     return self;
 }

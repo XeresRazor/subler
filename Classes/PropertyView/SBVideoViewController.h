@@ -43,18 +43,20 @@
     IBOutlet NSButton *preserveAspectRatio;
     
     IBOutlet NSMenuItem *profileLevelUnchanged;
+    
+    NSMutableArray *_forced;
 }
 
-- (void) setTrack:(MP42VideoTrack *) videoTrack;
-- (void) setFile:(MP42File *) mp4;
+- (void)setTrack:(MP42VideoTrack *)videoTrack;
+- (void)setFile:(MP42File *)mp4;
 
-- (IBAction) setSize: (id) sender;
-- (IBAction) setPixelAspect: (id) sender;
-- (IBAction) setAltenateGroup: (id) sender;
+- (IBAction)setSize:(id)sender;
+- (IBAction)setPixelAspect:(id)sender;
+- (IBAction)setAltenateGroup:(id)sender;
 
-- (IBAction) setProfileLevel: (id) sender;
+- (IBAction)setProfileLevel:(id)sender;
 
-- (IBAction) setForcedSubtitles: (id) sender;
-- (IBAction) setForcedTrack: (id) sender;
+- (IBAction)setForcedSubtitles:(id)sender;
+- (IBAction)setForcedTrack:(id)sender;
 
 @end

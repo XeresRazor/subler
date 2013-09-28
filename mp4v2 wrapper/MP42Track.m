@@ -136,18 +136,6 @@
     return success;
 }
 
-- (void)dealloc
-{
-    free(_helper);
-
-    [updatedProperty release];
-    [format release];
-    [sourceURL release];
-    [name release];
-    [language release];
-    [super dealloc];
-}
-
 - (NSString *)timeString
 {
     return SMPTEStringFromTime(duration, 1000);
@@ -388,6 +376,18 @@
     }
 
     return sample;
+}
+
+- (void)dealloc
+{
+    free(_helper);
+    
+    [updatedProperty release];
+    [format release];
+    [sourceURL release];
+    [name release];
+    [language release];
+    [super dealloc];
 }
 
 @end
