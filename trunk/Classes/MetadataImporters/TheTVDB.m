@@ -180,7 +180,9 @@
 	[metadata setTag:[aEpisode retrieveForPath:@"Overview.text"] forKey:@"Long Description"];
 	[metadata setTag:[aEpisode retrieveForPath:@"EpisodeNumber.text"] forKey:@"Track #"];
 	[metadata setTag:[TheTVDB cleanPeopleList:[aEpisode retrieveForPath:@"Director.text"]] forKey:@"Director"];
-	[metadata setTag:[TheTVDB cleanPeopleList:[aEpisode retrieveForPath:@"Director.text"]] forKey:@"Artist"];
+
+	[metadata setTag:[NSString stringWithFormat:@"%@, Season %@", [aSeries retrieveForPath:@"SeriesName.text"], [aEpisode retrieveForPath:@"SeasonNumber.text"]] forKey:@"Artist"];
+
 	[metadata setTag:[TheTVDB cleanPeopleList:[aEpisode retrieveForPath:@"Writer.text"]] forKey:@"Screenwriters"];
 	// cast
 	NSString *actors = [TheTVDB cleanPeopleList:[aSeries retrieveForPath:@"Actors.text"]];

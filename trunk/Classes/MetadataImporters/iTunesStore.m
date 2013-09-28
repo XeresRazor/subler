@@ -281,6 +281,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
                 NSString *episodeID = [NSString stringWithFormat:@"%ld%02ld", (long)[season integerValue],
                                        (long)[[r valueForKey:@"trackNumber"] integerValue]];
                 [metadata setTag:episodeID forKey:@"TV Episode ID"];
+                [metadata setTag:[NSString stringWithFormat:@"%@, Season %@", [r valueForKey:@"artistName"], season] forKey:@"Artist"];
             }
 			[metadata setTag:[r valueForKey:@"trackNumber"] forKey:@"TV Episode #"];
 			[metadata setTag:[r valueForKey:@"trackName"] forKey:@"Name"];
