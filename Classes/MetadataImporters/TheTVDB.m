@@ -60,19 +60,23 @@
             [seriesIDs addObject:[series retrieveForPath:@"Data.Series.0.seriesid.text"]];
 	}
     else {
-		[seriesIDs addObject:[series retrieveForPath:@"Data.Series.seriesid.text"]];
+        NSString *seriesID = [series retrieveForPath:@"Data.Series.seriesid.text"];
+        if (seriesID)
+            [seriesIDs addObject:seriesID];
 	}
     NSMutableArray *results = [[NSMutableArray alloc] init];
 
     if ([seriesIDs count]) {
         for (NSString *seriesID in seriesIDs) {
-            if (!seriesID || [seriesID isEqualToString:@""]) return nil;
+            if (!seriesID || [seriesID isEqualToString:@""])
+                continue;
 
             url = [NSURL URLWithString:[NSString stringWithFormat:@"http://thetvdb.com/api/%@/series/%@/all/%@.xml", API_KEY, seriesID, lang]];
             NSData *episodesXML = [MetadataImporter downloadDataOrGetFromCache:url];
             NSDictionary *episodes = [XMLReader dictionaryForXMLData:episodesXML error:NULL];
 
-            if (!episodes) return nil;
+            if (!episodes)
+                continue;
 
             NSArray *episodesArray = [episodes retrieveArrayForPath:@"Data.Episode"];
             NSDictionary *thisSeries = [episodes retrieveForPath:@"Data.Series"];
@@ -94,6 +98,9 @@
             }
         }
     }
+
+    [seriesIDs release];
+
 	return [results autorelease];
 }
 
