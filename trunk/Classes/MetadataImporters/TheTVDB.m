@@ -181,7 +181,8 @@
 	[metadata setTag:[aEpisode retrieveForPath:@"EpisodeNumber.text"] forKey:@"Track #"];
 	[metadata setTag:[TheTVDB cleanPeopleList:[aEpisode retrieveForPath:@"Director.text"]] forKey:@"Director"];
 
-	[metadata setTag:[NSString stringWithFormat:@"%@, Season %@", [aSeries retrieveForPath:@"SeriesName.text"], [aEpisode retrieveForPath:@"SeasonNumber.text"]] forKey:@"Artist"];
+	[metadata setTag:[NSString stringWithFormat:@"%@, Season %@", [aSeries retrieveForPath:@"SeriesName.text"], [aEpisode retrieveForPath:@"SeasonNumber.text"]] forKey:@"Album"];
+	[metadata setTag:[aSeries retrieveForPath:@"SeriesName.text"] forKey:@"Artist"];
 
 	[metadata setTag:[TheTVDB cleanPeopleList:[aEpisode retrieveForPath:@"Writer.text"]] forKey:@"Screenwriters"];
 	// cast
