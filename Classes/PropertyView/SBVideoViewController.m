@@ -130,10 +130,9 @@ static NSString *getLevelName(uint8_t level) {
                 [[forced menu] addItem:newItem];
                 [_forced addObject:fileTrack];
                 
-                if ((fileTrack.Id && ((MP42SubtitleTrack *)track).forcedTrackId == fileTrack.Id) ||
-                    ((MP42SubtitleTrack *)track).forcedTrack == fileTrack) {
+                if (((MP42SubtitleTrack *)track).forcedTrack == fileTrack)
                     selectedItem = i;
-                }
+
                 i++;
             }
         }

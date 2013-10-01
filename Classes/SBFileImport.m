@@ -42,16 +42,16 @@
     for (id object in _tracks) {
         if ([object isKindOfClass:[MP42Track class]]) {
             if (isTrackMuxable([object format]) || trackNeedConversion([object format]))
-                [_importCheckArray addObject: [NSNumber numberWithBool:YES]];
+                [_importCheckArray addObject:[NSNumber numberWithBool:YES]];
             else
-                [_importCheckArray addObject: [NSNumber numberWithBool:NO]];
+                [_importCheckArray addObject:[NSNumber numberWithBool:NO]];
 
             if ([[object format] isEqualToString:MP42AudioFormatAC3] &&
                 [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue]) {
                 if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioKeepAC3"] boolValue] &&
-                    [object fallbackTrackId] == 0)
+                    [object fallbackTrack] == nil)
                     [_actionArray addObject:[NSNumber numberWithInteger:6]];
-                else if ([object fallbackTrackId])
+                else if ([object fallbackTrack])
                     [_actionArray addObject:[NSNumber numberWithInteger:0]];
                 else
                     [_actionArray addObject:[NSNumber numberWithInteger:[[[NSUserDefaults standardUserDefaults]
