@@ -18,9 +18,9 @@
 - (id)init
 {
     if ((self = [super init])) {
-        enabled = YES;
-        updatedProperty = [[NSMutableDictionary alloc] init];
-        name = @"Unknown Track";
+        _enabled = YES;
+        _updatedProperty = [[NSMutableDictionary alloc] init];
+        _name = @"Unknown Track";
     }
     return self;
 }
@@ -28,30 +28,30 @@
 - (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
 	if ((self = [super init])) {
-		sourceURL = [URL retain];
-		Id = trackID;
-        isEdited = NO;
-        muxed = YES;
-        updatedProperty = [[NSMutableDictionary alloc] init];
+		_sourceURL = [URL retain];
+		_Id = trackID;
+        _isEdited = NO;
+        _muxed = YES;
+        _updatedProperty = [[NSMutableDictionary alloc] init];
 
         if (fileHandle) {
-            format = [getHumanReadableTrackMediaDataName(fileHandle, Id) retain];
-            name = [getTrackName(fileHandle, Id) retain];
-            language = [getHumanReadableTrackLanguage(fileHandle, Id) retain];
-            bitrate = MP4GetTrackBitRate(fileHandle, Id);
-            duration = MP4ConvertFromTrackDuration(fileHandle, Id,
-                                                   MP4GetTrackDuration(fileHandle, Id),
+            _format = [getHumanReadableTrackMediaDataName(fileHandle, _Id) retain];
+            _name = [getTrackName(fileHandle, _Id) retain];
+            _language = [getHumanReadableTrackLanguage(fileHandle, _Id) retain];
+            _bitrate = MP4GetTrackBitRate(fileHandle, _Id);
+            _duration = MP4ConvertFromTrackDuration(fileHandle, _Id,
+                                                   MP4GetTrackDuration(fileHandle, _Id),
                                                    MP4_MSECS_TIME_SCALE);
-            timescale = MP4GetTrackTimeScale(fileHandle, Id);
-            startOffset = getTrackStartOffset(fileHandle, Id);
+            _timescale = MP4GetTrackTimeScale(fileHandle, _Id);
+            _startOffset = getTrackStartOffset(fileHandle, _Id);
 
-            _size = getTrackSize(fileHandle, Id);
+            _size = getTrackSize(fileHandle, _Id);
 
             uint64_t temp;
-            MP4GetTrackIntegerProperty(fileHandle, Id, "tkhd.flags", &temp);
-            if (temp & TRACK_ENABLED) enabled = YES;
-            else enabled = NO;
-            MP4GetTrackIntegerProperty(fileHandle, Id, "tkhd.alternate_group", &alternate_group);
+            MP4GetTrackIntegerProperty(fileHandle, _Id, "tkhd.flags", &temp);
+            if (temp & TRACK_ENABLED) _enabled = YES;
+            else _enabled = NO;
+            MP4GetTrackIntegerProperty(fileHandle, _Id, "tkhd.alternate_group", &_alternate_group);
         }
 	}
 
@@ -63,26 +63,26 @@
     MP42Track *copy = [[[self class] alloc] init];
 
     if (copy) {
-        copy->Id = Id;
-        copy->sourceId = sourceId;
+        copy->_Id = _Id;
+        copy->_sourceId = _sourceId;
 
-        copy->sourceURL = [sourceURL retain];
-        copy->sourceFormat = [sourceFormat retain];
-        copy->format = [format retain];
-        copy->name = [name retain];
-        copy->language = [language retain];
-        copy->enabled = enabled;
-        copy->alternate_group = alternate_group;
-        copy->startOffset = startOffset;
+        copy->_sourceURL = [_sourceURL retain];
+        copy->_sourceFormat = [_sourceFormat retain];
+        copy->_format = [_format retain];
+        copy->_name = [_name retain];
+        copy->_language = [_language retain];
+        copy->_enabled = _enabled;
+        copy->_alternate_group = _alternate_group;
+        copy->_startOffset = _startOffset;
 
         copy->_size = _size;
 
-        copy->timescale = timescale;
-        copy->bitrate = bitrate;
-        copy->duration = duration;
+        copy->_timescale = _timescale;
+        copy->_bitrate = _bitrate;
+        copy->_duration = _duration;
 
-        [copy->updatedProperty release];
-        copy->updatedProperty = [updatedProperty mutableCopy];
+        [copy->_updatedProperty release];
+        copy->_updatedProperty = [_updatedProperty mutableCopy];
 
         if (_helper) {
             copy->_helper = calloc(1, sizeof(muxer_helper));
@@ -96,7 +96,7 @@
 - (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
     BOOL success = YES;
-    if (!fileHandle || !Id) {
+    if (!fileHandle || !_Id) {
         if ( outError != NULL) {
             *outError = MP42Error(@"Failed to modify track",
                                   nil,
@@ -106,31 +106,31 @@
         }
     }
 
-    if ([updatedProperty valueForKey:@"name"] || !muxed) {
-        if (![name isEqualToString:@"Video Track"] &&
-            ![name isEqualToString:@"Sound Track"] &&
-            ![name isEqualToString:@"Subtitle Track"] &&
-            ![name isEqualToString:@"Text Track"] &&
-            ![name isEqualToString:@"Chapter Track"] &&
-            ![name isEqualToString:@"Closed Caption Track"] &&
-            ![name isEqualToString:@"Unknown Track"] &&
-            name != nil) {
-            const char* cString = [name cStringUsingEncoding: NSMacOSRomanStringEncoding];
+    if ([_updatedProperty valueForKey:@"name"] || !_muxed) {
+        if (![_name isEqualToString:@"Video Track"] &&
+            ![_name isEqualToString:@"Sound Track"] &&
+            ![_name isEqualToString:@"Subtitle Track"] &&
+            ![_name isEqualToString:@"Text Track"] &&
+            ![_name isEqualToString:@"Chapter Track"] &&
+            ![_name isEqualToString:@"Closed Caption Track"] &&
+            ![_name isEqualToString:@"Unknown Track"] &&
+            _name != nil) {
+            const char* cString = [_name cStringUsingEncoding: NSMacOSRomanStringEncoding];
             if (cString)
-                MP4SetTrackName(fileHandle, Id, cString);
+                MP4SetTrackName(fileHandle, _Id, cString);
         }
         else
-            MP4SetTrackName(fileHandle, Id, "\0");
+            MP4SetTrackName(fileHandle, _Id, "\0");
     }
-    if ([updatedProperty valueForKey:@"alternate_group"] || !muxed)
-        MP4SetTrackIntegerProperty(fileHandle, Id, "tkhd.alternate_group", alternate_group);
-    if ([updatedProperty valueForKey:@"start_offset"])
-        setTrackStartOffset(fileHandle, Id, startOffset);
-    if ([updatedProperty valueForKey:@"language"] || !muxed)
-        MP4SetTrackLanguage(fileHandle, Id, lang_for_english([language UTF8String])->iso639_2);
-    if ([updatedProperty valueForKey:@"enabled"] || !muxed) {
-        if (enabled) enableTrack(fileHandle, Id);
-        else disableTrack(fileHandle, Id);
+    if ([_updatedProperty valueForKey:@"alternate_group"] || !_muxed)
+        MP4SetTrackIntegerProperty(fileHandle, _Id, "tkhd.alternate_group", _alternate_group);
+    if ([_updatedProperty valueForKey:@"start_offset"])
+        setTrackStartOffset(fileHandle, _Id, _startOffset);
+    if ([_updatedProperty valueForKey:@"language"] || !_muxed)
+        MP4SetTrackLanguage(fileHandle, _Id, lang_for_english([_language UTF8String])->iso639_2);
+    if ([_updatedProperty valueForKey:@"enabled"] || !_muxed) {
+        if (_enabled) enableTrack(fileHandle, _Id);
+        else disableTrack(fileHandle, _Id);
     }
 
     return success;
@@ -138,19 +138,19 @@
 
 - (NSString *)timeString
 {
-    return SMPTEStringFromTime(duration, 1000);
+    return SMPTEStringFromTime(_duration, 1000);
 }
 
-@synthesize sourceURL;
-@synthesize Id;
-@synthesize sourceId;
+@synthesize sourceURL = _sourceURL;
+@synthesize Id = _Id;
+@synthesize sourceId = _sourceId;
 
-@synthesize format;
-@synthesize sourceFormat;
-@synthesize name;
+@synthesize format = _format;
+@synthesize sourceFormat = _sourceFormat;
+@synthesize name = _name;
 
 - (NSString *)name {
-    return name;
+    return [[_name retain] autorelease];
 }
 
 - (NSString *)defaultName {
@@ -159,71 +159,71 @@
 
 - (void)setName:(NSString *)newName
 {
-    [name autorelease];
+    [_name autorelease];
     if ([newName length])
-        name = [newName retain];
+        _name = [newName retain];
     else
-        name = [self defaultName];
-    isEdited = YES;
-    [updatedProperty setValue:@"True" forKey:@"name"];
+        _name = [self defaultName];
+    _isEdited = YES;
+    [_updatedProperty setValue:@"True" forKey:@"name"];
 }
 
 - (NSString *)language {
-    return language;
+    return [[_language retain] autorelease];
 }
 
 - (void)setLanguage:(NSString *)newLang
 {
-    [language autorelease];
-    language = [newLang retain];
-    isEdited = YES;
-    [updatedProperty setValue:@"True" forKey:@"language"];
+    [_language autorelease];
+    _language = [newLang retain];
+    _isEdited = YES;
+    [_updatedProperty setValue:@"True" forKey:@"language"];
 }
 
 - (BOOL)enabled {
-    return enabled;
+    return _enabled;
 }
 
 - (void)setEnabled:(BOOL)newState
 {
-    enabled = newState;
-    isEdited = YES;
-    [updatedProperty setValue:@"True" forKey:@"enabled"];
+    _enabled = newState;
+    _isEdited = YES;
+    [_updatedProperty setValue:@"True" forKey:@"enabled"];
 }
 
 - (uint64_t)alternate_group {
-    return alternate_group;
+    return _alternate_group;
 }
 
 - (void)setAlternate_group:(uint64_t)newGroup
 {
-    alternate_group = newGroup;
-    isEdited = YES;
-    [updatedProperty setValue:@"True" forKey:@"alternate_group"];
+    _alternate_group = newGroup;
+    _isEdited = YES;
+    [_updatedProperty setValue:@"True" forKey:@"alternate_group"];
 }
 
 - (int64_t)startOffset {
-    return startOffset;
+    return _startOffset;
 }
 
 - (void)setStartOffset:(int64_t)newOffset
 {
-    startOffset = newOffset;
-    isEdited = YES;
-    [updatedProperty setValue:@"True" forKey:@"start_offset"];
+    _startOffset = newOffset;
+    _isEdited = YES;
+    [_updatedProperty setValue:@"True" forKey:@"start_offset"];
 }
 
 - (NSString *)formatSummary
 {
-    return [[format retain] autorelease];
+    return [[_format retain] autorelease];
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
     [coder encodeInt:2 forKey:@"MP42TrackVersion"];
 
-    [coder encodeInt64:Id forKey:@"Id"];
-    [coder encodeInt64:sourceId forKey:@"sourceId"];
+    [coder encodeInt64:_Id forKey:@"Id"];
+    [coder encodeInt64:_sourceId forKey:@"sourceId"];
 
 #ifdef SB_SANDBOX
     if ([sourceURL respondsToSelector:@selector(startAccessingSecurityScopedResource)]) {
@@ -243,30 +243,30 @@
         [coder encodeObject:sourceURL forKey:@"sourceURL"];
     }
 #else
-    [coder encodeObject:sourceURL forKey:@"sourceURL"];
+    [coder encodeObject:_sourceURL forKey:@"sourceURL"];
 #endif
 
-    [coder encodeObject:sourceFormat forKey:@"sourceFormat"];
-    [coder encodeObject:format forKey:@"format"];
-    [coder encodeObject:name forKey:@"name"];
-    [coder encodeObject:language forKey:@"language"];
+    [coder encodeObject:_sourceFormat forKey:@"sourceFormat"];
+    [coder encodeObject:_format forKey:@"format"];
+    [coder encodeObject:_name forKey:@"name"];
+    [coder encodeObject:_language forKey:@"language"];
 
-    [coder encodeBool:enabled forKey:@"enabled"];
+    [coder encodeBool:_enabled forKey:@"enabled"];
 
-    [coder encodeInt64:alternate_group forKey:@"alternate_group"];
-    [coder encodeInt64:startOffset forKey:@"startOffset"];
+    [coder encodeInt64:_alternate_group forKey:@"alternate_group"];
+    [coder encodeInt64:_startOffset forKey:@"startOffset"];
 
-    [coder encodeBool:isEdited forKey:@"isEdited"];
-    [coder encodeBool:muxed forKey:@"muxed"];
-    [coder encodeBool:needConversion forKey:@"needConversion"];
+    [coder encodeBool:_isEdited forKey:@"isEdited"];
+    [coder encodeBool:_muxed forKey:@"muxed"];
+    [coder encodeBool:_needConversion forKey:@"needConversion"];
 
-    [coder encodeInt32:timescale forKey:@"timescale"];
-    [coder encodeInt32:bitrate forKey:@"bitrate"];
-    [coder encodeInt64:duration forKey:@"duration"];
+    [coder encodeInt32:_timescale forKey:@"timescale"];
+    [coder encodeInt32:_bitrate forKey:@"bitrate"];
+    [coder encodeInt64:_duration forKey:@"duration"];
     
     [coder encodeInt64:_size forKey:@"dataLength"];
 
-    [coder encodeObject:updatedProperty forKey:@"updatedProperty"];
+    [coder encodeObject:_updatedProperty forKey:@"updatedProperty"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder
@@ -275,14 +275,14 @@
 
     NSInteger version = [decoder decodeInt32ForKey:@"MP42TrackVersion"];
 
-    Id = [decoder decodeInt64ForKey:@"Id"];
-    sourceId = [decoder decodeInt64ForKey:@"sourceId"];
+    _Id = [decoder decodeInt64ForKey:@"Id"];
+    _sourceId = [decoder decodeInt64ForKey:@"sourceId"];
 
     NSData *bookmarkData = [decoder decodeObjectForKey:@"bookmark"];
     if (bookmarkData) {
         BOOL bookmarkDataIsStale;
         NSError *error;
-        sourceURL = [[NSURL
+        _sourceURL = [[NSURL
                     URLByResolvingBookmarkData:bookmarkData
                     options:NSURLBookmarkResolutionWithSecurityScope
                     relativeToURL:nil
@@ -290,31 +290,31 @@
                     error:&error] retain];
     }
     else {
-        sourceURL = [[decoder decodeObjectForKey:@"sourceURL"] retain];
+        _sourceURL = [[decoder decodeObjectForKey:@"sourceURL"] retain];
     }
 
-    sourceFormat = [[decoder decodeObjectForKey:@"sourceFormat"] retain];
-    format = [[decoder decodeObjectForKey:@"format"] retain];
-    name = [[decoder decodeObjectForKey:@"name"] retain];
-    language = [[decoder decodeObjectForKey:@"language"] retain];
+    _sourceFormat = [[decoder decodeObjectForKey:@"sourceFormat"] retain];
+    _format = [[decoder decodeObjectForKey:@"format"] retain];
+    _name = [[decoder decodeObjectForKey:@"name"] retain];
+    _language = [[decoder decodeObjectForKey:@"language"] retain];
 
-    enabled = [decoder decodeBoolForKey:@"enabled"];
+    _enabled = [decoder decodeBoolForKey:@"enabled"];
 
-    alternate_group = [decoder decodeInt64ForKey:@"alternate_group"];
-    startOffset = [decoder decodeInt64ForKey:@"startOffset"];
+    _alternate_group = [decoder decodeInt64ForKey:@"alternate_group"];
+    _startOffset = [decoder decodeInt64ForKey:@"startOffset"];
 
-    isEdited = [decoder decodeBoolForKey:@"isEdited"];
-    muxed = [decoder decodeBoolForKey:@"muxed"];
-    needConversion = [decoder decodeBoolForKey:@"needConversion"];
+    _isEdited = [decoder decodeBoolForKey:@"isEdited"];
+    _muxed = [decoder decodeBoolForKey:@"muxed"];
+    _needConversion = [decoder decodeBoolForKey:@"needConversion"];
 
-    timescale = [decoder decodeInt32ForKey:@"timescale"];
-    bitrate = [decoder decodeInt32ForKey:@"bitrate"];
-    duration = [decoder decodeInt64ForKey:@"duration"];
+    _timescale = [decoder decodeInt32ForKey:@"timescale"];
+    _bitrate = [decoder decodeInt32ForKey:@"bitrate"];
+    _duration = [decoder decodeInt64ForKey:@"duration"];
     
     if (version == 2)
         _size = [decoder decodeInt64ForKey:@"dataLength"];
 
-    updatedProperty = [[decoder decodeObjectForKey:@"updatedProperty"] retain];
+    _updatedProperty = [[decoder decodeObjectForKey:@"updatedProperty"] retain];
 
     return self;
 }
@@ -323,16 +323,14 @@
     return [NSString stringWithFormat:@"Track: %d, %@, %@, %llu kbit/s, %@", [self Id], [self name], [self timeString], [self dataLength] / [self duration] * 8, [self format]];
 }
 
-@synthesize timescale;
-@synthesize bitrate;
-@synthesize duration;
-@synthesize isEdited;
-@synthesize muxed;
-@synthesize needConversion;
-
-@synthesize updatedProperty;
-
-@synthesize dataLength = _size;;
+@synthesize timescale = _timescale;
+@synthesize bitrate = _bitrate;
+@synthesize duration = _duration;
+@synthesize isEdited = _isEdited;
+@synthesize muxed = _muxed;
+@synthesize needConversion = _needConversion;
+@synthesize dataLength = _size;
+@synthesize mediaType = _mediaType;
 
 @synthesize muxer_helper = _helper;
 
@@ -382,11 +380,11 @@
 {
     free(_helper);
     
-    [updatedProperty release];
-    [format release];
-    [sourceURL release];
-    [name release];
-    [language release];
+    [_updatedProperty release];
+    [_format release];
+    [_sourceURL release];
+    [_name release];
+    [_language release];
     [super dealloc];
 }
 
