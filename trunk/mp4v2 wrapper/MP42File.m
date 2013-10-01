@@ -21,10 +21,11 @@ NSString * const MP42Create64BitData = @"64BitData";
 NSString * const MP42Create64BitTime = @"64BitTime";
 NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 
-@interface MP42File (Private)
+@interface MP42File ()
 
-- (void) removeMuxedTrack: (MP42Track *)track;
-- (BOOL) createChaptersPreview;
+- (void)reconnectReferences;
+- (void)removeMuxedTrack:(MP42Track *)track;
+- (BOOL)createChaptersPreview;
 
 @end
 
@@ -64,7 +65,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 			return nil;
         }
 
-        const char* brand = NULL;
+        const char *brand = NULL;
         MP4GetStringProperty(_fileHandle, "ftyp.majorBrand", &brand);
         if (brand != NULL) {
             if (!strcmp(brand, "qt  ")) {
@@ -110,6 +111,8 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
             [track release];
         }
 
+        [self reconnectReferences];
+
         _tracksToBeDeleted = [[NSMutableArray alloc] init];
         _metadata = [[MP42Metadata alloc] initWithSourceURL:_fileURL fileHandle:_fileHandle];
         _importers = [[NSMutableDictionary alloc] init];
@@ -119,6 +122,23 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 	}
 
 	return self;
+}
+
+- (void)reconnectReferences {
+    for (MP42Track *ref in _tracks) {
+        if ([ref isMemberOfClass:[MP42AudioTrack class]]) {
+            MP42AudioTrack *a = (MP42AudioTrack *)ref;
+            if (a.fallbackTrackId)
+                a.fallbackTrack = [self trackWithTrackID:a.fallbackTrackId];
+            if (a.followsTrackId)
+                a.followsTrack = [self trackWithTrackID:a.followsTrackId];
+        }
+        if ([ref isMemberOfClass:[MP42SubtitleTrack class]]) {
+            MP42SubtitleTrack *a = (MP42SubtitleTrack *)ref;
+            if (a.forcedTrackId)
+                a.forcedTrack = [self trackWithTrackID:a.forcedTrackId];
+        }
+    }
 }
 
 - (NSUInteger)movieDuration
@@ -143,46 +163,24 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     return [[chapterTrack retain] autorelease];
 }
 
-- (void)removeTracksAtIndexes:(NSIndexSet *)indexes
-{
-    NSUInteger index = [indexes firstIndex];
-    while (index != NSNotFound) {
-        MP42Track *track = [_tracks objectAtIndex:index];
-
-        // track is muxed, it needs to be removed from the file
-        if (track.muxed)
-            [_tracksToBeDeleted addObject:track];
-
-        // Remove the reference
-        for (MP42Track *ref in _tracks) {
-            if ([ref isMemberOfClass:[MP42AudioTrack class]]) {
-                MP42AudioTrack *a = (MP42AudioTrack *)ref;
-                if (a.fallbackTrack == track)
-                    a.fallbackTrack = nil;
-                if (a.followsTrack == track)
-                    a.followsTrack = nil;
-            }
-            if ([ref isMemberOfClass:[MP42SubtitleTrack class]]) {
-                MP42SubtitleTrack *a = (MP42SubtitleTrack *)ref;
-                if (a.forcedTrack == track)
-                    a.forcedTrack = nil;
-            }
-        }
-
-        index = [indexes indexGreaterThanIndex:index];
-    }
-
-    [_tracks removeObjectsAtIndexes:indexes];
-}
-
 - (NSUInteger)tracksCount
 {
     return [_tracks count];
 }
 
-- (id)trackAtIndex:(NSUInteger) index
+- (id)trackAtIndex:(NSUInteger)index
 {
     return [_tracks objectAtIndex:index];
+}
+
+- (id)trackWithTrackID:(NSUInteger)trackId
+{
+    for (MP42Track *track in _tracks) {
+        if (track.Id == trackId)
+            return track;
+    }
+
+    return nil;
 }
 
 - (void)addTrack:(id)object
@@ -235,6 +233,38 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     if (track.muxed)
         [_tracksToBeDeleted addObject:track];
     [_tracks removeObjectAtIndex:index];
+}
+
+- (void)removeTracksAtIndexes:(NSIndexSet *)indexes
+{
+    NSUInteger index = [indexes firstIndex];
+    while (index != NSNotFound) {
+        MP42Track *track = [_tracks objectAtIndex:index];
+
+        // track is muxed, it needs to be removed from the file
+        if (track.muxed)
+            [_tracksToBeDeleted addObject:track];
+
+        // Remove the reference
+        for (MP42Track *ref in _tracks) {
+            if ([ref isMemberOfClass:[MP42AudioTrack class]]) {
+                MP42AudioTrack *a = (MP42AudioTrack *)ref;
+                if (a.fallbackTrack == track)
+                    a.fallbackTrack = nil;
+                if (a.followsTrack == track)
+                    a.followsTrack = nil;
+            }
+            if ([ref isMemberOfClass:[MP42SubtitleTrack class]]) {
+                MP42SubtitleTrack *a = (MP42SubtitleTrack *)ref;
+                if (a.forcedTrack == track)
+                    a.forcedTrack = nil;
+            }
+        }
+
+        index = [indexes indexGreaterThanIndex:index];
+    }
+
+    [_tracks removeObjectsAtIndexes:indexes];
 }
 
 - (void)moveTrackAtIndex:(NSUInteger)index toIndex:(NSUInteger) newIndex

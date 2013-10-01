@@ -33,9 +33,9 @@
                 [[fallback menu] addItem:newItem];
                 [_fallbacks addObject:fileTrack];
                 
-                if ((fileTrack.Id && track.fallbackTrackId == fileTrack.Id) || track.fallbackTrack == fileTrack) {
+                if (track.fallbackTrack == fileTrack)
                     selectedItem = i;
-                }
+
                 i++;
             }
         }
@@ -62,9 +62,9 @@
             [[follows menu] addItem:newItem];
             [_follows addObject:fileTrack];
 
-            if ((fileTrack.Id && track.followsTrackId == fileTrack.Id) || track.followsTrack == fileTrack) {
+            if (track.followsTrack == fileTrack)
                 selectedItem = i;
-            }
+
             i++;
         }
     }

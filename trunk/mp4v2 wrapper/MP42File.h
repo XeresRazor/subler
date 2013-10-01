@@ -59,6 +59,7 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
 
 - (NSUInteger)tracksCount;
 - (id)trackAtIndex:(NSUInteger)index;
+- (id)trackWithTrackID:(NSUInteger)trackId;
 
 - (void)addTrack:(id)object;
 
