@@ -13,17 +13,16 @@
 extern NSString *SBPresetManagerUpdatedNotification;
 
 @interface SBPresetManager : NSObject {
-@private
-    NSMutableArray *presets;
+    NSMutableArray *_presets;
 }
 
-+ (SBPresetManager*)sharedManager;
++ (SBPresetManager *)sharedManager;
 
-- (void) newSetFromExistingMetadata:(MP42Metadata*)set;
-- (BOOL) savePresets;
+- (void)newSetFromExistingMetadata:(MP42Metadata *)set;
+- (BOOL)savePresets;
 
-- (BOOL) removePresetAtIndex:(NSUInteger)index;
+- (BOOL)removePresetAtIndex:(NSUInteger)index;
 
-@property (readonly) NSArray *presets;
+@property(readonly) NSArray *presets;
 
 @end

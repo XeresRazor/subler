@@ -52,7 +52,7 @@
     [optBar setUsesThreadedAnimation:NO];
 }
 
-- (void)windowControllerDidLoadNib:(NSWindowController *) aController
+- (void)windowControllerDidLoadNib:(NSWindowController *)aController
 {
     [super windowControllerDidLoadNib:aController];
 
@@ -98,7 +98,7 @@
 
 #pragma mark Read methods
 
-- (void)reloadFile: (NSURL*)absoluteURL
+- (void)reloadFile:(NSURL *)absoluteURL
 {
     if (absoluteURL) {
         MP42File *newFile = [[MP42File alloc] initWithExistingFile:absoluteURL andDelegate:self];
@@ -150,7 +150,7 @@
 
 #pragma mark Save methods
 
-- (BOOL)saveDidComplete: (NSError **)outError URL:(NSURL*)absoluteURL
+- (BOOL)saveDidComplete:(NSError **)outError URL:(NSURL *)absoluteURL
 {
     [NSApp endSheet: savingWindow];
     [savingWindow orderOut:self];
@@ -273,7 +273,7 @@
     return YES;
 }
 
-- (IBAction) setSaveFormat: (id) sender
+- (IBAction)setSaveFormat:(id)sender
 {
     NSString *requiredFileType = nil;
     NSInteger index = [sender indexOfSelectedItem];
@@ -296,18 +296,20 @@
     [[NSUserDefaults standardUserDefaults] setObject:requiredFileType forKey:@"SBSaveFormat"];
 }
 
-- (IBAction) cancelSaveOperation: (id) sender {
+- (IBAction)cancelSaveOperation:(id)sender
+{
     [cancelSave setEnabled:NO];
     [mp4File cancel];
 }
 
-- (IBAction) saveAndOptimize: (id)sender
+- (IBAction)saveAndOptimize:(id)sender
 {
     _optimize = YES;
     [self saveDocument:sender];
 }
 
-- (IBAction) sendToExternalApp: (id) sender {        
+- (IBAction)sendToExternalApp:(id)sender
+{
     /* send to itunes after save */
     NSAppleScript *myScript = [[NSAppleScript alloc] initWithSource: [NSString stringWithFormat: @"%@%@%@", @"tell application \"iTunes\" to open (POSIX file \"", [[self fileURL] path], @"\")"]];
     [myScript executeAndReturnError: nil];
@@ -316,7 +318,8 @@
 
 #pragma mark Interface validation
 
-- (void)progressStatus: (CGFloat)progress {
+- (void)progressStatus:(CGFloat)progress
+{
     dispatch_async(dispatch_get_main_queue(), ^{
         [optBar setIndeterminate:NO];
         [optBar setDoubleValue:progress];
@@ -377,7 +380,7 @@
     return NO;
 }
 
-- (BOOL)validateToolbarItem: (NSToolbarItem *) toolbarItem
+- (BOOL)validateToolbarItem:(NSToolbarItem *)toolbarItem
 {
     if (toolbarItem == addTracks)
             return YES;
@@ -397,15 +400,15 @@
 
 #pragma mark table datasource
 
-- (NSInteger) numberOfRowsInTableView: (NSTableView *) t
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)t
 {
-    if( !mp4File )
+    if (!mp4File)
         return 0;
 
     return [mp4File tracksCount];
 }
 
-- (id) tableView:(NSTableView *)tableView 
+- (id)tableView:(NSTableView *)tableView
 objectValueForTableColumn:(NSTableColumn *)tableColumn 
              row:(NSInteger)rowIndex
 {
@@ -439,10 +442,10 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     return nil;
 }
 
-- (void) tableView: (NSTableView *) tableView 
-    setObjectValue: (id) anObject 
-    forTableColumn: (NSTableColumn *) tableColumn 
-               row: (NSInteger) rowIndex
+- (void)tableView:(NSTableView *)tableView
+   setObjectValue:(id)anObject
+   forTableColumn:(NSTableColumn *)tableColumn
+              row:(NSInteger)rowIndex
 {
     MP42Track *track = [mp4File trackAtIndex:rowIndex];
 
@@ -523,7 +526,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [[propertyView view] setAutoresizingMask:( NSViewWidthSizable | NSViewHeightSizable )];
 }
 
-- (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard
+- (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
 {
     // Copy the row numbers to the pasteboard.
     if ([[mp4File trackAtIndex:[rowIndexes firstIndex]] muxed])
@@ -585,7 +588,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 #pragma mark Various things
 
-- (IBAction) sendToQueue:(id)sender
+- (IBAction)sendToQueue:(id)sender
 {
     SBQueueController *queue =  [SBQueueController sharedManager];
     if ([mp4File hasFileRepresentation]) {
@@ -615,7 +618,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     }
 }
 
-- (IBAction) searchMetadata: (id) sender
+- (IBAction)searchMetadata:(id)sender
 {
     importWindow = [[SBMetadataSearchController alloc] initWithDelegate:self];
     
@@ -623,7 +626,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];
 }
 
-- (IBAction) showTrackOffsetSheet: (id) sender
+- (IBAction)showTrackOffsetSheet:(id)sender
 {
     [offset setStringValue:[NSString stringWithFormat:@"%lld",
                             [[[mp4File tracks] objectAtIndex:[fileTracksTable selectedRow]] startOffset]]];
@@ -632,7 +635,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];
 }
 
-- (IBAction) setTrackOffset: (id) sender
+- (IBAction)setTrackOffset:(id)sender
 {
     MP42Track *selectedTrack = [[mp4File tracks] objectAtIndex:[fileTracksTable selectedRow]];
     [selectedTrack setStartOffset:[offset integerValue]];
@@ -643,13 +646,13 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [offsetWindow orderOut:self];
 }
 
-- (IBAction) closeOffsetSheet: (id) sender
+- (IBAction)closeOffsetSheet:(id)sender
 {
     [NSApp endSheet: offsetWindow];
     [offsetWindow orderOut:self];
 }
 
-- (IBAction)deleteTrack:(id) sender
+- (IBAction)deleteTrack:(id)sender
 {
     if ([fileTracksTable selectedRow] == -1  || [fileTracksTable editedRow] != -1)
         return;
@@ -663,7 +666,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 // Import tracks from file
 
-- (void) addChapterTrack: (NSURL *) fileURL
+- (void)addChapterTrack:(NSURL *)fileURL
 {
     [mp4File addTrack:[MP42ChapterTrack chapterTrackFromFile:fileURL]];
 
@@ -711,7 +714,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [fileTracksTable reloadData];
 }
 
-- (void) importDoneWithTracks: (NSArray*) tracksToBeImported andMetadata: (MP42Metadata*) metadata
+- (void)importDoneWithTracks:(NSArray *)tracksToBeImported andMetadata:(MP42Metadata *)metadata
 {
     if (tracksToBeImported) {
         for (id track in tracksToBeImported)
@@ -726,7 +729,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     }
 }
 
-- (void) metadataImportDone: (MP42Metadata*) metadataToBeImported
+- (void)metadataImportDone:(MP42Metadata *)metadataToBeImported
 {
     if (metadataToBeImported) {
         [mp4File.metadata mergeMetadata:metadataToBeImported];
@@ -750,16 +753,14 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [importWindow autorelease], importWindow = nil;
 }
 
-- (void) addMetadata: (NSURL *) URL
+- (void)addMetadata:(NSURL *)URL
 {
-    if ([[URL pathExtension] isEqualToString:@"xml"] || [[URL pathExtension] isEqualToString:@"nfo"])
-    {
+    if ([[URL pathExtension] isEqualToString:@"xml"] || [[URL pathExtension] isEqualToString:@"nfo"]) {
         MP42Metadata *xmlMetadata = [[MP42Metadata alloc] initWithFileURL:URL];
         [mp4File.metadata mergeMetadata:xmlMetadata];
         [xmlMetadata release];
     }
-    else
-    {
+    else {
         MP42File *file = nil;
         if ((file = [[MP42File alloc] initWithExistingFile:URL andDelegate:self])) {
             [mp4File.metadata mergeMetadata:file.metadata];
@@ -771,7 +772,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [self updateChangeCount:NSChangeDone];
 }
 
-- (IBAction) selectMetadataFile: (id) sender
+- (IBAction)selectMetadataFile:(id)sender
 {
     NSOpenPanel *panel = [NSOpenPanel openPanel];
     panel.allowsMultipleSelection = NO;
@@ -786,7 +787,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     }];
 }
 
-- (IBAction) export: (id) sender
+- (IBAction)export:(id)sender
 {
     NSInteger row = [fileTracksTable selectedRow];
     NSSavePanel * panel = [NSSavePanel savePanel];
@@ -825,7 +826,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     }];
 }
 
-- (IBAction) addChaptersEvery: (id) sender
+- (IBAction)addChaptersEvery:(id)sender
 {
     MP42ChapterTrack * chapterTrack = [mp4File chapters];
     NSInteger minutes = [sender tag] * 60 * 1000;
@@ -852,7 +853,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     [self updateChangeCount:NSChangeDone];
 }
 
-- (IBAction) iTunesFriendlyTrackGroups: (id) sender
+- (IBAction)iTunesFriendlyTrackGroups:(id)sender
 {
     [mp4File iTunesFriendlyTrackGroups];
     [fileTracksTable reloadData];
@@ -901,14 +902,6 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     return NO;
 }
 
-- (void)dealloc
-{
-    [propertyView release];
-    [mp4File release];
-    [languages release];
-    [super dealloc];
-}
-
 - (MP42File *)mp4File {
     return mp4File;
 }
@@ -918,6 +911,14 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     mp4File = [mp4 retain];
     [fileTracksTable reloadData];
     [self tableViewSelectionDidChange:nil];
+}
+
+- (void)dealloc
+{
+    [propertyView release];
+    [mp4File release];
+    [languages release];
+    [super dealloc];
 }
 
 @end
