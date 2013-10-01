@@ -24,6 +24,7 @@ typedef struct rgba_color {
 } rgba_color;
 
 rgba_color make_color(u_int8_t r, u_int8_t g, u_int8_t b, u_int8_t a);
+int compare_color(rgba_color c1, rgba_color c2);
 
 @interface MP42Style : NSObject
 {
