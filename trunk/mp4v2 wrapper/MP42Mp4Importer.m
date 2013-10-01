@@ -22,7 +22,6 @@
 @implementation MP4DemuxkHelper
 @end
 
-
 @implementation MP42Mp4Importer
 
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError

@@ -25,13 +25,13 @@
 + (void)registerUserDefaults;
 
 - (id)init;
-- (IBAction) clearRecentSearches:(id) sender;
-- (IBAction) deleteCachedMetadata:(id) sender;
-- (IBAction) toggleInfoWindow:(id) sender;
+- (IBAction)clearRecentSearches:(id) sender;
+- (IBAction)deleteCachedMetadata:(id) sender;
+- (IBAction)toggleInfoWindow:(id) sender;
 
-- (IBAction) deletePreset:(id) sender;
+- (IBAction)deletePreset:(id) sender;
 
-- (NSArray *) ratingsCountries;
-- (IBAction) updateRatingsCountry:(id)sender;
+- (NSArray *)ratingsCountries;
+- (IBAction)updateRatingsCountry:(id)sender;
 
 @end
