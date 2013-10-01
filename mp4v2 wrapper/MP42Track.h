@@ -27,28 +27,31 @@ typedef struct muxer_helper {
 } muxer_helper;
 
 @interface MP42Track : NSObject <NSCoding, NSCopying> {
-    MP4TrackId  Id;
-    MP4TrackId  sourceId;
+    MP4TrackId  _Id;
+    MP4TrackId  _sourceId;
 
-    NSURL       *sourceURL;
-    NSString    *sourceFormat;
-    NSString    *format;
-    NSString    *name;
-    NSString    *language;
-    BOOL        enabled;
-    uint64_t    alternate_group;
-    int64_t     startOffset;
+    NSURL       *_sourceURL;
+    NSString    *_format;
+    NSString    *_sourceFormat;
+    NSString    *_mediaType;
 
-    BOOL    isEdited;
-    BOOL    muxed;
-    BOOL    needConversion;
+    NSString    *_name;
+    NSString    *_language;
+
+    BOOL        _enabled;
+    uint64_t    _alternate_group;
+    int64_t     _startOffset;
+
+    BOOL    _isEdited;
+    BOOL    _muxed;
+    BOOL    _needConversion;
 
     uint64_t    _size;
-	uint32_t    timescale;
-	uint32_t    bitrate; 
-	MP4Duration duration;
-    NSMutableDictionary *updatedProperty;
+	uint32_t    _timescale;
+	uint32_t    _bitrate;
+	MP4Duration _duration;
 
+    NSMutableDictionary *_updatedProperty;
     muxer_helper *_helper;
 }
 
@@ -56,8 +59,10 @@ typedef struct muxer_helper {
 @property(nonatomic, readwrite) MP4TrackId sourceId;
 
 @property(nonatomic, readwrite, retain) NSURL *sourceURL;
-@property(nonatomic, readwrite, retain) NSString *sourceFormat;
 @property(nonatomic, readwrite, retain) NSString *format;
+@property(nonatomic, readwrite, retain) NSString *sourceFormat;
+@property(nonatomic, readonly, retain) NSString *mediaType;
+
 @property(nonatomic, readwrite, retain) NSString *name;
 @property(nonatomic, readwrite, retain) NSString *language;
 
@@ -76,8 +81,6 @@ typedef struct muxer_helper {
 @property(nonatomic, readwrite) uint64_t dataLength;
 
 @property(nonatomic, readonly) muxer_helper *muxer_helper;
-
-@property(nonatomic, readwrite, retain) NSMutableDictionary *updatedProperty;
 
 - (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
 

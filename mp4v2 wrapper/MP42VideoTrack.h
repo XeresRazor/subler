@@ -26,8 +26,8 @@
     uint32_t offsetX, offsetY;
 
     // H.264 profile
-    uint8_t origProfile, origLevel;
-    uint8_t newProfile, newLevel;
+    uint8_t _origProfile, _origLevel;
+    uint8_t _newProfile, _newLevel;
 }
 
 @property(nonatomic, readwrite) uint64_t width;

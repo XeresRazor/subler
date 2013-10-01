@@ -16,12 +16,13 @@
 - (id)init
 {
     if ((self = [super init])) {
-        name = [self defaultName];
-        format = MP42SubtitleFormatText;
-        language = @"English";
-        isEdited = YES;
-        muxed = NO;
-        enabled = NO;
+        _name = [self defaultName];
+        _format = MP42SubtitleFormatText;
+        _language = @"English";
+        _isEdited = YES;
+        _muxed = NO;
+        _enabled = NO;
+        _mediaType = MP42MediaTypeText;
 
         chapters = [[NSMutableArray alloc] init];
     }
@@ -32,10 +33,12 @@
 - (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
     if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle])) {
-        if (!name || [name isEqualToString:@"Text Track"])
-            name = [self defaultName];
-        if (!format)
-            format = MP42SubtitleFormatText;
+        if (!_name || [_name isEqualToString:@"Text Track"])
+            _name = [self defaultName];
+        if (!_format)
+            _format = MP42SubtitleFormatText;
+
+        _mediaType = MP42MediaTypeText;
         chapters = [[NSMutableArray alloc] init];
 
         MP4Chapter_t *chapter_list = NULL;
@@ -73,18 +76,18 @@
 
 - (id)initWithTextFile:(NSURL *)URL
 {
-    if ((self = [super init]))
-    {
-        name = [self defaultName];
-        format = MP42SubtitleFormatText;
-        sourceURL = [URL retain];
-        language = @"English";
-        isEdited = YES;
-        muxed = NO;
-        enabled = NO;
+    if ((self = [super init])) {
+        _name = [self defaultName];
+        _format = MP42SubtitleFormatText;
+        _sourceURL = [URL retain];
+        _language = @"English";
+        _isEdited = YES;
+        _muxed = NO;
+        _enabled = NO;
+        _mediaType = MP42MediaTypeText;
 
         chapters = [[NSMutableArray alloc] init];
-        LoadChaptersFromPath([sourceURL path], chapters);   
+        LoadChaptersFromPath([_sourceURL path], chapters);
         [chapters sortUsingSelector:@selector(compare:)];
     }
     
@@ -102,7 +105,7 @@
     newChapter.title = title;
     newChapter.timestamp = timestamp;
 
-    [self setIsEdited:YES];
+    _isEdited = YES;
 
     [chapters addObject:newChapter];
     [chapters sortUsingSelector:@selector(compare:)];
@@ -111,20 +114,20 @@
 
 - (void)removeChapterAtIndex:(NSUInteger)index
 {
-    [self setIsEdited:YES];
+    _isEdited = YES;
     [chapters removeObjectAtIndex:index];
 }
 
 - (void)setTimestamp:(MP4Duration)timestamp forChapter:(SBTextSample *)chapterSample
 {
-    [self setIsEdited:YES];
+    _isEdited = YES;
     [chapterSample setTimestamp:timestamp];
     [chapters sortUsingSelector:@selector(compare:)];
 }
 
 - (void)setTitle:(NSString *)title forChapter:(SBTextSample *)chapterSample
 {
-    [self setIsEdited:YES];
+    _isEdited = YES;
     [chapterSample setTitle:title];
 }
 
@@ -137,7 +140,7 @@
 {
     BOOL success = YES;
 
-    if (isEdited) {
+    if (_isEdited) {
         MP4Chapter_t * fileChapters = 0;
         uint32_t i, refTrackDuration, chapterCount = 0;
         uint64_t sum = 0, moovDuration;
@@ -145,7 +148,7 @@
         // get the list of chapters
         MP4GetChapters(fileHandle, &fileChapters, &chapterCount, MP4ChapterTypeQt);
 
-        MP4DeleteChapters(fileHandle, MP4ChapterTypeAny, Id);
+        MP4DeleteChapters(fileHandle, MP4ChapterTypeAny, _Id);
         updateTracksCount(fileHandle);
 
         MP4TrackId refTrack = findFirstVideoTrack(fileHandle);
@@ -200,7 +203,7 @@
             MP4SetChapters(fileHandle, fileChapters, i, MP4ChapterTypeAny);
 
             free(fileChapters);
-            success = Id = findChapterTrackId(fileHandle);
+            success = _Id = findChapterTrackId(fileHandle);
         }
     }
     if (!success) {
@@ -211,7 +214,7 @@
 
         return success;
     }
-    else if (Id)
+    else if (_Id)
         success = [super writeToFile:fileHandle error:outError];
 
     return success;

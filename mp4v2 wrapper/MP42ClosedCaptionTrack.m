@@ -14,7 +14,9 @@
 
 - (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
-    self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle];
+    if (self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle]) {
+        _mediaType = MP42MediaTypeClosedCaption;
+    }
 
     return self;
 }
@@ -22,8 +24,9 @@
 - (id)init
 {
     if ((self = [super init])) {
-        name = [self defaultName];
-        format = MP42ClosedCaptionFormatCEA608;
+        _name = [self defaultName];
+        _format = MP42ClosedCaptionFormatCEA608;
+        _mediaType = MP42MediaTypeClosedCaption;
     }
 
     return self;
@@ -31,12 +34,12 @@
 
 - (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError
 {
-    if (isEdited && !muxed)
-        muxed = YES;
+    if (_isEdited && !_muxed)
+        _muxed = YES;
 
     [super writeToFile:fileHandle error:outError];
 
-    return Id;
+    return _Id;
 }
 
 - (NSString *)defaultName {

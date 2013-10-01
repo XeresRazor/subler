@@ -244,8 +244,6 @@ static NSString *getLevelName(uint8_t level) {
         case 1:
             track.newProfile = track.origProfile;
             track.newLevel = track.origLevel;
-            [track.updatedProperty setValue:nil forKey:@"profile"];
-            [track.updatedProperty setValue:nil forKey:@"level"];
             return;
         case 6621:
             track.newProfile = 66;
@@ -266,37 +264,34 @@ static NSString *getLevelName(uint8_t level) {
         default:
             return;
     }
+
     [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
-    [track.updatedProperty setValue:@"True" forKey:@"profile"];
-    [track.updatedProperty setValue:@"True" forKey:@"level"];
-    track.isEdited = YES;
 }
 
 - (IBAction)setForcedSubtitles:(id)sender
 {
     if ([track isKindOfClass:[MP42SubtitleTrack class]]) {
-        MP42SubtitleTrack * subTrack = (MP42SubtitleTrack*)track;
+        MP42SubtitleTrack *subTrack = (MP42SubtitleTrack *)track;
         NSInteger tagName = [[sender selectedItem] tag];
 
         switch (tagName) {
             case 0:
-                subTrack.someSamplesAreForced = FALSE;
-                subTrack.allSamplesAreForced = FALSE;
+                subTrack.someSamplesAreForced = NO;
+                subTrack.allSamplesAreForced = NO;
                 break;
             case 1:
-                subTrack.someSamplesAreForced = TRUE;
-                subTrack.allSamplesAreForced = FALSE;
+                subTrack.someSamplesAreForced = YES;
+                subTrack.allSamplesAreForced = NO;
                 break;
             case 2:
-                subTrack.someSamplesAreForced = TRUE;
-                subTrack.allSamplesAreForced = TRUE;
+                subTrack.someSamplesAreForced = YES;
+                subTrack.allSamplesAreForced = YES;
                 break;
             default:
                 return;
         }
+
         [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
-        [track.updatedProperty setValue:@"True" forKey:@"forcedSubtitles"];
-        track.isEdited = YES;
     }
 }
 
