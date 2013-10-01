@@ -46,7 +46,7 @@ NSString *SBPresetManagerUpdatedNotification = @"SBPresetManagerUpdatedNotificat
     [[NSNotificationCenter defaultCenter] postNotificationName:SBPresetManagerUpdatedNotification object:self];    
 }
 
-- (void)newSetFromExistingMetadata:(MP42Metadata*)set
+- (void)newSetFromExistingMetadata:(MP42Metadata *)set
 {
     id newSet = [set copy];
     [_presets addObject:newSet];

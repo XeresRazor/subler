@@ -37,6 +37,7 @@
                                                              @"1",              @"SBAudioMixdown",
                                                              @"96",             @"SBAudioBitrate",
                                                              @"YES",            @"SBAudioConvertAC3",
+                                                             @"YES",            @"SBAudioKeepAC3",
                                                              @"YES",            @"SBSubtitleConvertBitmap",
                                                              @"All countries",  @"SBRatingsCountry",
                                                              @"m4v",            @"SBSaveFormat",
@@ -261,7 +262,7 @@
 
     //set title label
     if (sender)
-        [window setTitle: [sender label]];
+        [window setTitle:[sender label]];
     else {
         NSToolbar *toolbar = [window toolbar];
         NSString *itemIdentifier = [toolbar selectedItemIdentifier];

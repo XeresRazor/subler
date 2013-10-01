@@ -29,12 +29,12 @@
 
 - (id)initWithDelegate:(id)del andFiles: (NSArray *)files error:(NSError **)outError;
 
-- (IBAction) closeWindow: (id) sender;
-- (IBAction) addTracks: (id) sender;
+- (IBAction)closeWindow:(id)sender;
+- (IBAction)addTracks:(id)sender;
 
 @end
 
 @interface NSObject (FileImportDelegateMethod)
-- (void) importDoneWithTracks: (NSArray*) tracksToBeImported andMetadata: (MP42Metadata*)metadata;
+- (void)importDoneWithTracks:(NSArray *)tracksToBeImported andMetadata:(MP42Metadata *)metadata;
 
 @end

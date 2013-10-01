@@ -47,9 +47,16 @@
                 [_importCheckArray addObject: [NSNumber numberWithBool:NO]];
 
             if ([[object format] isEqualToString:MP42AudioFormatAC3] &&
-                [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue])
-                [_actionArray addObject:[NSNumber numberWithInteger:[[[NSUserDefaults standardUserDefaults]
-                                                                 valueForKey:@"SBAudioMixdown"] integerValue]]];
+                [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue]) {
+                if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioKeepAC3"] boolValue] &&
+                    [object fallbackTrackId] == 0)
+                    [_actionArray addObject:[NSNumber numberWithInteger:6]];
+                else if ([object fallbackTrackId])
+                    [_actionArray addObject:[NSNumber numberWithInteger:0]];
+                else
+                    [_actionArray addObject:[NSNumber numberWithInteger:[[[NSUserDefaults standardUserDefaults]
+                                                                          valueForKey:@"SBAudioMixdown"] integerValue]]];
+            }
             else if ([[object format] isEqualToString:MP42AudioFormatDTS])
                 [_actionArray addObject:[NSNumber numberWithInteger:1]];
             else if ([[object format] isEqualToString:MP42SubtitleFormatVobSub] &&
