@@ -110,6 +110,7 @@
 		A9D47B5B17B239E200900BCA /* EncodeComplete@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9D47B5717B239E200900BCA /* EncodeComplete@2x.png */; };
 		A9D825A912ABF72D00C1AA54 /* MP42CCImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D825A812ABF72D00C1AA54 /* MP42CCImporter.m */; };
 		A9EBA68912AE28DF0092D645 /* MP42AC3Importer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9EBA68812AE28DF0092D645 /* MP42AC3Importer.m */; };
+		A9ED7B22180067A2008FD3A8 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9ED7B21180067A2008FD3A8 /* IOKit.framework */; };
 		A9ED7C4E1115CFBD00423241 /* MP42Mp4Importer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ED7C4D1115CFBD00423241 /* MP42Mp4Importer.m */; };
 		A9ED7C8B1115D32E00423241 /* MP42QTImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ED7C8A1115D32E00423241 /* MP42QTImporter.m */; };
 		A9F183DD12C201760035BDE1 /* downmix.c in Sources */ = {isa = PBXBuildFile; fileRef = A9F183DB12C201760035BDE1 /* downmix.c */; };
@@ -361,6 +362,7 @@
 		A9D825A812ABF72D00C1AA54 /* MP42CCImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42CCImporter.m; path = "mp4v2 wrapper/MP42CCImporter.m"; sourceTree = "<group>"; };
 		A9EBA68712AE28DF0092D645 /* MP42AC3Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AC3Importer.h; path = "mp4v2 wrapper/MP42AC3Importer.h"; sourceTree = "<group>"; };
 		A9EBA68812AE28DF0092D645 /* MP42AC3Importer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42AC3Importer.m; path = "mp4v2 wrapper/MP42AC3Importer.m"; sourceTree = "<group>"; };
+		A9ED7B21180067A2008FD3A8 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		A9ED7C4C1115CFBD00423241 /* MP42Mp4Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Mp4Importer.h; path = "mp4v2 wrapper/MP42Mp4Importer.h"; sourceTree = "<group>"; };
 		A9ED7C4D1115CFBD00423241 /* MP42Mp4Importer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Mp4Importer.m; path = "mp4v2 wrapper/MP42Mp4Importer.m"; sourceTree = "<group>"; };
 		A9ED7C891115D32E00423241 /* MP42QTImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42QTImporter.h; path = "mp4v2 wrapper/MP42QTImporter.h"; sourceTree = "<group>"; };
@@ -402,6 +404,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9ED7B22180067A2008FD3A8 /* IOKit.framework in Frameworks */,
 				A9707B9317B139780010F3DB /* Quartz.framework in Frameworks */,
 				A97C78DA167F5F6100A7AD32 /* libavcodec.a in Frameworks */,
 				A97C78DB167F5F6100A7AD32 /* libavdevice.a in Frameworks */,
@@ -575,6 +578,7 @@
 		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A9ED7B21180067A2008FD3A8 /* IOKit.framework */,
 				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
 				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
 			);

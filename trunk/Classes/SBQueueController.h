@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <IOKit/pwr_mgt/IOPMLib.h>
 #import "SBTableView.h"
 
 @class MP42File;
@@ -37,7 +38,6 @@ typedef NSInteger SBQueueStatus;
 
     IBOutlet NSScrollView   *tableScrollView;
     IBOutlet SBTableView    *tableView;
-    NSMutableArray *filesArray;
 
     NSURL *destination;
     BOOL customDestination;
@@ -45,11 +45,14 @@ typedef NSInteger SBQueueStatus;
 
     NSImage *docImg;
 
-    dispatch_queue_t    queue;
+    dispatch_queue_t   queue;
     MP42File           *_currentMP4;
-    SBQueueStatus       status;
 
-    BOOL                _cancelled;
+    NSMutableArray     *filesArray;
+    SBQueueStatus      status;
+
+    IOPMAssertionID _assertionID;
+    BOOL            _cancelled;
 }
 
 @property (readonly) SBQueueStatus status;

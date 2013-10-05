@@ -322,10 +322,28 @@
                                                                               error:outError];
 
         for (MP42Track *track in fileImporter.tracks) {
-            if (([track.format isEqualToString:MP42AudioFormatAC3] || [track.format isEqualToString:MP42AudioFormatDTS]) && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue])
-                track.needConversion = YES;
+            if ([track.format isEqualToString:MP42AudioFormatAC3]) {
+                if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue]) {
+                    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioKeepAC3"] boolValue] ||
+                        ![(MP42AudioTrack *)track fallbackTrack]) {
+                        MP42AudioTrack *copy = [track copy];
+                        [copy setNeedConversion:YES];
+                        [copy setMixdownType:SBDolbyPlIIMixdown];
 
-            if ([track.format isEqualToString:MP42SubtitleFormatVobSub] && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBSubtitleConvertBitmap"] boolValue])
+                        [(MP42AudioTrack *)track setFallbackTrack:copy];
+
+                        [copy setTrackImporterHelper:fileImporter];
+                        [mp4File addTrack:copy];
+
+                        [copy release];
+                    }
+
+                    track.needConversion = YES;
+                }
+            }
+
+            if ([track.format isEqualToString:MP42AudioFormatDTS] ||
+                ([track.format isEqualToString:MP42SubtitleFormatVobSub] && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBSubtitleConvertBitmap"] boolValue]))
                 track.needConversion = YES;
 
             [track setTrackImporterHelper:fileImporter];
@@ -387,6 +405,11 @@
     NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"chaptersPreviewTrack"] boolValue])
         [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
+
+    // Enable sleep assertion
+    CFStringRef reasonForActivity= CFSTR("Subler Queue Started");
+    IOReturn io_success = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep,
+                                                   kIOPMAssertionLevelOn, reasonForActivity, &_assertionID);
 
     dispatch_async(queue, ^{
         NSError *outError = nil;
@@ -493,6 +516,10 @@
         if([destination respondsToSelector:@selector(stopAccessingSecurityScopedResource)])
             [destination stopAccessingSecurityScopedResource];
 #endif
+
+        // Disable sleep assertion
+        if (io_success == kIOReturnSuccess)
+            IOPMAssertionRelease(_assertionID);
 
         dispatch_async(dispatch_get_main_queue(), ^{
             _currentMP4 = nil;
