@@ -20,10 +20,11 @@
     if ([[track format] isEqualToString:MP42AudioFormatAC3]) {
         NSInteger i = 1;
         NSInteger selectedItem = 0;
-        for (MP42Track *fileTrack in [mp4file tracks]) {
-            if ([fileTrack isMemberOfClass:[MP42AudioTrack class]] && [[fileTrack format] isEqualToString:MP42AudioFormatAAC]) {
+
+        for (MP42AudioTrack *fileTrack in [mp4file tracksWithMediaType:MP42MediaTypeAudio]) {
+            if ([[fileTrack format] isEqualToString:MP42AudioFormatAAC]) {
                 NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ - %@ - %@",
-                                                                          fileTrack.Id ? [NSString stringWithFormat:@"%d", fileTrack.Id] : @"NA",
+                                                                          fileTrack.Id ? [NSString stringWithFormat:@"%d", fileTrack.Id] : @"na",
                                                                           fileTrack.name,
                                                                           fileTrack.language]
                                                                   action:@selector(setFallbackTrack:)
@@ -46,27 +47,26 @@
     }
 
     _follows = [[NSMutableArray alloc] init];
-    
+
     NSInteger i = 1;
     NSInteger selectedItem = 0;
-    for (MP42Track *fileTrack in [mp4file tracks]) {
-        if ([fileTrack isMemberOfClass:[MP42SubtitleTrack class]]) {
-            NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ - %@ - %@",
-                                                                      fileTrack.Id ? [NSString stringWithFormat:@"%d", fileTrack.Id] : @"NA",
-                                                                      fileTrack.name,
-                                                                      fileTrack.language]
-                                                              action:@selector(setFollowsTrack:)
-                                                       keyEquivalent:@""] autorelease];
-            [newItem setTarget:self];
-            [newItem setTag:i];
-            [[follows menu] addItem:newItem];
-            [_follows addObject:fileTrack];
 
-            if (track.followsTrack == fileTrack)
-                selectedItem = i;
+    for (MP42SubtitleTrack *fileTrack in [mp4file tracksWithMediaType:MP42MediaTypeSubtitle]) {
+        NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ - %@ - %@",
+                                                                  fileTrack.Id ? [NSString stringWithFormat:@"%d", fileTrack.Id] : @"na",
+                                                                  fileTrack.name,
+                                                                  fileTrack.language]
+                                                          action:@selector(setFollowsTrack:)
+                                                   keyEquivalent:@""] autorelease];
+        [newItem setTarget:self];
+        [newItem setTag:i];
+        [[follows menu] addItem:newItem];
+        [_follows addObject:fileTrack];
 
-            i++;
-        }
+        if (track.followsTrack == fileTrack)
+            selectedItem = i;
+
+        i++;
     }
 
     [follows selectItemWithTag:selectedItem];

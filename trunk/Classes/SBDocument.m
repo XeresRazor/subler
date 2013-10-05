@@ -311,7 +311,9 @@
 - (IBAction)sendToExternalApp:(id)sender
 {
     /* send to itunes after save */
-    NSAppleScript *myScript = [[NSAppleScript alloc] initWithSource: [NSString stringWithFormat: @"%@%@%@", @"tell application \"iTunes\" to open (POSIX file \"", [[self fileURL] path], @"\")"]];
+    NSAppleScript *myScript = [[NSAppleScript alloc] initWithSource:
+                               [NSString stringWithFormat:@"%@%@%@", @"tell application \"iTunes\" to open (POSIX file \"", [[self fileURL] path], @"\")"]];
+
     [myScript executeAndReturnError: nil];
     [myScript release];
 }

@@ -183,6 +183,18 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     return nil;
 }
 
+- (NSArray *)tracksWithMediaType:(NSString *)mediaType
+{
+    NSMutableArray *tracks = [[[NSMutableArray alloc] init] autorelease];
+
+    for (MP42Track *track in _tracks) {
+        if ([track.mediaType isEqualToString:mediaType])
+            [tracks addObject:track];
+    }
+
+    return [[tracks copy] autorelease];
+}
+
 - (void)addTrack:(id)object
 {
     MP42Track *track = (MP42Track *) object;
@@ -369,8 +381,8 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
         _fileURL = [url retain];
 
         NSString *fileExtension = [_fileURL pathExtension];
-        char* majorBrand = "mp42";
-        char* supportedBrands[4];
+        char *majorBrand = "mp42";
+        char *supportedBrands[4];
         uint32_t supportedBrandsCount = 0;
         uint32_t flags = 0;
 
