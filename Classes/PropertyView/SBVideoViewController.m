@@ -94,12 +94,12 @@ static NSString *getLevelName(uint8_t level) {
         [videoProfileLabel setHidden:YES];
         [videoProfileDescription setHidden:YES];
     }
-    
+
     if ([track isKindOfClass:[MP42SubtitleTrack class]]) {
         [forcedSubs setEnabled:YES];
         [forcedSubs setHidden:NO];
         [forcedSubsLabel setHidden:NO];
-        
+
         [forced setHidden:NO];
         [forcedLabel setHidden:NO];
 
@@ -112,31 +112,29 @@ static NSString *getLevelName(uint8_t level) {
         } else if (subTrack.allSamplesAreForced) {
             [forcedSubs selectItemWithTag:2];
         }
-        
+
         _forced = [[NSMutableArray alloc] init];
-        
+
         NSInteger i = 1;
         NSInteger selectedItem = 0;
-        for (MP42SubtitleTrack *fileTrack in [mp4file tracks]) {
-            if ([fileTrack isMemberOfClass:[MP42SubtitleTrack class]]) {
-                NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ - %@ - %@",
-                                                                          fileTrack.Id ? [NSString stringWithFormat:@"%d", fileTrack.Id] : @"NA",
-                                                                          fileTrack.name,
-                                                                          fileTrack.language]
-                                                                  action:@selector(setForcedTrack:)
-                                                           keyEquivalent:@""] autorelease];
-                [newItem setTarget:self];
-                [newItem setTag:i];
-                [[forced menu] addItem:newItem];
-                [_forced addObject:fileTrack];
-                
-                if (((MP42SubtitleTrack *)track).forcedTrack == fileTrack)
-                    selectedItem = i;
+        for (MP42SubtitleTrack *fileTrack in [mp4file tracksWithMediaType:MP42MediaTypeSubtitle]) {
+            NSMenuItem *newItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ - %@ - %@",
+                                                                      fileTrack.Id ? [NSString stringWithFormat:@"%d", fileTrack.Id] : @"NA",
+                                                                      fileTrack.name,
+                                                                      fileTrack.language]
+                                                              action:@selector(setForcedTrack:)
+                                                       keyEquivalent:@""] autorelease];
+            [newItem setTarget:self];
+            [newItem setTag:i];
+            [[forced menu] addItem:newItem];
+            [_forced addObject:fileTrack];
 
-                i++;
-            }
+            if (((MP42SubtitleTrack *)track).forcedTrack == fileTrack)
+                selectedItem = i;
+
+            i++;
         }
-        
+
         [forced selectItemWithTag:selectedItem];
     }
     else {
