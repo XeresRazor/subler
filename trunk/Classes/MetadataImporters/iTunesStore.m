@@ -45,12 +45,56 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 {
     int v1 = [[[((MP42Metadata *) ep1) tagsDict] valueForKey:@"TV Episode #"] intValue];
     int v2 = [[[((MP42Metadata *) ep2) tagsDict] valueForKey:@"TV Episode #"] intValue];
-    if (v1 < v2)
+
+    int s1 = [[[((MP42Metadata *) ep1) tagsDict] valueForKey:@"TV Season"] intValue];
+    int s2 = [[[((MP42Metadata *) ep2) tagsDict] valueForKey:@"TV Season"] intValue];
+
+    if (s1 == s2) {
+        if (v1 < v2)
+            return NSOrderedAscending;
+        else if (v1 > v2)
+            return NSOrderedDescending;
+    }
+
+    if (s1 < s2)
         return NSOrderedAscending;
-    else if (v1 > v2)
+    else if (s1 > s2)
         return NSOrderedDescending;
     else
         return NSOrderedSame;
+}
+
+- (NSArray *)filterResult:(NSArray *)results tvSeries:(NSString *)aSeriesName seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum {
+    NSMutableArray *r = [[NSMutableArray alloc] init];
+    for (MP42Metadata *m in results) {
+        if (!aSeriesName || [[[m tagsDict] valueForKey:@"TV Show"] isEqualToString:aSeriesName]) {
+            // Episode Number and Season Number
+            if ((aEpisodeNum && [aEpisodeNum length]) && (aSeasonNum && [aSeasonNum length])) {
+                if ([[[[m tagsDict] valueForKey:@"TV Episode #"] stringValue] isEqualToString:aEpisodeNum] &&
+                    [[[m tagsDict] valueForKey:@"TV Season"] integerValue] == [aSeasonNum integerValue]) {
+                    [r addObject:m];
+                }
+
+            }
+            // Episode Number only
+            else if ((aEpisodeNum && [aEpisodeNum length]) && !(aSeasonNum && [aSeasonNum length])) {
+                if ([[[[m tagsDict] valueForKey:@"TV Episode #"] stringValue] isEqualToString:aEpisodeNum]) {
+                    [r addObject:m];
+                }
+
+            }
+            // Season Number only
+            else if (!(aEpisodeNum && [aEpisodeNum length]) && (aSeasonNum && [aSeasonNum length])) {
+                if ([[[m tagsDict] valueForKey:@"TV Season"] integerValue] == [aSeasonNum integerValue]) {
+                    [r addObject:m];
+                }
+            }
+            else if (!(aEpisodeNum && [aEpisodeNum length]) && !(aSeasonNum && [aSeasonNum length])) {
+                [r addObject:m];
+            }
+        }
+    }
+    return [r autorelease];
 }
 
 - (NSArray *) searchTVSeries:(NSString *)aSeriesName language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum
@@ -68,10 +112,10 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 	}
 
 	NSURL *url;
-	if (aSeasonNum && ![aSeasonNum isEqualToString:@""]) {
-		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=tvSeasonTerm&entity=tvEpisode", country, [language lowercaseString], [MetadataImporter urlEncoded:[NSString stringWithFormat:@"%@ %@ %@", aSeriesName, season, aSeasonNum]]]];
+	if (aSeasonNum && [aSeasonNum length]) {
+		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=tvSeasonTerm&entity=tvEpisode&limit=150", country, [language lowercaseString], [MetadataImporter urlEncoded:[NSString stringWithFormat:@"%@ %@ %@", aSeriesName, season, aSeasonNum]]]];
 	} else {
-		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=showTerm&entity=tvEpisode", country, [language lowercaseString], [MetadataImporter urlEncoded:aSeriesName]]];
+		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=showTerm&entity=tvEpisode&limit=150", country, [language lowercaseString], [MetadataImporter urlEncoded:aSeriesName]]];
 	}
 	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
 	if (jsonData) {
@@ -85,16 +129,16 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
             if (([results count] == 0) && aSeasonNum) {
                 return [self searchTVSeries:aSeriesName language:@"USA (English)" seasonNum:nil episodeNum:aEpisodeNum];
             }
-            if (aEpisodeNum && ![aEpisodeNum isEqualToString:@""]) {
-                NSEnumerator *resultsEnum = [results objectEnumerator];
-                MP42Metadata *m;
-                while ((m = (MP42Metadata *) [resultsEnum nextObject])) {
-                    if ([[[[m tagsDict] valueForKey:@"TV Episode #"] stringValue] isEqualToString:aEpisodeNum]) {
-                        return [NSArray arrayWithObject:m];
-                    }
-                }
+
+            // Filter results
+            NSArray *r = [self filterResult:results tvSeries:aSeriesName seasonNum:aSeasonNum episodeNum:aEpisodeNum];
+
+            // If we don't have any result for the exact series name, relax the filter
+            if (![r count]) {
+                r = [self filterResult:results tvSeries:nil seasonNum:aSeasonNum episodeNum:aEpisodeNum];
             }
-            NSArray *resultsSorted = [results sortedArrayUsingFunction:sortMP42Metadata context:NULL];
+
+            NSArray *resultsSorted = [r sortedArrayUsingFunction:sortMP42Metadata context:NULL];
             return resultsSorted;
         }
 	}
