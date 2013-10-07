@@ -798,6 +798,11 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 {
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 
+    [imageBrowser setDataSource:nil];
+    [imageBrowser setDelegate:nil];
+    [tagsTableView setDataSource:nil];
+    [tagsTableView setDelegate:nil];
+
     [tagsArray release];
     [tagsMenu release];
     [tabCol release];
