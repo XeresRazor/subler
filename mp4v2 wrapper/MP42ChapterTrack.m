@@ -238,18 +238,8 @@
 	return [file writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:error];
 }
 
-- (void)setTrackImporterHelper: (MP42FileImporter*) importerHelper
-{
-}
-
 - (NSString *)defaultName {
     return @"Chapter Track";
-}
-
-- (void)dealloc
-{
-    [chapters release];
-    [super dealloc];
 }
 
 @synthesize chapters;
@@ -268,6 +258,12 @@
     chapters = [[decoder decodeObjectForKey:@"chapters"] retain];
 
     return self;
+}
+
+- (void)dealloc
+{
+    [chapters release];
+    [super dealloc];
 }
 
 @end
