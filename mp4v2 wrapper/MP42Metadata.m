@@ -1447,7 +1447,6 @@ static const genreType_t genreType_strings[] = {
 @synthesize artworks;
 
 @synthesize isArtworkEdited;
-@synthesize artworkURL;
 @synthesize artworkThumbURLs;
 @synthesize artworkFullsizeURLs;
 @synthesize artworkProviderNames;
@@ -1537,7 +1536,6 @@ static const genreType_t genreType_strings[] = {
 
     [artworks release];
 
-    [artworkURL release];
     [artworkThumbURLs release];
     [artworkFullsizeURLs release];
     [artworkProviderNames release];

@@ -16,7 +16,6 @@
 
     NSMutableArray          *artworks;
     
-    NSURL                   *artworkURL;
     NSArray                 *artworkThumbURLs;
     NSArray                 *artworkFullsizeURLs;
     NSArray                 *artworkProviderNames;
@@ -56,7 +55,6 @@
 
 @property(readwrite, retain) NSMutableArray *artworks;
 
-@property(readwrite, retain) NSURL      *artworkURL;
 @property(readwrite, retain) NSArray    *artworkThumbURLs;
 @property(readwrite, retain) NSArray    *artworkFullsizeURLs;
 @property(readwrite, retain) NSArray    *artworkProviderNames;
