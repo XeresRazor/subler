@@ -354,6 +354,9 @@
 
 - (void)work
 {
+    if (![_workingTracks count])
+        return;
+
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSMutableArray *trackImportersArray = [[NSMutableArray alloc] init];
     NSUInteger done = 0, update = 0;
