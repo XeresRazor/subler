@@ -16,6 +16,9 @@
     MP4SampleId     currentSampleId;
     uint64_t        totalSampleNumber;
     MP4Timestamp    currentTime;
+    uint64_t        timeScale;
+
+    uint32_t        done;
 }
 @end
 
@@ -220,49 +223,60 @@
     for (MP42Track *track in _inputTracks) {
         track.muxer_helper->demuxer_context = [[MP4DemuxkHelper alloc] init];
         demuxHelper = track.muxer_helper->demuxer_context;
-        demuxHelper->totalSampleNumber = MP4GetTrackNumberOfSamples(_fileHandle, track.Id);
+        demuxHelper->totalSampleNumber = MP4GetTrackNumberOfSamples(_fileHandle, track.sourceId);
+        demuxHelper->timeScale = MP4GetTrackTimeScale(_fileHandle, track.sourceId);
+        demuxHelper->done = 0;
     }
 
-    for (MP42Track *track in _inputTracks) {
-        muxer_helper *helper = track.muxer_helper;
+    MP4Timestamp currentTime = 1;
+    MP4Duration duration = MP4GetDuration(_fileHandle);
+    MP4Duration timescale = MP4GetTimeScale(_fileHandle);
 
-        while (!_cancelled) {
-            MP4TrackId srcTrackId = [track sourceId];
-            uint8_t *pBytes = NULL;
-            uint32_t numBytes = 0;
-            MP4Duration duration;
-            MP4Duration renderingOffset;
-            MP4Timestamp pStartTime;
-            bool isSyncSample;
-
+    while (tracksDone != tracksNumber) {
+        for (MP42Track *track in _inputTracks) {
+            muxer_helper *helper = track.muxer_helper;
             demuxHelper = helper->demuxer_context;
-            demuxHelper->currentSampleId = demuxHelper->currentSampleId + 1;
 
-            if (!MP4ReadSample(_fileHandle,
-                               srcTrackId,
-                               demuxHelper->currentSampleId,
-                               &pBytes, &numBytes,
-                               &pStartTime, &duration, &renderingOffset,
-                               &isSyncSample)) {
-                tracksDone++;
-                break;
+            while (!_cancelled && demuxHelper->currentTime < demuxHelper->timeScale * currentTime && !demuxHelper->done) {
+                MP4TrackId srcTrackId = [track sourceId];
+                uint8_t *pBytes = NULL;
+                uint32_t numBytes = 0;
+                MP4Duration duration;
+                MP4Duration renderingOffset;
+                MP4Timestamp pStartTime;
+                bool isSyncSample;
+
+                demuxHelper->currentSampleId = demuxHelper->currentSampleId + 1;
+
+                if (!MP4ReadSample(_fileHandle,
+                                   srcTrackId,
+                                   demuxHelper->currentSampleId,
+                                   &pBytes, &numBytes,
+                                   &pStartTime, &duration, &renderingOffset,
+                                   &isSyncSample)) {
+                    demuxHelper->done++;
+                    tracksDone++;
+                    break;
+                }
+
+                MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
+                sample->data = pBytes;
+                sample->size = numBytes;
+                sample->duration = duration;
+                sample->offset = renderingOffset;
+                sample->timestamp = pStartTime;
+                sample->isSync = isSyncSample;
+                sample->trackId = track.sourceId;
+
+                [self enqueue:sample];
+                [sample release];
+
+                demuxHelper->currentTime = pStartTime;
             }
-
-            MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
-            sample->data = pBytes;
-            sample->size = numBytes;
-            sample->duration = duration;
-            sample->offset = renderingOffset;
-            sample->timestamp = pStartTime;
-            sample->isSync = isSyncSample;
-            sample->trackId = track.sourceId;
-
-            [self enqueue:sample];
-            [sample release];
-
-            _progress = ((demuxHelper->currentSampleId / (CGFloat) demuxHelper->totalSampleNumber ) * 100 / tracksNumber) +
-                        (tracksDone / (CGFloat) tracksNumber * 100);
         }
+
+        _progress = ((CGFloat)currentTime * timescale / duration) * 100;
+        currentTime += 3;
     }
 
     [self setDone: YES];
