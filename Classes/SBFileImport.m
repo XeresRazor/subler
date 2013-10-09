@@ -256,17 +256,6 @@
     [[self window] orderOut:self];
 }
 
-- (void)addTrack:(MP42Track *)track toArray:(NSMutableArray *)tracks
-{
-    for (MP42FileImporter *importer in _fileImporters)
-        if ([importer containsTrack:track]) {
-            [track setTrackImporterHelper:importer];
-            break;
-        }
-
-    [tracks addObject:track];
-}
-
 - (IBAction)addTracks:(id)sender
 {
     NSMutableArray *tracks = [[NSMutableArray alloc] init];
@@ -285,7 +274,7 @@
                         
                         [(MP42AudioTrack *)track setFallbackTrack:copy];
 
-                        [self addTrack:copy toArray:tracks];
+                        [tracks addObject:copy];
                         [copy release];
                     }
                     else if (conversion)
@@ -318,8 +307,8 @@
                         [track setNeedConversion:YES];
                 }
                 else if ([track isMemberOfClass:[MP42VideoTrack class]]) {
-                    if ([[track.sourceURL pathExtension] caseInsensitiveCompare: @"264"] == NSOrderedSame ||
-                        [[track.sourceURL pathExtension] caseInsensitiveCompare: @"h264"] == NSOrderedSame) {
+                    if ([[track.sourceURL pathExtension] caseInsensitiveCompare:@"264"] == NSOrderedSame ||
+                        [[track.sourceURL pathExtension] caseInsensitiveCompare:@"h264"] == NSOrderedSame) {
                         switch(conversion) {
                             case 0:
                                 [track setId:2398];
@@ -352,7 +341,7 @@
                     }
                 }
 
-                [self addTrack:track toArray:tracks];
+                [tracks addObject:track];
             }
         }
         i++;

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+
 #import "mp4v2.h"
 #import "MP42Track.h"
 #import "MP42VideoTrack.h"
@@ -15,10 +16,11 @@
 #import "MP42ClosedCaptionTrack.h"
 #import "MP42ChapterTrack.h"
 #import "MP42Metadata.h"
+
 #import "MP42Utilities.h"
 #import "MP42MediaFormat.h"
-#import "MP42Fifo.h"
-#import "MP42Muxer.h"
+
+@class MP42Muxer;
 
 extern NSString * const MP42Create64BitData;
 extern NSString * const MP42Create64BitTime;
@@ -55,7 +57,7 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
 - (id)initWithExistingFile:(NSURL *)URL andDelegate:(id)del;
 
 - (NSUInteger)movieDuration;
-- (MP42ChapterTrack*)chapters;
+- (MP42ChapterTrack *)chapters;
 
 - (NSUInteger)tracksCount;
 - (id)trackAtIndex:(NSUInteger)index;

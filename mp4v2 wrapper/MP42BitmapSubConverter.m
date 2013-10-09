@@ -12,7 +12,7 @@
 #import "MP42FileImporter.h"
 #import "MP42Sample.h"
 #import "MP42OCRWrapper.h"
-#import "SubUtilities.h"
+#import "MP42SubUtilities.h"
 
 #define REGISTER_DECODER(x) { \
 extern AVCodec ff_##x##_decoder; \

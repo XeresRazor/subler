@@ -7,15 +7,16 @@
 //
 
 #import "MP42File.h"
-#import <QTKit/QTKit.h>
-#import "SubUtilities.h"
+#import "MP42FileImporter.h"
+#import "MP42Muxer.h"
+#import "MP42SubUtilities.h"
 #import "SBLanguages.h"
+
+#import <QTKit/QTKit.h>
 
 #if __MAC_OS_X_VERSION_MAX_ALLOWED > 1060
 #import <AVFoundation/AVFoundation.h>
 #endif
-
-#import "MP42FileImporter.h"
 
 NSString * const MP42Create64BitData = @"64BitData";
 NSString * const MP42Create64BitTime = @"64BitTime";
@@ -231,7 +232,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 
     if (track.muxer_helper->importer) {
         if ([_importers objectForKey:[[track sourceURL] path]])
-            [track setTrackImporterHelper:[_importers objectForKey:[[track sourceURL] path]]];
+            track.muxer_helper->importer = [_importers objectForKey:[[track sourceURL] path]];
         else
             [_importers setObject:track.muxer_helper->importer forKey:[[track sourceURL] path]];
     }
@@ -454,14 +455,21 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
             if (![track isMemberOfClass:[MP42ChapterTrack class]] && !track.muxer_helper->importer && [track sourceURL]) {
                 MP42FileImporter *fileImporter = [_importers valueForKey:[[track sourceURL] path]];
 
-                if (fileImporter) {
-                    [track setTrackImporterHelper:fileImporter];
-                }
-                else {
+                if (!fileImporter) {
                     fileImporter = [[[MP42FileImporter alloc] initWithDelegate:nil andFile:[track sourceURL] error:outError] autorelease];
-                    [track setTrackImporterHelper:fileImporter];
                     [_importers setObject:fileImporter forKey:[[track sourceURL] path]];
                 }
+
+                if (fileImporter) {
+                    track.muxer_helper->importer = fileImporter;
+                } else {
+                    *outError = MP42Error(@"Missing sources.",
+                                          @"One or more sources files are missing.",
+                                          200);
+                    noErr = NO;
+                    break;
+                }
+
             }
 
             // Add the track to the muxer
@@ -470,10 +478,17 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
         }
     }
 
+    if (!noErr) {
+        [_muxer release], _muxer = nil;
+        MP4Close(_fileHandle, 0);
+        return NO;
+    }
+
     noErr = [_muxer setup:_fileHandle error:outError];
 
     if (!noErr) {
         [_muxer release], _muxer = nil;
+        MP4Close(_fileHandle, 0);
         return NO;
     }
 
