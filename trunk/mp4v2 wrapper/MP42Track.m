@@ -342,11 +342,6 @@
     return _helper;
 }
 
-- (void)setTrackImporterHelper:(MP42FileImporter *)importer
-{
-    self.muxer_helper->importer = importer;
-}
-
 - (MP42SampleBuffer *)copyNextSample {
     MP42SampleBuffer *sample = nil;
 

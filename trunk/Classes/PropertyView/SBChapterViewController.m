@@ -8,11 +8,11 @@
 
 #import "SBChapterViewController.h"
 #import "MP42Utilities.h"
-#import "SubUtilities.h"
+#import "MP42SubUtilities.h"
 
 @implementation SBChapterViewController
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     NSMutableParagraphStyle * ps = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
     [ps setHeadIndent: -10.0];
@@ -25,24 +25,24 @@
                        nil] retain];
 }
 
-- (void) setTrack:(MP42ChapterTrack *) chapterTrack
+- (void)setTrack:(MP42ChapterTrack *)chapterTrack
 {
     track = chapterTrack;
 }
 
-- (NSAttributedString *) boldString: (NSString *) string
+- (NSAttributedString *)boldString:(NSString *)string
 {
     return [[[NSAttributedString alloc] initWithString:string attributes:detailBoldAttr] autorelease];
 }
 
-- (NSInteger) numberOfRowsInTableView: (NSTableView *) t
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)t
 {
     return [track chapterCount];
 }
 
-- (id)              tableView: (NSTableView *) tableView 
-    objectValueForTableColumn: (NSTableColumn *) tableColumn 
-                          row: (NSInteger) rowIndex
+- (id)              tableView:(NSTableView *)tableView
+    objectValueForTableColumn:(NSTableColumn *)tableColumn
+                          row:(NSInteger)rowIndex
 {
     SBTextSample * chapter = [track chapterAtIndex:rowIndex];
     if ([tableColumn.identifier isEqualToString:@"time"])
@@ -54,10 +54,10 @@
     return nil;
 }
 
-- (void) tableView: (NSTableView *) tableView 
-    setObjectValue: (id) anObject 
-    forTableColumn: (NSTableColumn *) tableColumn 
-               row: (NSInteger) rowIndex
+- (void)tableView:(NSTableView *)tableView
+   setObjectValue:(id)anObject
+   forTableColumn:(NSTableColumn *)tableColumn
+              row:(NSInteger)rowIndex
 {
     SBTextSample * chapter = [track chapterAtIndex:rowIndex];
 
@@ -86,7 +86,7 @@
         [removeChapter setEnabled:NO];
 }
 
-- (IBAction) removeChapter: (id) sender {
+- (IBAction)removeChapter:(id)sender {
     NSUInteger current_index = [chapterTableView selectedRow];
     if (current_index < [track chapterCount]) {
         [track removeChapterAtIndex:current_index];
@@ -96,14 +96,14 @@
     }
 }
 
-- (IBAction) addChapter: (id) sender {
+- (IBAction)addChapter:(id)sender {
     [track addChapter:@"Chapter" duration:0];
 
     [chapterTableView reloadData];
     [[[[[self view]window] windowController] document] updateChangeCount:NSChangeDone];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [detailBoldAttr release];
     [super dealloc];

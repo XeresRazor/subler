@@ -254,7 +254,6 @@
                                                                                           error:&outError] autorelease];
 
                     for (MP42Track *track in fileImporter.tracks) {
-                        [track setTrackImporterHelper:fileImporter];
                         [tracksArray addObject:track];
                     }
                 }
@@ -332,7 +331,6 @@
 
                         [(MP42AudioTrack *)track setFallbackTrack:copy];
 
-                        [copy setTrackImporterHelper:fileImporter];
                         [mp4File addTrack:copy];
 
                         [copy release];
@@ -345,8 +343,6 @@
             if ([track.format isEqualToString:MP42AudioFormatDTS] ||
                 ([track.format isEqualToString:MP42SubtitleFormatVobSub] && [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBSubtitleConvertBitmap"] boolValue]))
                 track.needConversion = YES;
-
-            [track setTrackImporterHelper:fileImporter];
 
             if (isTrackMuxable(track.format) || trackNeedConversion(track.format))
                 [mp4File addTrack:track];

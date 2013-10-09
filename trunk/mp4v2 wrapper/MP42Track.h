@@ -55,6 +55,14 @@ typedef struct muxer_helper {
     muxer_helper *_helper;
 }
 
+- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
+
+- (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError;
+- (MP42SampleBuffer *)copyNextSample;
+
+- (NSString *)timeString;
+- (NSString *)formatSummary;
+
 @property(nonatomic, readwrite) MP4TrackId Id;
 @property(nonatomic, readwrite) MP4TrackId sourceId;
 
@@ -81,15 +89,5 @@ typedef struct muxer_helper {
 @property(nonatomic, readwrite) uint64_t dataLength;
 
 @property(nonatomic, readonly) muxer_helper *muxer_helper;
-
-- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
-
-- (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError;
-
-- (void)setTrackImporterHelper:(MP42FileImporter *)helper;
-- (MP42SampleBuffer *)copyNextSample;
-
-- (NSString *)timeString;
-- (NSString *)formatSummary;
 
 @end

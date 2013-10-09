@@ -7,7 +7,7 @@
 //
 
 #import "MP42VobSubImporter.h"
-#import "SubUtilities.h"
+#import "MP42SubUtilities.h"
 #import "SBLanguages.h"
 #import "MP42File.h"
 

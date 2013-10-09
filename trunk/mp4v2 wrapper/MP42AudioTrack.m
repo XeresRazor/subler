@@ -226,14 +226,14 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 - (void)encodeWithCoder:(NSCoder *)coder
 {
     [super encodeWithCoder:coder];
-    
+
     [coder encodeInt:1 forKey:@"MP42AudioTrackVersion"];
 
     [coder encodeFloat:_volume forKey:@"volume"];
 
     [coder encodeInt64:_channels forKey:@"channels"];
     [coder encodeInt64:_channelLayoutTag forKey:@"channelLayoutTag"];
-    
+
     [coder encodeInt64:_fallbackTrackId forKey:@"fallbackTrackId"];
 
     [coder encodeObject:_mixdownType forKey:@"mixdownType"];

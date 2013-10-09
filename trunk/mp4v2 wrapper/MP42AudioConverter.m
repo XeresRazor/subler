@@ -501,8 +501,8 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 		UInt32 ioOutputDataPackets = numOutputPackets;
 		err = AudioConverterFillComplexBuffer(decoderData.converter, DecoderDataProc, &decoderData, &ioOutputDataPackets,
                                               &fillBufList, outputPktDescs);
-        if (err)
-            NSLog(@"Error converterDec %ld", (long)err);
+        //if (err)
+        //    NSLog(@"Error converterDec %ld", (long)err);
         if (ioOutputDataPackets == 0) {
 			// this is the EOF conditon
 			break;

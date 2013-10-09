@@ -918,8 +918,9 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 - (void)dealloc
 {
     [propertyView release];
-    [mp4File release];
     [languages release];
+
+    [mp4File release];
     [super dealloc];
 }
 

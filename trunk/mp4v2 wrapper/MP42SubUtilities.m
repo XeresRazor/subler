@@ -6,10 +6,11 @@
 //  Copyright 2007 Perian. All rights reserved.
 //
 
-#import "SubUtilities.h"
-#import "RegexKitLite.h"
+#import "MP42SubUtilities.h"
 #import "MP42Sample.h"
 #import "MP42HtmlParser.h"
+
+#import "RegexKitLite.h"
 
 @implementation SBTextSample
 

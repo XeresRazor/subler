@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioToolbox.h>
+
 #import "MP42Sample.h"
+#import "MP42Utilities.h"
+
 #import "mp4v2.h"
 
 @class MP42Sample;

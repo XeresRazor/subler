@@ -76,7 +76,7 @@
 		A9AB486617F0AEFD000AA72E /* MovieView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9AB485E17F0AEFD000AA72E /* MovieView.xib */; };
 		A9AB486717F0AEFD000AA72E /* SoundView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9AB486017F0AEFD000AA72E /* SoundView.xib */; };
 		A9AB486817F0AEFD000AA72E /* VideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9AB486217F0AEFD000AA72E /* VideoView.xib */; };
-		A9AB486B17F0AF22000AA72E /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB486A17F0AF22000AA72E /* JSONKit.m */; };
+		A9AB486B17F0AF22000AA72E /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB486A17F0AF22000AA72E /* JSONKit.m */; settings = {COMPILER_FLAGS = "-w"; }; };
 		A9AEF83B167C808600FDDBB3 /* QTKitDecrap.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AEF83A167C808600FDDBB3 /* QTKitDecrap.m */; };
 		A9B3411C1679CA3E00E6EE0C /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9B3411B1679CA3E00E6EE0C /* QTKit.framework */; };
 		A9B46A8C12B79B240040517A /* SBFileImport.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A7F12B79B240040517A /* SBFileImport.m */; };
@@ -84,10 +84,10 @@
 		A9B46A8F12B79B240040517A /* SBTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A8512B79B240040517A /* SBTableView.m */; };
 		A9B46A9012B79B240040517A /* SBView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A8712B79B240040517A /* SBView.m */; };
 		A9B46A9E12B79B990040517A /* ButtonToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A9412B79B990040517A /* ButtonToolbarItem.m */; };
-		A9B46AA212B79B990040517A /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A9D12B79B990040517A /* RegexKitLite.m */; };
+		A9B46AA212B79B990040517A /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46A9D12B79B990040517A /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-w"; }; };
 		A9B46AA412B79BB10040517A /* Subler.icns in Resources */ = {isa = PBXBuildFile; fileRef = A9B46AA312B79BB10040517A /* Subler.icns */; };
 		A9B46AA912B79BD00040517A /* MP42AudioConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46AA612B79BD00040517A /* MP42AudioConverter.m */; };
-		A9B46AAA12B79BD00040517A /* SubUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46AA812B79BD00040517A /* SubUtilities.m */; };
+		A9B46AAA12B79BD00040517A /* MP42SubUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A9B46AA812B79BD00040517A /* MP42SubUtilities.m */; };
 		A9B46AAF12B79BE80040517A /* MatroskaFile.c in Sources */ = {isa = PBXBuildFile; fileRef = A9B46AAB12B79BE80040517A /* MatroskaFile.c */; };
 		A9B46AB012B79BE80040517A /* MatroskaParser.c in Sources */ = {isa = PBXBuildFile; fileRef = A9B46AAD12B79BE80040517A /* MatroskaParser.c */; };
 		A9B46AB312B79BF60040517A /* sfifo.c in Sources */ = {isa = PBXBuildFile; fileRef = A9B46AB112B79BF60040517A /* sfifo.c */; };
@@ -325,8 +325,8 @@
 		A9B46AA312B79BB10040517A /* Subler.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Subler.icns; path = images/Subler.icns; sourceTree = "<group>"; };
 		A9B46AA512B79BD00040517A /* MP42AudioConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42AudioConverter.h; path = "mp4v2 wrapper/MP42AudioConverter.h"; sourceTree = "<group>"; };
 		A9B46AA612B79BD00040517A /* MP42AudioConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MP42AudioConverter.m; path = "mp4v2 wrapper/MP42AudioConverter.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		A9B46AA712B79BD00040517A /* SubUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SubUtilities.h; path = "mp4v2 wrapper/SubUtilities.h"; sourceTree = "<group>"; };
-		A9B46AA812B79BD00040517A /* SubUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SubUtilities.m; path = "mp4v2 wrapper/SubUtilities.m"; sourceTree = "<group>"; };
+		A9B46AA712B79BD00040517A /* MP42SubUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42SubUtilities.h; path = "mp4v2 wrapper/MP42SubUtilities.h"; sourceTree = "<group>"; };
+		A9B46AA812B79BD00040517A /* MP42SubUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42SubUtilities.m; path = "mp4v2 wrapper/MP42SubUtilities.m"; sourceTree = "<group>"; };
 		A9B46AAB12B79BE80040517A /* MatroskaFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MatroskaFile.c; path = "mp4v2 wrapper/muxer/MatroskaFile.c"; sourceTree = "<group>"; };
 		A9B46AAC12B79BE80040517A /* MatroskaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MatroskaFile.h; path = "mp4v2 wrapper/muxer/MatroskaFile.h"; sourceTree = "<group>"; };
 		A9B46AAD12B79BE80040517A /* MatroskaParser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MatroskaParser.c; path = "mp4v2 wrapper/muxer/MatroskaParser.c"; sourceTree = "<group>"; };
@@ -632,14 +632,9 @@
 			name = NIBs;
 			sourceTree = "<group>";
 		};
-		A9C03EB41116DFE700DA6FF6 /* Muxer */ = {
+		A9782B9C18058E9F00085DFE /* Importers */ = {
 			isa = PBXGroup;
 			children = (
-				9480588F106E032D0037A911 /* Other */,
-				A9B8E923123AA03D006A6EB8 /* MP42Muxer.h */,
-				A9B8E892123A95BA006A6EB8 /* MP42Muxer.m */,
-				A99EAC7A1115BED200D89903 /* MP42FileImporter.h */,
-				A99EAC7B1115BED200D89903 /* MP42FileImporter.m */,
 				A99EACA11115C18000D89903 /* MP42MkvImporter.h */,
 				A99EACA21115C18000D89903 /* MP42MkvImporter.m */,
 				A9ED7C4C1115CFBD00423241 /* MP42Mp4Importer.h */,
@@ -660,21 +655,42 @@
 				A937137412B76EAD00940FEC /* MP42H264Importer.mm */,
 				A906213916839AB00057EA0B /* MP42VobSubImporter.h */,
 				A906213A16839AB00057EA0B /* MP42VobSubImporter.m */,
-				A9AB485917F0AED0000AA72E /* MP42ConverterProtocol.h */,
+			);
+			name = Importers;
+			sourceTree = "<group>";
+		};
+		A9782B9F18058EB000085DFE /* Converters */ = {
+			isa = PBXGroup;
+			children = (
 				A9B46AA512B79BD00040517A /* MP42AudioConverter.h */,
 				A9B46AA612B79BD00040517A /* MP42AudioConverter.m */,
 				A936DAFC1682057700D19BDB /* MP42BitmapSubConverter.h */,
 				A936DAFD1682057700D19BDB /* MP42BitmapSubConverter.m */,
 				A90327E2133F68C5004E0D41 /* MP42OCRWrapper.h */,
 				A90327E3133F68C5004E0D41 /* MP42OCRWrapper.mm */,
+			);
+			name = Converters;
+			sourceTree = "<group>";
+		};
+		A9C03EB41116DFE700DA6FF6 /* Muxer */ = {
+			isa = PBXGroup;
+			children = (
+				A9782B9F18058EB000085DFE /* Converters */,
+				A9782B9C18058E9F00085DFE /* Importers */,
+				9480588F106E032D0037A911 /* Other */,
+				A9B8E923123AA03D006A6EB8 /* MP42Muxer.h */,
+				A9B8E892123A95BA006A6EB8 /* MP42Muxer.m */,
+				A99EAC7A1115BED200D89903 /* MP42FileImporter.h */,
+				A99EAC7B1115BED200D89903 /* MP42FileImporter.m */,
+				A9AB485917F0AED0000AA72E /* MP42ConverterProtocol.h */,
 				A93F28F817B505740092E882 /* MP42Fifo.h */,
 				A93F28F917B505740092E882 /* MP42Fifo.m */,
 				A9B8E893123A95BA006A6EB8 /* MP42Sample.h */,
 				A9B8E894123A95BA006A6EB8 /* MP42Sample.m */,
 				A91ED320176A4BDF0091DC0A /* MP42HtmlParser.h */,
 				A91ED321176A4BDF0091DC0A /* MP42HtmlParser.m */,
-				A9B46AA712B79BD00040517A /* SubUtilities.h */,
-				A9B46AA812B79BD00040517A /* SubUtilities.m */,
+				A9B46AA712B79BD00040517A /* MP42SubUtilities.h */,
+				A9B46AA812B79BD00040517A /* MP42SubUtilities.m */,
 			);
 			name = Muxer;
 			sourceTree = "<group>";
@@ -976,7 +992,7 @@
 				A9B46AA212B79B990040517A /* RegexKitLite.m in Sources */,
 				A9B46AA912B79BD00040517A /* MP42AudioConverter.m in Sources */,
 				A9AB486B17F0AF22000AA72E /* JSONKit.m in Sources */,
-				A9B46AAA12B79BD00040517A /* SubUtilities.m in Sources */,
+				A9B46AAA12B79BD00040517A /* MP42SubUtilities.m in Sources */,
 				A9B46AAF12B79BE80040517A /* MatroskaFile.c in Sources */,
 				A9AB485417F0AEAC000AA72E /* SBChapterViewController.m in Sources */,
 				A9AB485817F0AEAC000AA72E /* SBVideoViewController.m in Sources */,
@@ -1224,6 +1240,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/mp4v2\"/**",
@@ -1264,7 +1282,7 @@
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
