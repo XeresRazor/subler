@@ -285,9 +285,9 @@
 
 - (BOOL)cleanUp:(MP4FileHandle)dstFileHandle
 {
-    for (MP42Track *track in _inputTracks) {
-        MP4TrackId srcTrackId = [track sourceId];
-        MP4TrackId dstTrackId = [track Id];
+    for (MP42Track *track in _outputsTracks) {
+        MP4TrackId srcTrackId = track.sourceId;
+        MP4TrackId dstTrackId = track.Id;
 
         MP4Duration trackDuration = 0;
         uint32_t i = 1, trackEditCount = MP4GetTrackNumberOfEdits(_fileHandle, srcTrackId);

@@ -903,11 +903,13 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
     }
 }
 
-- (BOOL)cleanUp:(MP4FileHandle) fileHandle
+- (BOOL)cleanUp:(MP4FileHandle)fileHandle
 {
-    for (MP42Track * track in _inputTracks) {
-        MatroskaDemuxHelper *demuxHelper = track.muxer_helper->demuxer_context;
-        MP4TrackId trackId = [track Id];
+    for (MP42Track *track in _outputsTracks) {
+        MP42Track *inputTrack = [self inpuTrackWithTrackID:track.sourceId];
+
+        MatroskaDemuxHelper *demuxHelper = inputTrack.muxer_helper->demuxer_context;
+        MP4TrackId trackId = track.Id;
 
         if (demuxHelper->minDisplayOffset != 0) {
             int i;

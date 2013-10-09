@@ -169,6 +169,17 @@
     return [_tracksArray containsObject:track];
 }
 
+- (MP42Track *)inpuTrackWithTrackID:(MP4TrackId)trackId
+{
+    for (MP42Track *track in _inputTracks) {
+        if (track.sourceId == trackId) {
+            return track;;
+        }
+    }
+
+    return nil;
+}
+
 - (void)dealloc
 {
     for (MP42Track *track in _inputTracks) {

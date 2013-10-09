@@ -935,10 +935,12 @@
 
     for (MP42Track *track in _inputTracks) {
         AVAssetTrack *assetTrack = [_localAsset trackWithTrackID:track.sourceId];
+        MP42Track *inputTrack = [self inpuTrackWithTrackID:track.sourceId];
+
         MP4Duration trackDuration = 0;
         MP4Timestamp editDuration;
 
-        AVFDemuxHelper *demuxHelper = track.muxer_helper->demuxer_context;
+        AVFDemuxHelper *demuxHelper = inputTrack.muxer_helper->demuxer_context;
 
         for (AVAssetTrackSegment *segment in assetTrack.segments) {
             bool empty = NO;
@@ -984,10 +986,10 @@
                 editDuration = timeMapping.target.duration.value * ((double) timescale / timeMapping.target.duration.timescale);
                 
                 if (empty)
-                    MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, -1,
+                    MP4AddTrackEdit(fileHandle, track.Id, MP4_INVALID_EDIT_ID, -1,
                                     editDuration, 0);
                 else
-                    MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, timeMapping.source.start.value - correction,
+                    MP4AddTrackEdit(fileHandle, track.Id, MP4_INVALID_EDIT_ID, timeMapping.source.start.value - correction,
                                     editDuration, 0);
 
                 trackDuration = trackDuration + editDuration;
@@ -995,7 +997,7 @@
             }
         }
         if (trackDuration)
-            MP4SetTrackIntegerProperty(fileHandle, [track Id], "tkhd.duration", trackDuration);
+            MP4SetTrackIntegerProperty(fileHandle, track.Id, "tkhd.duration", trackDuration);
     }
     return YES;
 }

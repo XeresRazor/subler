@@ -941,17 +941,18 @@
     }
 }
 
-- (BOOL)cleanUp:(MP4FileHandle) fileHandle
+- (BOOL)cleanUp:(MP4FileHandle)fileHandle
 {
-    for (MP42Track *track in _inputTracks) {
+    for (MP42Track *track in _outputsTracks) {
         Track qtcTrack = [[_sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
+        MP42Track *inputTrack = [self inpuTrackWithTrackID:track.sourceId];
 
         TimeValue editTrackStart, editTrackDuration;
         TimeValue64 editDisplayStart, trackDuration = 0;
         Fixed editDwell;
 
         MovDemuxHelper *demuxHelper;
-        demuxHelper = track.muxer_helper->demuxer_context;
+        demuxHelper = inputTrack.muxer_helper->demuxer_context;
 
         // Find the first edit
         // Each edit has a starting track timestamp, a duration in track time, a starting display timestamp and a rate.
@@ -968,10 +969,10 @@
             editDwell = GetTrackEditRate64(qtcTrack, editTrackStart);
 
             if (demuxHelper->minDisplayOffset < 0 && editDisplayStart != -1)
-                MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, editDisplayStart - demuxHelper->minDisplayOffset,
+                MP4AddTrackEdit(fileHandle, track.Id, MP4_INVALID_EDIT_ID, editDisplayStart - demuxHelper->minDisplayOffset,
                                 editTrackDuration, !Fix2X(editDwell));
             else
-                MP4AddTrackEdit(fileHandle, [track Id], MP4_INVALID_EDIT_ID, editDisplayStart,
+                MP4AddTrackEdit(fileHandle, track.Id, MP4_INVALID_EDIT_ID, editDisplayStart,
                                 editTrackDuration, !Fix2X(editDwell));
 
             trackDuration += editTrackDuration;
@@ -984,7 +985,7 @@
                                         &editTrackDuration);
         }
 
-        MP4SetTrackIntegerProperty(fileHandle, [track Id], "tkhd.duration", trackDuration);
+        MP4SetTrackIntegerProperty(fileHandle, track.Id, "tkhd.duration", trackDuration);
     }
     
     return YES;
