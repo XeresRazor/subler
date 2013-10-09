@@ -38,6 +38,7 @@
 - (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError;
 
 - (BOOL)containsTrack:(MP42Track*)track;
+- (MP42Track *)inpuTrackWithTrackID:(MP4TrackId)trackId;
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track;
 - (NSSize)sizeForTrack:(MP42Track *)track;

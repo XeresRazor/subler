@@ -1603,7 +1603,7 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
     [pool release];
 }
 
-- (BOOL)cleanUp:(MP4FileHandle) fileHandle
+- (BOOL)cleanUp:(MP4FileHandle)fileHandle
 {
     MP42Track *track = [_inputTracks lastObject];
     MP4TrackId trackId = [track Id];
