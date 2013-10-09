@@ -266,7 +266,7 @@
 
 - (MP42Image *)loadArtwork:(NSURL*)url
 {
-    NSData *artworkData = [NSData dataWithContentsOfURL:url];
+    NSData *artworkData = [MetadataImporter downloadDataOrGetFromCache:url];
     if (artworkData && [artworkData length]) {
         MP42Image *artwork = [[MP42Image alloc] initWithData:artworkData type:MP42_ART_JPEG];
         if (artwork != nil) {
@@ -299,7 +299,9 @@
     }
 
     if (metadata.artworkThumbURLs && [metadata.artworkThumbURLs count]) {
-        [metadata.artworks addObject:[self loadArtwork:[metadata.artworkFullsizeURLs lastObject]]];
+        MP42Image *artwork = [self loadArtwork:[metadata.artworkFullsizeURLs lastObject]];
+        if (artwork)
+            [metadata.artworks addObject:artwork];
     }
 
     return metadata;
@@ -335,8 +337,8 @@
 
                         [copy release];
                     }
-
-                    track.needConversion = YES;
+                    else
+                        track.needConversion = YES;
                 }
             }
 
