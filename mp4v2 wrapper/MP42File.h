@@ -64,7 +64,7 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
 - (id)trackWithTrackID:(NSUInteger)trackId;
 - (NSArray *)tracksWithMediaType:(NSString *)mediaType;
 
-- (void)addTrack:(id)object;
+- (void)addTrack:(MP42Track *)track;
 
 - (void)removeTrackAtIndex:(NSUInteger)index;
 - (void)removeTracksAtIndexes:(NSIndexSet *)indexes;

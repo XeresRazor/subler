@@ -196,9 +196,8 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     return [[tracks copy] autorelease];
 }
 
-- (void)addTrack:(id)object
+- (void)addTrack:(MP42Track *)track
 {
-    MP42Track *track = (MP42Track *) object;
     track.sourceId = track.Id;
     track.Id = 0;
     track.muxed = NO;
@@ -230,7 +229,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
             track.format = MP42SubtitleFormatTx3g;
     }
 
-    if (track.muxer_helper->importer) {
+    if (track.muxer_helper->importer && track.sourceURL) {
         if ([_importers objectForKey:[[track sourceURL] path]])
             track.muxer_helper->importer = [_importers objectForKey:[[track sourceURL] path]];
         else
