@@ -203,7 +203,7 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 		language = [store valueForKey:@"language2"];
 	}
 	
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&entity=movie", country, language, [MetadataImporter urlEncoded:aMovieTitle]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&entity=movie&limit=150", country, language, [MetadataImporter urlEncoded:aMovieTitle]]];
 	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
 	if (jsonData) {
 		JSONDecoder *jsonDecoder = [JSONDecoder decoder];
