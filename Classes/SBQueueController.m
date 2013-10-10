@@ -18,6 +18,8 @@
 #define SublerBatchTableViewDataType @"SublerBatchTableViewDataType"
 #define kOptionsPanelHeight 88
 
+static NSString *fileType = @"mp4";
+
 @interface SBQueueController (Private)
 
 - (void)updateUI;
@@ -235,7 +237,9 @@
     NSMutableArray *tracksArray = [[NSMutableArray alloc] init];
     NSArray *directory = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[url URLByDeletingLastPathComponent]
                                                        includingPropertiesForKeys:nil
-                                                                          options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles | NSDirectoryEnumerationSkipsPackageDescendants
+                                                                          options:NSDirectoryEnumerationSkipsSubdirectoryDescendants |
+                                                                                  NSDirectoryEnumerationSkipsHiddenFiles |
+                                                                                  NSDirectoryEnumerationSkipsPackageDescendants
                                                                             error:nil];
 
     for (NSURL *dirUrl in directory) {
@@ -279,27 +283,50 @@
 
 - (MP42Metadata *)searchMetadataForFile:(NSURL*) url
 {
-    id  currentSearcher = nil;
+    id currentSearcher = nil;
     MP42Metadata *metadata = nil;
 
     // Parse FileName and search for metadata
     NSDictionary *parsed = [MetadataImporter parseFilename:[url lastPathComponent]];
-    if ([@"movie" isEqualToString:(NSString *) [parsed valueForKey:@"type"]]) {
+    NSString *type = (NSString *)[parsed valueForKey:@"type"];
+    if ([@"movie" isEqualToString:type]) {
 		currentSearcher = [MetadataImporter defaultMovieProvider];
 		NSString *language = [MetadataImporter defaultMovieLanguage];
 		NSArray *results = [currentSearcher searchMovie:[parsed valueForKey:@"title"] language:language];
         if ([results count])
 			metadata = [currentSearcher loadMovieMetadata:[results objectAtIndex:0] language:language];
-    } else if ([@"tv" isEqualToString:(NSString *) [parsed valueForKey:@"type"]]) {
+    } else if ([@"tv" isEqualToString:type]) {
 		currentSearcher = [MetadataImporter defaultTVProvider];
 		NSString *language = [MetadataImporter defaultTVLanguage];
-		NSArray *results = [currentSearcher searchTVSeries:[parsed valueForKey:@"seriesName"] language:language seasonNum:[parsed valueForKey:@"seasonNum"] episodeNum:[parsed valueForKey:@"episodeNum"]];
+		NSArray *results = [currentSearcher searchTVSeries:[parsed valueForKey:@"seriesName"]
+                                                  language:language seasonNum:[parsed valueForKey:@"seasonNum"]
+                                                episodeNum:[parsed valueForKey:@"episodeNum"]];
         if ([results count])
 			metadata = [currentSearcher loadTVMetadata:[results objectAtIndex:0] language:language];
     }
 
     if (metadata.artworkThumbURLs && [metadata.artworkThumbURLs count]) {
-        MP42Image *artwork = [self loadArtwork:[metadata.artworkFullsizeURLs lastObject]];
+        NSURL *artworkURL = nil;
+        if ([type isEqualToString:@"movie"]) {
+            artworkURL = [metadata.artworkFullsizeURLs objectAtIndex:0];
+        } else if ([type isEqualToString:@"tv"]) {
+            if ([metadata.artworkFullsizeURLs count] > 1) {
+                int i = 0;
+                for (NSString *artworkProviderName in metadata.artworkProviderNames) {
+                    NSArray *a = [artworkProviderName componentsSeparatedByString:@"|"];
+                    if ([a count] > 1 && ![[a objectAtIndex:1] isEqualToString:@"episode"]) {
+                            artworkURL = [metadata.artworkFullsizeURLs objectAtIndex:i];
+                            break;
+                    }
+                    i++;
+                }
+            } else {
+                artworkURL = [metadata.artworkFullsizeURLs objectAtIndex:0];
+            }
+        }
+
+        MP42Image *artwork = [self loadArtwork:artworkURL];
+
         if (artwork)
             [metadata.artworks addObject:artwork];
     }
@@ -446,9 +473,9 @@
             // Set the destination url
             if (![item destURL]) {
                 if (!_currentMP4 && destination && customDestination)
-                    item.destURL = [[[destination URLByAppendingPathComponent:[item.URL lastPathComponent]] URLByDeletingPathExtension] URLByAppendingPathExtension:@"mp4"];
+                    item.destURL = [[[destination URLByAppendingPathComponent:[item.URL lastPathComponent]] URLByDeletingPathExtension] URLByAppendingPathExtension:fileType];
                 else
-                    item.destURL = [[item.URL URLByDeletingPathExtension] URLByAppendingPathExtension:@"mp4"];
+                    item.destURL = [[item.URL URLByDeletingPathExtension] URLByAppendingPathExtension:fileType];
             }
 
             // The file has been added directly to the queue
@@ -830,7 +857,7 @@
 
 #pragma mark Drag & Drop
 
-- (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard
+- (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
 {
     // Copy the row numbers to the pasteboard.    
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
@@ -839,10 +866,10 @@
     return YES;
 }
 
-- (NSDragOperation) tableView: (NSTableView *) view
-                 validateDrop: (id <NSDraggingInfo>) info
-                  proposedRow: (NSInteger) row
-        proposedDropOperation: (NSTableViewDropOperation) operation
+- (NSDragOperation)tableView:(NSTableView *)view
+                validateDrop:(id <NSDraggingInfo>)info
+                 proposedRow:(NSInteger)row
+       proposedDropOperation:(NSTableViewDropOperation)operation
 {
     if (nil == [info draggingSource]) { // From other application
         [view setDropRow: row dropOperation: NSTableViewDropAbove];
@@ -855,10 +882,10 @@
         return NSDragOperationNone;
 }
 
-- (BOOL) tableView: (NSTableView *) view
-        acceptDrop: (id <NSDraggingInfo>) info
-               row: (NSInteger) row
-     dropOperation: (NSTableViewDropOperation) operation
+- (BOOL)tableView:(NSTableView *)view
+       acceptDrop:(id <NSDraggingInfo>)info
+              row:(NSInteger)row
+        dropOperation:(NSTableViewDropOperation)operation
 {
     NSPasteboard *pboard = [info draggingPasteboard];
 
@@ -909,7 +936,7 @@
     return NO;
 }
 
-- (void)addItem:(SBQueueItem*)item
+- (void)addItem:(SBQueueItem *)item
 {
     [self addItems:[NSArray arrayWithObject:item] atIndexes:nil];
 
@@ -919,7 +946,7 @@
         [self start:self];
 }
 
-- (void)addItems:(NSArray*)items atIndexes:(NSIndexSet*)indexes;
+- (void)addItems:(NSArray *)items atIndexes:(NSIndexSet *)indexes;
 {
     NSMutableIndexSet *mutableIndexes = [indexes mutableCopy];
     if ([indexes count] == [items count])
@@ -952,7 +979,7 @@
     [mutableIndexes release];
 }
 
-- (void)removeItems:(NSArray*)items
+- (void)removeItems:(NSArray *)items
 {
     NSMutableIndexSet *indexes = [[NSMutableIndexSet alloc] init];
 
