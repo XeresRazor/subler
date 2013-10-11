@@ -140,7 +140,11 @@
 - (void)enqueue:(MP42SampleBuffer *)sample {
     for (MP42Track *track in _outputsTracks) {
         if (track.sourceId == sample->trackId) {
-            [track.muxer_helper->fifo enqueue:sample];
+            if (track.muxer_helper->converter) {
+                [track.muxer_helper->converter addSample:sample];
+            } else {
+                [track.muxer_helper->fifo enqueue:sample];
+            }
         }
     }
 }

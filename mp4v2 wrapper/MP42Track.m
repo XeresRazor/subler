@@ -346,12 +346,6 @@
     MP42SampleBuffer *sample = nil;
 
     if (_helper->converter) {
-        while ([_helper->converter needMoreSample] && [_helper->fifo count]) {
-            sample = [_helper->fifo deque];
-            [_helper->converter addSample:sample];
-            [sample release];
-        }
-
         if ([_helper->fifo isEmpty] && [_helper->importer done])
             [_helper->converter setInputDone];
 
