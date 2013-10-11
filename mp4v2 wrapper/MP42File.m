@@ -8,7 +8,6 @@
 
 #import "MP42File.h"
 #import "MP42FileImporter.h"
-#import "MP42Muxer.h"
 #import "MP42SubUtilities.h"
 #import "SBLanguages.h"
 
@@ -45,7 +44,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     return self;
 }
 
-- (id)initWithDelegate:(id)del;
+- (instancetype)initWithDelegate:(id <MP42FileDelegate>)del;
 {
     if ((self = [self init])) {
         _delegate = del;
@@ -54,7 +53,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     return self;
 }
 
-- (id)initWithExistingFile:(NSURL *)URL andDelegate:(id)del;
+- (instancetype)initWithExistingFile:(NSURL *)URL andDelegate:(id <MP42FileDelegate>)del;
 {
     if ((self = [super init]))
 	{
@@ -455,7 +454,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
                 MP42FileImporter *fileImporter = [_importers valueForKey:[[track sourceURL] path]];
 
                 if (!fileImporter) {
-                    fileImporter = [[[MP42FileImporter alloc] initWithDelegate:nil andFile:[track sourceURL] error:outError] autorelease];
+                    fileImporter = [[[MP42FileImporter alloc] initWithURL:[track sourceURL] error:outError] autorelease];
                     [_importers setObject:fileImporter forKey:[[track sourceURL] path]];
                 }
 

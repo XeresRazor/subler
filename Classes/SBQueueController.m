@@ -253,9 +253,8 @@ static NSString *fileType = @"mp4";
                 result = [subtitleFilename compare:movieFilename options:NSCaseInsensitiveSearch range:range];
 
                 if (result == NSOrderedSame) {
-                    MP42FileImporter *fileImporter = [[[MP42FileImporter alloc] initWithDelegate:nil
-                                                                                        andFile:dirUrl
-                                                                                          error:&outError] autorelease];
+                    MP42FileImporter *fileImporter = [[[MP42FileImporter alloc] initWithURL:dirUrl
+                                                                                      error:&outError] autorelease];
 
                     for (MP42Track *track in fileImporter.tracks) {
                         [tracksArray addObject:track];
@@ -345,9 +344,8 @@ static NSString *fileType = @"mp4";
     }
     else {
         mp4File = [[MP42File alloc] initWithDelegate:self];
-        MP42FileImporter *fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil
-                                                                            andFile:url
-                                                                              error:outError];
+        MP42FileImporter *fileImporter = [[MP42FileImporter alloc] initWithURL:url
+                                                                         error:outError];
 
         for (MP42Track *track in fileImporter.tracks) {
             if ([track.format isEqualToString:MP42AudioFormatAC3]) {

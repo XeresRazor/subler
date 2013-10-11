@@ -10,12 +10,12 @@
 
 @implementation MP42Fifo
 
-- (id)init {
+- (instancetype)init {
     self = [self initWithCapacity:300];
     return self;
 }
 
-- (id)initWithCapacity:(NSUInteger)numItems {
+- (instancetype)initWithCapacity:(NSUInteger)numItems {
     self = [super init];
     if (self) {
         _size = numItems;

@@ -31,8 +31,8 @@
     BOOL isArtworkEdited;
 }
 
-- (id) initWithSourceURL:(NSURL *)URL fileHandle:(MP4FileHandle)fileHandle;
-- (id) initWithFileURL:(NSURL *)URL;
+- (instancetype) initWithSourceURL:(NSURL *)URL fileHandle:(MP4FileHandle)fileHandle;
+- (instancetype) initWithFileURL:(NSURL *)URL;
 
 - (NSArray *) availableMetadata;
 - (NSArray *) writableMetadata;

@@ -147,11 +147,10 @@ int readMkvPacket(struct StdIoStream  *ioStream, TrackInfo *trackInfo, uint64_t 
 
 @implementation MP42MkvImporter
 
-- (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
+- (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError
 {
     if ((self = [super init])) {
-        _delegate = del;
-        _fileURL = [URL retain];
+        _fileURL = [fileURL retain];
 
         _ioStream = calloc(1, sizeof(StdIoStream));
         _matroskaFile= openMatroskaFile((char *)[[_fileURL path] UTF8String], _ioStream);

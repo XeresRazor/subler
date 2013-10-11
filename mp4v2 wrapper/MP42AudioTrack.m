@@ -14,7 +14,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
 
 @implementation MP42AudioTrack
 
-- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (instancetype)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
     if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle])) {
         MP4GetTrackFloatProperty(fileHandle, _Id, "tkhd.volume", &_volume);
@@ -86,7 +86,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     return self;
 }
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init]))
     {
@@ -100,7 +100,7 @@ extern u_int8_t MP4AV_AacConfigGetChannels(u_int8_t* pConfig);
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
     MP42AudioTrack *copy = [super copyWithZone:zone];
 

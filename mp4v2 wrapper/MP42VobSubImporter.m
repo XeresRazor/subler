@@ -216,14 +216,13 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
 
 @implementation MP42VobSubImporter
 
-- (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
+- (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError
 {
     if ((self = [super init])) {
         NSInteger count = 0;
-        _delegate = del;
-        _fileURL = [URL retain];
+        _fileURL = [fileURL retain];
 
-        _VobSubTracks = LoadVobSubSubtitles([URL URLByDeletingLastPathComponent], [URL lastPathComponent]);
+        _VobSubTracks = LoadVobSubSubtitles([_fileURL URLByDeletingLastPathComponent], [_fileURL lastPathComponent]);
         _tracksArray = [[NSMutableArray alloc] initWithCapacity:[_VobSubTracks count]];
 
         for (SBVobSubTrack *track in _VobSubTracks) {

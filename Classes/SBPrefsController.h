@@ -24,7 +24,7 @@
 
 + (void)registerUserDefaults;
 
-- (id)init;
+- (instancetype)init;
 - (IBAction)clearRecentSearches:(id) sender;
 - (IBAction)deleteCachedMetadata:(id) sender;
 - (IBAction)toggleInfoWindow:(id) sender;

@@ -13,7 +13,7 @@
 
 @synthesize mMetadata;
 
-- (id) initWithURL:(NSURL *)url error:(NSError **)error
+- (instancetype)initWithURL:(NSURL *)url error:(NSError **)error
 {
     if (self = [super init]) {
         NSXMLDocument *xml = [[NSXMLDocument alloc] initWithContentsOfURL:url options:0 error:NULL];

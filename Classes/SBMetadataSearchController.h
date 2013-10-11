@@ -7,11 +7,16 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "SBArtworkSelector.h"
 
 @class SBTableView;
 @class MP42Metadata;
 
-@interface SBMetadataSearchController : NSWindowController<NSTableViewDelegate> {
+@protocol SBMetadataSearchControllerDelegate
+- (void)metadataImportDone:(MP42Metadata *)metadataToBeImported;
+@end
+
+@interface SBMetadataSearchController : NSWindowController <NSTableViewDelegate, SBArtworkSelectorDelegate> {
     id                            delegate;
     NSDictionary                 *detailBoldAttr;
 
@@ -48,7 +53,7 @@
 }
 
 #pragma mark Initialization
-- (id)initWithDelegate:(id)del;
+- (instancetype)initWithDelegate:(id)del;
 
 #pragma mark Metadata provider
 - (void) createLanguageMenus;
@@ -86,8 +91,4 @@
 + (void) clearRecentSearches;
 + (void) deleteCachedMetadata;
 
-@end
-
-@interface NSObject (SBMetadataSearchControllerDelegateMethod)
-- (void)metadataImportDone:(MP42Metadata*) metadataToBeImported;
 @end

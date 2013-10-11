@@ -14,7 +14,7 @@
     NSString *_language;
 }
 
-- (id) initWithLanguage: (NSString*) language;
-- (NSString*) performOCROnCGImage:(CGImageRef)image;
+- (instancetype)initWithLanguage:(NSString *)language;
+- (NSString *)performOCROnCGImage:(CGImageRef)image;
 
 @end

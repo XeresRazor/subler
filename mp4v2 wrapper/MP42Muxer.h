@@ -11,6 +11,10 @@
 
 @class MP42Track;
 
+@protocol MP42MuxerDelegate
+- (void)progressStatus:(CGFloat)progress;
+@end
+
 @interface MP42Muxer : NSObject {
     MP4FileHandle   _fileHandle;
     id              _delegate;
@@ -19,17 +23,12 @@
     int32_t         _cancelled;
 }
 
-- (id)initWithDelegate:(id)del;
+- (instancetype)initWithDelegate:(id <MP42MuxerDelegate>)del;
 
-- (void)addTrack:(MP42Track*)track;
+- (void)addTrack:(MP42Track *)track;
 
 - (BOOL)setup:(MP4FileHandle)fileHandle error:(NSError **)outError;
 - (void)work;
 - (void)cancel;
-
-@end
-
-@interface NSObject (MP42MuxerDelegateMethod)
-- (void)progressStatus: (CGFloat)progress;
 
 @end

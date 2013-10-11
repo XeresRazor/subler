@@ -7,10 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MP42File.h"
+#import "SBFileImport.h"
 
-@class MP42File;
-
-@interface SBDocument : NSDocument <NSTableViewDelegate> {
+@interface SBDocument : NSDocument <NSTableViewDelegate, MP42FileDelegate, SBFileImportDelegate> {
     MP42File  *mp4File;
     IBOutlet NSWindow       *documentWindow;
 

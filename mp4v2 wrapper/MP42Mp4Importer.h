@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "MP42FileImporter.h"
+#import "MP42File.h"
 #import "mp4v2.h"
 
-@interface MP42Mp4Importer : MP42FileImporter {
+@interface MP42Mp4Importer : MP42FileImporter <MP42FileDelegate> {
     MP4FileHandle   _fileHandle;
 }
 

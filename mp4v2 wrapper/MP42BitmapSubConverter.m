@@ -329,7 +329,7 @@ void FFInitFFmpeg()
     [pool drain];
 }
 
-- (id) initWithTrack: (MP42SubtitleTrack*) track error:(NSError **)outError
+- (instancetype)initWithTrack:(MP42SubtitleTrack *) track error:(NSError **)outError
 {
     if ((self = [super init])) {
         if (!avCodec) {
@@ -402,14 +402,6 @@ void FFInitFFmpeg()
 
     while (!_encoderDone)
         usleep(500);
-}
-
-- (BOOL)needMoreSample
-{
-    if ([inputSamplesBuffer count] > 10)
-        return NO;
-
-    return YES;
 }
 
 - (void)setInputDone

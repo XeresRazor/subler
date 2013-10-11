@@ -38,13 +38,12 @@
     int32_t     _encoderDone;
 }
 
-- (id)initWithTrack:(MP42SubtitleTrack *)track error:(NSError **)outError;
+- (instancetype)initWithTrack:(MP42SubtitleTrack *)track error:(NSError **)outError;
 
 - (void)addSample: (MP42SampleBuffer *)sample;
 - (MP42SampleBuffer *)copyEncodedSample;
 
 - (void)cancel;
-- (BOOL)needMoreSample;
 
 - (BOOL)encoderDone;
 - (void)setInputDone;

@@ -21,8 +21,6 @@
 - (void)cancel;
 - (BOOL)encoderDone;
 
-- (BOOL)needMoreSample;
 - (void)setInputDone;
-
 
 @end

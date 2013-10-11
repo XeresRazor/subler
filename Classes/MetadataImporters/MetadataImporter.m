@@ -152,11 +152,9 @@
     NSError *outError = nil;
 	NSData *r = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:&outError];
     
-    /*if (outError)
-        NSLog(@"Error: url content is nil");
-     */
+    if (!outError && r)
+        [r writeToFile:filename atomically:NO];
 
-	[r writeToFile:filename atomically:NO];
 	return r;
 }
 
@@ -168,7 +166,7 @@
 	return a;
 }
 
-+ (MetadataImporter *) importerForProvider:(NSString *)aProvider {
++ (instancetype) importerForProvider:(NSString *)aProvider {
 	if ([aProvider isEqualToString:@"iTunes Store"]) {
 		return [[[iTunesStore alloc] init] autorelease];
 	} else if ([aProvider isEqualToString:@"TheMovieDB"]) {
@@ -179,11 +177,11 @@
 	return nil;
 }
 
-+ (MetadataImporter *) defaultMovieProvider {
++ (instancetype) defaultMovieProvider {
 	return [MetadataImporter importerForProvider:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBMetadataPreference|Movie"]];
 }
 
-+ (MetadataImporter *) defaultTVProvider {
++ (instancetype) defaultTVProvider {
 	return [MetadataImporter importerForProvider:[[NSUserDefaults standardUserDefaults] valueForKey:@"SBMetadataPreference|TV"]];
 }
 

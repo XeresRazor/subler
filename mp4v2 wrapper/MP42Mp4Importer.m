@@ -8,7 +8,6 @@
 
 #import "MP42Mp4Importer.h"
 #import "SBLanguages.h"
-#import "MP42File.h"
 #import "MP42Sample.h"
 
 @interface MP4DemuxkHelper : NSObject {
@@ -27,11 +26,10 @@
 
 @implementation MP42Mp4Importer
 
-- (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
+- (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError;
 {
     if ((self = [super init])) {
-        _delegate = del;
-        _fileURL = [URL retain];
+        _fileURL = [fileURL retain];
 
         MP42File *sourceFile = [[MP42File alloc] initWithExistingFile:_fileURL andDelegate:self];
 
@@ -44,7 +42,7 @@
             return nil;
         }
 
-        _tracksArray = [[sourceFile tracks] retain];
+        _tracksArray = [[sourceFile tracks] mutableCopy];
         _metadata = [[sourceFile metadata] retain];
 
         [sourceFile release];

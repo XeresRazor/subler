@@ -22,8 +22,8 @@
     dispatch_semaphore_t _sem;
 }
 
-- (id)init;
-- (id)initWithCapacity:(NSUInteger)numItems;
+- (instancetype)init;
+- (instancetype)initWithCapacity:(NSUInteger)numItems;
 
 - (void)enqueue:(id)item;
 - (id)deque NS_RETURNS_RETAINED;

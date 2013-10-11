@@ -12,7 +12,7 @@
 
 @implementation SBFileImport
 
-- (id)initWithDelegate:(id)del andFiles: (NSArray *)files error:(NSError **)outError
+- (instancetype)initWithDelegate:(id <SBFileImportDelegate>)del andFiles:(NSArray *)files error:(NSError **)outError
 {
 	if ((self = [super initWithWindowNibName:@"FileImport"])) {
 		delegate = del;
@@ -21,7 +21,7 @@
         _tracks = [[NSMutableArray alloc] init];
 
         for (NSURL *file in files) {
-            MP42FileImporter *importer = [[MP42FileImporter alloc] initWithDelegate:delegate andFile:file error:outError];
+            MP42FileImporter *importer = [[MP42FileImporter alloc] initWithURL:file error:outError];
             if (importer) {
                 [_tracks addObject:[file lastPathComponent]];
                 [_fileImporters addObject:importer];
@@ -351,8 +351,7 @@
     if ([importMetadata state])
         metadata = [[[(MP42FileImporter *)[_fileImporters objectAtIndex:0] metadata] retain] autorelease];
 
-    if ([delegate respondsToSelector:@selector(importDoneWithTracks:andMetadata:)]) 
-        [delegate importDoneWithTracks:tracks andMetadata: metadata];
+    [delegate importDoneWithTracks:tracks andMetadata: metadata];
 
     [tracks release];
 

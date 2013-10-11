@@ -13,7 +13,7 @@
 
 @implementation MP42ChapterTrack
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init])) {
         _name = [self defaultName];
@@ -30,7 +30,7 @@
     return self;
 }
 
-- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (instancetype)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
     if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle])) {
         if (!_name || [_name isEqualToString:@"Text Track"])
@@ -74,7 +74,7 @@
     return self;
 }
 
-- (id)initWithTextFile:(NSURL *)URL
+- (instancetype)initWithTextFile:(NSURL *)URL
 {
     if ((self = [super init])) {
         _name = [self defaultName];
@@ -94,7 +94,7 @@
     return self;
 }
 
-+ (id)chapterTrackFromFile:(NSURL *)URL
++ (instancetype)chapterTrackFromFile:(NSURL *)URL
 {
     return [[[MP42ChapterTrack alloc] initWithTextFile:URL] autorelease];
 }

@@ -1350,18 +1350,17 @@ NSData* H264Info(const char *filePath, uint32_t *pic_width, uint32_t *pic_height
 
 @implementation MP42H264Importer
 
-- (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
+- (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError
 {
     if ((self = [super init])) {
-        _delegate = del;
-        _fileURL = [URL retain];
+        _fileURL = [fileURL retain];
 
         _tracksArray = [[NSMutableArray alloc] initWithCapacity:1];
 
         MP42VideoTrack *newTrack = [[MP42VideoTrack alloc] init];
 
         newTrack.format = MP42VideoFormatH264;
-        newTrack.sourceURL = URL;
+        newTrack.sourceURL = _fileURL;
 
         if (!inFile)
             inFile = fopen([[_fileURL path] UTF8String], "rb");

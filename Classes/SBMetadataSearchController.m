@@ -9,7 +9,6 @@
 #import "SBMetadataSearchController.h"
 #import "MP42File.h"
 #import "SBDocument.h"
-#import "SBArtworkSelector.h"
 #import "RegexKitLite.h"
 #import "SBLanguages.h"
 #import "MetadataImporter.h"
@@ -19,7 +18,7 @@
 
 #pragma mark Initialization
 
-- (id)initWithDelegate:(id)del
+- (instancetype)initWithDelegate:(id)del
 {
 	if ((self = [super initWithWindowNibName:@"MetadataSearch"])) {        
 		delegate = del;
