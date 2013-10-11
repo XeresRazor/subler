@@ -88,7 +88,7 @@ protected:
 }
 
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init]))
     {
@@ -97,7 +97,7 @@ protected:
     return self;
 }
 
-- (id) initWithLanguage: (NSString*) language
+- (instancetype)initWithLanguage:(NSString *)language
 {
     if ((self = [super init]))
     {
@@ -115,7 +115,7 @@ protected:
     return self;
 }
 
-- (NSString*) performOCROnCGImage:(CGImageRef)cgImage {
+- (NSString *)performOCROnCGImage:(CGImageRef)cgImage {
     NSMutableString * text;
 
     OCRWrapper *ocr = (OCRWrapper *)tess_base;
@@ -148,7 +148,7 @@ protected:
 
 }
 
-- (void) dealloc {
+- (void)dealloc {
     OCRWrapper *ocr = (OCRWrapper *)tess_base;
     ocr->End();
     delete ocr;

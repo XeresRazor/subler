@@ -706,11 +706,10 @@ static bool GetFirstHeader(FILE* inFile)
 	return true;
 }
 
-- (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
+- (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError
 {
     if ((self = [super init])) {
-        _delegate = del;
-        _fileURL = [URL retain];
+        _fileURL = [fileURL retain];
 
         _tracksArray = [[NSMutableArray alloc] initWithCapacity:1];
 

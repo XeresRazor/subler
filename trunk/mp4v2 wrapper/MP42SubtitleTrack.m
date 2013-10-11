@@ -14,7 +14,7 @@
 
 @implementation MP42SubtitleTrack
 
-- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (instancetype)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
     if ((self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle])) {
         if (![_format isEqualToString:MP42SubtitleFormatVobSub]) {
@@ -46,7 +46,7 @@
     return self;
 }
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init])) {
         _name = [self defaultName];

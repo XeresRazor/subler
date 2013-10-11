@@ -12,7 +12,7 @@
 
 @implementation MP42ClosedCaptionTrack
 
-- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (instancetype)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
     if (self = [super initWithSourceURL:URL trackID:trackID fileHandle:fileHandle]) {
         _mediaType = MP42MediaTypeClosedCaption;
@@ -21,7 +21,7 @@
     return self;
 }
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init])) {
         _name = [self defaultName];

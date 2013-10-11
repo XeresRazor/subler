@@ -8,9 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
+
+#import "MP42File.h"
 #import "SBTableView.h"
 
-@class MP42File;
 @class SBQueueItem;
 
 enum {
@@ -22,7 +23,7 @@ enum {
 };
 typedef NSInteger SBQueueStatus;
 
-@interface SBQueueController : NSWindowController<NSTableViewDelegate, NSTableViewDataSource, SBTableViewDelegate> {
+@interface SBQueueController : NSWindowController<NSTableViewDelegate, NSTableViewDataSource, SBTableViewDelegate, MP42FileDelegate> {
     IBOutlet NSButton *start;
     IBOutlet NSButton *open;
 
@@ -55,7 +56,7 @@ typedef NSInteger SBQueueStatus;
     BOOL            _cancelled;
 }
 
-@property (readonly) SBQueueStatus status;
+@property(readonly) SBQueueStatus status;
 
 + (SBQueueController *)sharedManager;
 

@@ -36,11 +36,10 @@
 
 @implementation MP42QTImporter
 
-- (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
+- (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError
 {
     if ((self = [super init])) {
-        _delegate = del;
-        _fileURL = [URL retain];
+        _fileURL = [fileURL retain];
 
 		NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:
 							   _fileURL, QTMovieURLAttribute,

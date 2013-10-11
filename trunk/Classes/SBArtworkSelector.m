@@ -81,7 +81,7 @@
 
 #pragma mark Initialization
 
-- (id)initWithDelegate:(id)del imageURLs:(NSArray *)imageURLs artworkProviderNames:(NSArray *)aArtworkProviderNames {
+- (instancetype)initWithDelegate:(id <SBArtworkSelectorDelegate>)del imageURLs:(NSArray *)imageURLs artworkProviderNames:(NSArray *)aArtworkProviderNames {
 	if ((self = [super initWithWindowNibName:@"ArtworkSelector"])) {        
 		delegate = del;
         imageURLsUnloaded = [[NSMutableArray alloc] initWithArray:imageURLs];
@@ -132,15 +132,11 @@
 #pragma mark Finishing up
 
 - (IBAction) addArtwork:(id)sender {
-    if ([delegate respondsToSelector:@selector(selectArtworkDone:)]) {
-        [delegate performSelector:@selector(selectArtworkDone:) withObject:[[[imageBrowser selectionIndexes] retain] autorelease]];
-    }
+    [delegate performSelector:@selector(selectArtworkDone:) withObject:[[[imageBrowser selectionIndexes] retain] autorelease]];
 }
 
 - (IBAction) addNoArtwork:(id)sender {
-    if ([delegate respondsToSelector:@selector(selectArtworkDone:)]) {
-        [delegate performSelector:@selector(selectArtworkDone:) withObject:nil];
-    }
+    [delegate performSelector:@selector(selectArtworkDone:) withObject:nil];
 }
 
 - (void) dealloc {

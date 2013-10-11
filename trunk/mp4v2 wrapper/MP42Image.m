@@ -11,7 +11,7 @@
 
 @implementation MP42Image
 
-- (id)initWithURL:(NSURL *)url type:(NSInteger)type
+- (instancetype)initWithURL:(NSURL *)url type:(NSInteger)type
 {
     if (self = [super init]) {
         _url = [url retain];
@@ -21,7 +21,7 @@
     return self;
 }
 
-- (id)initWithImage:(NSImage *)image
+- (instancetype)initWithImage:(NSImage *)image
 {
     if (self = [super init])
         _image = [image retain];
@@ -29,7 +29,7 @@
     return self;
 }
 
-- (id)initWithData:(NSData *)data type:(NSInteger)type
+- (instancetype)initWithData:(NSData *)data type:(NSInteger)type
 {
     if (self = [super init]) {
         _data = [data retain];
@@ -39,7 +39,7 @@
     return self;
 }
 
-- (id)initWithBytes:(const void*)bytes length:(NSUInteger)length type:(NSInteger)type
+- (instancetype)initWithBytes:(const void*)bytes length:(NSUInteger)length type:(NSInteger)type
 {
     if (self = [super init]) {
         _data = [[NSData alloc] initWithBytes:bytes length:length];

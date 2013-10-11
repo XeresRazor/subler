@@ -14,8 +14,8 @@
     MP42Metadata *mMetadata;
 }
 
-- (id) initWithURL:(NSURL *)url error:(NSError **)error;
+- (instancetype)initWithURL:(NSURL *)url error:(NSError **)error;
 
-@property (readonly) MP42Metadata *mMetadata;
+@property(readonly) MP42Metadata *mMetadata;
 
 @end

@@ -52,7 +52,7 @@
                                                              nil]];
 }
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super initWithWindowNibName:@"Prefs"])) {
         [[NSNotificationCenter defaultCenter] addObserver:self

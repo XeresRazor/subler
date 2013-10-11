@@ -23,9 +23,9 @@
 
 #pragma mark Static methods
 + (NSArray *) languagesForProvider:(NSString *)aProvider;
-+ (MetadataImporter *) importerForProvider:(NSString *)aProviderName;
-+ (MetadataImporter *) defaultMovieProvider;
-+ (MetadataImporter *) defaultTVProvider;
++ (instancetype) importerForProvider:(NSString *)aProviderName;
++ (instancetype) defaultMovieProvider;
++ (instancetype) defaultTVProvider;
 + (NSString *) defaultMovieLanguage;
 + (NSString *) defaultTVLanguage;
 

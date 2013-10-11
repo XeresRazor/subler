@@ -76,7 +76,7 @@ struct AudioFileIO
     struct AudioFileIO encoderData;
 }
 
-- (id)initWithTrack:(MP42AudioTrack*)track andMixdownType:(NSString *)mixdownType error:(NSError **)outError;
+- (instancetype)initWithTrack:(MP42AudioTrack*)track andMixdownType:(NSString *)mixdownType error:(NSError **)outError;
 
 - (void)addSample:(MP42SampleBuffer *)sample;
 - (MP42SampleBuffer *)copyEncodedSample;
@@ -86,7 +86,6 @@ struct AudioFileIO
 - (void)cancel;
 - (BOOL)encoderDone;
 
-- (BOOL)needMoreSample;
 - (void)setInputDone;
 
 @end

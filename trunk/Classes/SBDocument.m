@@ -10,7 +10,6 @@
 #import "SBQueueController.h"
 #import "SBQueueItem.h"
 #import "SBLanguages.h"
-#import "SBFileImport.h"
 #import "SBEmptyViewController.h"
 #import "SBMovieViewController.h"
 #import "SBVideoViewController.h"
@@ -492,14 +491,14 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     else if (row != -1 && [[mp4File trackAtIndex:row] isMemberOfClass:[MP42ChapterTrack class]])
     {
         SBChapterViewController *controller = [[SBChapterViewController alloc] initWithNibName:@"ChapterView" bundle:nil];
-        [controller setTrack:[mp4File trackAtIndex:row]];
+        [controller setTrack:(MP42ChapterTrack *)[mp4File trackAtIndex:row]];
         if (controller !=nil)
             propertyView = controller;
     }
     else if (row != -1 && [[mp4File trackAtIndex:row] isKindOfClass:[MP42VideoTrack class]])
     {
         SBVideoViewController *controller = [[SBVideoViewController alloc] initWithNibName:@"VideoView" bundle:nil];
-        [controller setTrack:[mp4File trackAtIndex:row]];
+        [controller setTrack:(MP42VideoTrack *)[mp4File trackAtIndex:row]];
         [controller setFile:mp4File];
         if (controller !=nil)
             propertyView = controller;
@@ -507,7 +506,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     else if (row != -1 && [[mp4File trackAtIndex:row] isKindOfClass:[MP42AudioTrack class]])
     {
         SBSoundViewController *controller = [[SBSoundViewController alloc] initWithNibName:@"SoundView" bundle:nil];
-        [controller setTrack:[mp4File trackAtIndex:row]];
+        [controller setTrack:(MP42AudioTrack *)[mp4File trackAtIndex:row]];
         [controller setFile:mp4File];
         if (controller !=nil)
             propertyView = controller;

@@ -9,9 +9,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 
-@interface SBArtworkSelector : NSWindowController {
+@protocol SBArtworkSelectorDelegate <NSObject>
+- (void)selectArtworkDone:(NSURL *)url;
+@end
 
-    id                               delegate;
+@interface SBArtworkSelector : NSWindowController {
+    id <SBArtworkSelectorDelegate>  delegate;
     IBOutlet IKImageBrowserView     *imageBrowser;
     IBOutlet NSSlider               *slider;
     IBOutlet NSButton               *addArtworkButton;
@@ -22,7 +25,7 @@
 }
 
 #pragma mark Initialization
-- (id)initWithDelegate:(id)del imageURLs:(NSArray *)imageURLs artworkProviderNames:(NSArray *)artworkProviderNames;
+- (instancetype)initWithDelegate:(id <SBArtworkSelectorDelegate>)del imageURLs:(NSArray *)imageURLs artworkProviderNames:(NSArray *)artworkProviderNames;
 
 #pragma mark Load images
 - (IBAction) loadMoreArtwork:(id)sender;
@@ -34,8 +37,4 @@
 - (IBAction) addArtwork:(id)sender;
 - (IBAction) addNoArtwork:(id)sender;
 
-@end
-
-@interface NSObject (SBArtworkSelectorDelegateMethod)
-- (void)selectArtworkDone:(NSURL *)url;
 @end

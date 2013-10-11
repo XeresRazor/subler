@@ -20,7 +20,6 @@
 
 @interface MP42FileImporter : NSObject {
     NSURL   *_fileURL;
-    id       _delegate;
 
     NSInteger       _chapterId;
     MP42Metadata   *_metadata;
@@ -35,7 +34,7 @@
     int32_t       _done;
 }
 
-- (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError;
+- (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError;
 
 - (BOOL)containsTrack:(MP42Track*)track;
 - (MP42Track *)inpuTrackWithTrackID:(MP4TrackId)trackId;
@@ -61,10 +60,5 @@
 
 @property(readwrite, retain) MP42Metadata *metadata;
 @property(readonly) NSMutableArray  *tracks;
-
-@end
-
-@interface NSObject (MP42FileImporterDelegateMethod)
-- (void) fileLoaded;
 
 @end

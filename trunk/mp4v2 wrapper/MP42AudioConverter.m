@@ -590,7 +590,7 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
     return YES;
 }
 
-- (id)initWithTrack:(MP42AudioTrack *)track andMixdownType:(NSString *) mixdownType error:(NSError **)outError
+- (instancetype)initWithTrack:(MP42AudioTrack *)track andMixdownType:(NSString *) mixdownType error:(NSError **)outError
 {
     if ((self = [super init])) {
         OSStatus err;
@@ -783,14 +783,6 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
         return nil;
 
     return [_outputSamplesBuffer deque];
-}
-
-- (BOOL)needMoreSample
-{
-    if ([_inputSamplesBuffer isFull])
-        return NO;
-
-    return YES;
 }
 
 - (void)setInputDone

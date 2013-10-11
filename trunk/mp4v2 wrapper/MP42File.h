@@ -19,14 +19,19 @@
 
 #import "MP42Utilities.h"
 #import "MP42MediaFormat.h"
-
-@class MP42Muxer;
+#import "MP42Muxer.h"
 
 extern NSString * const MP42Create64BitData;
 extern NSString * const MP42Create64BitTime;
 extern NSString * const MP42CreateChaptersPreviewTrack;
 
-@interface MP42File : NSObject <NSCoding> {
+@protocol MP42FileDelegate
+@optional
+- (void)progressStatus:(CGFloat)progress;
+- (void)endSave:(id)sender;
+@end
+
+@interface MP42File : NSObject <NSCoding, MP42MuxerDelegate> {
 @private
     MP4FileHandle   _fileHandle;
     NSURL          *_fileURL;
@@ -45,23 +50,23 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
     MP42Muxer       *_muxer;
 }
 
-@property(readwrite, assign) id delegate;
+@property(readwrite, assign) id <MP42FileDelegate> delegate;
 
 @property(readonly) NSURL *URL;
 @property(readonly) MP42Metadata *metadata;
-@property(readonly, copy) NSMutableArray *tracks;
+@property(readonly, copy) NSArray *tracks;
 
 @property(readonly) BOOL hasFileRepresentation;
 
-- (id)initWithDelegate:(id)del;
-- (id)initWithExistingFile:(NSURL *)URL andDelegate:(id)del;
+- (instancetype)initWithDelegate:(id <MP42FileDelegate>)del;
+- (instancetype)initWithExistingFile:(NSURL *)URL andDelegate:(id <MP42FileDelegate>)del;
 
 - (NSUInteger)movieDuration;
 - (MP42ChapterTrack *)chapters;
 
 - (NSUInteger)tracksCount;
-- (id)trackAtIndex:(NSUInteger)index;
-- (id)trackWithTrackID:(NSUInteger)trackId;
+- (MP42Track *)trackAtIndex:(NSUInteger)index;
+- (MP42Track *)trackWithTrackID:(NSUInteger)trackId;
 - (NSArray *)tracksWithMediaType:(NSString *)mediaType;
 
 - (void)addTrack:(MP42Track *)track;
@@ -79,11 +84,5 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
 - (BOOL)optimize;
 
 - (void)cancel;
-
-@end
-
-@interface NSObject (MP42FileDelegateMethod)
-- (void)progressStatus:(CGFloat)progress;
-- (void)endSave:(id)sender;
 
 @end

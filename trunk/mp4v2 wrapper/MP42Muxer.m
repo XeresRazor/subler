@@ -15,7 +15,7 @@
 
 @implementation MP42Muxer
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init])) {
         _workingTracks = [[NSMutableArray alloc] init];
@@ -23,7 +23,7 @@
     return self;
 }
 
-- (id)initWithDelegate:(id)del
+- (instancetype)initWithDelegate:(id <MP42FileDelegate>)del
 {
     if ((self = [super init])) {
         _workingTracks = [[NSMutableArray alloc] init];
@@ -409,8 +409,7 @@
 
             progress = progress /= tracksImportersCount;
 
-            if ([_delegate respondsToSelector:@selector(progressStatus:)])
-                [_delegate progressStatus:progress];
+            [_delegate progressStatus:progress];
         }
         update++;
     }

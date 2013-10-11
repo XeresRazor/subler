@@ -163,14 +163,12 @@
     return [NSString stringWithUTF8String:lang_for_qtcode([[track languageCode] integerValue])->eng_name];
 }
 
-- (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
+- (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError
 {
     if ((self = [super init])) {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-        _delegate = del;
-        _fileURL = [URL retain];
-
+        _fileURL = [fileURL retain];
         _localAsset = [[AVAsset assetWithURL:_fileURL] retain];
 
         _tracksArray = [[NSMutableArray alloc] init];

@@ -194,7 +194,7 @@ static const genreType_t genreType_strings[] = {
 
 @implementation MP42Metadata
 
-- (id)init
+- (instancetype)init
 {
 	if ((self = [super init]))
 	{
@@ -209,7 +209,7 @@ static const genreType_t genreType_strings[] = {
     return self;
 }
 
-- (id)initWithSourceURL:(NSURL *)URL fileHandle:(MP4FileHandle)fileHandle
+- (instancetype)initWithSourceURL:(NSURL *)URL fileHandle:(MP4FileHandle)fileHandle
 {
 	if ((self = [super init]))
 	{
@@ -225,7 +225,7 @@ static const genreType_t genreType_strings[] = {
     return self;
 }
 
-- (id)initWithFileURL:(NSURL *)URL;
+- (instancetype)initWithFileURL:(NSURL *)URL;
 {
     if ((self = [super init]))
 	{

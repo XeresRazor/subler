@@ -28,7 +28,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
 }
 @implementation MP42Style
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         _color = make_color(255, 255, 255, 255);
@@ -36,7 +36,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
     return self;
 }
 
-- (id)initWithStyle:(NSInteger)style type:(NSInteger)type location:(NSUInteger) location color:(rgba_color) color
+- (instancetype)initWithStyle:(NSInteger)style type:(NSInteger)type location:(NSUInteger) location color:(rgba_color) color
 {
     self = [super init];
     if (self) {
@@ -49,7 +49,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
     MP42Style *newObject = [[MP42Style allocWithZone:zone] init];
 
@@ -76,7 +76,7 @@ int compare_color(rgba_color c1, rgba_color c2) {
 
 @implementation MP42HtmlParser
 
-- (id)initWithString: (NSString*) string
+- (instancetype)initWithString: (NSString*) string
 {
     self = [super init];
     if (self) {

@@ -55,7 +55,7 @@ typedef struct muxer_helper {
     muxer_helper *_helper;
 }
 
-- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
+- (instancetype)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
 
 - (BOOL)writeToFile:(MP4FileHandle)fileHandle error:(NSError **)outError;
 - (MP42SampleBuffer *)copyNextSample;

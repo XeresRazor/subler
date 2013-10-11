@@ -35,7 +35,7 @@ int compare_color(rgba_color c1, rgba_color c2);
     NSUInteger _length;
 }
 
-- (id)initWithStyle:(NSInteger)style type:(NSInteger)type location:(NSUInteger) location color:(rgba_color) color;
+- (instancetype)initWithStyle:(NSInteger)style type:(NSInteger)type location:(NSUInteger) location color:(rgba_color) color;
 
 @property (readwrite) NSInteger style;
 @property (readwrite) rgba_color color;

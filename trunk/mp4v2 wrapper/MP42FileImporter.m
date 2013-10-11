@@ -28,48 +28,52 @@
 
 @implementation MP42FileImporter
 
-- (id)initWithDelegate:(id)del andFile:(NSURL *)URL error:(NSError **)outError
+- (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError;
 {
     [self release];
     self = nil;
-    if ([[URL pathExtension] caseInsensitiveCompare: @"mkv"] == NSOrderedSame ||
-        [[URL pathExtension] caseInsensitiveCompare: @"mka"] == NSOrderedSame ||
-        [[URL pathExtension] caseInsensitiveCompare: @"mks"] == NSOrderedSame)
-        self = [[MP42MkvImporter alloc] initWithDelegate:del andFile:URL error:outError];
-    else if ([[URL pathExtension] caseInsensitiveCompare: @"mp4"] == NSOrderedSame ||
-             [[URL pathExtension] caseInsensitiveCompare: @"m4v"] == NSOrderedSame ||
-             [[URL pathExtension] caseInsensitiveCompare: @"m4a"] == NSOrderedSame)
-        self = [[MP42Mp4Importer alloc] initWithDelegate:del andFile:URL error:outError];
-    else if ([[URL pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame)
-        self = [[MP42SrtImporter alloc] initWithDelegate:del andFile:URL error:outError];
-    else if ([[URL pathExtension] caseInsensitiveCompare: @"scc"] == NSOrderedSame)
-        self = [[MP42CCImporter alloc] initWithDelegate:del andFile:URL error:outError];
-    else if ([[URL pathExtension] caseInsensitiveCompare: @"ac3"] == NSOrderedSame)
-        self = [[MP42AC3Importer alloc] initWithDelegate:del andFile:URL error:outError];
-    else if ([[URL pathExtension] caseInsensitiveCompare: @"aac"] == NSOrderedSame)
-        self = [[MP42AACImporter alloc] initWithDelegate:del andFile:URL error:outError];
-    else if ([[URL pathExtension] caseInsensitiveCompare: @"264"] == NSOrderedSame ||
-             [[URL pathExtension] caseInsensitiveCompare: @"h264"] == NSOrderedSame)
-        self = [[MP42H264Importer alloc] initWithDelegate:del andFile:URL error:outError];
-    else if ([[URL pathExtension] caseInsensitiveCompare: @"idx"] == NSOrderedSame ||
-             [[URL pathExtension] caseInsensitiveCompare: @"idx"] == NSOrderedSame)
-        self = [[MP42VobSubImporter alloc] initWithDelegate:del andFile:URL error:outError];
+    if ([[fileURL pathExtension] caseInsensitiveCompare: @"mkv"] == NSOrderedSame ||
+        [[fileURL pathExtension] caseInsensitiveCompare: @"mka"] == NSOrderedSame ||
+        [[fileURL pathExtension] caseInsensitiveCompare: @"mks"] == NSOrderedSame)
+        self = [MP42MkvImporter alloc];
+    else if ([[fileURL pathExtension] caseInsensitiveCompare: @"mp4"] == NSOrderedSame ||
+             [[fileURL pathExtension] caseInsensitiveCompare: @"m4v"] == NSOrderedSame ||
+             [[fileURL pathExtension] caseInsensitiveCompare: @"m4a"] == NSOrderedSame)
+        self = [MP42Mp4Importer alloc];
+    else if ([[fileURL pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame)
+        self = [MP42SrtImporter alloc];
+    else if ([[fileURL pathExtension] caseInsensitiveCompare: @"scc"] == NSOrderedSame)
+        self = [MP42CCImporter alloc];
+    else if ([[fileURL pathExtension] caseInsensitiveCompare: @"ac3"] == NSOrderedSame)
+        self = [MP42AC3Importer alloc];
+    else if ([[fileURL pathExtension] caseInsensitiveCompare: @"aac"] == NSOrderedSame)
+        self = [MP42AACImporter alloc];
+    else if ([[fileURL pathExtension] caseInsensitiveCompare: @"264"] == NSOrderedSame ||
+             [[fileURL pathExtension] caseInsensitiveCompare: @"h264"] == NSOrderedSame)
+        self = [MP42H264Importer alloc];
+    else if ([[fileURL pathExtension] caseInsensitiveCompare: @"idx"] == NSOrderedSame ||
+             [[fileURL pathExtension] caseInsensitiveCompare: @"idx"] == NSOrderedSame)
+        self = [MP42VobSubImporter alloc];
 #if !__LP64__
-    else if ([[URL pathExtension] caseInsensitiveCompare: @"mov"] == NSOrderedSame) {
-        self = [[MP42QTImporter alloc] initWithDelegate:del andFile:URL error:outError];
+    else if ([[fileURL pathExtension] caseInsensitiveCompare: @"mov"] == NSOrderedSame) {
+        self = [MP42QTImporter alloc];
     }
 #endif
     // If we are on 10.7 or later, use the AVFoundation path
     else if (NSClassFromString(@"AVAsset")) {
-        if ([[URL pathExtension] caseInsensitiveCompare: @"m2ts"] == NSOrderedSame ||
-            [[URL pathExtension] caseInsensitiveCompare: @"mts"] == NSOrderedSame ) {
-            self = [[MP42AVFImporter alloc] initWithDelegate:del andFile:URL error:outError];
+        if ([[fileURL pathExtension] caseInsensitiveCompare: @"m2ts"] == NSOrderedSame ||
+            [[fileURL pathExtension] caseInsensitiveCompare: @"mts"] == NSOrderedSame ) {
+            self = [MP42AVFImporter alloc];
         }
     }
 
     if (self) {
-        for (MP42Track *track in _tracksArray)
-            track.muxer_helper->importer = self;
+        self = [self initWithURL:fileURL error:outError];
+
+        if (self) {
+            for (MP42Track *track in _tracksArray)
+                track.muxer_helper->importer = self;
+        }
     }
 
     return self;

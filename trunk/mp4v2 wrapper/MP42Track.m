@@ -15,7 +15,7 @@
 
 @implementation MP42Track
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init])) {
         _enabled = YES;
@@ -25,7 +25,7 @@
     return self;
 }
 
-- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
+- (instancetype)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle
 {
 	if ((self = [super init])) {
 		_sourceURL = [URL retain];
@@ -58,7 +58,7 @@
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
     MP42Track *copy = [[[self class] alloc] init];
 
