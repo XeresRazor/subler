@@ -30,7 +30,7 @@
 
     int                     compressed;
 	UInt32                  paletteG[16];
-    NSData * srcMagicCookie;
+    NSData *srcMagicCookie;
 
     uint8_t                 *codecData;
     unsigned int            bufferSize;

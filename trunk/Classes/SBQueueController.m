@@ -444,93 +444,93 @@ static NSString *fileType = @"mp4";
 #endif
 
         for (;;) {
-            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            __block SBQueueItem *item = nil;
+            @autoreleasepool {
+                __block SBQueueItem *item = nil;
 
-            // Get the first item available in the queue
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                item = [self firstItemInQueue];
-                [item retain];
-                [item setStatus:SBQueueItemStatusWorking];
-            });
+                // Get the first item available in the queue
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    item = [self firstItemInQueue];
+                    [item retain];
+                    [item setStatus:SBQueueItemStatusWorking];
+                });
 
-            if (item == nil)
-                break;
+                if (item == nil)
+                    break;
 
-            _currentMP4 = [item mp4File];
-            [_currentMP4 setDelegate:self];
+                _currentMP4 = [item mp4File];
+                [_currentMP4 setDelegate:self];
 
-            // Update the UI
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSInteger itemIndex = [filesArray indexOfObject:item];
-                [countLabel setStringValue:[NSString stringWithFormat:@"Processing file %ld of %lu.",(long)itemIndex + 1, (unsigned long)[filesArray count]]];
-                [[NSApp dockTile] setBadgeLabel:[NSString stringWithFormat:@"%lu", (unsigned long)[filesArray count] - itemIndex]];
-                [tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-            });
+                // Update the UI
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSInteger itemIndex = [filesArray indexOfObject:item];
+                    [countLabel setStringValue:[NSString stringWithFormat:@"Processing file %ld of %lu.",(long)itemIndex + 1, (unsigned long)[filesArray count]]];
+                    [[NSApp dockTile] setBadgeLabel:[NSString stringWithFormat:@"%lu", (unsigned long)[filesArray count] - itemIndex]];
+                    [tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                });
 
-            // Set the destination url
-            if (![item destURL]) {
-                if (!_currentMP4 && destination && customDestination)
-                    item.destURL = [[[destination URLByAppendingPathComponent:[item.URL lastPathComponent]] URLByDeletingPathExtension] URLByAppendingPathExtension:fileType];
-                else
-                    item.destURL = [[item.URL URLByDeletingPathExtension] URLByAppendingPathExtension:fileType];
-            }
-
-            // The file has been added directly to the queue
-            if (!_currentMP4 && item.URL)
-                _currentMP4 = [self prepareQueueItem:item.URL error:&outError];
-
-            // We have an existing mp4 file, update it
-            if (!_cancelled) {
-                if ([_currentMP4 hasFileRepresentation])
-                    success = [_currentMP4 updateMP4FileWithAttributes:attributes error:&outError];
-                // Write the new file to disk
-                else if (_currentMP4 && item.destURL) {
-                    [attributes addEntriesFromDictionary:[item attributes]];
-                    success = [_currentMP4 writeToUrl:[item destURL]
-                                       withAttributes:attributes
-                                                error:&outError];
+                // Set the destination url
+                if (![item destURL]) {
+                    if (!_currentMP4 && destination && customDestination)
+                        item.destURL = [[[destination URLByAppendingPathComponent:[item.URL lastPathComponent]] URLByDeletingPathExtension] URLByAppendingPathExtension:fileType];
+                    else
+                        item.destURL = [[item.URL URLByDeletingPathExtension] URLByAppendingPathExtension:fileType];
                 }
-            }
 
-            // Check results
-            if (_cancelled) {
-                [item setStatus:SBQueueItemStatusCancelled];
-                status = SBQueueStatusCancelled;
-            }
-            else if (success) {
-                if ([OptimizeOption state]) {
-                    // Update the UI
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSInteger itemIndex = [filesArray indexOfObject:item];
-                        [countLabel setStringValue:[NSString stringWithFormat:@"Optimizing file %ld of %lu.",(long)itemIndex + 1, (unsigned long)[filesArray count]]];
-                    });
+                // The file has been added directly to the queue
+                if (!_currentMP4 && item.URL)
+                    _currentMP4 = [self prepareQueueItem:item.URL error:&outError];
 
-                    success = [_currentMP4 optimize];
+                // We have an existing mp4 file, update it
+                if (!_cancelled) {
+                    if ([_currentMP4 hasFileRepresentation])
+                        success = [_currentMP4 updateMP4FileWithAttributes:attributes error:&outError];
+                    // Write the new file to disk
+                    else if (_currentMP4 && item.destURL) {
+                        [attributes addEntriesFromDictionary:[item attributes]];
+                        success = [_currentMP4 writeToUrl:[item destURL]
+                                           withAttributes:attributes
+                                                    error:&outError];
+                    }
                 }
-            }
 
-            if (success)
-                [item setStatus:SBQueueItemStatusCompleted];
-            else {
-                [item setStatus:SBQueueItemStatusFailed];
-                if (outError) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [NSApp presentError:outError];
-                    });
+                // Check results
+                if (_cancelled) {
+                    [item setStatus:SBQueueItemStatusCancelled];
+                    status = SBQueueStatusCancelled;
                 }
+                else if (success) {
+                    if ([OptimizeOption state]) {
+                        // Update the UI
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSInteger itemIndex = [filesArray indexOfObject:item];
+                            [countLabel setStringValue:[NSString stringWithFormat:@"Optimizing file %ld of %lu.",(long)itemIndex + 1, (unsigned long)[filesArray count]]];
+                        });
+
+                        success = [_currentMP4 optimize];
+                    }
+                }
+
+                if (success)
+                    [item setStatus:SBQueueItemStatusCompleted];
+                else {
+                    [item setStatus:SBQueueItemStatusFailed];
+                    if (outError) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [NSApp presentError:outError];
+                        });
+                    }
+                }
+
+                // Update the UI
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSInteger itemIndex = [filesArray indexOfObject:item];
+                    [tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                    [self saveQueueToDisk];
+                });
+                
+                [item release];
             }
-
-            // Update the UI
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSInteger itemIndex = [filesArray indexOfObject:item];
-                [tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:itemIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-                [self saveQueueToDisk];
-            });
-
-            [item release];
-            [pool release];
-
+            
             if (status == SBQueueStatusCancelled)
                 break;
         }
