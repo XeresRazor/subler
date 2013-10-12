@@ -26,6 +26,8 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
 
 - (void)reconnectReferences;
 - (void)removeMuxedTrack:(MP42Track *)track;
+
+- (void)organizeAlternateGroupsForMediaType:(NSString *)mediaType withGroupID:(NSUInteger)groupID;
 - (BOOL)createChaptersPreview;
 
 @end
@@ -571,45 +573,44 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
     updateMoovDuration(_fileHandle);
 }
 
+- (void)organizeAlternateGroupsForMediaType:(NSString *)mediaType withGroupID:(NSUInteger)groupID
+{
+    NSArray *tracks = [self tracksWithMediaType:mediaType];
+    BOOL enabled = NO;
+
+    if (![tracks count])
+        return;
+
+    for (MP42Track *track in tracks) {
+        track.alternate_group = groupID;
+
+        if (track.enabled && !enabled)
+            enabled = YES;
+        else if (track.enabled)
+            track.enabled = NO;
+    }
+
+    if (!enabled)
+        [[tracks objectAtIndex:0] setEnabled:YES];
+}
+
 /** Create a set of alternate group the way iTunes and Apple devices want:
     one alternate group for sound, one for subtitles, a disabled photo-jpeg track,
     a disabled chapter track, and a video track with no alternate group */
 - (void)organizeAlternateGroups
 {
-    NSInteger firstAudioTrack = 0, firstSubtitleTrack = 0, firstVideoTrack = 0;
+    NSArray *typeToOrganize = @[MP42MediaTypeVideo,
+                                MP42MediaTypeAudio,
+                                MP42MediaTypeSubtitle];
+
+    for (int i = 0; i < [typeToOrganize count]; i++) {
+        [self organizeAlternateGroupsForMediaType:[typeToOrganize objectAtIndex:i]
+                                     withGroupID:i];
+    }
 
     for (MP42Track *track in _tracks) {
         if ([track isMemberOfClass:[MP42ChapterTrack class]])
             track.enabled = NO;
-        else if ([track isMemberOfClass:[MP42AudioTrack class]]) {
-            if (!firstAudioTrack)
-                track.enabled = YES;
-            else
-                track.enabled = NO;
-            
-            track.alternate_group = 1;
-            firstAudioTrack++;
-        }
-        else if ([track isMemberOfClass:[MP42SubtitleTrack class]]) {
-            if (!firstSubtitleTrack)
-                track.enabled = YES;
-            else
-                track.enabled = NO;
-            
-            track.alternate_group = 2;
-            firstSubtitleTrack++;
-        }
-        else if ([track isMemberOfClass:[MP42VideoTrack class]]) {
-            track.alternate_group = 0;
-            if ([track.format isEqualToString:MP42VideoFormatJPEG])
-                track.enabled = NO;
-            else {
-                if (!firstVideoTrack) {
-                    track.enabled = YES;
-                    firstVideoTrack++;
-                }
-            }
-        }
     }
 }
 
@@ -621,11 +622,11 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
 
     for (MP42Track *track in _tracks) {
         if ([track isMemberOfClass:[MP42ChapterTrack class]])
-            chapterTrack = (MP42ChapterTrack*) track;
-        
+            chapterTrack = (MP42ChapterTrack *)track;
+
         if ([track.format isEqualToString:MP42VideoFormatJPEG])
             jpegTrack = track.Id;
-        
+
         if ([track.format isEqualToString:MP42VideoFormatH264])
             if ((((MP42VideoTrack *)track).origProfile) == 110)
                 decodable = 0;
