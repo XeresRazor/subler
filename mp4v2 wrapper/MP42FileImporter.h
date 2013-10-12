@@ -32,12 +32,13 @@
     CGFloat       _progress;
     int32_t       _cancelled;
     int32_t       _done;
+    dispatch_semaphore_t _doneSem;
 }
 
 - (instancetype)initWithURL:(NSURL *)fileURL error:(NSError **)outError;
 
 - (BOOL)containsTrack:(MP42Track*)track;
-- (MP42Track *)inpuTrackWithTrackID:(MP4TrackId)trackId;
+- (MP42Track *)inputTrackWithTrackID:(MP4TrackId)trackId;
 
 - (NSUInteger)timescaleForTrack:(MP42Track *)track;
 - (NSSize)sizeForTrack:(MP42Track *)track;

@@ -33,16 +33,10 @@ void FFInitFFmpeg()
 - (void)VobSubDecoderThreadMainRoutine:(id)sender
 {
     @autoreleasepool {
-        while(1) {
-            while (![_inputSamplesBuffer count] && !_readerDone)
-                usleep(1000);
-
-            if (![_inputSamplesBuffer count] && _readerDone)
-                break;
-
+        while([_inputSamplesBuffer count] || !_readerDone) {
             MP42SampleBuffer *sampleBuffer = nil;
 
-            sampleBuffer = [_inputSamplesBuffer deque];
+            while (!(sampleBuffer = [_inputSamplesBuffer dequeAndWait]));
 
             UInt8 *data = (UInt8 *) sampleBuffer->data;
             int ret, got_sub;
@@ -199,14 +193,10 @@ void FFInitFFmpeg()
 - (void)PGSDecoderThreadMainRoutine:(id)sender
 {
     @autoreleasepool {
-        while(1) {
-            while (![_inputSamplesBuffer count] && !_readerDone)
-                usleep(1000);
+        while([_inputSamplesBuffer count] || !_readerDone) {
+            MP42SampleBuffer *sampleBuffer = nil;
 
-            if (![_inputSamplesBuffer count] && _readerDone)
-                break;
-
-            MP42SampleBuffer *sampleBuffer = [_inputSamplesBuffer deque];
+            while (!(sampleBuffer = [_inputSamplesBuffer dequeAndWait]));
 
             int ret, got_sub, i;
             uint32_t *imageData;
@@ -303,6 +293,7 @@ void FFInitFFmpeg()
         }
         
         _encoderDone = YES;
+        dispatch_semaphore_signal(_done);
     }
 }
 
@@ -332,6 +323,8 @@ void FFInitFFmpeg()
         srcMagicCookie = [[track.muxer_helper->importer magicCookieForTrack:track] retain];
 
         ocr = [[MP42OCRWrapper alloc] initWithLanguage:[track language]];
+
+        _done = dispatch_semaphore_create(0);
 
         if (([track.sourceFormat isEqualToString:MP42SubtitleFormatVobSub])) {
             // Launch the vobsub decoder thread.
@@ -371,8 +364,7 @@ void FFInitFFmpeg()
     [_inputSamplesBuffer cancel];
     [_outputSamplesBuffer cancel];
 
-    while (!_encoderDone)
-        usleep(500);
+    dispatch_semaphore_wait(_done, DISPATCH_TIME_FOREVER);
 }
 
 - (void)setInputDone
@@ -411,6 +403,8 @@ void FFInitFFmpeg()
 
     [decoderThread release];
     [ocr release];
+
+    dispatch_release(_done);
     [super dealloc];
 }
 

@@ -105,7 +105,7 @@
 
     _progress = 100.0;
 
-    [self setDone: YES];
+    [self setDone:YES];
     [pool release];
 }
 

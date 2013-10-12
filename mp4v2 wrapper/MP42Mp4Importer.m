@@ -277,7 +277,7 @@
         currentTime += 3;
     }
 
-    [self setDone: YES];
+    [self setDone:YES];
     [pool release];
 }
 

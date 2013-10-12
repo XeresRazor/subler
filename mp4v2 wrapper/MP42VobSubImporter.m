@@ -379,7 +379,7 @@ static NSArray* LoadVobSubSubtitles(NSURL *theDirectory, NSString *filename)
         tracksDone++;
     }
 
-    [self setDone: YES];
+    [self setDone:YES];
     [pool release];
 }
 

@@ -20,7 +20,9 @@
     if (self) {
         _size = numItems;
         _array = (id *) malloc(sizeof(id) * _size);
-        _sem = dispatch_semaphore_create(_size);
+        _full = dispatch_semaphore_create(_size);
+        _empty = dispatch_semaphore_create(0);
+
     }
     return self;
 }
@@ -28,7 +30,7 @@
 - (void)enqueue:(id)item {
     if (_cancelled) return;
 
-    dispatch_semaphore_wait(_sem, DISPATCH_TIME_FOREVER);
+    dispatch_semaphore_wait(_full, DISPATCH_TIME_FOREVER);
 
     [item retain];
 
@@ -38,6 +40,7 @@
         _tail = 0;
 
     OSAtomicIncrement32(&_count);
+    dispatch_semaphore_signal(_empty);
 }
 
 - (id)deque {
@@ -49,7 +52,18 @@
         _head = 0;
 
     OSAtomicDecrement32(&_count);
-    dispatch_semaphore_signal(_sem);
+    dispatch_semaphore_signal(_full);
+
+    return item;
+}
+
+- (id)dequeAndWait {
+    id item = [self deque];
+
+    if (!item) {
+        dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC/1000);
+        dispatch_semaphore_wait(_empty, time);
+    }
 
     return item;
 }
@@ -80,7 +94,8 @@
     [self drain];
 
 	free(_array);
-    dispatch_release(_sem);
+    dispatch_release(_full);
+    dispatch_release(_empty);
 
     [super dealloc];
 }

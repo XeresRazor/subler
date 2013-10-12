@@ -346,15 +346,14 @@
     MP42SampleBuffer *sample = nil;
 
     if (_helper->converter) {
-        if ([_helper->fifo isEmpty] && [_helper->importer done])
+        if ([_helper->importer done])
             [_helper->converter setInputDone];
 
         if ([_helper->converter encoderDone])
             _helper->done = YES;
 
         sample = [_helper->converter copyEncodedSample];
-    }
-    else {
+    } else {
         if ([_helper->fifo isEmpty] && [_helper->importer done])
             _helper->done = YES;
 
@@ -368,7 +367,7 @@
 - (void)dealloc
 {
     free(_helper);
-    
+
     [_updatedProperty release];
     [_format release];
     [_sourceURL release];

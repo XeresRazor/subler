@@ -19,7 +19,8 @@
 
     int32_t     _cancelled;
 
-    dispatch_semaphore_t _sem;
+    dispatch_semaphore_t _full;
+    dispatch_semaphore_t _empty;
 }
 
 - (instancetype)init;
@@ -27,6 +28,7 @@
 
 - (void)enqueue:(id)item;
 - (id)deque NS_RETURNS_RETAINED;
+- (id)dequeAndWait NS_RETURNS_RETAINED;
 
 - (NSInteger)count;
 
