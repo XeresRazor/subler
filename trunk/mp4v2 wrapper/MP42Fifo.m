@@ -30,9 +30,9 @@
 - (void)enqueue:(id)item {
     if (_cancelled) return;
 
-    dispatch_semaphore_wait(_full, DISPATCH_TIME_FOREVER);
-
     [item retain];
+
+    dispatch_semaphore_wait(_full, DISPATCH_TIME_FOREVER);
 
     _array[_tail++] = item;
 
