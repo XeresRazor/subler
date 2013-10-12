@@ -22,8 +22,6 @@
     BOOL          isSync;
     BOOL          isCompressed;
     BOOL          isForced;
-
-    int32_t _retainCount;
 }
 
 @end
