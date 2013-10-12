@@ -36,31 +36,27 @@ void FFInitFFmpeg()
     MP42SampleBuffer* subSample;
 
     while(1) {
-        while (![inputSamplesBuffer count] && !_readerDone)
+        while (![_inputSamplesBuffer count] && !_readerDone)
             usleep(1000);
 
-        if (![inputSamplesBuffer count] && _readerDone)
+        if (![_inputSamplesBuffer count] && _readerDone)
             break;
 
         MP42SampleBuffer *sampleBuffer = nil;
-        @synchronized(inputSamplesBuffer) {
-            sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
-        }
+
+        sampleBuffer = [_inputSamplesBuffer deque];
+
         UInt8 *data = (UInt8 *) sampleBuffer->data;
         int ret, got_sub;
 
         if(sampleBuffer->size < 4)
         {
             subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, NO);
-            @synchronized(outputSamplesBuffer) {
-                [outputSamplesBuffer addObject:subSample];    
-            }
 
+            [_outputSamplesBuffer enqueue:subSample];
             [subSample release];
 
-            @synchronized(inputSamplesBuffer) {
-                [inputSamplesBuffer removeObjectAtIndex:0];
-            }
+            [sampleBuffer release];
 
             continue;
         }
@@ -92,14 +88,11 @@ void FFInitFFmpeg()
             NSLog(@"Error decoding DVD subtitle %d / %ld", ret, (long)bufferSize);
             
             subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, NO);
-            @synchronized(outputSamplesBuffer) {
-                [outputSamplesBuffer addObject:subSample];
-            }
+
+            [_outputSamplesBuffer enqueue:subSample];
             [subSample release];
-            
-            @synchronized(inputSamplesBuffer) {
-                [inputSamplesBuffer removeObjectAtIndex:0];
-            }
+
+            [sampleBuffer release];
 
             continue;
         }
@@ -172,10 +165,11 @@ void FFInitFFmpeg()
                                                kCGRenderingIntentDefault);
             CGColorSpaceRelease(colorSpace);
 
-            //NSBitmapImageRep *bitmapImage = [[NSBitmapImageRep alloc]initWithCGImage:(CGImageRef)cgImage];
-            //[[bitmapImage representationUsingType:NSTIFFFileType properties:nil] writeToFile:@"/tmp/foo.tif" atomically:YES];
-            //[bitmapImage release];
-
+#ifdef OCR_DEBUG
+            NSBitmapImageRep *bitmapImage = [[NSBitmapImageRep alloc]initWithCGImage:(CGImageRef)cgImage];
+            [[bitmapImage representationUsingType:NSTIFFFileType properties:nil] writeToFile:@"/tmp/foo.tif" atomically:YES];
+            [bitmapImage release];
+#endif
             NSString *text = [ocr performOCROnCGImage:cgImage];
 
             if (text)
@@ -183,10 +177,7 @@ void FFInitFFmpeg()
             else
                 subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, forced);
 
-            @synchronized(outputSamplesBuffer) {
-                [outputSamplesBuffer addObject:subSample];
-            }
-
+            [_outputSamplesBuffer enqueue:subSample];
             [subSample release];
 
             CGImageRelease(cgImage);
@@ -198,9 +189,8 @@ void FFInitFFmpeg()
 
         avsubtitle_free(&subtitle);
         av_free_packet(&pkt);
-        @synchronized(inputSamplesBuffer) {
-            [inputSamplesBuffer removeObjectAtIndex:0];
-        }
+
+        [sampleBuffer release];
     }
 
     _encoderDone = YES;
@@ -213,16 +203,15 @@ void FFInitFFmpeg()
     MP42SampleBuffer* subSample;
 
     while(1) {
-        while (![inputSamplesBuffer count] && !_readerDone)
+        while (![_inputSamplesBuffer count] && !_readerDone)
             usleep(1000);
 
-        if (![inputSamplesBuffer count] && _readerDone)
+        if (![_inputSamplesBuffer count] && _readerDone)
             break;
 
         MP42SampleBuffer *sampleBuffer = nil;
-        @synchronized(inputSamplesBuffer) {
-            sampleBuffer = [inputSamplesBuffer objectAtIndex:0];
-        }
+        sampleBuffer = [_inputSamplesBuffer deque];
+
         int ret, got_sub, i;
         uint32_t *imageData;
         BOOL forced = NO;
@@ -237,15 +226,10 @@ void FFInitFFmpeg()
         if (ret < 0 || !got_sub || !subtitle.num_rects) {
             subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, NO);
 
-            @synchronized(outputSamplesBuffer) {
-                [outputSamplesBuffer addObject:subSample];
-            }
-
+            [_outputSamplesBuffer enqueue:subSample];
             [subSample release];
 
-            @synchronized(inputSamplesBuffer) {
-                [inputSamplesBuffer removeObjectAtIndex:0];
-            }
+            [sampleBuffer release];
 
             continue;
         }
@@ -305,10 +289,7 @@ void FFInitFFmpeg()
             else
                 subSample = copyEmptySubtitleSample(sampleBuffer->trackId, sampleBuffer->duration, forced);
 
-            @synchronized(outputSamplesBuffer) {
-                [outputSamplesBuffer addObject:subSample];
-            }
-
+            [_outputSamplesBuffer enqueue:subSample];
             [subSample release];
 
             CGImageRelease(cgImage);
@@ -320,9 +301,8 @@ void FFInitFFmpeg()
 
         avsubtitle_free(&subtitle);
         av_free_packet(&pkt);
-        @synchronized(inputSamplesBuffer) {
-            [inputSamplesBuffer removeObjectAtIndex:0];
-        }
+
+        [sampleBuffer release];
     }
 
     _encoderDone = YES;
@@ -349,8 +329,8 @@ void FFInitFFmpeg()
             }
         }
 
-        outputSamplesBuffer = [[NSMutableArray alloc] init];
-        inputSamplesBuffer = [[NSMutableArray alloc] init];
+        _outputSamplesBuffer = [[MP42Fifo alloc] initWithCapacity:20];
+        _inputSamplesBuffer  = [[MP42Fifo alloc] initWithCapacity:20];
 
         srcMagicCookie = [[track.muxer_helper->importer magicCookieForTrack:track] retain];
 
@@ -376,29 +356,23 @@ void FFInitFFmpeg()
 
 - (void)addSample:(MP42SampleBuffer*)sample
 {
-    @synchronized(inputSamplesBuffer) {
-        [inputSamplesBuffer addObject:sample];
-    }
+    [_inputSamplesBuffer enqueue:sample];
 }
 
 - (MP42SampleBuffer *)copyEncodedSample
 {
-    MP42SampleBuffer *sample;
-    if (![outputSamplesBuffer count]) {
+    if (![_outputSamplesBuffer count])
         return nil;
-    }
-    @synchronized(outputSamplesBuffer) {
-        sample = [outputSamplesBuffer objectAtIndex:0];
-        [sample retain];
-        [outputSamplesBuffer removeObjectAtIndex:0];
-    }
-    
-    return sample;
+
+    return [_outputSamplesBuffer deque];
 }
 
 - (void)cancel
 {
     _readerDone = YES;
+
+    [_inputSamplesBuffer cancel];
+    [_outputSamplesBuffer cancel];
 
     while (!_encoderDone)
         usleep(500);
@@ -416,8 +390,6 @@ void FFInitFFmpeg()
 
 - (void) dealloc
 {
-    int i;
-
     if (codecData) {
         av_freep(&codecData);
     }
@@ -428,7 +400,7 @@ void FFInitFFmpeg()
         av_freep(&avContext);
     }
     if (subtitle.rects) {
-        for (i = 0; i < subtitle.num_rects; i++) {
+        for (int i = 0; i < subtitle.num_rects; i++) {
             av_freep(&subtitle.rects[i]->pict.data[0]);
             av_freep(&subtitle.rects[i]->pict.data[1]);
             av_freep(&subtitle.rects[i]);
@@ -437,8 +409,8 @@ void FFInitFFmpeg()
     }
 
     [srcMagicCookie release];
-    [outputSamplesBuffer release];
-    [inputSamplesBuffer release];
+    [_outputSamplesBuffer release];
+    [_inputSamplesBuffer release];
 
     [decoderThread release];
     [ocr release];
