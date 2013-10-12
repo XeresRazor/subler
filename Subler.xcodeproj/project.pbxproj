@@ -22,7 +22,6 @@
 		A916F4311678DD07003920D6 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A916F4301678DD07003920D6 /* libjpeg.a */; };
 		A91ED322176A4BDF0091DC0A /* MP42HtmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A91ED321176A4BDF0091DC0A /* MP42HtmlParser.m */; };
 		A91F622D0FB0A56F00B96B33 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A91F622C0FB0A56F00B96B33 /* libicucore.dylib */; };
-		A92A4FB812B0F2F300751FA5 /* prefs-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = A92A4FB712B0F2F300751FA5 /* prefs-audio.png */; };
 		A92E3BE4177CB29800E7F7BB /* MP42Image.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E3BE3177CB29800E7F7BB /* MP42Image.m */; };
 		A935764117B3A72900ED8598 /* MP42MediaFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = A935764017B3A72900ED8598 /* MP42MediaFormat.m */; };
 		A936DAFE1682057700D19BDB /* MP42BitmapSubConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A936DAFD1682057700D19BDB /* MP42BitmapSubConverter.m */; };
@@ -221,7 +220,6 @@
 		A91ED320176A4BDF0091DC0A /* MP42HtmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42HtmlParser.h; path = "mp4v2 wrapper/MP42HtmlParser.h"; sourceTree = "<group>"; };
 		A91ED321176A4BDF0091DC0A /* MP42HtmlParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42HtmlParser.m; path = "mp4v2 wrapper/MP42HtmlParser.m"; sourceTree = "<group>"; };
 		A91F622C0FB0A56F00B96B33 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
-		A92A4FB712B0F2F300751FA5 /* prefs-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "prefs-audio.png"; path = "images/prefs-audio.png"; sourceTree = "<group>"; };
 		A92E3BE2177CB29800E7F7BB /* MP42Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MP42Image.h; path = "mp4v2 wrapper/MP42Image.h"; sourceTree = "<group>"; };
 		A92E3BE3177CB29800E7F7BB /* MP42Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42Image.m; path = "mp4v2 wrapper/MP42Image.m"; sourceTree = "<group>"; };
 		A935764017B3A72900ED8598 /* MP42MediaFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MP42MediaFormat.m; path = "mp4v2 wrapper/MP42MediaFormat.m"; sourceTree = "<group>"; };
@@ -566,7 +564,6 @@
 				A9D47B5617B239E200900BCA /* EncodeComplete.png */,
 				A9D47B5717B239E200900BCA /* EncodeComplete@2x.png */,
 				A9C9E34113FBC1EB00CA3B4E /* EncodeWorking.png */,
-				A92A4FB712B0F2F300751FA5 /* prefs-audio.png */,
 				A9BAD41F1405050600F3F4AE /* eng.traineddata */,
 				CD4A86A71234AFA10054970A /* ParseFilename */,
 				CDE8E451174CBBD4009410B5 /* iTunesStores.json */,
@@ -914,7 +911,6 @@
 				A90B023B10F3290A000416F3 /* Prefs.xib in Resources */,
 				A9AB486417F0AEFD000AA72E /* ChapterView.xib in Resources */,
 				A9AB486817F0AEFD000AA72E /* VideoView.xib in Resources */,
-				A92A4FB812B0F2F300751FA5 /* prefs-audio.png in Resources */,
 				A9B46AA412B79BB10040517A /* Subler.icns in Resources */,
 				CD71FEA612F1B62600F0A98D /* MetadataSearch.xib in Resources */,
 				CD4E6E5D12F744210095C84F /* ArtworkSelector.xib in Resources */,
