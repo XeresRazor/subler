@@ -195,6 +195,12 @@
     [NSApp beginSheet:savingWindow modalForWindow:documentWindow
         modalDelegate:nil didEndSelector:NULL contextInfo:nil];
 
+    IOPMAssertionID assertionID;
+    // Enable sleep assertion
+    CFStringRef reasonForActivity= CFSTR("Subler Save Operation");
+    IOReturn io_success = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep,
+                                                      kIOPMAssertionLevelOn, reasonForActivity, &assertionID);
+
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         switch (saveOperation) {
             case NSSaveOperation:
@@ -234,6 +240,9 @@
             [pool drain];
         }
     }
+
+    if (io_success == kIOReturnSuccess)
+        IOPMAssertionRelease(assertionID);
 
     *outError = [inError autorelease];
 
@@ -717,7 +726,12 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;{
     [importWindow autorelease], importWindow = nil;
-    [fileTracksTable reloadData];
+
+    // IKImageBrowserView is a bit problematic, do the refresh at the end of the run loop
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [fileTracksTable reloadData];
+        [self tableViewSelectionDidChange:nil];
+    });
 }
 
 - (void)importDoneWithTracks:(NSArray *)tracksToBeImported andMetadata:(MP42Metadata *)metadata
@@ -732,7 +746,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     }
 
     if (metadata) {
-        [self tableViewSelectionDidChange:nil];
+        [mp4File.metadata mergeMetadata:metadata];
         [self updateChangeCount:NSChangeDone];
     }
 }
