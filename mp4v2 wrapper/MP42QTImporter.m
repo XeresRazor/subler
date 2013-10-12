@@ -43,8 +43,8 @@
 
 		NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:
 							   _fileURL, QTMovieURLAttribute,
-							   [NSNumber numberWithBool:NO], @"QTMovieOpenAsyncRequiredAttribute",
-							   [NSNumber numberWithBool:NO], @"QTMovieOpenAsyncOKAttribute",
+							   @NO, @"QTMovieOpenAsyncRequiredAttribute",
+							   @NO, @"QTMovieOpenAsyncOKAttribute",
 							   nil];
 
         if (dispatch_get_current_queue() != dispatch_get_main_queue()) {

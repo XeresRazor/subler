@@ -668,14 +668,13 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
         else {
             __block QTMovie * qtMovie;
             // QTMovie objects must always be create on the main thread.
-            NSDictionary *movieAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                 _fileURL, QTMovieURLAttribute,
-                                                 [NSNumber numberWithBool:NO], QTMovieAskUnresolvedDataRefsAttribute,
-                                                 [NSNumber numberWithBool:YES], @"QTMovieOpenForPlaybackAttribute",
-                                                 [NSNumber numberWithBool:NO], @"QTMovieOpenAsyncRequiredAttribute",
-                                                 [NSNumber numberWithBool:NO], @"QTMovieOpenAsyncOKAttribute",
-                                                 QTMovieApertureModeClean, QTMovieApertureModeAttribute,
-                                                 nil];
+            NSDictionary *movieAttributes = @{QTMovieURLAttribute: _fileURL,
+                                              QTMovieAskUnresolvedDataRefsAttribute: @NO,
+                                              @"QTMovieOpenForPlaybackAttribute": @YES,
+                                              @"QTMovieOpenAsyncRequiredAttribute": @NO,
+                                              @"QTMovieOpenAsyncOKAttribute": @NO,
+                                              QTMovieApertureModeAttribute: QTMovieApertureModeClean};
+
             if (dispatch_get_current_queue() != dispatch_get_main_queue()) {
                 dispatch_sync(dispatch_get_main_queue(), ^{
                     qtMovie = [[QTMovie alloc] initWithAttributes:movieAttributes error:nil];
@@ -689,7 +688,7 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
                 return NO;
 
             for (QTTrack* qtTrack in [qtMovie tracksOfMediaType:@"sbtl"])
-                [qtTrack setAttribute:[NSNumber numberWithBool:NO] forKey:QTTrackEnabledAttribute];
+                [qtTrack setAttribute:@NO forKey:QTTrackEnabledAttribute];
 
             NSDictionary *attributes = [NSDictionary dictionaryWithObject:QTMovieFrameImageTypeNSImage forKey:QTMovieFrameImageType];
 

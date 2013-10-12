@@ -34,7 +34,7 @@
         NSFileManager *fileManager = [NSFileManager defaultManager];
         unsigned long long originalFileSize = [[[fileManager attributesOfItemAtPath:[fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
         if (originalFileSize > 4200000000) {
-            attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithBool:YES], MP42Create64BitData, nil];
+            attributes = [[NSDictionary alloc] initWithObjectsAndKeys:@YES, MP42Create64BitData, nil];
         }
     }
 
