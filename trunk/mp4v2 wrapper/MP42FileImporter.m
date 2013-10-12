@@ -121,6 +121,8 @@
 {
     for (MP42Track *track in _outputsTracks)
         track.muxer_helper->fifo = [[MP42Fifo alloc] init];
+
+    _doneSem = dispatch_semaphore_create(0);
 }
 
 - (void)cancelReading
@@ -132,8 +134,7 @@
     }
 
     // wait until the demuxer thread exits
-    while (!_done)
-        usleep(2000);
+    dispatch_semaphore_wait(_doneSem, DISPATCH_TIME_FOREVER);
 
     // stop all the related converters
     for (MP42Track *track in _outputsTracks) {
@@ -160,6 +161,7 @@
 
 - (void)setDone:(BOOL)status {
     OSAtomicIncrement32(&_done);
+    dispatch_semaphore_signal(_doneSem);
 }
 
 - (CGFloat)progress
@@ -177,7 +179,7 @@
     return [_tracksArray containsObject:track];
 }
 
-- (MP42Track *)inpuTrackWithTrackID:(MP4TrackId)trackId
+- (MP42Track *)inputTrackWithTrackID:(MP4TrackId)trackId
 {
     for (MP42Track *track in _inputTracks) {
         if (track.sourceId == trackId) {
@@ -206,6 +208,9 @@
 
 	[_fileURL release], _fileURL = nil;
     [_demuxerThread release], _demuxerThread = nil;
+
+    if (_doneSem)
+        dispatch_release(_doneSem);
 
     [super dealloc];
 }

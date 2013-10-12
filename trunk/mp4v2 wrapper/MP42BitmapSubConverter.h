@@ -37,6 +37,7 @@
 
     int32_t     _readerDone;
     int32_t     _encoderDone;
+    dispatch_semaphore_t _done;
 }
 
 - (instancetype)initWithTrack:(MP42SubtitleTrack *)track error:(NSError **)outError;

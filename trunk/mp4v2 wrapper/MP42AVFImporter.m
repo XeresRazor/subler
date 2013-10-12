@@ -911,7 +911,7 @@
     }
 
     [assetReader release];
-    [self setDone: YES];
+    [self setDone:YES];
     [pool release];
 }
 
@@ -933,7 +933,7 @@
 
     for (MP42Track *track in _inputTracks) {
         AVAssetTrack *assetTrack = [_localAsset trackWithTrackID:track.sourceId];
-        MP42Track *inputTrack = [self inpuTrackWithTrackID:track.sourceId];
+        MP42Track *inputTrack = [self inputTrackWithTrackID:track.sourceId];
 
         MP4Duration trackDuration = 0;
         MP4Timestamp editDuration;

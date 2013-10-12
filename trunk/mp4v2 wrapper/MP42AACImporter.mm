@@ -857,7 +857,7 @@ static bool GetFirstHeader(FILE* inFile)
             _progress = (currentSize / (CGFloat) size) * 100;
         }
         
-        [self setDone: YES];
+        [self setDone:YES];
     }
 }
 

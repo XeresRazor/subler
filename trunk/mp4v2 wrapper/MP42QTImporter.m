@@ -925,7 +925,7 @@
         QTSampleTableRelease(sampleTable);
     }
 
-    [self setDone: YES];
+    [self setDone:YES];
     [pool release];
 }
 
@@ -944,7 +944,7 @@
 {
     for (MP42Track *track in _outputsTracks) {
         Track qtcTrack = [[_sourceFile trackWithTrackID:[track sourceId]] quickTimeTrack];
-        MP42Track *inputTrack = [self inpuTrackWithTrackID:track.sourceId];
+        MP42Track *inputTrack = [self inputTrackWithTrackID:track.sourceId];
 
         TimeValue editTrackStart, editTrackDuration;
         TimeValue64 editDisplayStart, trackDuration = 0;
