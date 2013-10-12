@@ -42,40 +42,40 @@
     for (id object in _tracks) {
         if ([object isKindOfClass:[MP42Track class]]) {
             if (isTrackMuxable([object format]) || trackNeedConversion([object format]))
-                [_importCheckArray addObject:[NSNumber numberWithBool:YES]];
+                [_importCheckArray addObject:@YES];
             else
-                [_importCheckArray addObject:[NSNumber numberWithBool:NO]];
+                [_importCheckArray addObject:@NO];
 
             if ([[object format] isEqualToString:MP42AudioFormatAC3] &&
                 [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioConvertAC3"] boolValue]) {
                 if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"SBAudioKeepAC3"] boolValue] &&
                     [object fallbackTrack] == nil)
-                    [_actionArray addObject:[NSNumber numberWithInteger:6]];
+                    [_actionArray addObject:@6];
                 else if ([object fallbackTrack])
-                    [_actionArray addObject:[NSNumber numberWithInteger:0]];
+                    [_actionArray addObject:@0];
                 else
-                    [_actionArray addObject:[NSNumber numberWithInteger:[[[NSUserDefaults standardUserDefaults]
-                                                                          valueForKey:@"SBAudioMixdown"] integerValue]]];
+                    [_actionArray addObject:@([[[NSUserDefaults standardUserDefaults]
+                                                valueForKey:@"SBAudioMixdown"] integerValue])];
             }
             else if ([[object format] isEqualToString:MP42AudioFormatDTS])
-                [_actionArray addObject:[NSNumber numberWithInteger:1]];
+                [_actionArray addObject:@1];
             else if ([[object format] isEqualToString:MP42SubtitleFormatVobSub] &&
                      [[[NSUserDefaults standardUserDefaults] valueForKey:@"SBSubtitleConvertBitmap"] boolValue])
-                [_actionArray addObject:[NSNumber numberWithInteger:1]];
+                [_actionArray addObject:@1];
             else if (!trackNeedConversion([object format]))
-                [_actionArray addObject:[NSNumber numberWithInteger:0]];
+                [_actionArray addObject:@0];
             else if ([object isMemberOfClass:[MP42AudioTrack class]])
-                [_actionArray addObject:[NSNumber numberWithInteger:[[[NSUserDefaults standardUserDefaults]
-                                                                 valueForKey:@"SBAudioMixdown"] integerValue]]];
+                [_actionArray addObject:@([[[NSUserDefaults standardUserDefaults]
+                                                                 valueForKey:@"SBAudioMixdown"] integerValue])];
             else if ([object isMemberOfClass:[MP42ChapterTrack class]])
-                [_actionArray addObject:[NSNumber numberWithInteger:0]];
+                [_actionArray addObject:@0];
             else
-                [_actionArray addObject:[NSNumber numberWithInteger:1]];
+                [_actionArray addObject:@1];
 
         }
         else {
-            [_importCheckArray addObject: [NSNumber numberWithBool:YES]];
-            [_actionArray addObject:[NSNumber numberWithInteger:0]];
+            [_importCheckArray addObject:@YES];
+            [_actionArray addObject:@0];
         }
     }
 
