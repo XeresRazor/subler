@@ -169,7 +169,7 @@
     return _progress;
 }
 
-- (BOOL)cleanUp:(MP4FileHandle) fileHandle
+- (BOOL)cleanUp:(MP4FileHandle)fileHandle
 {
     return NO;
 }
