@@ -184,9 +184,9 @@
 
     NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"chaptersPreviewTrack"] boolValue])
-        [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
+        [attributes setObject:@YES forKey:MP42CreateChaptersPreviewTrack];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"SBOrganizeAlternateGroups"] boolValue])
-        [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42OrganizeAlternateGroups];
+        [attributes setObject:@YES forKey:MP42OrganizeAlternateGroups];
 
 
     [optBar setIndeterminate:YES];
@@ -203,8 +203,8 @@
                 success = [mp4File updateMP4FileWithAttributes:attributes error:&inError];
                 break;
             case NSSaveAsOperation:
-                if ([_64bit_data state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitData];
-                if ([_64bit_time state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitTime];
+                if ([_64bit_data state]) [attributes setObject:@YES forKey:MP42Create64BitData];
+                if ([_64bit_time state]) [attributes setObject:@YES forKey:MP42Create64BitTime];
                 success = [mp4File writeToUrl:absoluteURL withAttributes:attributes error:&inError];
                 break;
             case NSSaveToOperation:
@@ -429,19 +429,19 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     }
 
     if ([tableColumn.identifier isEqualToString:@"trackName"])
-        return [track name];
+        return track.name;
 
     if ([tableColumn.identifier isEqualToString:@"trackInfo"])
-        return [track formatSummary];
+        return track.formatSummary;
 
     if ([tableColumn.identifier isEqualToString:@"trackEnabled"])
-        return [NSNumber numberWithInteger:[track enabled]];
+        return @(track.enabled);
 
     if ([tableColumn.identifier isEqualToString:@"trackDuration"])
-        return [track timeString];
+        return track.timeString;
 
     if ([tableColumn.identifier isEqualToString:@"trackLanguage"])
-        return [track language];
+        return track.language;
 
     return nil;
 }
@@ -609,8 +609,8 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
         [panel beginSheetModalForWindow:documentWindow completionHandler:^(NSInteger result) {
             if (result == NSFileHandlingPanelOKButton) {
                 NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-                if ([_64bit_data state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitData];
-                if ([_64bit_time state]) [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitTime];
+                if ([_64bit_data state]) [attributes setObject:@YES forKey:MP42Create64BitData];
+                if ([_64bit_time state]) [attributes setObject:@YES forKey:MP42Create64BitTime];
 
                 SBQueueItem *item = [SBQueueItem itemWithMP4:mp4File url:[panel URL] attributes:attributes];
                 [queue addItem:item];
@@ -747,7 +747,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
                 int hdVideo = isHdVideo([((MP42VideoTrack *) track) trackWidth], [((MP42VideoTrack *) track) trackHeight]);
 
                 if (hdVideo)
-                    [mp4File.metadata setTag:[NSNumber numberWithInt:hdVideo] forKey:@"HD Video"];
+                    [mp4File.metadata setTag:@(hdVideo) forKey:@"HD Video"];
 
                 [self updateChangeCount:NSChangeDone];
             }

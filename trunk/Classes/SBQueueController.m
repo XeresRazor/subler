@@ -392,7 +392,7 @@ static NSString *fileType = @"mp4";
                 int hdVideo = isHdVideo([((MP42VideoTrack *) track) trackWidth], [((MP42VideoTrack *) track) trackHeight]);
 
                 if (hdVideo)
-                    [mp4File.metadata setTag:[NSNumber numberWithInt:hdVideo] forKey:@"HD Video"];
+                    [mp4File.metadata setTag:@(hdVideo) forKey:@"HD Video"];
             }
 
         [[mp4File metadata] mergeMetadata:metadata];
@@ -427,7 +427,7 @@ static NSString *fileType = @"mp4";
 
     NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"chaptersPreviewTrack"] boolValue])
-        [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
+        [attributes setObject:@YES forKey:MP42CreateChaptersPreviewTrack];
 
     // Enable sleep assertion
     CFStringRef reasonForActivity= CFSTR("Subler Queue Started");
