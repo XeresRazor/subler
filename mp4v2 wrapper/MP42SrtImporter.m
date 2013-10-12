@@ -35,8 +35,7 @@
         _ss = [[SBSubSerializer alloc] init];
         if ([[_fileURL pathExtension] caseInsensitiveCompare: @"srt"] == NSOrderedSame) {
             success = LoadSRTFromPath([_fileURL path], _ss, &duration);
-        }
-        else if ([[_fileURL pathExtension] caseInsensitiveCompare: @"smi"] == NSOrderedSame) {
+        } else if ([[_fileURL pathExtension] caseInsensitiveCompare: @"smi"] == NSOrderedSame) {
             success = LoadSMIFromPath([_fileURL path], _ss, 1);
         }
 
