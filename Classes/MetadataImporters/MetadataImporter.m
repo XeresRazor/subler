@@ -200,60 +200,59 @@
 - (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        NSArray *results = [self searchTVSeries:aSeries language:aLanguage];
-        if (!isCancelled) {
-            [mCallback performSelectorOnMainThread:@selector(searchTVSeriesNameDone:) withObject:results waitUntilDone:YES];
-		}
-        [pool release];
+        @autoreleasepool {
+            NSArray *results = [self searchTVSeries:aSeries language:aLanguage];
+            if (!isCancelled) {
+                [mCallback performSelectorOnMainThread:@selector(searchTVSeriesNameDone:) withObject:results waitUntilDone:YES];
+            }
+        }
     });
 }
 
 - (void) searchTVSeries:(NSString *)aSeries language:(NSString *)aLanguage seasonNum:(NSString *)aSeasonNum episodeNum:(NSString *)aEpisodeNum callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        NSArray *results = [self searchTVSeries:aSeries language:aLanguage seasonNum:aSeasonNum episodeNum:aEpisodeNum];
-        if (!isCancelled) {
-            [mCallback performSelectorOnMainThread:@selector(searchForResultsDone:) withObject:results waitUntilDone:YES];
-		}
-        [pool release];
+        @autoreleasepool {
+            NSArray *results = [self searchTVSeries:aSeries language:aLanguage seasonNum:aSeasonNum episodeNum:aEpisodeNum];
+            if (!isCancelled) {
+                [mCallback performSelectorOnMainThread:@selector(searchForResultsDone:) withObject:results waitUntilDone:YES];
+            }
+        }
     });
 }
 
 - (void) loadTVMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        [self loadTVMetadata:aMetadata language:aLanguage];
-        if (!isCancelled) {
-            [mCallback performSelectorOnMainThread:@selector(loadAdditionalMetadataDone:) withObject:aMetadata waitUntilDone:YES];
-		}
-        [pool release];
+        @autoreleasepool {
+            [self loadTVMetadata:aMetadata language:aLanguage];
+            if (!isCancelled) {
+                [mCallback performSelectorOnMainThread:@selector(loadAdditionalMetadataDone:) withObject:aMetadata waitUntilDone:YES];
+            }
+        }
     });
 }
 
 - (void) searchMovie:(NSString *)aMovieTitle language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        NSArray *results = [self searchMovie:aMovieTitle language:aLanguage];
-        if (!isCancelled)
-            [mCallback performSelectorOnMainThread:@selector(searchForResultsDone:) withObject:results waitUntilDone:YES];
-		
-        [pool release];
+        @autoreleasepool {
+            NSArray *results = [self searchMovie:aMovieTitle language:aLanguage];
+            if (!isCancelled)
+                [mCallback performSelectorOnMainThread:@selector(searchForResultsDone:) withObject:results waitUntilDone:YES];
+        }
     });
 }
 
 - (void) loadMovieMetadata:(MP42Metadata *)aMetadata language:(NSString *)aLanguage callback:(SBMetadataSearchController *)aCallback {
     mCallback = aCallback;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        [self loadMovieMetadata:aMetadata language:aLanguage];
-        if (!isCancelled) {
-            [mCallback performSelectorOnMainThread:@selector(loadAdditionalMetadataDone:) withObject:aMetadata waitUntilDone:YES];
-		}
-        [pool release];
+        @autoreleasepool {
+            [self loadMovieMetadata:aMetadata language:aLanguage];
+            if (!isCancelled) {
+                [mCallback performSelectorOnMainThread:@selector(loadAdditionalMetadataDone:) withObject:aMetadata waitUntilDone:YES];
+            }
+        }
     });
 }
 

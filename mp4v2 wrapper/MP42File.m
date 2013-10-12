@@ -297,48 +297,48 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
     __block BOOL noErr = NO;
     __block BOOL done = NO;
 
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSError *error;
+    @autoreleasepool {
+        NSError *error;
 
-    NSFileManager *fileManager = [[NSFileManager alloc] init];
+        NSFileManager *fileManager = [[NSFileManager alloc] init];
 #ifdef SB_SANDBOX
-    NSURL *folderURL = [fileURL URLByDeletingLastPathComponent];
-    NSURL *tempURL = [fileManager URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:folderURL create:YES error:&error];
+        NSURL *folderURL = [fileURL URLByDeletingLastPathComponent];
+        NSURL *tempURL = [fileManager URLForDirectory:NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:folderURL create:YES error:&error];
 #else
-    NSURL *tempURL = [_fileURL URLByDeletingLastPathComponent];
+        NSURL *tempURL = [_fileURL URLByDeletingLastPathComponent];
 #endif
-    if (tempURL) {
-        tempURL = [tempURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.tmp", [_fileURL lastPathComponent]]];
+        if (tempURL) {
+            tempURL = [tempURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.tmp", [_fileURL lastPathComponent]]];
 
-        unsigned long long originalFileSize = [[[fileManager attributesOfItemAtPath:[_fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
+            unsigned long long originalFileSize = [[[fileManager attributesOfItemAtPath:[_fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
 
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            noErr = MP4Optimize([[_fileURL path] UTF8String], [[tempURL path] UTF8String]);
-            done = YES;
-        });
+            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                noErr = MP4Optimize([[_fileURL path] UTF8String], [[tempURL path] UTF8String]);
+                done = YES;
+            });
 
-        while (!done) {
-            unsigned long long fileSize = [[[fileManager attributesOfItemAtPath:[tempURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
-            [self progressStatus:((CGFloat)fileSize / originalFileSize) * 100];
-            usleep(450000);
-        }
+            while (!done) {
+                unsigned long long fileSize = [[[fileManager attributesOfItemAtPath:[tempURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
+                [self progressStatus:((CGFloat)fileSize / originalFileSize) * 100];
+                usleep(450000);
+            }
 
-        if (noErr) {
-            NSURL *result = nil;
-            noErr = [fileManager replaceItemAtURL:_fileURL withItemAtURL:tempURL backupItemName:nil options:0 resultingItemURL:&result error:&error];
             if (noErr) {
-                [_fileURL release];
-                _fileURL = [result retain];
+                NSURL *result = nil;
+                noErr = [fileManager replaceItemAtURL:_fileURL withItemAtURL:tempURL backupItemName:nil options:0 resultingItemURL:&result error:&error];
+                if (noErr) {
+                    [_fileURL release];
+                    _fileURL = [result retain];
+                }
             }
         }
+
+        [fileManager release];
     }
-
-    [fileManager release];
-    [pool release];
-
+    
     if ([_delegate respondsToSelector:@selector(endSave:)])
         [_delegate performSelector:@selector(endSave:) withObject:self];
-
+    
     return noErr;
 }
 

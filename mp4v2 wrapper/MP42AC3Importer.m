@@ -338,45 +338,45 @@ static bool GetFirstHeader(FILE* inFile)
 
 - (void)demux:(id)sender
 {
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    if (!inFile)
-        inFile = fopen([[_fileURL path] UTF8String], "rb");
+    @autoreleasepool {
+        if (!inFile)
+            inFile = fopen([[_fileURL path] UTF8String], "rb");
 
-    MP4TrackId trackId = [[_inputTracks lastObject] sourceId];
+        MP4TrackId trackId = [[_inputTracks lastObject] sourceId];
 
-    // parse the Ac3 frames, and write the MP4 samples
-    u_int8_t sampleBuffer[8 * 1024];
-    u_int32_t sampleSize = sizeof(sampleBuffer);
-    MP4SampleId sampleId = 1;
+        // parse the Ac3 frames, and write the MP4 samples
+        u_int8_t sampleBuffer[8 * 1024];
+        u_int32_t sampleSize = sizeof(sampleBuffer);
+        MP4SampleId sampleId = 1;
 
-    int64_t currentSize = 0;
+        int64_t currentSize = 0;
 
-    while (LoadNextAc3Frame(inFile, sampleBuffer, &sampleSize, false) && !_cancelled) {
-        MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
+        while (LoadNextAc3Frame(inFile, sampleBuffer, &sampleSize, false) && !_cancelled) {
+            MP42SampleBuffer *sample = [[MP42SampleBuffer alloc] init];
 
-        void * sampleDataBuffer = malloc(sampleSize);
-        memcpy(sampleDataBuffer, sampleBuffer, sampleSize);
+            void * sampleDataBuffer = malloc(sampleSize);
+            memcpy(sampleDataBuffer, sampleBuffer, sampleSize);
 
-        sample->data = sampleDataBuffer;
-        sample->size = sampleSize;
-        sample->duration = MP4_INVALID_DURATION;
-        sample->offset = 0;
-        sample->timestamp = 0;
-        sample->isSync = 1;
-        sample->trackId = trackId;
+            sample->data = sampleDataBuffer;
+            sample->size = sampleSize;
+            sample->duration = MP4_INVALID_DURATION;
+            sample->offset = 0;
+            sample->timestamp = 0;
+            sample->isSync = 1;
+            sample->trackId = trackId;
 
-        [self enqueue:sample];
-        [sample release];
+            [self enqueue:sample];
+            [sample release];
 
-        sampleId++;
-        sampleSize = sizeof(sampleBuffer);
-
-        currentSize += sampleSize;
-        _progress = (currentSize / (CGFloat) size) * 100;
+            sampleId++;
+            sampleSize = sizeof(sampleBuffer);
+            
+            currentSize += sampleSize;
+            _progress = (currentSize / (CGFloat) size) * 100;
+        }
+        
+        [self setDone: YES];
     }
-
-    [self setDone: YES];
-    [pool release];
 }
 
 - (void)startReading
