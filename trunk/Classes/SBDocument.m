@@ -185,6 +185,9 @@
     NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"chaptersPreviewTrack"] boolValue])
         [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"SBOrganizeAlternateGroups"] boolValue])
+        [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42OrganizeAlternateGroups];
+
 
     [optBar setIndeterminate:YES];
     [optBar startAnimation:self];
@@ -744,14 +747,16 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
                 [self updateChangeCount:NSChangeDone];
             }
-
-        [self tableViewSelectionDidChange:nil];
-        [self updateChangeCount:NSChangeDone];
     }
 
     [NSApp endSheet:[importWindow window]];
     [[importWindow window] orderOut:self];
     [importWindow autorelease], importWindow = nil;
+
+    if (metadataToBeImported) {
+        [self tableViewSelectionDidChange:nil];
+        [self updateChangeCount:NSChangeDone];
+    }
 }
 
 - (void)addMetadata:(NSURL *)URL
@@ -856,7 +861,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (IBAction)iTunesFriendlyTrackGroups:(id)sender
 {
-    [mp4File iTunesFriendlyTrackGroups];
+    [mp4File organizeAlternateGroups];
     [fileTracksTable reloadData];
     [self tableViewSelectionDidChange:nil];
     [self updateChangeCount:NSChangeDone];

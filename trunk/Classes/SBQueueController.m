@@ -399,7 +399,7 @@ static NSString *fileType = @"mp4";
     }
 
      if ([ITunesGroupsOption state])
-        [mp4File iTunesFriendlyTrackGroups];
+        [mp4File organizeAlternateGroups];
 
     return [mp4File autorelease];
 }

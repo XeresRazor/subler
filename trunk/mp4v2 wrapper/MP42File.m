@@ -17,9 +17,10 @@
 #import <AVFoundation/AVFoundation.h>
 #endif
 
-NSString * const MP42Create64BitData = @"64BitData";
-NSString * const MP42Create64BitTime = @"64BitTime";
-NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
+NSString * const MP42Create64BitData = @"MP4264BitData";
+NSString * const MP42Create64BitTime = @"MP4264BitTime";
+NSString * const MP42CreateChaptersPreviewTrack = @"MP42ChaptersPreview";
+NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
 
 @interface MP42File ()
 
@@ -496,6 +497,10 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     [_muxer release], _muxer = nil;
     [_importers removeAllObjects];
 
+    // Generate previews images for chapters
+    if ([[attributes valueForKey:MP42OrganizeAlternateGroups] boolValue])
+        [self organizeAlternateGroups];
+
     // Update modified tracks properties
     updateMoovDuration(_fileHandle);
     for (MP42Track *track in _tracks) {
@@ -520,7 +525,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
     }
 
     // Generate previews images for chapters
-    if ([[attributes valueForKey:@"ChaptersPreview"] boolValue])
+    if ([[attributes valueForKey:MP42CreateChaptersPreviewTrack] boolValue])
         [self createChaptersPreview];
 
     if ([_delegate respondsToSelector:@selector(endSave:)])
@@ -564,15 +569,12 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 
     updateTracksCount(_fileHandle);
     updateMoovDuration(_fileHandle);
-
-    if ([track isMemberOfClass:[MP42SubtitleTrack class]])
-        enableFirstSubtitleTrack(_fileHandle);
 }
 
-/* Create a set of alternate group the way iTunes and Apple devices want:
-   one alternate group for sound, one for subtitles, a disabled photo-jpeg track,
-   a disabled chapter track, and a video track with no alternate group */
-- (void)iTunesFriendlyTrackGroups
+/** Create a set of alternate group the way iTunes and Apple devices want:
+    one alternate group for sound, one for subtitles, a disabled photo-jpeg track,
+    a disabled chapter track, and a video track with no alternate group */
+- (void)organizeAlternateGroups
 {
     NSInteger firstAudioTrack = 0, firstSubtitleTrack = 0, firstVideoTrack = 0;
 
@@ -614,7 +616,7 @@ NSString * const MP42CreateChaptersPreviewTrack = @"ChaptersPreview";
 - (BOOL)createChaptersPreview {
     NSError *error;
     NSInteger decodable = 1;
-    MP42ChapterTrack * chapterTrack = nil;
+    MP42ChapterTrack *chapterTrack = nil;
     MP4TrackId jpegTrack = 0;
 
     for (MP42Track *track in _tracks) {
