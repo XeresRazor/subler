@@ -24,6 +24,7 @@
 extern NSString * const MP42Create64BitData;
 extern NSString * const MP42Create64BitTime;
 extern NSString * const MP42CreateChaptersPreviewTrack;
+extern NSString * const MP42OrganizeAlternateGroups;
 
 @protocol MP42FileDelegate
 @optional
@@ -77,7 +78,7 @@ extern NSString * const MP42CreateChaptersPreviewTrack;
 
 - (uint64_t)estimatedDataLength;
 
-- (void)iTunesFriendlyTrackGroups;
+- (void)organizeAlternateGroups;
 
 - (BOOL)writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError;
 - (BOOL)updateMP4FileWithAttributes:(NSDictionary *)attributes error:(NSError **)outError;
