@@ -33,10 +33,13 @@ void FFInitFFmpeg()
 - (void)VobSubDecoderThreadMainRoutine:(id)sender
 {
     @autoreleasepool {
-        while([_inputSamplesBuffer count] || !_readerDone) {
+        while(1) {
             MP42SampleBuffer *sampleBuffer = nil;
 
-            while (!(sampleBuffer = [_inputSamplesBuffer dequeAndWait]));
+            while (!(sampleBuffer = [_inputSamplesBuffer dequeAndWait]) && !_readerDone);
+
+            if (!sampleBuffer)
+                break;
 
             UInt8 *data = (UInt8 *) sampleBuffer->data;
             int ret, got_sub;
@@ -187,16 +190,20 @@ void FFInitFFmpeg()
         }
         
         _encoderDone = YES;
+        dispatch_semaphore_signal(_done);
     }
 }
 
 - (void)PGSDecoderThreadMainRoutine:(id)sender
 {
     @autoreleasepool {
-        while([_inputSamplesBuffer count] || !_readerDone) {
+        while(1) {
             MP42SampleBuffer *sampleBuffer = nil;
 
-            while (!(sampleBuffer = [_inputSamplesBuffer dequeAndWait]));
+            while (!(sampleBuffer = [_inputSamplesBuffer dequeAndWait]) && !_readerDone);
+
+            if (!sampleBuffer)
+                break;
 
             int ret, got_sub, i;
             uint32_t *imageData;
