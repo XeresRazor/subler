@@ -663,6 +663,8 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
     [mp4File removeTrackAtIndex:[fileTracksTable selectedRow]];
 
+    [mp4File organizeAlternateGroups];
+
     [fileTracksTable reloadData];
     [self tableViewSelectionDidChange:nil];
     [self updateChangeCount:NSChangeDone];
@@ -723,11 +725,13 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     if (tracksToBeImported) {
         for (id track in tracksToBeImported)
             [mp4File addTrack:track];
+
         [self updateChangeCount:NSChangeDone];
+        if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"SBOrganizeAlternateGroups"] boolValue])
+            [mp4File organizeAlternateGroups];
     }
 
     if (metadata) {
-        [mp4File.metadata mergeMetadata:metadata];
         [self tableViewSelectionDidChange:nil];
         [self updateChangeCount:NSChangeDone];
     }
