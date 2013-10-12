@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "MP42ConverterProtocol.h"
+#import "MP42Fifo.h"
 
 #include "avcodec.h"
 
@@ -24,8 +25,8 @@
 	AVCodecContext          *avContext;
 	AVSubtitle              subtitle;
 
-    NSMutableArray * inputSamplesBuffer;
-    NSMutableArray * outputSamplesBuffer;
+    MP42Fifo    *_inputSamplesBuffer;
+    MP42Fifo    *_outputSamplesBuffer;
 
     int                     compressed;
 	UInt32                  paletteG[16];
@@ -33,14 +34,14 @@
 
     uint8_t                 *codecData;
     unsigned int            bufferSize;
-    
+
     int32_t     _readerDone;
     int32_t     _encoderDone;
 }
 
 - (instancetype)initWithTrack:(MP42SubtitleTrack *)track error:(NSError **)outError;
 
-- (void)addSample: (MP42SampleBuffer *)sample;
+- (void)addSample:(MP42SampleBuffer *)sample;
 - (MP42SampleBuffer *)copyEncodedSample;
 
 - (void)cancel;
