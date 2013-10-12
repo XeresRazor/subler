@@ -113,9 +113,9 @@ NSInteger sortMP42Metadata(id ep1, id ep2, void *context)
 
 	NSURL *url;
 	if (aSeasonNum && [aSeasonNum length]) {
-		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=tvSeasonTerm&entity=tvEpisode&limit=150", country, [language lowercaseString], [MetadataImporter urlEncoded:[NSString stringWithFormat:@"%@ %@ %@", aSeriesName, season, aSeasonNum]]]];
+		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=tvSeasonTerm&entity=tvEpisode&limit=200", country, [language lowercaseString], [MetadataImporter urlEncoded:[NSString stringWithFormat:@"%@ %@ %@", aSeriesName, season, aSeasonNum]]]];
 	} else {
-		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=showTerm&entity=tvEpisode&limit=150", country, [language lowercaseString], [MetadataImporter urlEncoded:aSeriesName]]];
+		url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/search?country=%@&lang=%@&term=%@&attribute=showTerm&entity=tvEpisode&limit=200", country, [language lowercaseString], [MetadataImporter urlEncoded:aSeriesName]]];
 	}
 	NSData *jsonData = [MetadataImporter downloadDataOrGetFromCache:url];
 	if (jsonData) {
