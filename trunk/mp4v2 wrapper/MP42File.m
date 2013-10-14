@@ -124,8 +124,6 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
         _metadata = [[MP42Metadata alloc] initWithSourceURL:_fileURL fileHandle:_fileHandle];
         _importers = [[NSMutableDictionary alloc] init];
         MP4Close(_fileHandle, 0);
-
-        _size = [[[[NSFileManager defaultManager] attributesOfItemAtPath:[_fileURL path] error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
 	}
 
 	return self;
@@ -148,14 +146,14 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
     }
 }
 
-- (NSUInteger)movieDuration
+- (NSUInteger)duration
 {
     NSUInteger duration = 0;
     NSUInteger trackDuration = 0;
     for (MP42Track *track in _tracks)
         if ((trackDuration = [track duration]) > duration)
             duration = trackDuration;
-    
+
     return duration;
 }
 
@@ -551,7 +549,7 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
         [_delegate progressStatus:progress];
 }
 
-- (uint64_t)estimatedDataLength {
+- (uint64_t)dataSize {
     uint64_t estimation = 0;
     for (MP42Track *track in _tracks)
         estimation += track.dataLength;
