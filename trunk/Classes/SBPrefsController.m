@@ -18,12 +18,12 @@
 #define TOOLBAR_SETS        @"TOOLBAR_SETS"
 
 @interface SBPrefsController ()
+- (NSArray *)ratingsCountries;
 
 - (void)setPrefView:(id)sender;
 - (NSToolbarItem *)toolbarItemWithIdentifier:(NSString *)identifier
                                        label:(NSString *)label
                                        image:(NSImage *)image;
-
 @end
 
 @implementation SBPrefsController

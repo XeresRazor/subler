@@ -129,8 +129,8 @@
     if ([_updatedProperty valueForKey:@"language"] || !_muxed)
         MP4SetTrackLanguage(fileHandle, _Id, lang_for_english([_language UTF8String])->iso639_2);
     if ([_updatedProperty valueForKey:@"enabled"] || !_muxed) {
-        if (_enabled) enableTrack(fileHandle, _Id);
-        else disableTrack(fileHandle, _Id);
+        if (_enabled) MP4SetTrackEnabled(fileHandle, _Id);
+        else MP4SetTrackDisabled(fileHandle, _Id);
     }
 
     return success;

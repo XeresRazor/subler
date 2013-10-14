@@ -26,8 +26,8 @@ NSString* SRTStringFromTime( long long time, long timeScale , const char separat
 NSString* SMPTEStringFromTime(long long time, long timeScale);
 MP4Duration TimeFromSMPTEString( NSString* SMPTE_string, MP4Duration timeScale );
 
-int enableTrack(MP4FileHandle fileHandle, MP4TrackId trackId);
-int disableTrack(MP4FileHandle fileHandle, MP4TrackId trackId);
+int MP4SetTrackEnabled(MP4FileHandle fileHandle, MP4TrackId trackId);
+int MP4SetTrackDisabled(MP4FileHandle fileHandle, MP4TrackId trackId);
 
 int updateTracksCount(MP4FileHandle fileHandle);
 void updateMoovDuration(MP4FileHandle fileHandle);

@@ -14,8 +14,8 @@
 @interface MP42ChapterTrack : MP42Track <NSCoding> {
     NSMutableArray *chapters;
 }
-- (id)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
-+ (id)chapterTrackFromFile:(NSURL *)URL;
+- (instancetype)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
++ (instancetype)chapterTrackFromFile:(NSURL *)URL;
 
 - (void)addChapter:(NSString *)title duration:(uint64_t)timestamp;
 - (void)removeChapterAtIndex:(NSUInteger)index;
