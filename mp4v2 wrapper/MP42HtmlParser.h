@@ -57,7 +57,7 @@ int compare_color(rgba_color c1, rgba_color c2);
 @property (readonly) NSArray *styles;
 @property (readwrite) rgba_color defaultColor;
 
-- (id)initWithString: (NSString*) string;
+- (instancetype)initWithString:(NSString *)string;
 - (NSInteger) parseNextTag;
 - (void)serializeStyles;
 

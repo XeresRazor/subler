@@ -77,12 +77,12 @@ MP4Duration TimeFromSMPTEString( NSString* SMPTE_string, MP4Duration timeScale )
 }
 
 
-int enableTrack(MP4FileHandle fileHandle, MP4TrackId trackId)
+int MP4SetTrackEnabled(MP4FileHandle fileHandle, MP4TrackId trackId)
 {
     return MP4SetTrackIntegerProperty(fileHandle, trackId, "tkhd.flags", (TRACK_ENABLED | TRACK_IN_MOVIE));
 }
 
-int disableTrack(MP4FileHandle fileHandle, MP4TrackId trackId)
+int MP4SetTrackDisabled(MP4FileHandle fileHandle, MP4TrackId trackId)
 {
     return MP4SetTrackIntegerProperty(fileHandle, trackId, "tkhd.flags", (TRACK_DISABLED | TRACK_IN_MOVIE));
 }
@@ -173,8 +173,8 @@ MP4TrackId findFirstVideoTrack(MP4FileHandle fileHandle)
     if (!trackNumber)
         return 0;
     for (i = 0; i < trackNumber; i++) {
-        videoTrack = MP4FindTrackId( fileHandle, i, 0, 0);
-        const char* trackType = MP4GetTrackType(fileHandle, videoTrack);
+        videoTrack = MP4FindTrackId(fileHandle, i, 0, 0);
+        const char *trackType = MP4GetTrackType(fileHandle, videoTrack);
         if (trackType)
             if (!strcmp(trackType, MP4_VIDEO_TRACK_TYPE))
                 return videoTrack;
