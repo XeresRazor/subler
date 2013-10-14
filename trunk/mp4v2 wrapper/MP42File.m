@@ -224,7 +224,7 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
             MP42AudioTrack *audioTrack = (MP42AudioTrack *)track;
             track.format = MP42AudioFormatAAC;
             audioTrack.sourceChannels = audioTrack.channels;
-            if ([audioTrack.mixdownType isEqualToString:SBMonoMixdown])
+            if ([audioTrack.mixdownType isEqualToString:SBMonoMixdown] || audioTrack.sourceChannels == 1)
                 audioTrack.channels = 1;
             else if (audioTrack.mixdownType)
                 audioTrack.channels = 2;

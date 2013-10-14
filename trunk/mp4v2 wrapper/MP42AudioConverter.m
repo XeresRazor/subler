@@ -501,8 +501,8 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
 		UInt32 ioOutputDataPackets = numOutputPackets;
 		err = AudioConverterFillComplexBuffer(decoderData.converter, DecoderDataProc, &decoderData, &ioOutputDataPackets,
                                               &fillBufList, outputPktDescs);
-        //if (err)
-        //    NSLog(@"Error converterDec %ld", (long)err);
+        if (err)
+            NSLog(@"Error converterDec %ld", (long)err);
         if (ioOutputDataPackets == 0) {
 			// this is the EOF conditon
 			break;
@@ -599,6 +599,9 @@ OSStatus DecoderDataProc(AudioConverterRef              inAudioConverter,
         sampleRate = [track.muxer_helper->importer timescaleForTrack:track];
         inputChannelsCount = [track sourceChannels];
         outputChannelCount = [track channels];
+
+        if (outputChannelCount > inputChannelsCount)
+            outputChannelCount = inputChannelsCount;
 
         if ([mixdownType isEqualToString:SBMonoMixdown] && inputChannelsCount > 1) {
             downmixType = HB_AMIXDOWN_MONO;
