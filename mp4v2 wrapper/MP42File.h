@@ -41,7 +41,6 @@ extern NSString * const MP42OrganizeAlternateGroups;
     NSMutableArray      *_tracksToBeDeleted;
     NSMutableDictionary *_importers;
 
-    uint64_t    _size;
     BOOL        _hasFileRepresentation;
     BOOL        _cancelled;
 
@@ -58,12 +57,11 @@ extern NSString * const MP42OrganizeAlternateGroups;
 @property(readonly, copy) NSArray *tracks;
 
 @property(readonly) BOOL hasFileRepresentation;
+@property(readonly) NSUInteger duration;
+@property(readonly) uint64_t dataSize;
 
 - (instancetype)initWithDelegate:(id <MP42FileDelegate>)del;
 - (instancetype)initWithExistingFile:(NSURL *)URL andDelegate:(id <MP42FileDelegate>)del;
-
-- (NSUInteger)movieDuration;
-- (MP42ChapterTrack *)chapters;
 
 - (NSUInteger)tracksCount;
 - (MP42Track *)trackAtIndex:(NSUInteger)index;
@@ -76,8 +74,7 @@ extern NSString * const MP42OrganizeAlternateGroups;
 - (void)removeTracksAtIndexes:(NSIndexSet *)indexes;
 - (void)moveTrackAtIndex:(NSUInteger)index toIndex:(NSUInteger)newIndex;
 
-- (uint64_t)estimatedDataLength;
-
+- (MP42ChapterTrack *)chapters;
 - (void)organizeAlternateGroups;
 
 - (BOOL)writeToUrl:(NSURL *)url withAttributes:(NSDictionary *)attributes error:(NSError **)outError;

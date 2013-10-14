@@ -278,7 +278,7 @@
     if (filename)
         [savePanel performSelector:@selector(setNameFieldStringValue:) withObject:filename];
 
-    if ([mp4File estimatedDataLength] > 4200000000)
+    if (mp4File.dataSize > 4200000000)
         [_64bit_data setState:NSOnState];
 
     return YES;
@@ -852,25 +852,25 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (IBAction)addChaptersEvery:(id)sender
 {
-    MP42ChapterTrack * chapterTrack = [mp4File chapters];
+    MP42ChapterTrack *chapterTrack = [mp4File chapters];
     NSInteger minutes = [sender tag] * 60 * 1000;
     NSInteger i, y = 1;
 
     if (!chapterTrack) {
         chapterTrack = [[MP42ChapterTrack alloc] init];
-        [chapterTrack setDuration:[mp4File movieDuration]];
+        [chapterTrack setDuration:mp4File.duration];
         [mp4File addTrack:chapterTrack];
         [chapterTrack release];
     }
 
     if (minutes)
-        for (i = 0, y = 1; i < [mp4File movieDuration]; i += minutes, y++) {
+        for (i = 0, y = 1; i < mp4File.duration; i += minutes, y++) {
             [chapterTrack addChapter:[NSString stringWithFormat:@"Chapter %ld", (long)y]
                             duration:i];
         }
     else
         [chapterTrack addChapter:@"Chapter 1"
-                        duration:[mp4File movieDuration]];
+                        duration:mp4File.duration];
 
     [fileTracksTable reloadData];
     [self tableViewSelectionDidChange:nil];
