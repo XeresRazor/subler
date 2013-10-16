@@ -23,48 +23,48 @@
 		A98ED3FC0F59E24A00885A49 /* libuniversaldetector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A98ED3550F59E17A00885A49 /* libuniversaldetector.a */; };
 		A98ED4030F59E28300885A49 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98ED4020F59E28300885A49 /* Cocoa.framework */; };
 		A9AB487417F0B0B2000AA72E /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB487317F0B0B2000AA72E /* JSONKit.m */; };
-		A9AB48C117F0B0C5000AA72E /* MP42AACImporter.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9AB487717F0B0C4000AA72E /* MP42AACImporter.mm */; };
-		A9AB48C217F0B0C5000AA72E /* MP42AC3Importer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB487917F0B0C4000AA72E /* MP42AC3Importer.m */; };
-		A9AB48C317F0B0C5000AA72E /* MP42AudioConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB487B17F0B0C4000AA72E /* MP42AudioConverter.m */; };
-		A9AB48C417F0B0C5000AA72E /* MP42AudioTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB487D17F0B0C4000AA72E /* MP42AudioTrack.m */; };
-		A9AB48C517F0B0C5000AA72E /* MP42AVFImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB487F17F0B0C4000AA72E /* MP42AVFImporter.m */; };
-		A9AB48C617F0B0C5000AA72E /* MP42BitmapSubConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB488117F0B0C4000AA72E /* MP42BitmapSubConverter.m */; };
-		A9AB48C717F0B0C5000AA72E /* MP42CCImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB488317F0B0C4000AA72E /* MP42CCImporter.m */; };
-		A9AB48C817F0B0C5000AA72E /* MP42ChapterTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB488517F0B0C5000AA72E /* MP42ChapterTrack.m */; };
-		A9AB48C917F0B0C5000AA72E /* MP42ClosedCaptionTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB488717F0B0C5000AA72E /* MP42ClosedCaptionTrack.m */; };
-		A9AB48CA17F0B0C5000AA72E /* MP42Fifo.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB488A17F0B0C5000AA72E /* MP42Fifo.m */; };
-		A9AB48CB17F0B0C5000AA72E /* MP42File.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB488C17F0B0C5000AA72E /* MP42File.m */; };
-		A9AB48CC17F0B0C5000AA72E /* MP42FileImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB488E17F0B0C5000AA72E /* MP42FileImporter.m */; };
-		A9AB48CD17F0B0C5000AA72E /* MP42H264Importer.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9AB489017F0B0C5000AA72E /* MP42H264Importer.mm */; };
-		A9AB48CE17F0B0C5000AA72E /* MP42HtmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB489217F0B0C5000AA72E /* MP42HtmlParser.m */; };
-		A9AB48CF17F0B0C5000AA72E /* MP42Image.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB489417F0B0C5000AA72E /* MP42Image.m */; };
-		A9AB48D017F0B0C5000AA72E /* MP42MediaFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB489617F0B0C5000AA72E /* MP42MediaFormat.m */; };
-		A9AB48D117F0B0C5000AA72E /* MP42Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB489817F0B0C5000AA72E /* MP42Metadata.m */; };
-		A9AB48D217F0B0C5000AA72E /* MP42MkvImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB489A17F0B0C5000AA72E /* MP42MkvImporter.m */; };
-		A9AB48D317F0B0C5000AA72E /* MP42Mp4Importer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB489C17F0B0C5000AA72E /* MP42Mp4Importer.m */; };
-		A9AB48D417F0B0C5000AA72E /* MP42Muxer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB489E17F0B0C5000AA72E /* MP42Muxer.m */; };
-		A9AB48D517F0B0C5000AA72E /* MP42OCRWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48A017F0B0C5000AA72E /* MP42OCRWrapper.mm */; };
-		A9AB48D617F0B0C5000AA72E /* MP42QTImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48A217F0B0C5000AA72E /* MP42QTImporter.m */; };
-		A9AB48D717F0B0C5000AA72E /* MP42Sample.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48A417F0B0C5000AA72E /* MP42Sample.m */; };
-		A9AB48D817F0B0C5000AA72E /* MP42SrtImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48A617F0B0C5000AA72E /* MP42SrtImporter.m */; };
-		A9AB48D917F0B0C5000AA72E /* MP42SubtitleTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48A817F0B0C5000AA72E /* MP42SubtitleTrack.m */; };
-		A9AB48DA17F0B0C5000AA72E /* MP42Track.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48AA17F0B0C5000AA72E /* MP42Track.m */; };
-		A9AB48DB17F0B0C5000AA72E /* MP42Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48AC17F0B0C5000AA72E /* MP42Utilities.m */; };
-		A9AB48DC17F0B0C5000AA72E /* MP42VideoTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48AE17F0B0C5000AA72E /* MP42VideoTrack.m */; };
-		A9AB48DD17F0B0C5000AA72E /* MP42VobSubImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48B017F0B0C5000AA72E /* MP42VobSubImporter.m */; };
-		A9AB48DE17F0B0C5000AA72E /* MP42XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48B217F0B0C5000AA72E /* MP42XMLReader.m */; };
-		A9AB48DF17F0B0C5000AA72E /* downmix.c in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48B417F0B0C5000AA72E /* downmix.c */; };
-		A9AB48E017F0B0C5000AA72E /* MatroskaFile.c in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48B617F0B0C5000AA72E /* MatroskaFile.c */; };
-		A9AB48E117F0B0C5000AA72E /* MatroskaParser.c in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48B817F0B0C5000AA72E /* MatroskaParser.c */; };
-		A9AB48E217F0B0C5000AA72E /* mbs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48BA17F0B0C5000AA72E /* mbs.cpp */; };
-		A9AB48E317F0B0C5000AA72E /* sfifo.c in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48BD17F0B0C5000AA72E /* sfifo.c */; };
-		A9AB48E417F0B0C5000AA72E /* SubUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AB48C017F0B0C5000AA72E /* SubUtilities.m */; };
 		A9AEF826167C7CAF00FDDBB3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AEF825167C7CAF00FDDBB3 /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A9AEF828167C7CB900FDDBB3 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AEF827167C7CB900FDDBB3 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A9AEF82A167C7CC600FDDBB3 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AEF829167C7CC600FDDBB3 /* CoreVideo.framework */; };
 		A9AEF82D167C7D6500FDDBB3 /* QTKitDecrap.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AEF82C167C7D6500FDDBB3 /* QTKitDecrap.m */; };
 		A9BAABD315D930D400A59EAB /* SBLanguages.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BAABD215D930AD00A59EAB /* SBLanguages.m */; };
 		A9C0605216831CBE00FE3D98 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C0605116831CBE00FE3D98 /* libbz2.dylib */; };
+		A9D361C3180C7F2C00C6C166 /* MP42AACImporter.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9D36179180C7F2C00C6C166 /* MP42AACImporter.mm */; };
+		A9D361C4180C7F2C00C6C166 /* MP42AC3Importer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3617B180C7F2C00C6C166 /* MP42AC3Importer.m */; };
+		A9D361C5180C7F2C00C6C166 /* MP42AudioConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3617D180C7F2C00C6C166 /* MP42AudioConverter.m */; };
+		A9D361C6180C7F2C00C6C166 /* MP42AudioTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3617F180C7F2C00C6C166 /* MP42AudioTrack.m */; };
+		A9D361C7180C7F2C00C6C166 /* MP42AVFImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D36181180C7F2C00C6C166 /* MP42AVFImporter.m */; };
+		A9D361C8180C7F2C00C6C166 /* MP42BitmapSubConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D36183180C7F2C00C6C166 /* MP42BitmapSubConverter.m */; };
+		A9D361C9180C7F2C00C6C166 /* MP42CCImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D36185180C7F2C00C6C166 /* MP42CCImporter.m */; };
+		A9D361CA180C7F2C00C6C166 /* MP42ChapterTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D36187180C7F2C00C6C166 /* MP42ChapterTrack.m */; };
+		A9D361CB180C7F2C00C6C166 /* MP42ClosedCaptionTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D36189180C7F2C00C6C166 /* MP42ClosedCaptionTrack.m */; };
+		A9D361CC180C7F2C00C6C166 /* MP42Fifo.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3618C180C7F2C00C6C166 /* MP42Fifo.m */; };
+		A9D361CD180C7F2C00C6C166 /* MP42File.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3618E180C7F2C00C6C166 /* MP42File.m */; };
+		A9D361CE180C7F2C00C6C166 /* MP42FileImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D36190180C7F2C00C6C166 /* MP42FileImporter.m */; };
+		A9D361CF180C7F2C00C6C166 /* MP42H264Importer.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9D36192180C7F2C00C6C166 /* MP42H264Importer.mm */; };
+		A9D361D0180C7F2C00C6C166 /* MP42HtmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D36194180C7F2C00C6C166 /* MP42HtmlParser.m */; };
+		A9D361D1180C7F2C00C6C166 /* MP42Image.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D36196180C7F2C00C6C166 /* MP42Image.m */; };
+		A9D361D2180C7F2C00C6C166 /* MP42MediaFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D36198180C7F2C00C6C166 /* MP42MediaFormat.m */; };
+		A9D361D3180C7F2C00C6C166 /* MP42Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3619A180C7F2C00C6C166 /* MP42Metadata.m */; };
+		A9D361D4180C7F2C00C6C166 /* MP42MkvImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3619C180C7F2C00C6C166 /* MP42MkvImporter.m */; };
+		A9D361D5180C7F2C00C6C166 /* MP42Mp4Importer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3619E180C7F2C00C6C166 /* MP42Mp4Importer.m */; };
+		A9D361D6180C7F2C00C6C166 /* MP42Muxer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361A0180C7F2C00C6C166 /* MP42Muxer.m */; };
+		A9D361D7180C7F2C00C6C166 /* MP42OCRWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9D361A2180C7F2C00C6C166 /* MP42OCRWrapper.mm */; };
+		A9D361D8180C7F2C00C6C166 /* MP42QTImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361A4180C7F2C00C6C166 /* MP42QTImporter.m */; };
+		A9D361D9180C7F2C00C6C166 /* MP42Sample.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361A6180C7F2C00C6C166 /* MP42Sample.m */; };
+		A9D361DA180C7F2C00C6C166 /* MP42SrtImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361A8180C7F2C00C6C166 /* MP42SrtImporter.m */; };
+		A9D361DB180C7F2C00C6C166 /* MP42SubtitleTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361AA180C7F2C00C6C166 /* MP42SubtitleTrack.m */; };
+		A9D361DC180C7F2C00C6C166 /* MP42SubUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361AC180C7F2C00C6C166 /* MP42SubUtilities.m */; };
+		A9D361DD180C7F2C00C6C166 /* MP42Track.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361AE180C7F2C00C6C166 /* MP42Track.m */; };
+		A9D361DE180C7F2C00C6C166 /* MP42Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361B0180C7F2C00C6C166 /* MP42Utilities.m */; };
+		A9D361DF180C7F2C00C6C166 /* MP42VideoTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361B2180C7F2C00C6C166 /* MP42VideoTrack.m */; };
+		A9D361E0180C7F2C00C6C166 /* MP42VobSubImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361B4180C7F2C00C6C166 /* MP42VobSubImporter.m */; };
+		A9D361E1180C7F2C00C6C166 /* MP42XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D361B6180C7F2C00C6C166 /* MP42XMLReader.m */; };
+		A9D361E2180C7F2C00C6C166 /* downmix.c in Sources */ = {isa = PBXBuildFile; fileRef = A9D361B8180C7F2C00C6C166 /* downmix.c */; };
+		A9D361E3180C7F2C00C6C166 /* MatroskaFile.c in Sources */ = {isa = PBXBuildFile; fileRef = A9D361BA180C7F2C00C6C166 /* MatroskaFile.c */; };
+		A9D361E4180C7F2C00C6C166 /* MatroskaParser.c in Sources */ = {isa = PBXBuildFile; fileRef = A9D361BC180C7F2C00C6C166 /* MatroskaParser.c */; };
+		A9D361E5180C7F2C00C6C166 /* mbs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D361BE180C7F2C00C6C166 /* mbs.cpp */; };
+		A9D361E6180C7F2C00C6C166 /* sfifo.c in Sources */ = {isa = PBXBuildFile; fileRef = A9D361C1180C7F2C00C6C166 /* sfifo.c */; };
 		A9E96D0413892BE400D4B7F0 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E96CF313892BE300D4B7F0 /* libavcodec.a */; };
 		A9E96D0613892BE400D4B7F0 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E96CF513892BE300D4B7F0 /* libavdevice.a */; };
 		A9E96D0713892BE400D4B7F0 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E96CF613892BE300D4B7F0 /* libavformat.a */; };
@@ -137,80 +137,6 @@
 		A98ED4020F59E28300885A49 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		A9AB487217F0B0B2000AA72E /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = ../Others/JSONKit.h; sourceTree = "<group>"; };
 		A9AB487317F0B0B2000AA72E /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = ../Others/JSONKit.m; sourceTree = "<group>"; };
-		A9AB487617F0B0C4000AA72E /* MP42AACImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AACImporter.h; sourceTree = "<group>"; };
-		A9AB487717F0B0C4000AA72E /* MP42AACImporter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MP42AACImporter.mm; sourceTree = "<group>"; };
-		A9AB487817F0B0C4000AA72E /* MP42AC3Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AC3Importer.h; sourceTree = "<group>"; };
-		A9AB487917F0B0C4000AA72E /* MP42AC3Importer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42AC3Importer.m; sourceTree = "<group>"; };
-		A9AB487A17F0B0C4000AA72E /* MP42AudioConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AudioConverter.h; sourceTree = "<group>"; };
-		A9AB487B17F0B0C4000AA72E /* MP42AudioConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42AudioConverter.m; sourceTree = "<group>"; };
-		A9AB487C17F0B0C4000AA72E /* MP42AudioTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AudioTrack.h; sourceTree = "<group>"; };
-		A9AB487D17F0B0C4000AA72E /* MP42AudioTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42AudioTrack.m; sourceTree = "<group>"; };
-		A9AB487E17F0B0C4000AA72E /* MP42AVFImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AVFImporter.h; sourceTree = "<group>"; };
-		A9AB487F17F0B0C4000AA72E /* MP42AVFImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42AVFImporter.m; sourceTree = "<group>"; };
-		A9AB488017F0B0C4000AA72E /* MP42BitmapSubConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42BitmapSubConverter.h; sourceTree = "<group>"; };
-		A9AB488117F0B0C4000AA72E /* MP42BitmapSubConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42BitmapSubConverter.m; sourceTree = "<group>"; };
-		A9AB488217F0B0C4000AA72E /* MP42CCImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42CCImporter.h; sourceTree = "<group>"; };
-		A9AB488317F0B0C4000AA72E /* MP42CCImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42CCImporter.m; sourceTree = "<group>"; };
-		A9AB488417F0B0C5000AA72E /* MP42ChapterTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42ChapterTrack.h; sourceTree = "<group>"; };
-		A9AB488517F0B0C5000AA72E /* MP42ChapterTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42ChapterTrack.m; sourceTree = "<group>"; };
-		A9AB488617F0B0C5000AA72E /* MP42ClosedCaptionTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42ClosedCaptionTrack.h; sourceTree = "<group>"; };
-		A9AB488717F0B0C5000AA72E /* MP42ClosedCaptionTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42ClosedCaptionTrack.m; sourceTree = "<group>"; };
-		A9AB488817F0B0C5000AA72E /* MP42ConverterProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42ConverterProtocol.h; sourceTree = "<group>"; };
-		A9AB488917F0B0C5000AA72E /* MP42Fifo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Fifo.h; sourceTree = "<group>"; };
-		A9AB488A17F0B0C5000AA72E /* MP42Fifo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Fifo.m; sourceTree = "<group>"; };
-		A9AB488B17F0B0C5000AA72E /* MP42File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42File.h; sourceTree = "<group>"; };
-		A9AB488C17F0B0C5000AA72E /* MP42File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42File.m; sourceTree = "<group>"; };
-		A9AB488D17F0B0C5000AA72E /* MP42FileImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42FileImporter.h; sourceTree = "<group>"; };
-		A9AB488E17F0B0C5000AA72E /* MP42FileImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42FileImporter.m; sourceTree = "<group>"; };
-		A9AB488F17F0B0C5000AA72E /* MP42H264Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42H264Importer.h; sourceTree = "<group>"; };
-		A9AB489017F0B0C5000AA72E /* MP42H264Importer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MP42H264Importer.mm; sourceTree = "<group>"; };
-		A9AB489117F0B0C5000AA72E /* MP42HtmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42HtmlParser.h; sourceTree = "<group>"; };
-		A9AB489217F0B0C5000AA72E /* MP42HtmlParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42HtmlParser.m; sourceTree = "<group>"; };
-		A9AB489317F0B0C5000AA72E /* MP42Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Image.h; sourceTree = "<group>"; };
-		A9AB489417F0B0C5000AA72E /* MP42Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Image.m; sourceTree = "<group>"; };
-		A9AB489517F0B0C5000AA72E /* MP42MediaFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42MediaFormat.h; sourceTree = "<group>"; };
-		A9AB489617F0B0C5000AA72E /* MP42MediaFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42MediaFormat.m; sourceTree = "<group>"; };
-		A9AB489717F0B0C5000AA72E /* MP42Metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Metadata.h; sourceTree = "<group>"; };
-		A9AB489817F0B0C5000AA72E /* MP42Metadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Metadata.m; sourceTree = "<group>"; };
-		A9AB489917F0B0C5000AA72E /* MP42MkvImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42MkvImporter.h; sourceTree = "<group>"; };
-		A9AB489A17F0B0C5000AA72E /* MP42MkvImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42MkvImporter.m; sourceTree = "<group>"; };
-		A9AB489B17F0B0C5000AA72E /* MP42Mp4Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Mp4Importer.h; sourceTree = "<group>"; };
-		A9AB489C17F0B0C5000AA72E /* MP42Mp4Importer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Mp4Importer.m; sourceTree = "<group>"; };
-		A9AB489D17F0B0C5000AA72E /* MP42Muxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Muxer.h; sourceTree = "<group>"; };
-		A9AB489E17F0B0C5000AA72E /* MP42Muxer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Muxer.m; sourceTree = "<group>"; };
-		A9AB489F17F0B0C5000AA72E /* MP42OCRWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42OCRWrapper.h; sourceTree = "<group>"; };
-		A9AB48A017F0B0C5000AA72E /* MP42OCRWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MP42OCRWrapper.mm; sourceTree = "<group>"; };
-		A9AB48A117F0B0C5000AA72E /* MP42QTImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42QTImporter.h; sourceTree = "<group>"; };
-		A9AB48A217F0B0C5000AA72E /* MP42QTImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42QTImporter.m; sourceTree = "<group>"; };
-		A9AB48A317F0B0C5000AA72E /* MP42Sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Sample.h; sourceTree = "<group>"; };
-		A9AB48A417F0B0C5000AA72E /* MP42Sample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Sample.m; sourceTree = "<group>"; };
-		A9AB48A517F0B0C5000AA72E /* MP42SrtImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42SrtImporter.h; sourceTree = "<group>"; };
-		A9AB48A617F0B0C5000AA72E /* MP42SrtImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42SrtImporter.m; sourceTree = "<group>"; };
-		A9AB48A717F0B0C5000AA72E /* MP42SubtitleTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42SubtitleTrack.h; sourceTree = "<group>"; };
-		A9AB48A817F0B0C5000AA72E /* MP42SubtitleTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42SubtitleTrack.m; sourceTree = "<group>"; };
-		A9AB48A917F0B0C5000AA72E /* MP42Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Track.h; sourceTree = "<group>"; };
-		A9AB48AA17F0B0C5000AA72E /* MP42Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Track.m; sourceTree = "<group>"; };
-		A9AB48AB17F0B0C5000AA72E /* MP42Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Utilities.h; sourceTree = "<group>"; };
-		A9AB48AC17F0B0C5000AA72E /* MP42Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Utilities.m; sourceTree = "<group>"; };
-		A9AB48AD17F0B0C5000AA72E /* MP42VideoTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42VideoTrack.h; sourceTree = "<group>"; };
-		A9AB48AE17F0B0C5000AA72E /* MP42VideoTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42VideoTrack.m; sourceTree = "<group>"; };
-		A9AB48AF17F0B0C5000AA72E /* MP42VobSubImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42VobSubImporter.h; sourceTree = "<group>"; };
-		A9AB48B017F0B0C5000AA72E /* MP42VobSubImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42VobSubImporter.m; sourceTree = "<group>"; };
-		A9AB48B117F0B0C5000AA72E /* MP42XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42XMLReader.h; sourceTree = "<group>"; };
-		A9AB48B217F0B0C5000AA72E /* MP42XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42XMLReader.m; sourceTree = "<group>"; };
-		A9AB48B417F0B0C5000AA72E /* downmix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = downmix.c; sourceTree = "<group>"; };
-		A9AB48B517F0B0C5000AA72E /* downmix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = downmix.h; sourceTree = "<group>"; };
-		A9AB48B617F0B0C5000AA72E /* MatroskaFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MatroskaFile.c; sourceTree = "<group>"; };
-		A9AB48B717F0B0C5000AA72E /* MatroskaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatroskaFile.h; sourceTree = "<group>"; };
-		A9AB48B817F0B0C5000AA72E /* MatroskaParser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MatroskaParser.c; sourceTree = "<group>"; };
-		A9AB48B917F0B0C5000AA72E /* MatroskaParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatroskaParser.h; sourceTree = "<group>"; };
-		A9AB48BA17F0B0C5000AA72E /* mbs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mbs.cpp; sourceTree = "<group>"; };
-		A9AB48BB17F0B0C5000AA72E /* mbs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mbs.h; sourceTree = "<group>"; };
-		A9AB48BC17F0B0C5000AA72E /* mpeg4ip_bitstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpeg4ip_bitstream.h; sourceTree = "<group>"; };
-		A9AB48BD17F0B0C5000AA72E /* sfifo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sfifo.c; sourceTree = "<group>"; };
-		A9AB48BE17F0B0C5000AA72E /* sfifo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sfifo.h; sourceTree = "<group>"; };
-		A9AB48BF17F0B0C5000AA72E /* SubUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubUtilities.h; sourceTree = "<group>"; };
-		A9AB48C017F0B0C5000AA72E /* SubUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubUtilities.m; sourceTree = "<group>"; };
 		A9AC785512FE96E100A72A1E /* SublerCLI_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SublerCLI_Prefix.pch; sourceTree = "<group>"; };
 		A9AEF825167C7CAF00FDDBB3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		A9AEF827167C7CB900FDDBB3 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -220,6 +146,80 @@
 		A9BAABD115D930AD00A59EAB /* SBLanguages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SBLanguages.h; path = ../Classes/SBLanguages.h; sourceTree = "<group>"; };
 		A9BAABD215D930AD00A59EAB /* SBLanguages.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SBLanguages.m; path = ../Classes/SBLanguages.m; sourceTree = "<group>"; };
 		A9C0605116831CBE00FE3D98 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
+		A9D36178180C7F2C00C6C166 /* MP42AACImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AACImporter.h; sourceTree = "<group>"; };
+		A9D36179180C7F2C00C6C166 /* MP42AACImporter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MP42AACImporter.mm; sourceTree = "<group>"; };
+		A9D3617A180C7F2C00C6C166 /* MP42AC3Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AC3Importer.h; sourceTree = "<group>"; };
+		A9D3617B180C7F2C00C6C166 /* MP42AC3Importer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42AC3Importer.m; sourceTree = "<group>"; };
+		A9D3617C180C7F2C00C6C166 /* MP42AudioConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AudioConverter.h; sourceTree = "<group>"; };
+		A9D3617D180C7F2C00C6C166 /* MP42AudioConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42AudioConverter.m; sourceTree = "<group>"; };
+		A9D3617E180C7F2C00C6C166 /* MP42AudioTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AudioTrack.h; sourceTree = "<group>"; };
+		A9D3617F180C7F2C00C6C166 /* MP42AudioTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42AudioTrack.m; sourceTree = "<group>"; };
+		A9D36180180C7F2C00C6C166 /* MP42AVFImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42AVFImporter.h; sourceTree = "<group>"; };
+		A9D36181180C7F2C00C6C166 /* MP42AVFImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42AVFImporter.m; sourceTree = "<group>"; };
+		A9D36182180C7F2C00C6C166 /* MP42BitmapSubConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42BitmapSubConverter.h; sourceTree = "<group>"; };
+		A9D36183180C7F2C00C6C166 /* MP42BitmapSubConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42BitmapSubConverter.m; sourceTree = "<group>"; };
+		A9D36184180C7F2C00C6C166 /* MP42CCImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42CCImporter.h; sourceTree = "<group>"; };
+		A9D36185180C7F2C00C6C166 /* MP42CCImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42CCImporter.m; sourceTree = "<group>"; };
+		A9D36186180C7F2C00C6C166 /* MP42ChapterTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42ChapterTrack.h; sourceTree = "<group>"; };
+		A9D36187180C7F2C00C6C166 /* MP42ChapterTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42ChapterTrack.m; sourceTree = "<group>"; };
+		A9D36188180C7F2C00C6C166 /* MP42ClosedCaptionTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42ClosedCaptionTrack.h; sourceTree = "<group>"; };
+		A9D36189180C7F2C00C6C166 /* MP42ClosedCaptionTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42ClosedCaptionTrack.m; sourceTree = "<group>"; };
+		A9D3618A180C7F2C00C6C166 /* MP42ConverterProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42ConverterProtocol.h; sourceTree = "<group>"; };
+		A9D3618B180C7F2C00C6C166 /* MP42Fifo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Fifo.h; sourceTree = "<group>"; };
+		A9D3618C180C7F2C00C6C166 /* MP42Fifo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Fifo.m; sourceTree = "<group>"; };
+		A9D3618D180C7F2C00C6C166 /* MP42File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42File.h; sourceTree = "<group>"; };
+		A9D3618E180C7F2C00C6C166 /* MP42File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42File.m; sourceTree = "<group>"; };
+		A9D3618F180C7F2C00C6C166 /* MP42FileImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42FileImporter.h; sourceTree = "<group>"; };
+		A9D36190180C7F2C00C6C166 /* MP42FileImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42FileImporter.m; sourceTree = "<group>"; };
+		A9D36191180C7F2C00C6C166 /* MP42H264Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42H264Importer.h; sourceTree = "<group>"; };
+		A9D36192180C7F2C00C6C166 /* MP42H264Importer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MP42H264Importer.mm; sourceTree = "<group>"; };
+		A9D36193180C7F2C00C6C166 /* MP42HtmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42HtmlParser.h; sourceTree = "<group>"; };
+		A9D36194180C7F2C00C6C166 /* MP42HtmlParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42HtmlParser.m; sourceTree = "<group>"; };
+		A9D36195180C7F2C00C6C166 /* MP42Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Image.h; sourceTree = "<group>"; };
+		A9D36196180C7F2C00C6C166 /* MP42Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Image.m; sourceTree = "<group>"; };
+		A9D36197180C7F2C00C6C166 /* MP42MediaFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42MediaFormat.h; sourceTree = "<group>"; };
+		A9D36198180C7F2C00C6C166 /* MP42MediaFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42MediaFormat.m; sourceTree = "<group>"; };
+		A9D36199180C7F2C00C6C166 /* MP42Metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Metadata.h; sourceTree = "<group>"; };
+		A9D3619A180C7F2C00C6C166 /* MP42Metadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Metadata.m; sourceTree = "<group>"; };
+		A9D3619B180C7F2C00C6C166 /* MP42MkvImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42MkvImporter.h; sourceTree = "<group>"; };
+		A9D3619C180C7F2C00C6C166 /* MP42MkvImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42MkvImporter.m; sourceTree = "<group>"; };
+		A9D3619D180C7F2C00C6C166 /* MP42Mp4Importer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Mp4Importer.h; sourceTree = "<group>"; };
+		A9D3619E180C7F2C00C6C166 /* MP42Mp4Importer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Mp4Importer.m; sourceTree = "<group>"; };
+		A9D3619F180C7F2C00C6C166 /* MP42Muxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Muxer.h; sourceTree = "<group>"; };
+		A9D361A0180C7F2C00C6C166 /* MP42Muxer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Muxer.m; sourceTree = "<group>"; };
+		A9D361A1180C7F2C00C6C166 /* MP42OCRWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42OCRWrapper.h; sourceTree = "<group>"; };
+		A9D361A2180C7F2C00C6C166 /* MP42OCRWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MP42OCRWrapper.mm; sourceTree = "<group>"; };
+		A9D361A3180C7F2C00C6C166 /* MP42QTImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42QTImporter.h; sourceTree = "<group>"; };
+		A9D361A4180C7F2C00C6C166 /* MP42QTImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42QTImporter.m; sourceTree = "<group>"; };
+		A9D361A5180C7F2C00C6C166 /* MP42Sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Sample.h; sourceTree = "<group>"; };
+		A9D361A6180C7F2C00C6C166 /* MP42Sample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Sample.m; sourceTree = "<group>"; };
+		A9D361A7180C7F2C00C6C166 /* MP42SrtImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42SrtImporter.h; sourceTree = "<group>"; };
+		A9D361A8180C7F2C00C6C166 /* MP42SrtImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42SrtImporter.m; sourceTree = "<group>"; };
+		A9D361A9180C7F2C00C6C166 /* MP42SubtitleTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42SubtitleTrack.h; sourceTree = "<group>"; };
+		A9D361AA180C7F2C00C6C166 /* MP42SubtitleTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42SubtitleTrack.m; sourceTree = "<group>"; };
+		A9D361AB180C7F2C00C6C166 /* MP42SubUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42SubUtilities.h; sourceTree = "<group>"; };
+		A9D361AC180C7F2C00C6C166 /* MP42SubUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42SubUtilities.m; sourceTree = "<group>"; };
+		A9D361AD180C7F2C00C6C166 /* MP42Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Track.h; sourceTree = "<group>"; };
+		A9D361AE180C7F2C00C6C166 /* MP42Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Track.m; sourceTree = "<group>"; };
+		A9D361AF180C7F2C00C6C166 /* MP42Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42Utilities.h; sourceTree = "<group>"; };
+		A9D361B0180C7F2C00C6C166 /* MP42Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42Utilities.m; sourceTree = "<group>"; };
+		A9D361B1180C7F2C00C6C166 /* MP42VideoTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42VideoTrack.h; sourceTree = "<group>"; };
+		A9D361B2180C7F2C00C6C166 /* MP42VideoTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42VideoTrack.m; sourceTree = "<group>"; };
+		A9D361B3180C7F2C00C6C166 /* MP42VobSubImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42VobSubImporter.h; sourceTree = "<group>"; };
+		A9D361B4180C7F2C00C6C166 /* MP42VobSubImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42VobSubImporter.m; sourceTree = "<group>"; };
+		A9D361B5180C7F2C00C6C166 /* MP42XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP42XMLReader.h; sourceTree = "<group>"; };
+		A9D361B6180C7F2C00C6C166 /* MP42XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP42XMLReader.m; sourceTree = "<group>"; };
+		A9D361B8180C7F2C00C6C166 /* downmix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = downmix.c; sourceTree = "<group>"; };
+		A9D361B9180C7F2C00C6C166 /* downmix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = downmix.h; sourceTree = "<group>"; };
+		A9D361BA180C7F2C00C6C166 /* MatroskaFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MatroskaFile.c; sourceTree = "<group>"; };
+		A9D361BB180C7F2C00C6C166 /* MatroskaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatroskaFile.h; sourceTree = "<group>"; };
+		A9D361BC180C7F2C00C6C166 /* MatroskaParser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MatroskaParser.c; sourceTree = "<group>"; };
+		A9D361BD180C7F2C00C6C166 /* MatroskaParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatroskaParser.h; sourceTree = "<group>"; };
+		A9D361BE180C7F2C00C6C166 /* mbs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mbs.cpp; sourceTree = "<group>"; };
+		A9D361BF180C7F2C00C6C166 /* mbs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mbs.h; sourceTree = "<group>"; };
+		A9D361C0180C7F2C00C6C166 /* mpeg4ip_bitstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpeg4ip_bitstream.h; sourceTree = "<group>"; };
+		A9D361C1180C7F2C00C6C166 /* sfifo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sfifo.c; sourceTree = "<group>"; };
+		A9D361C2180C7F2C00C6C166 /* sfifo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sfifo.h; sourceTree = "<group>"; };
 		A9E96CF313892BE300D4B7F0 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = ../ffmpeg/lib/libavcodec.a; sourceTree = SOURCE_ROOT; };
 		A9E96CF513892BE300D4B7F0 /* libavdevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavdevice.a; path = ../ffmpeg/lib/libavdevice.a; sourceTree = SOURCE_ROOT; };
 		A9E96CF613892BE300D4B7F0 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../ffmpeg/lib/libavformat.a; sourceTree = SOURCE_ROOT; };
@@ -279,7 +279,7 @@
 			children = (
 				A9AC785512FE96E100A72A1E /* SublerCLI_Prefix.pch */,
 				CBE9467B12FC5510007E656A /* SublerCLI.mm */,
-				A9AB487517F0B0C4000AA72E /* mp4v2 wrapper */,
+				A9D36177180C7F2C00C6C166 /* mp4v2 wrapper */,
 				A9975E6C12B8CD6B00A3EFB6 /* Others */,
 			);
 			name = Source;
@@ -359,92 +359,92 @@
 			name = Others;
 			sourceTree = "<group>";
 		};
-		A9AB487517F0B0C4000AA72E /* mp4v2 wrapper */ = {
+		A9D36177180C7F2C00C6C166 /* mp4v2 wrapper */ = {
 			isa = PBXGroup;
 			children = (
-				A9AB487617F0B0C4000AA72E /* MP42AACImporter.h */,
-				A9AB487717F0B0C4000AA72E /* MP42AACImporter.mm */,
-				A9AB487817F0B0C4000AA72E /* MP42AC3Importer.h */,
-				A9AB487917F0B0C4000AA72E /* MP42AC3Importer.m */,
-				A9AB487A17F0B0C4000AA72E /* MP42AudioConverter.h */,
-				A9AB487B17F0B0C4000AA72E /* MP42AudioConverter.m */,
-				A9AB487C17F0B0C4000AA72E /* MP42AudioTrack.h */,
-				A9AB487D17F0B0C4000AA72E /* MP42AudioTrack.m */,
-				A9AB487E17F0B0C4000AA72E /* MP42AVFImporter.h */,
-				A9AB487F17F0B0C4000AA72E /* MP42AVFImporter.m */,
-				A9AB488017F0B0C4000AA72E /* MP42BitmapSubConverter.h */,
-				A9AB488117F0B0C4000AA72E /* MP42BitmapSubConverter.m */,
-				A9AB488217F0B0C4000AA72E /* MP42CCImporter.h */,
-				A9AB488317F0B0C4000AA72E /* MP42CCImporter.m */,
-				A9AB488417F0B0C5000AA72E /* MP42ChapterTrack.h */,
-				A9AB488517F0B0C5000AA72E /* MP42ChapterTrack.m */,
-				A9AB488617F0B0C5000AA72E /* MP42ClosedCaptionTrack.h */,
-				A9AB488717F0B0C5000AA72E /* MP42ClosedCaptionTrack.m */,
-				A9AB488817F0B0C5000AA72E /* MP42ConverterProtocol.h */,
-				A9AB488917F0B0C5000AA72E /* MP42Fifo.h */,
-				A9AB488A17F0B0C5000AA72E /* MP42Fifo.m */,
-				A9AB488B17F0B0C5000AA72E /* MP42File.h */,
-				A9AB488C17F0B0C5000AA72E /* MP42File.m */,
-				A9AB488D17F0B0C5000AA72E /* MP42FileImporter.h */,
-				A9AB488E17F0B0C5000AA72E /* MP42FileImporter.m */,
-				A9AB488F17F0B0C5000AA72E /* MP42H264Importer.h */,
-				A9AB489017F0B0C5000AA72E /* MP42H264Importer.mm */,
-				A9AB489117F0B0C5000AA72E /* MP42HtmlParser.h */,
-				A9AB489217F0B0C5000AA72E /* MP42HtmlParser.m */,
-				A9AB489317F0B0C5000AA72E /* MP42Image.h */,
-				A9AB489417F0B0C5000AA72E /* MP42Image.m */,
-				A9AB489517F0B0C5000AA72E /* MP42MediaFormat.h */,
-				A9AB489617F0B0C5000AA72E /* MP42MediaFormat.m */,
-				A9AB489717F0B0C5000AA72E /* MP42Metadata.h */,
-				A9AB489817F0B0C5000AA72E /* MP42Metadata.m */,
-				A9AB489917F0B0C5000AA72E /* MP42MkvImporter.h */,
-				A9AB489A17F0B0C5000AA72E /* MP42MkvImporter.m */,
-				A9AB489B17F0B0C5000AA72E /* MP42Mp4Importer.h */,
-				A9AB489C17F0B0C5000AA72E /* MP42Mp4Importer.m */,
-				A9AB489D17F0B0C5000AA72E /* MP42Muxer.h */,
-				A9AB489E17F0B0C5000AA72E /* MP42Muxer.m */,
-				A9AB489F17F0B0C5000AA72E /* MP42OCRWrapper.h */,
-				A9AB48A017F0B0C5000AA72E /* MP42OCRWrapper.mm */,
-				A9AB48A117F0B0C5000AA72E /* MP42QTImporter.h */,
-				A9AB48A217F0B0C5000AA72E /* MP42QTImporter.m */,
-				A9AB48A317F0B0C5000AA72E /* MP42Sample.h */,
-				A9AB48A417F0B0C5000AA72E /* MP42Sample.m */,
-				A9AB48A517F0B0C5000AA72E /* MP42SrtImporter.h */,
-				A9AB48A617F0B0C5000AA72E /* MP42SrtImporter.m */,
-				A9AB48A717F0B0C5000AA72E /* MP42SubtitleTrack.h */,
-				A9AB48A817F0B0C5000AA72E /* MP42SubtitleTrack.m */,
-				A9AB48A917F0B0C5000AA72E /* MP42Track.h */,
-				A9AB48AA17F0B0C5000AA72E /* MP42Track.m */,
-				A9AB48AB17F0B0C5000AA72E /* MP42Utilities.h */,
-				A9AB48AC17F0B0C5000AA72E /* MP42Utilities.m */,
-				A9AB48AD17F0B0C5000AA72E /* MP42VideoTrack.h */,
-				A9AB48AE17F0B0C5000AA72E /* MP42VideoTrack.m */,
-				A9AB48AF17F0B0C5000AA72E /* MP42VobSubImporter.h */,
-				A9AB48B017F0B0C5000AA72E /* MP42VobSubImporter.m */,
-				A9AB48B117F0B0C5000AA72E /* MP42XMLReader.h */,
-				A9AB48B217F0B0C5000AA72E /* MP42XMLReader.m */,
-				A9AB48B317F0B0C5000AA72E /* muxer */,
-				A9AB48BD17F0B0C5000AA72E /* sfifo.c */,
-				A9AB48BE17F0B0C5000AA72E /* sfifo.h */,
-				A9AB48BF17F0B0C5000AA72E /* SubUtilities.h */,
-				A9AB48C017F0B0C5000AA72E /* SubUtilities.m */,
+				A9D36178180C7F2C00C6C166 /* MP42AACImporter.h */,
+				A9D36179180C7F2C00C6C166 /* MP42AACImporter.mm */,
+				A9D3617A180C7F2C00C6C166 /* MP42AC3Importer.h */,
+				A9D3617B180C7F2C00C6C166 /* MP42AC3Importer.m */,
+				A9D3617C180C7F2C00C6C166 /* MP42AudioConverter.h */,
+				A9D3617D180C7F2C00C6C166 /* MP42AudioConverter.m */,
+				A9D3617E180C7F2C00C6C166 /* MP42AudioTrack.h */,
+				A9D3617F180C7F2C00C6C166 /* MP42AudioTrack.m */,
+				A9D36180180C7F2C00C6C166 /* MP42AVFImporter.h */,
+				A9D36181180C7F2C00C6C166 /* MP42AVFImporter.m */,
+				A9D36182180C7F2C00C6C166 /* MP42BitmapSubConverter.h */,
+				A9D36183180C7F2C00C6C166 /* MP42BitmapSubConverter.m */,
+				A9D36184180C7F2C00C6C166 /* MP42CCImporter.h */,
+				A9D36185180C7F2C00C6C166 /* MP42CCImporter.m */,
+				A9D36186180C7F2C00C6C166 /* MP42ChapterTrack.h */,
+				A9D36187180C7F2C00C6C166 /* MP42ChapterTrack.m */,
+				A9D36188180C7F2C00C6C166 /* MP42ClosedCaptionTrack.h */,
+				A9D36189180C7F2C00C6C166 /* MP42ClosedCaptionTrack.m */,
+				A9D3618A180C7F2C00C6C166 /* MP42ConverterProtocol.h */,
+				A9D3618B180C7F2C00C6C166 /* MP42Fifo.h */,
+				A9D3618C180C7F2C00C6C166 /* MP42Fifo.m */,
+				A9D3618D180C7F2C00C6C166 /* MP42File.h */,
+				A9D3618E180C7F2C00C6C166 /* MP42File.m */,
+				A9D3618F180C7F2C00C6C166 /* MP42FileImporter.h */,
+				A9D36190180C7F2C00C6C166 /* MP42FileImporter.m */,
+				A9D36191180C7F2C00C6C166 /* MP42H264Importer.h */,
+				A9D36192180C7F2C00C6C166 /* MP42H264Importer.mm */,
+				A9D36193180C7F2C00C6C166 /* MP42HtmlParser.h */,
+				A9D36194180C7F2C00C6C166 /* MP42HtmlParser.m */,
+				A9D36195180C7F2C00C6C166 /* MP42Image.h */,
+				A9D36196180C7F2C00C6C166 /* MP42Image.m */,
+				A9D36197180C7F2C00C6C166 /* MP42MediaFormat.h */,
+				A9D36198180C7F2C00C6C166 /* MP42MediaFormat.m */,
+				A9D36199180C7F2C00C6C166 /* MP42Metadata.h */,
+				A9D3619A180C7F2C00C6C166 /* MP42Metadata.m */,
+				A9D3619B180C7F2C00C6C166 /* MP42MkvImporter.h */,
+				A9D3619C180C7F2C00C6C166 /* MP42MkvImporter.m */,
+				A9D3619D180C7F2C00C6C166 /* MP42Mp4Importer.h */,
+				A9D3619E180C7F2C00C6C166 /* MP42Mp4Importer.m */,
+				A9D3619F180C7F2C00C6C166 /* MP42Muxer.h */,
+				A9D361A0180C7F2C00C6C166 /* MP42Muxer.m */,
+				A9D361A1180C7F2C00C6C166 /* MP42OCRWrapper.h */,
+				A9D361A2180C7F2C00C6C166 /* MP42OCRWrapper.mm */,
+				A9D361A3180C7F2C00C6C166 /* MP42QTImporter.h */,
+				A9D361A4180C7F2C00C6C166 /* MP42QTImporter.m */,
+				A9D361A5180C7F2C00C6C166 /* MP42Sample.h */,
+				A9D361A6180C7F2C00C6C166 /* MP42Sample.m */,
+				A9D361A7180C7F2C00C6C166 /* MP42SrtImporter.h */,
+				A9D361A8180C7F2C00C6C166 /* MP42SrtImporter.m */,
+				A9D361A9180C7F2C00C6C166 /* MP42SubtitleTrack.h */,
+				A9D361AA180C7F2C00C6C166 /* MP42SubtitleTrack.m */,
+				A9D361AB180C7F2C00C6C166 /* MP42SubUtilities.h */,
+				A9D361AC180C7F2C00C6C166 /* MP42SubUtilities.m */,
+				A9D361AD180C7F2C00C6C166 /* MP42Track.h */,
+				A9D361AE180C7F2C00C6C166 /* MP42Track.m */,
+				A9D361AF180C7F2C00C6C166 /* MP42Utilities.h */,
+				A9D361B0180C7F2C00C6C166 /* MP42Utilities.m */,
+				A9D361B1180C7F2C00C6C166 /* MP42VideoTrack.h */,
+				A9D361B2180C7F2C00C6C166 /* MP42VideoTrack.m */,
+				A9D361B3180C7F2C00C6C166 /* MP42VobSubImporter.h */,
+				A9D361B4180C7F2C00C6C166 /* MP42VobSubImporter.m */,
+				A9D361B5180C7F2C00C6C166 /* MP42XMLReader.h */,
+				A9D361B6180C7F2C00C6C166 /* MP42XMLReader.m */,
+				A9D361B7180C7F2C00C6C166 /* muxer */,
+				A9D361C1180C7F2C00C6C166 /* sfifo.c */,
+				A9D361C2180C7F2C00C6C166 /* sfifo.h */,
 			);
 			name = "mp4v2 wrapper";
 			path = "../mp4v2 wrapper";
 			sourceTree = "<group>";
 		};
-		A9AB48B317F0B0C5000AA72E /* muxer */ = {
+		A9D361B7180C7F2C00C6C166 /* muxer */ = {
 			isa = PBXGroup;
 			children = (
-				A9AB48B417F0B0C5000AA72E /* downmix.c */,
-				A9AB48B517F0B0C5000AA72E /* downmix.h */,
-				A9AB48B617F0B0C5000AA72E /* MatroskaFile.c */,
-				A9AB48B717F0B0C5000AA72E /* MatroskaFile.h */,
-				A9AB48B817F0B0C5000AA72E /* MatroskaParser.c */,
-				A9AB48B917F0B0C5000AA72E /* MatroskaParser.h */,
-				A9AB48BA17F0B0C5000AA72E /* mbs.cpp */,
-				A9AB48BB17F0B0C5000AA72E /* mbs.h */,
-				A9AB48BC17F0B0C5000AA72E /* mpeg4ip_bitstream.h */,
+				A9D361B8180C7F2C00C6C166 /* downmix.c */,
+				A9D361B9180C7F2C00C6C166 /* downmix.h */,
+				A9D361BA180C7F2C00C6C166 /* MatroskaFile.c */,
+				A9D361BB180C7F2C00C6C166 /* MatroskaFile.h */,
+				A9D361BC180C7F2C00C6C166 /* MatroskaParser.c */,
+				A9D361BD180C7F2C00C6C166 /* MatroskaParser.h */,
+				A9D361BE180C7F2C00C6C166 /* mbs.cpp */,
+				A9D361BF180C7F2C00C6C166 /* mbs.h */,
+				A9D361C0180C7F2C00C6C166 /* mpeg4ip_bitstream.h */,
 			);
 			path = muxer;
 			sourceTree = "<group>";
@@ -541,48 +541,48 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9AB48D417F0B0C5000AA72E /* MP42Muxer.m in Sources */,
-				A9AB48D917F0B0C5000AA72E /* MP42SubtitleTrack.m in Sources */,
-				A9AB48CE17F0B0C5000AA72E /* MP42HtmlParser.m in Sources */,
-				A9AB48CF17F0B0C5000AA72E /* MP42Image.m in Sources */,
-				A9AB48C817F0B0C5000AA72E /* MP42ChapterTrack.m in Sources */,
-				A9AB48DF17F0B0C5000AA72E /* downmix.c in Sources */,
-				A9AB48DE17F0B0C5000AA72E /* MP42XMLReader.m in Sources */,
-				A9AB48D817F0B0C5000AA72E /* MP42SrtImporter.m in Sources */,
-				A9AB48C217F0B0C5000AA72E /* MP42AC3Importer.m in Sources */,
+				A9D361E3180C7F2C00C6C166 /* MatroskaFile.c in Sources */,
+				A9D361DF180C7F2C00C6C166 /* MP42VideoTrack.m in Sources */,
+				A9D361E5180C7F2C00C6C166 /* mbs.cpp in Sources */,
+				A9D361D6180C7F2C00C6C166 /* MP42Muxer.m in Sources */,
+				A9D361DB180C7F2C00C6C166 /* MP42SubtitleTrack.m in Sources */,
+				A9D361D0180C7F2C00C6C166 /* MP42HtmlParser.m in Sources */,
+				A9D361D1180C7F2C00C6C166 /* MP42Image.m in Sources */,
+				A9D361E1180C7F2C00C6C166 /* MP42XMLReader.m in Sources */,
+				A9D361CA180C7F2C00C6C166 /* MP42ChapterTrack.m in Sources */,
+				A9D361DA180C7F2C00C6C166 /* MP42SrtImporter.m in Sources */,
+				A9D361C4180C7F2C00C6C166 /* MP42AC3Importer.m in Sources */,
 				A9BAABD315D930D400A59EAB /* SBLanguages.m in Sources */,
-				A9AB48D517F0B0C5000AA72E /* MP42OCRWrapper.mm in Sources */,
-				A9AB48DD17F0B0C5000AA72E /* MP42VobSubImporter.m in Sources */,
-				A9AB48E117F0B0C5000AA72E /* MatroskaParser.c in Sources */,
-				A9AB48D717F0B0C5000AA72E /* MP42Sample.m in Sources */,
-				A9AB48C517F0B0C5000AA72E /* MP42AVFImporter.m in Sources */,
-				A9AB48D017F0B0C5000AA72E /* MP42MediaFormat.m in Sources */,
+				A9D361D7180C7F2C00C6C166 /* MP42OCRWrapper.mm in Sources */,
+				A9D361DE180C7F2C00C6C166 /* MP42Utilities.m in Sources */,
+				A9D361D9180C7F2C00C6C166 /* MP42Sample.m in Sources */,
+				A9D361C7180C7F2C00C6C166 /* MP42AVFImporter.m in Sources */,
+				A9D361D2180C7F2C00C6C166 /* MP42MediaFormat.m in Sources */,
+				A9D361E4180C7F2C00C6C166 /* MatroskaParser.c in Sources */,
 				A9AB487417F0B0B2000AA72E /* JSONKit.m in Sources */,
 				CBE9463B12FC5350007E656A /* RegexKitLite.m in Sources */,
-				A9AB48E217F0B0C5000AA72E /* mbs.cpp in Sources */,
-				A9AB48C117F0B0C5000AA72E /* MP42AACImporter.mm in Sources */,
+				A9D361C3180C7F2C00C6C166 /* MP42AACImporter.mm in Sources */,
+				A9D361E6180C7F2C00C6C166 /* sfifo.c in Sources */,
 				CBE9467C12FC5510007E656A /* SublerCLI.mm in Sources */,
-				A9AB48E017F0B0C5000AA72E /* MatroskaFile.c in Sources */,
-				A9AB48C917F0B0C5000AA72E /* MP42ClosedCaptionTrack.m in Sources */,
-				A9AB48CD17F0B0C5000AA72E /* MP42H264Importer.mm in Sources */,
-				A9AB48C317F0B0C5000AA72E /* MP42AudioConverter.m in Sources */,
+				A9D361CB180C7F2C00C6C166 /* MP42ClosedCaptionTrack.m in Sources */,
+				A9D361CF180C7F2C00C6C166 /* MP42H264Importer.mm in Sources */,
+				A9D361C5180C7F2C00C6C166 /* MP42AudioConverter.m in Sources */,
 				A9AEF82D167C7D6500FDDBB3 /* QTKitDecrap.m in Sources */,
-				A9AB48CB17F0B0C5000AA72E /* MP42File.m in Sources */,
-				A9AB48CC17F0B0C5000AA72E /* MP42FileImporter.m in Sources */,
-				A9AB48D117F0B0C5000AA72E /* MP42Metadata.m in Sources */,
-				A9AB48E417F0B0C5000AA72E /* SubUtilities.m in Sources */,
-				A9AB48C717F0B0C5000AA72E /* MP42CCImporter.m in Sources */,
-				A9AB48DC17F0B0C5000AA72E /* MP42VideoTrack.m in Sources */,
-				A9AB48D617F0B0C5000AA72E /* MP42QTImporter.m in Sources */,
-				A9AB48D317F0B0C5000AA72E /* MP42Mp4Importer.m in Sources */,
-				A9AB48CA17F0B0C5000AA72E /* MP42Fifo.m in Sources */,
-				A9AB48C617F0B0C5000AA72E /* MP42BitmapSubConverter.m in Sources */,
+				A9D361CD180C7F2C00C6C166 /* MP42File.m in Sources */,
+				A9D361CE180C7F2C00C6C166 /* MP42FileImporter.m in Sources */,
+				A9D361DC180C7F2C00C6C166 /* MP42SubUtilities.m in Sources */,
+				A9D361E2180C7F2C00C6C166 /* downmix.c in Sources */,
+				A9D361D3180C7F2C00C6C166 /* MP42Metadata.m in Sources */,
+				A9D361C9180C7F2C00C6C166 /* MP42CCImporter.m in Sources */,
+				A9D361DD180C7F2C00C6C166 /* MP42Track.m in Sources */,
+				A9D361D8180C7F2C00C6C166 /* MP42QTImporter.m in Sources */,
+				A9D361D5180C7F2C00C6C166 /* MP42Mp4Importer.m in Sources */,
+				A9D361CC180C7F2C00C6C166 /* MP42Fifo.m in Sources */,
+				A9D361C8180C7F2C00C6C166 /* MP42BitmapSubConverter.m in Sources */,
 				A92D8CCE1761EAEC0004E0C5 /* SBRatings.m in Sources */,
-				A9AB48DB17F0B0C5000AA72E /* MP42Utilities.m in Sources */,
-				A9AB48C417F0B0C5000AA72E /* MP42AudioTrack.m in Sources */,
-				A9AB48DA17F0B0C5000AA72E /* MP42Track.m in Sources */,
-				A9AB48D217F0B0C5000AA72E /* MP42MkvImporter.m in Sources */,
-				A9AB48E317F0B0C5000AA72E /* sfifo.c in Sources */,
+				A9D361E0180C7F2C00C6C166 /* MP42VobSubImporter.m in Sources */,
+				A9D361C6180C7F2C00C6C166 /* MP42AudioTrack.m in Sources */,
+				A9D361D4180C7F2C00C6C166 /* MP42MkvImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -601,6 +601,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -618,9 +619,9 @@
 					"\"$(SRCROOT)/../Tesseract/lib\"",
 					"\"$(SRCROOT)/../ffmpeg/lib\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = SublerCLI;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../mp4v2\"/** \"$(SRCROOT)/../Tesseract\"/** \"$(SRCROOT)/../ffmpeg\"/**";
 			};
 			name = Debug;
@@ -629,6 +630,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = SublerCLI_Prefix.pch;
@@ -644,9 +646,9 @@
 					"\"$(SRCROOT)/../Tesseract/lib\"",
 					"\"$(SRCROOT)/../ffmpeg/lib\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = SublerCLI;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../mp4v2\"/** \"$(SRCROOT)/../Tesseract\"/** \"$(SRCROOT)/../ffmpeg\"/**";
 			};
 			name = Release;

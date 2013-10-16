@@ -96,17 +96,17 @@ int main (int argc, const char * argv[]) {
         
 		if ( ! strcmp ( args, "source" ) )
 		{
-            sourcePath = [NSString stringWithUTF8String: *argv++];
+            sourcePath = @(*argv++);
 			argc--;
 		}
 		else if (( ! strcmp ( args, "dest" )) || ( ! strcmp ( args, "destination" )) )
 		{
-			destinationPath = [NSString stringWithUTF8String: *argv++];
+			destinationPath = @(*argv++);
 			argc--;
 		}
         else if ( ! strcmp ( args, "chapters" ) )
 		{
-			chaptersPath = [NSString stringWithUTF8String: *argv++];
+			chaptersPath = @(*argv++);
 			argc--;
 		}
         else if ( ! strcmp ( args, "chapterspreview" ) )
@@ -115,7 +115,7 @@ int main (int argc, const char * argv[]) {
 		}
         else if ( ! strcmp ( args, "metadata" ) )
 		{
-			metadata = [NSString stringWithUTF8String: *argv++];
+			metadata = @(*argv++);
             argc--;
 		}
         else if ( ! strcmp ( args, "optimize" ) )
@@ -125,7 +125,7 @@ int main (int argc, const char * argv[]) {
         else if ( ! strcmp ( args, "downmix" ) )
 		{
             downmixAudio = YES;
-            downmixArg = [NSString stringWithUTF8String:*argv++];
+            downmixArg = @(*argv++);
             if(![downmixArg caseInsensitiveCompare:@"mono"]) downmixType = SBMonoMixdown;
             else if(![downmixArg caseInsensitiveCompare:@"stereo"]) downmixType = SBStereoMixdown;
             else if(![downmixArg caseInsensitiveCompare:@"dolby"]) downmixType = SBDolbyMixdown;
@@ -153,7 +153,7 @@ int main (int argc, const char * argv[]) {
 		}
         else if ( ! strcmp ( args, "language" ) )
 		{
-            language = [NSString stringWithUTF8String: *argv++];
+            language = @(*argv++);
 			argc--;
 		}
         else if ( ! strcmp ( args, "remove" ) )
@@ -256,7 +256,7 @@ int main (int argc, const char * argv[]) {
                     if ([tag isKindOfClass:[NSString class]])
                         printf("%s: %s\n", [key UTF8String], [tag UTF8String]);
                     if ([tag isKindOfClass:[NSNumber class]])
-                        printf("%s: %d\n", [key UTF8String], [tag integerValue]);
+                        printf("%s: %ld\n", [key UTF8String], (long)[tag integerValue]);
                 }
             }
 
@@ -282,7 +282,7 @@ int main (int argc, const char * argv[]) {
     
     NSMutableDictionary * attributes = [[NSMutableDictionary alloc] init];
     if (chapterPreview)
-        [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42CreateChaptersPreviewTrack];
+        [attributes setObject:@YES forKey:MP42CreateChaptersPreviewTrack];
     
     if ((sourcePath && [[NSFileManager defaultManager] fileExistsAtPath:sourcePath]) || itunesfriendly || chaptersPath || removeExisting || metadata || chapterPreview || removemetadata)
     {
@@ -337,9 +337,8 @@ int main (int argc, const char * argv[]) {
         }
 
         if ((sourcePath && [[NSFileManager defaultManager] fileExistsAtPath:sourcePath])) {
-            NSURL* sourceURL = [NSURL fileURLWithPath:sourcePath];
-            MP42FileImporter *fileImporter = [[MP42FileImporter alloc] initWithDelegate:nil
-                                                                                andFile:sourceURL
+            NSURL *sourceURL = [NSURL fileURLWithPath:sourcePath];
+            MP42FileImporter *fileImporter = [[MP42FileImporter alloc] initWithURL:sourceURL
                                                                                 error:&outError];
 
             for (MP42Track * track in [fileImporter tracks]) {
@@ -350,7 +349,6 @@ int main (int argc, const char * argv[]) {
                 if (height && [track isMemberOfClass:[MP42SubtitleTrack class]])
                     [(MP42VideoTrack*)track setTrackHeight:height];
 
-                [track setTrackImporterHelper:fileImporter];
                 [mp4File addTrack:track];
             }
 
@@ -396,9 +394,7 @@ int main (int argc, const char * argv[]) {
             if ([track isKindOfClass: [MP42VideoTrack class]] && [track.format isEqualToString:@"H.264"]) {
                 track.newProfile = videoprofile;
                 track.newLevel = videolevel;
-                
-                [track.updatedProperty setValue:@"True" forKey:@"profile"];
-                [track.updatedProperty setValue:@"True" forKey:@"level"];
+
                 track.isEdited = YES;
                 
                 modified = YES;
@@ -457,7 +453,7 @@ int main (int argc, const char * argv[]) {
             modified = YES;
 
         if (itunesfriendly) {
-            [mp4File iTunesFriendlyTrackGroups];
+            [mp4File organizeAlternateGroups];
             modified = YES;
         }
 
@@ -466,8 +462,8 @@ int main (int argc, const char * argv[]) {
             success = [mp4File updateMP4FileWithAttributes:attributes error:&outError];
 
         else if (modified && ![mp4File hasFileRepresentation] && destinationPath) {
-            if ([mp4File estimatedDataLength] > 4200000000 || _64bitchunk)
-                [attributes setObject:[NSNumber numberWithBool:YES] forKey:MP42Create64BitData];
+            if ([mp4File dataSize] > 4100000000 || _64bitchunk)
+                [attributes setObject:@YES forKey:MP42Create64BitData];
 
             success = [mp4File writeToUrl:[NSURL fileURLWithPath:destinationPath]
                            withAttributes:attributes
