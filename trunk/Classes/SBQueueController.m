@@ -20,17 +20,15 @@
 
 static NSString *fileType = @"mp4";
 
-@interface SBQueueController (Private)
-
+@interface SBQueueController ()
 - (void)updateUI;
 - (void)updateDockTile;
-- (NSURL*)queueURL;
-- (NSMenuItem*)prepareDestPopupItem:(NSURL*) dest;
+- (NSURL *)queueURL;
+- (NSMenuItem *)prepareDestPopupItem:(NSURL *)dest;
 - (void)prepareDestPopup;
 
-- (void)addItems:(NSArray*)items atIndexes:(NSIndexSet*)indexes;
-- (void)removeItems:(NSArray*)items;
-
+- (void)addItems:(NSArray *)items atIndexes:(NSIndexSet *)indexes;
+- (void)removeItems:(NSArray *)items;
 @end
 
 
