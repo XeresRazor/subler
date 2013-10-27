@@ -245,10 +245,7 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
 
 - (void)removeTrackAtIndex:(NSUInteger) index
 {
-    MP42Track *track = [_tracks objectAtIndex:index];
-    if (track.muxed)
-        [_tracksToBeDeleted addObject:track];
-    [_tracks removeObjectAtIndex:index];
+    [self removeTracksAtIndexes:[NSIndexSet indexSetWithIndex:index]];
 }
 
 - (void)removeTracksAtIndexes:(NSIndexSet *)indexes
@@ -276,7 +273,6 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
                     a.forcedTrack = nil;
             }
         }
-
         index = [indexes indexGreaterThanIndex:index];
     }
 
@@ -529,7 +525,7 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
     }
 
     // Generate previews images for chapters
-    if ([[attributes valueForKey:MP42CreateChaptersPreviewTrack] boolValue])
+    if ([[attributes valueForKey:MP42CreateChaptersPreviewTrack] boolValue] && [_tracks count])
         [self createChaptersPreview];
 
     if ([_delegate respondsToSelector:@selector(endSave:)])
