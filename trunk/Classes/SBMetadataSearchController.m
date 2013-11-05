@@ -117,8 +117,10 @@
 	} else if (sender == tvMetadataProvider) {
 		[[NSUserDefaults standardUserDefaults] setValue:[[tvMetadataProvider selectedItem] title] forKey:@"SBMetadataPreference|TV"];
 	}
+
 	[self createLanguageMenus];
 	[self metadataProvidersSelectDefaultLanguage];
+    [self searchForResults:nil];
 }
 
 #pragma mark Search input fields
@@ -173,18 +175,30 @@
         currentSearcher = nil;
     }
 
-	[progress startAnimation:self];
-	[progress setHidden:NO];
-    if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"Movie"]) {
-		[progressText setStringValue:[NSString stringWithFormat:@"Searching %@ for movie information…", [[movieMetadataProvider selectedItem] title]]];
+    if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"Movie"] && [[movieName stringValue] length]) {
+        [progress startAnimation:self];
+        [progress setHidden:NO];
+		[progressText setStringValue:[NSString stringWithFormat:@"Searching %@ for movie information…",
+                                      [[movieMetadataProvider selectedItem] title]]];
 		[progressText setHidden:NO];
 		currentSearcher = [MetadataImporter importerForProvider:[[movieMetadataProvider selectedItem] title]];
 		[currentSearcher searchMovie:[movieName stringValue] language:[movieLanguage titleOfSelectedItem] callback:self];
-    } else if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"TV Episode"]) {
-		[progressText setStringValue:[NSString stringWithFormat:@"Searching %@ for episode information…", [[tvMetadataProvider selectedItem] title]]];
+    } else if ([[[searchMode selectedTabViewItem] label] isEqualToString:@"TV Episode"] && [[tvSeriesName stringValue] length]) {
+        [progress startAnimation:self];
+        [progress setHidden:NO];
+		[progressText setStringValue:[NSString stringWithFormat:@"Searching %@ for episode information…",
+                                      [[tvMetadataProvider selectedItem] title]]];
 		[progressText setHidden:NO];
 		currentSearcher = [MetadataImporter importerForProvider:[[tvMetadataProvider selectedItem] title]];
 		[currentSearcher searchTVSeries:[tvSeriesName stringValue] language:[tvLanguage titleOfSelectedItem] seasonNum:[tvSeasonNum stringValue] episodeNum:[tvEpisodeNum stringValue] callback:self];
+    }
+    else {
+        // Nothing to search, reset the table view
+        [resultsArray release];
+        resultsArray = nil;
+        selectedResult = nil;
+        [resultsTable reloadData];
+        [metadataTable reloadData];
     }
 }
 
