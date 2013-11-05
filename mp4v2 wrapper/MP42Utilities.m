@@ -140,16 +140,35 @@ int isHdVideo(uint64_t width, uint64_t height)
 MP4TrackId findChapterTrackId(MP4FileHandle fileHandle)
 {
     MP4TrackId trackId = 0;
-    uint64_t trackRef;
+    uint64_t trackRef = 0;
     unsigned int i;
     for (i = 0; i< MP4GetNumberOfTracks( fileHandle, 0, 0); i++ ) {
         trackId = MP4FindTrackId(fileHandle, i, 0, 0);
         if (MP4HaveTrackAtom(fileHandle, trackId, "tref.chap")) {
-            MP4GetTrackIntegerProperty(fileHandle, trackId, "tref.chap.entries.trackId", &trackRef);
-            if (trackRef > 0)
-                return (MP4TrackId) trackRef;
+            if (MP4GetTrackIntegerProperty(fileHandle, trackId, "tref.chap.entries.trackId", &trackRef))
+                if (trackRef > 0)
+                    return (MP4TrackId) trackRef;
         }
     }
+    return 0;
+}
+
+MP4TrackId findChapterPreviewTrackId(MP4FileHandle fileHandle)
+{
+    MP4TrackId trackId = 0;
+    uint64_t trackRef = 0;
+    unsigned int i;
+    for (i = 0; i< MP4GetNumberOfTracks( fileHandle, 0, 0); i++ ) {
+        trackId = MP4FindTrackId(fileHandle, i, 0, 0);
+        if (MP4HaveTrackAtom(fileHandle, trackId, "tref.chap")) {
+            uint64_t entryCount = 0;
+            MP4GetTrackIntegerProperty(fileHandle, trackId, "tref.chap.entryCount", &entryCount);
+            if (entryCount > 1 && MP4GetTrackIntegerProperty(fileHandle, trackId, "tref.chap.entries.trackId[1]", &trackRef))
+                if (trackRef > 0)
+                    return (MP4TrackId) trackRef;
+        }
+    }
+
     return 0;
 }
 
