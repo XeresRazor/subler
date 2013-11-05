@@ -121,6 +121,12 @@ int compare_color(rgba_color c1, rgba_color c2) {
     contentInternalRange.location += 1;
     contentInternalRange.length -= 2;
 
+    // If the internal content range location is equal to the text length
+    // it means there is no content at all
+    if (contentInternalRange.location == [_text length]) {
+        return NSNotFound;
+    }
+
     content = [_text substringWithRange:contentInternalRange];
 
     NSInteger tagType;
