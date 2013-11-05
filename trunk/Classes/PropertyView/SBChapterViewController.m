@@ -44,7 +44,7 @@
     objectValueForTableColumn:(NSTableColumn *)tableColumn
                           row:(NSInteger)rowIndex
 {
-    SBTextSample * chapter = [track chapterAtIndex:rowIndex];
+    MP42TextSample * chapter = [track chapterAtIndex:rowIndex];
     if ([tableColumn.identifier isEqualToString:@"time"])
         return [self boldString:SMPTEStringFromTime(chapter.timestamp, 1000)];  
 
@@ -59,7 +59,7 @@
    forTableColumn:(NSTableColumn *)tableColumn
               row:(NSInteger)rowIndex
 {
-    SBTextSample * chapter = [track chapterAtIndex:rowIndex];
+    MP42TextSample * chapter = [track chapterAtIndex:rowIndex];
 
     if ([tableColumn.identifier isEqualToString:@"title"]) {
         if (![chapter.title isEqualToString:anObject]) {

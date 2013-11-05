@@ -26,7 +26,7 @@
 
         chapters = [[NSMutableArray alloc] init];
     }
-    
+
     return self;
 }
 
@@ -50,7 +50,7 @@
         MP4Duration sum = 0;
         while (i <= chapter_count)
         {
-            SBTextSample *chapter = [[SBTextSample alloc] init];
+            MP42TextSample *chapter = [[MP42TextSample alloc] init];
 
             char * title = chapter_list[i-1].title;
             if ((title[0] == '\xfe' && title[1] == '\xff') || (title[0] == '\xff' && title[1] == '\xfe')) {
@@ -85,12 +85,13 @@
         _muxed = NO;
         _enabled = NO;
         _mediaType = MP42MediaTypeText;
+        _areChaptersEdited = YES;
 
         chapters = [[NSMutableArray alloc] init];
         LoadChaptersFromPath([_sourceURL path], chapters);
         [chapters sortUsingSelector:@selector(compare:)];
     }
-    
+
     return self;
 }
 
@@ -99,39 +100,70 @@
     return [[[MP42ChapterTrack alloc] initWithTextFile:URL] autorelease];
 }
 
-- (void)addChapter:(NSString *)title duration:(uint64_t)timestamp
+- (NSUInteger)addChapter:(NSString *)title duration:(uint64_t)timestamp
 {
-    SBTextSample *newChapter = [[SBTextSample alloc] init];
+    MP42TextSample *newChapter = [[MP42TextSample alloc] init];
     newChapter.title = title;
     newChapter.timestamp = timestamp;
 
     _isEdited = YES;
+    _areChaptersEdited = YES;
 
     [chapters addObject:newChapter];
     [chapters sortUsingSelector:@selector(compare:)];
     [newChapter release];
+
+    return [chapters indexOfObject:newChapter];
+}
+
+- (NSUInteger)addChapter:(NSString *)title image:(MP42Image *)image duration:(uint64_t)timestamp {
+    MP42TextSample *newChapter = [[MP42TextSample alloc] init];
+    newChapter.title = title;
+    newChapter.image = image;
+    newChapter.timestamp = timestamp;
+
+    _isEdited = YES;
+    _areChaptersEdited = YES;
+
+    [chapters addObject:newChapter];
+    [chapters sortUsingSelector:@selector(compare:)];
+    [newChapter release];
+
+    return [chapters indexOfObject:newChapter];
+}
+
+- (NSUInteger)indexOfChapter:(MP42TextSample *)chapterSample {
+    return [chapters indexOfObject:chapterSample];
 }
 
 - (void)removeChapterAtIndex:(NSUInteger)index
 {
-    _isEdited = YES;
-    [chapters removeObjectAtIndex:index];
+    [self removeChaptersAtIndexes:[NSIndexSet indexSetWithIndex:index]];
 }
 
-- (void)setTimestamp:(MP4Duration)timestamp forChapter:(SBTextSample *)chapterSample
+- (void)removeChaptersAtIndexes:(NSIndexSet *)indexes
 {
     _isEdited = YES;
+    _areChaptersEdited = YES;
+    [chapters removeObjectsAtIndexes:indexes];
+}
+
+- (void)setTimestamp:(MP4Duration)timestamp forChapter:(MP42TextSample *)chapterSample
+{
+    _isEdited = YES;
+    _areChaptersEdited = YES;
     [chapterSample setTimestamp:timestamp];
     [chapters sortUsingSelector:@selector(compare:)];
 }
 
-- (void)setTitle:(NSString *)title forChapter:(SBTextSample *)chapterSample
+- (void)setTitle:(NSString *)title forChapter:(MP42TextSample *)chapterSample
 {
     _isEdited = YES;
+    _areChaptersEdited = YES;
     [chapterSample setTitle:title];
 }
 
-- (SBTextSample *)chapterAtIndex:(NSUInteger)index
+- (MP42TextSample *)chapterAtIndex:(NSUInteger)index
 {
     return [chapters objectAtIndex:index];
 }
@@ -140,9 +172,11 @@
 {
     BOOL success = YES;
 
-    if (_isEdited) {
+    if (_isEdited && _areChaptersEdited) {
         MP4Chapter_t * fileChapters = 0;
-        uint32_t i, refTrackDuration, chapterCount = 0;
+        MP4Duration refTrackDuration;
+        uint32_t chapterCount = 0;
+        uint32_t i = 0;
         uint64_t sum = 0, moovDuration;
 
         // get the list of chapters
@@ -156,12 +190,12 @@
             refTrack = 1;
 
         chapterCount = [chapters count];
-        
+
         if (chapterCount) {
             // Insert a chapter at time 0 if there isn't one
-            SBTextSample * chapter = [chapters objectAtIndex:0];
+            MP42TextSample * chapter = [chapters objectAtIndex:0];
             if (chapter.timestamp != 0) {
-                SBTextSample *st = [[SBTextSample alloc] init];
+                MP42TextSample *st = [[MP42TextSample alloc] init];
                 st.timestamp = 0;
                 st.title = @"Chapter 0";
                 [chapters insertObject:st atIndex:0];
@@ -180,12 +214,12 @@
                 refTrackDuration = moovDuration;
 
             for (i = 0; i < chapterCount; i++) {
-                SBTextSample * chapter = [chapters objectAtIndex:i];
+                MP42TextSample * chapter = [chapters objectAtIndex:i];
                 if ([[chapter title] UTF8String])
                     strcpy(fileChapters[i].title, [[chapter title] UTF8String]);
 
                 if (i + 1 < chapterCount && sum < refTrackDuration) {
-                    SBTextSample * nextChapter = [chapters objectAtIndex:i+1];
+                    MP42TextSample * nextChapter = [chapters objectAtIndex:i+1];
                     fileChapters[i].duration = nextChapter.timestamp - chapter.timestamp;
                     sum = nextChapter.timestamp;
                 }
@@ -195,7 +229,7 @@
                 if (sum > refTrackDuration) {
                     fileChapters[i].duration = refTrackDuration - chapter.timestamp;
                     i++;
-                break;
+                    break;
                 }
             }
 
@@ -222,7 +256,7 @@
 
 - (NSInteger)chapterCount
 {
-  return [chapters count];
+    return [chapters count];
 }
 
 - (BOOL)exportToURL:(NSURL *)url error:(NSError **)error
@@ -230,7 +264,7 @@
 	NSMutableString* file = [[[NSMutableString alloc] init] autorelease];
 	NSUInteger x = 0;
 
-	for (SBTextSample * chapter in chapters) {
+	for (MP42TextSample * chapter in chapters) {
 		[file appendFormat:@"CHAPTER%02lu=%@\nCHAPTER%02luNAME=%@\n", (unsigned long)x, SRTStringFromTime([chapter timestamp], 1000, '.'), (unsigned long)x, [chapter title]];
 		x++;
 	}
@@ -254,9 +288,9 @@
 - (id)initWithCoder:(NSCoder *)decoder
 {
     self = [super initWithCoder:decoder];
-
+    
     chapters = [[decoder decodeObjectForKey:@"chapters"] retain];
-
+    
     return self;
 }
 

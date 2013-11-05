@@ -8,22 +8,30 @@
 
 #import <Foundation/Foundation.h>
 #import "MP42Track.h"
+#import "MP42Image.h"
 
-@class SBTextSample;
+@class MP42TextSample;
 
 @interface MP42ChapterTrack : MP42Track <NSCoding> {
     NSMutableArray *chapters;
+    BOOL _areChaptersEdited;
 }
+
 - (instancetype)initWithSourceURL:(NSURL *)URL trackID:(NSInteger)trackID fileHandle:(MP4FileHandle)fileHandle;
 + (instancetype)chapterTrackFromFile:(NSURL *)URL;
 
-- (void)addChapter:(NSString *)title duration:(uint64_t)timestamp;
+- (NSUInteger)addChapter:(NSString *)title duration:(uint64_t)timestamp;
+- (NSUInteger)addChapter:(NSString *)title image:(MP42Image *)image duration:(uint64_t)timestamp;
+
 - (void)removeChapterAtIndex:(NSUInteger)index;
+- (void)removeChaptersAtIndexes:(NSIndexSet *)indexes;
 
-- (void)setTimestamp:(MP4Duration)timestamp forChapter:(SBTextSample *)chapterSample;
-- (void)setTitle:(NSString*)title forChapter:(SBTextSample *)chapterSample;
+- (NSUInteger)indexOfChapter:(MP42TextSample *)chapterSample;
 
-- (SBTextSample *)chapterAtIndex:(NSUInteger)index;
+- (void)setTimestamp:(MP4Duration)timestamp forChapter:(MP42TextSample *)chapterSample;
+- (void)setTitle:(NSString*)title forChapter:(MP42TextSample *)chapterSample;
+
+- (MP42TextSample *)chapterAtIndex:(NSUInteger)index;
 
 - (NSInteger)chapterCount;
 
