@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">12F30</string>
-		<string key="IBDocument.InterfaceBuilderVersion">4504</string>
-		<string key="IBDocument.AppKitVersion">1187.39</string>
-		<string key="IBDocument.HIToolboxVersion">626.00</string>
+		<string key="IBDocument.SystemVersion">13A603</string>
+		<string key="IBDocument.InterfaceBuilderVersion">4511</string>
+		<string key="IBDocument.AppKitVersion">1265</string>
+		<string key="IBDocument.HIToolboxVersion">695.00</string>
 		<dictionary class="NSMutableDictionary" key="IBDocument.PluginVersions">
-			<string key="com.apple.InterfaceBuilder.CocoaPlugin">4504</string>
-			<string key="com.apple.imagekit.ibplugin">3335</string>
+			<string key="com.apple.InterfaceBuilder.CocoaPlugin">4511</string>
+			<string key="com.apple.imagekit.ibplugin">3336</string>
 		</dictionary>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IKImageBrowserView</string>
@@ -45,7 +45,7 @@
 		</object>
 		<array class="NSMutableArray" key="IBDocument.RootObjects" id="1025272554">
 			<object class="NSCustomObject" id="722257213">
-				<string key="NSClassName">MovieViewController</string>
+				<string key="NSClassName">SBMovieViewController</string>
 			</object>
 			<object class="NSCustomObject" id="73993916">
 				<string key="NSClassName">FirstResponder</string>
@@ -64,6 +64,7 @@
 						<string key="NSFrame">{{-11, -12}, {502, 279}}</string>
 						<reference key="NSSuperview" ref="399306276"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="421749083"/>
 						<array class="NSMutableArray" key="NSTabViewItems">
 							<object class="NSTabViewItem" id="187364600">
 								<string key="NSIdentifier">1</string>
@@ -86,7 +87,7 @@
 															<string key="NSFrameSize">{446, 181}</string>
 															<reference key="NSSuperview" ref="862602990"/>
 															<reference key="NSWindow"/>
-															<reference key="NSNextKeyView" ref="450995031"/>
+															<reference key="NSNextKeyView" ref="49443620"/>
 															<bool key="NSEnabled">YES</bool>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 															<bool key="NSControlAllowsExpansionToolTips">YES</bool>
@@ -116,7 +117,7 @@
 																		<int key="NSCellFlags2">2048</int>
 																		<string key="NSContents">Annotation</string>
 																		<object class="NSFont" key="NSSupport" id="26">
-																			<string key="NSName">LucidaGrande</string>
+																			<string key="NSName">.LucidaGrandeUI</string>
 																			<double key="NSSize">11</double>
 																			<int key="NSfFlags">3100</int>
 																		</object>
@@ -476,7 +477,7 @@
 												</object>
 												<object class="NSClipView" id="450995031">
 													<reference key="NSNextResponder" ref="794461692"/>
-													<int key="NSvFlags">3840</int>
+													<int key="NSvFlags">3874</int>
 													<array class="NSMutableArray" key="NSSubviews">
 														<reference ref="343667352"/>
 													</array>
@@ -520,7 +521,7 @@
 											<string key="NSFrame">{{17, 36}, {448, 199}}</string>
 											<reference key="NSSuperview" ref="421749083"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="862602990"/>
+											<reference key="NSNextKeyView" ref="450995031"/>
 											<int key="NSsFlags">133682</int>
 											<reference key="NSVScroller" ref="49443620"/>
 											<reference key="NSHScroller" ref="375667773"/>
@@ -607,7 +608,7 @@
 												<int key="NSCellFlags2">134217728</int>
 												<string key="NSContents"/>
 												<object class="NSFont" key="NSSupport" id="828509009">
-													<string key="NSName">LucidaGrande</string>
+													<string key="NSName">.LucidaGrandeUI</string>
 													<double key="NSSize">13</double>
 													<int key="NSfFlags">1044</int>
 												</object>
@@ -632,7 +633,7 @@
 											<string key="NSFrame">{{76, 7}, {33, 22}}</string>
 											<reference key="NSSuperview" ref="421749083"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="445979726"/>
+											<reference key="NSNextKeyView"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSPopUpButtonCell" key="NSCell" id="786216324">
 												<int key="NSCellFlags">71303232</int>
@@ -731,6 +732,7 @@
 																<string>NSTypedFilenamesPboardType:'TPIC'</string>
 																<string>NSTypedFilenamesPboardType:'icns'</string>
 																<string>NSTypedFilenamesPboardType:'jp2 '</string>
+																<string>NSTypedFilenamesPboardType:'qtif'</string>
 																<string>NSTypedFilenamesPboardType:3FR</string>
 																<string>NSTypedFilenamesPboardType:3fr</string>
 																<string>NSTypedFilenamesPboardType:ARW</string>
@@ -749,6 +751,8 @@
 																<string>NSTypedFilenamesPboardType:EXR</string>
 																<string>NSTypedFilenamesPboardType:FAX</string>
 																<string>NSTypedFilenamesPboardType:FFF</string>
+																<string>NSTypedFilenamesPboardType:FPIX</string>
+																<string>NSTypedFilenamesPboardType:FPX</string>
 																<string>NSTypedFilenamesPboardType:G3</string>
 																<string>NSTypedFilenamesPboardType:GIF</string>
 																<string>NSTypedFilenamesPboardType:HDR</string>
@@ -780,6 +784,8 @@
 																<string>NSTypedFilenamesPboardType:PNTG</string>
 																<string>NSTypedFilenamesPboardType:PS</string>
 																<string>NSTypedFilenamesPboardType:PSD</string>
+																<string>NSTypedFilenamesPboardType:QTI</string>
+																<string>NSTypedFilenamesPboardType:QTIF</string>
 																<string>NSTypedFilenamesPboardType:RAF</string>
 																<string>NSTypedFilenamesPboardType:RAW</string>
 																<string>NSTypedFilenamesPboardType:RGB</string>
@@ -810,6 +816,8 @@
 																<string>NSTypedFilenamesPboardType:exr</string>
 																<string>NSTypedFilenamesPboardType:fax</string>
 																<string>NSTypedFilenamesPboardType:fff</string>
+																<string>NSTypedFilenamesPboardType:fpix</string>
+																<string>NSTypedFilenamesPboardType:fpx</string>
 																<string>NSTypedFilenamesPboardType:g3</string>
 																<string>NSTypedFilenamesPboardType:gif</string>
 																<string>NSTypedFilenamesPboardType:hdr</string>
@@ -841,6 +849,8 @@
 																<string>NSTypedFilenamesPboardType:pntg</string>
 																<string>NSTypedFilenamesPboardType:ps</string>
 																<string>NSTypedFilenamesPboardType:psd</string>
+																<string>NSTypedFilenamesPboardType:qti</string>
+																<string>NSTypedFilenamesPboardType:qtif</string>
 																<string>NSTypedFilenamesPboardType:raf</string>
 																<string>NSTypedFilenamesPboardType:raw</string>
 																<string>NSTypedFilenamesPboardType:rgb</string>
@@ -1238,6 +1248,7 @@
 																<reference key="NSTextColor" ref="827510412"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSPopUpButton" id="303497108">
 															<reference key="NSNextResponder" ref="515763283"/>
@@ -1325,6 +1336,7 @@
 																<reference key="NSTextColor" ref="827510412"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSPopUpButton" id="747590269">
 															<reference key="NSNextResponder" ref="515763283"/>
@@ -1412,6 +1424,7 @@
 																<reference key="NSTextColor" ref="827510412"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="869420095">
 															<reference key="NSNextResponder" ref="515763283"/>
@@ -1430,6 +1443,7 @@
 																<reference key="NSTextColor" ref="827510412"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 													</array>
 													<object class="NSPSMatrix" key="NSFrameMatrix"/>
@@ -1519,6 +1533,7 @@
 								<reference key="NSTextColor" ref="827510412"/>
 							</object>
 							<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+							<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 						</object>
 						<object class="NSTextField" id="642401968">
 							<reference key="NSNextResponder" ref="624185281"/>
@@ -1543,6 +1558,7 @@
 								</object>
 							</object>
 							<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+							<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 						</object>
 						<object class="NSButton" id="616813380">
 							<reference key="NSNextResponder" ref="624185281"/>
@@ -2741,7 +2757,52 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
-					<string key="className">MovieViewController</string>
+					<string key="className">IKImageBrowserView</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="_dataSource">id</string>
+						<string key="_delegate">id</string>
+						<string key="_dragDestinationDelegate">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="_dataSource">
+							<string key="name">_dataSource</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="_delegate">
+							<string key="name">_delegate</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="_dragDestinationDelegate">
+							<string key="name">_dragDestinationDelegate</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/IKImageBrowserView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SBImageBrowserView</string>
+					<string key="superclassName">IKImageBrowserView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">paste:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">paste:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">paste:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SBImageBrowserView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SBMovieViewController</string>
 					<string key="superclassName">NSViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="addMetadataSet:">id</string>
@@ -2752,6 +2813,7 @@
 						<string key="changecContentRating:">id</string>
 						<string key="changehdVideo:">id</string>
 						<string key="closeSaveSheet:">id</string>
+						<string key="doubleClickAction:">id</string>
 						<string key="removeArtwork:">id</string>
 						<string key="removeTag:">id</string>
 						<string key="saveSet:">id</string>
@@ -2790,6 +2852,10 @@
 						</object>
 						<object class="IBActionInfo" key="closeSaveSheet:">
 							<string key="name">closeSaveSheet:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="doubleClickAction:">
+							<string key="name">doubleClickAction:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="removeArtwork:">
@@ -2893,31 +2959,36 @@
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/MovieViewController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">SBImageBrowserView</string>
-					<string key="superclassName">IKImageBrowserView</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">paste:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">paste:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">paste:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/SBImageBrowserView.h</string>
+						<string key="minorKey">./Classes/SBMovieViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">SBTableView</string>
 					<string key="superclassName">NSTableView</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="copy:">id</string>
+						<string key="cut:">id</string>
+						<string key="delete:">id</string>
+						<string key="paste:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="copy:">
+							<string key="name">copy:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="cut:">
+							<string key="name">cut:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="delete:">
+							<string key="name">delete:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="paste:">
+							<string key="name">paste:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/SBTableView.h</string>
@@ -2943,7 +3014,7 @@
 			<string key="NSMenuCheckmark">{11, 11}</string>
 			<string key="NSMenuMixedState">{10, 3}</string>
 			<string key="NSRemoveTemplate">{8, 8}</string>
-			<string key="NSSmartBadgeTemplate">{15, 15}</string>
+			<string key="NSSmartBadgeTemplate">{14, 14}</string>
 			<string key="NSSwitch">{15, 15}</string>
 		</dictionary>
 	</data>

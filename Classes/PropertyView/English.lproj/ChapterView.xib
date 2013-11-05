@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">12F30</string>
-		<string key="IBDocument.InterfaceBuilderVersion">4488.2</string>
-		<string key="IBDocument.AppKitVersion">1187.39</string>
-		<string key="IBDocument.HIToolboxVersion">626.00</string>
+		<string key="IBDocument.SystemVersion">13A603</string>
+		<string key="IBDocument.InterfaceBuilderVersion">4511</string>
+		<string key="IBDocument.AppKitVersion">1265</string>
+		<string key="IBDocument.HIToolboxVersion">695.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">4488.2</string>
+			<string key="NS.object.0">4511</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSButton</string>
@@ -34,7 +34,7 @@
 		</object>
 		<array class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<object class="NSCustomObject" id="1001">
-				<string key="NSClassName">ChapterViewController</string>
+				<string key="NSClassName">SBChapterViewController</string>
 			</object>
 			<object class="NSCustomObject" id="1003">
 				<string key="NSClassName">FirstResponder</string>
@@ -43,7 +43,7 @@
 				<string key="NSClassName">NSApplication</string>
 			</object>
 			<object class="NSCustomView" id="1005">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="NSTabView" id="980212840">
@@ -51,6 +51,8 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{-11, -12}, {502, 279}}</string>
 						<reference key="NSSuperview" ref="1005"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="900859224"/>
 						<array class="NSMutableArray" key="NSTabViewItems">
 							<object class="NSTabViewItem" id="561234673">
 								<string key="NSIdentifier">1</string>
@@ -71,7 +73,8 @@
 															<int key="NSvFlags">256</int>
 															<string key="NSFrameSize">{446, 181}</string>
 															<reference key="NSSuperview" ref="399023230"/>
-															<reference key="NSNextKeyView" ref="738579199"/>
+															<reference key="NSWindow"/>
+															<reference key="NSNextKeyView" ref="477814729"/>
 															<bool key="NSEnabled">YES</bool>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 															<bool key="NSControlAllowsExpansionToolTips">YES</bool>
@@ -80,14 +83,14 @@
 																<int key="NSvFlags">256</int>
 																<string key="NSFrameSize">{446, 17}</string>
 																<reference key="NSSuperview" ref="188370008"/>
+																<reference key="NSWindow"/>
 																<reference key="NSNextKeyView" ref="399023230"/>
 																<reference key="NSTableView" ref="999266526"/>
 															</object>
-															<object class="_NSCornerView" key="NSCornerView" id="738579199">
+															<object class="_NSCornerView" key="NSCornerView">
 																<nil key="NSNextResponder"/>
 																<int key="NSvFlags">-2147483392</int>
 																<string key="NSFrame">{{-22, 0}, {12, 17}}</string>
-																<reference key="NSNextKeyView" ref="188370008"/>
 															</object>
 															<array class="NSMutableArray" key="NSTableColumns">
 																<object class="NSTableColumn" id="891606345">
@@ -100,7 +103,7 @@
 																		<int key="NSCellFlags2">2048</int>
 																		<string key="NSContents">Time</string>
 																		<object class="NSFont" key="NSSupport" id="26">
-																			<string key="NSName">LucidaGrande</string>
+																			<string key="NSName">.LucidaGrandeUI</string>
 																			<double key="NSSize">11</double>
 																			<int key="NSfFlags">3100</int>
 																		</object>
@@ -450,6 +453,7 @@
 													</array>
 													<string key="NSFrame">{{1, 17}, {446, 181}}</string>
 													<reference key="NSSuperview" ref="86220922"/>
+													<reference key="NSWindow"/>
 													<reference key="NSNextKeyView" ref="999266526"/>
 													<reference key="NSDocView" ref="999266526"/>
 													<reference key="NSBGColor" ref="315001162"/>
@@ -460,6 +464,7 @@
 													<int key="NSvFlags">-2147483392</int>
 													<string key="NSFrame">{{412, 17}, {11, 176}}</string>
 													<reference key="NSSuperview" ref="86220922"/>
+													<reference key="NSWindow"/>
 													<reference key="NSNextKeyView" ref="827247503"/>
 													<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 													<int key="NSsFlags">256</int>
@@ -473,6 +478,7 @@
 													<int key="NSvFlags">-2147483392</int>
 													<string key="NSFrame">{{1, 193}, {411, 11}}</string>
 													<reference key="NSSuperview" ref="86220922"/>
+													<reference key="NSWindow"/>
 													<reference key="NSNextKeyView" ref="665589373"/>
 													<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 													<int key="NSsFlags">257</int>
@@ -482,12 +488,13 @@
 												</object>
 												<object class="NSClipView" id="188370008">
 													<reference key="NSNextResponder" ref="86220922"/>
-													<int key="NSvFlags">2304</int>
+													<int key="NSvFlags">2338</int>
 													<array class="NSMutableArray" key="NSSubviews">
 														<reference ref="888415462"/>
 													</array>
 													<string key="NSFrame">{{1, 0}, {446, 17}}</string>
 													<reference key="NSSuperview" ref="86220922"/>
+													<reference key="NSWindow"/>
 													<reference key="NSNextKeyView" ref="888415462"/>
 													<reference key="NSDocView" ref="888415462"/>
 													<reference key="NSBGColor" ref="315001162"/>
@@ -496,7 +503,8 @@
 											</array>
 											<string key="NSFrame">{{17, 36}, {448, 199}}</string>
 											<reference key="NSSuperview" ref="900859224"/>
-											<reference key="NSNextKeyView" ref="399023230"/>
+											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="188370008"/>
 											<int key="NSsFlags">133682</int>
 											<reference key="NSVScroller" ref="477814729"/>
 											<reference key="NSHScroller" ref="827247503"/>
@@ -512,13 +520,15 @@
 											<int key="NSvFlags">292</int>
 											<string key="NSFrame">{{40, 7}, {24, 22}}</string>
 											<reference key="NSSuperview" ref="900859224"/>
+											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="7436524">
 												<int key="NSCellFlags">603979776</int>
 												<int key="NSCellFlags2">134217728</int>
 												<string key="NSContents"/>
 												<object class="NSFont" key="NSSupport" id="555068703">
-													<string key="NSName">LucidaGrande</string>
+													<string key="NSName">.LucidaGrandeUI</string>
 													<double key="NSSize">13</double>
 													<int key="NSfFlags">1044</int>
 												</object>
@@ -541,6 +551,7 @@
 											<int key="NSvFlags">292</int>
 											<string key="NSFrame">{{17, 7}, {24, 22}}</string>
 											<reference key="NSSuperview" ref="900859224"/>
+											<reference key="NSWindow"/>
 											<reference key="NSNextKeyView" ref="900292374"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="19812870">
@@ -565,6 +576,7 @@
 									</array>
 									<string key="NSFrame">{{10, 25}, {482, 241}}</string>
 									<reference key="NSSuperview" ref="980212840"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="86220922"/>
 								</object>
 								<string key="NSLabel">Chapters</string>
@@ -588,6 +600,8 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{480, 272}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="980212840"/>
 				<string key="NSClassName">NSView</string>
 			</object>
@@ -829,7 +843,54 @@
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">SBChapterViewController</string>
+					<string key="superclassName">NSViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="addChapter:">id</string>
+						<string key="removeChapter:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="addChapter:">
+							<string key="name">addChapter:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="removeChapter:">
+							<string key="name">removeChapter:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="chapterTableView">SBTableView</string>
+						<string key="removeChapter">NSButton</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="chapterTableView">
+							<string key="name">chapterTableView</string>
+							<string key="candidateClassName">SBTableView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="removeChapter">
+							<string key="name">removeChapter</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SBChapterViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SBTableView</string>
+					<string key="superclassName">NSTableView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SBTableView.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">YES</bool>
