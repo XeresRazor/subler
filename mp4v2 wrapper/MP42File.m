@@ -640,7 +640,7 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
     NSDictionary *attributes = [NSDictionary dictionaryWithObject:QTMovieFrameImageTypeNSImage forKey:QTMovieFrameImageType];
     NSMutableArray *images = [[NSMutableArray alloc] initWithCapacity:[chapters count]];
 
-    for (SBTextSample *chapter in chapters) {
+    for (MP42TextSample *chapter in chapters) {
         QTTime chapterTime = {
             [chapter timestamp] + 1500, // Add a short offset, hopefully we will get a better image
             1000,                       // if there is a fade
@@ -680,7 +680,7 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
             generator.requestedTimeToleranceBefore = kCMTimeZero;
             generator.requestedTimeToleranceAfter  = kCMTimeZero;
 
-            for (SBTextSample * chapter in chapters) {
+            for (MP42TextSample * chapter in chapters) {
                 CMTime time = CMTimeMake([chapter timestamp] + 1800, 1000);
                 CGImageRef imgRef = [generator copyCGImageAtTime:time actualTime:NULL error:NULL];
                 if (imgRef) {
@@ -763,7 +763,7 @@ NSString * const MP42OrganizeAlternateGroups = @"MP42AlternateGroups";
             NSUInteger idx = 0;
             MP4Duration duration = 0;
 
-            for (SBTextSample *chapterT in [chapterTrack chapters]) {
+            for (MP42TextSample *chapterT in [chapterTrack chapters]) {
                 duration = MP4GetSampleDuration(_fileHandle, chapterTrack.Id, idx + 1);
 
                 // Scale the image.

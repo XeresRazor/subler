@@ -8,15 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import "UniversalDetector.h"
+#import "MP42Image.h"
 #import "mp4v2.h"
 
-@interface SBTextSample : NSObject <NSCoding> {
+@interface MP42TextSample : NSObject <NSCoding> {
     MP4Duration timestamp;
     NSString *title;
+    MP42Image *image;
 }
 
 @property(readwrite, retain) NSString *title;
 @property(readwrite) MP4Duration timestamp;
+@property(readwrite, retain) MP42Image *image;
 
 @end
 

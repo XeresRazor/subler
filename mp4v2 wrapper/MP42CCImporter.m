@@ -143,14 +143,14 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
             continue;
 
         startTime = ParseTimeCode([[lineArray objectAtIndex:0] UTF8String], 30000, NO, &dropFrame);
-        SBTextSample *sample = [[SBTextSample alloc] init];
+        MP42TextSample *sample = [[MP42TextSample alloc] init];
         sample.timestamp = startTime;
         sample.title = [lineArray lastObject];
         
         [sampleArray addObject:[sample autorelease]];
     }
 
-    for (SBTextSample *ccSample in sampleArray) {
+    for (MP42TextSample *ccSample in sampleArray) {
         if (_cancelled)
             break;
 
@@ -177,7 +177,7 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
         }
 
         if (firstSample && ccSample.timestamp != 0 && i == 0) {
-            SBTextSample *boh = [sampleArray objectAtIndex:1];
+            MP42TextSample *boh = [sampleArray objectAtIndex:1];
             sampleDuration = boh.timestamp - ccSample.timestamp;
             firstSample = NO;
             u_int8_t *emptyBuffer = malloc(sizeof(u_int8_t)*8);
@@ -200,7 +200,7 @@ static int ParseByte(const char *string, UInt8 *byte, Boolean hex)
             minutesDrop += frameDrop;
         }
         else if (i+1 < [sampleArray count]) {
-            SBTextSample *boh = [sampleArray objectAtIndex:i+1];
+            MP42TextSample *boh = [sampleArray objectAtIndex:i+1];
             sampleDuration = boh.timestamp - ccSample.timestamp;
             frameDrop += sampleDuration;
             minutesDrop += sampleDuration;

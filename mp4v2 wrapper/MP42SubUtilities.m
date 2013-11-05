@@ -12,9 +12,9 @@
 
 #import "RegexKitLite.h"
 
-@implementation SBTextSample
+@implementation MP42TextSample
 
--(NSComparisonResult)compare:(SBTextSample *)otherObject
+-(NSComparisonResult)compare:(MP42TextSample *)otherObject
 {
     MP4Duration otherTimestamp = [otherObject timestamp];
 
@@ -28,12 +28,14 @@
 
 -(void) dealloc
 {
+    [image release];
     [title release];
     [super dealloc];
 }
 
 @synthesize timestamp;
 @synthesize title;
+@synthesize image;
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
@@ -518,7 +520,7 @@ int LoadChaptersFromPath(NSString *path, NSMutableArray *ss)
                         res = [NSString stringWithFormat:@"Chapter %d", count];
                     [sc scanString:@"\n" intoString:nil];
 
-                    SBTextSample *chapter = [[SBTextSample alloc] init];
+                    MP42TextSample *chapter = [[MP42TextSample alloc] init];
                     chapter.timestamp = time;
                     chapter.title = res;
 
@@ -548,7 +550,7 @@ int LoadChaptersFromPath(NSString *path, NSMutableArray *ss)
 
                     [sc scanString:@"\n" intoString:nil];
 
-                    SBTextSample *chapter = [[SBTextSample alloc] init];
+                    MP42TextSample *chapter = [[MP42TextSample alloc] init];
                     chapter.timestamp = time;
                     chapter.title = res;
                     
