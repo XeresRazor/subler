@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">12F37</string>
-		<string key="IBDocument.InterfaceBuilderVersion">4510</string>
-		<string key="IBDocument.AppKitVersion">1187.39</string>
-		<string key="IBDocument.HIToolboxVersion">626.00</string>
+		<string key="IBDocument.SystemVersion">13A603</string>
+		<string key="IBDocument.InterfaceBuilderVersion">4511</string>
+		<string key="IBDocument.AppKitVersion">1265</string>
+		<string key="IBDocument.HIToolboxVersion">695.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">4510</string>
+			<string key="NS.object.0">4511</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSBox</string>
@@ -36,7 +36,7 @@
 		</object>
 		<array class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<object class="NSCustomObject" id="1001">
-				<string key="NSClassName">VideoViewController</string>
+				<string key="NSClassName">SBVideoViewController</string>
 			</object>
 			<object class="NSCustomObject" id="1003">
 				<string key="NSClassName">FirstResponder</string>
@@ -54,6 +54,7 @@
 						<string key="NSFrame">{{-11, -10}, {502, 302}}</string>
 						<reference key="NSSuperview" ref="1005"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="936155568"/>
 						<array class="NSMutableArray" key="NSTabViewItems">
 							<object class="NSTabViewItem" id="381230830">
 								<string key="NSIdentifier">1</string>
@@ -82,7 +83,7 @@
 																<int key="NSCellFlags2">272761856</int>
 																<string key="NSContents">Normal Size:</string>
 																<object class="NSFont" key="NSSupport" id="26">
-																	<string key="NSName">LucidaGrande</string>
+																	<string key="NSName">.LucidaGrandeUI</string>
 																	<double key="NSSize">11</double>
 																	<int key="NSfFlags">3100</int>
 																</object>
@@ -107,6 +108,7 @@
 																</object>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="118219294">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -126,6 +128,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="403643050">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -145,6 +148,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="971716160">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -164,6 +168,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSButton" id="797453744">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -226,6 +231,7 @@
 																</object>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="780345623">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -285,6 +291,7 @@
 																<reference key="NSTextColor" ref="815718121"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="136134567">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -304,6 +311,7 @@
 																<reference key="NSTextColor" ref="815718121"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="727581860">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -354,6 +362,7 @@
 																<reference key="NSTextColor" ref="815718121"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="22195205">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -373,6 +382,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="19618583">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -392,6 +402,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="582309524">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -411,6 +422,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="910115219">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -461,6 +473,7 @@
 																<reference key="NSTextColor" ref="815718121"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="1002286936">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -511,6 +524,7 @@
 																<reference key="NSTextColor" ref="815718121"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="417079067">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -530,6 +544,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="226015306">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -549,6 +564,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="856080287">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -568,6 +584,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSPopUpButton" id="253388668">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -710,6 +727,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="434886182">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -729,6 +747,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="1067990728">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -748,6 +767,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="1068465181">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -767,6 +787,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="699995122">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -817,6 +838,7 @@
 																<reference key="NSTextColor" ref="815718121"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="1028602620">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -866,6 +888,7 @@
 																<reference key="NSTextColor" ref="815718121"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSTextField" id="9845034">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -873,13 +896,14 @@
 															<string key="NSFrame">{{163, 15}, {275, 44}}</string>
 															<reference key="NSSuperview" ref="506907932"/>
 															<reference key="NSWindow"/>
+															<reference key="NSNextKeyView"/>
 															<bool key="NSEnabled">YES</bool>
 															<object class="NSTextFieldCell" key="NSCell" id="1028607763">
 																<int key="NSCellFlags">67108864</int>
 																<int key="NSCellFlags2">272760832</int>
 																<string key="NSContents">You should only change the video profile if you want to load the file onto one of the devices listed and have been unable to do so.  However, if the video file uses advanced features of the codec, then the file may still be unplayable on the device.</string>
 																<object class="NSFont" key="NSSupport">
-																	<string key="NSName">LucidaGrande</string>
+																	<string key="NSName">.LucidaGrandeUI</string>
 																	<double key="NSSize">9</double>
 																	<int key="NSfFlags">3614</int>
 																</object>
@@ -888,6 +912,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSPopUpButton" id="739228925">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -986,7 +1011,7 @@
 																		</object>
 																	</array>
 																	<object class="NSFont" key="NSMenuFont" id="850191728">
-																		<string key="NSName">LucidaGrande</string>
+																		<string key="NSName">.LucidaGrandeUI</string>
 																		<double key="NSSize">13</double>
 																		<int key="NSfFlags">1044</int>
 																	</object>
@@ -1088,6 +1113,7 @@
 																<reference key="NSTextColor" ref="30582130"/>
 															</object>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+															<int key="NSTextFieldAlignmentRectInsetsVersion">1</int>
 														</object>
 														<object class="NSPopUpButton" id="339382906">
 															<reference key="NSNextResponder" ref="506907932"/>
@@ -2196,7 +2222,146 @@
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">SBVideoViewController</string>
+					<string key="superclassName">NSViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="setAltenateGroup:">id</string>
+						<string key="setForcedSubtitles:">id</string>
+						<string key="setForcedTrack:">id</string>
+						<string key="setPixelAspect:">id</string>
+						<string key="setProfileLevel:">id</string>
+						<string key="setSize:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="setAltenateGroup:">
+							<string key="name">setAltenateGroup:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="setForcedSubtitles:">
+							<string key="name">setForcedSubtitles:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="setForcedTrack:">
+							<string key="name">setForcedTrack:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="setPixelAspect:">
+							<string key="name">setPixelAspect:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="setProfileLevel:">
+							<string key="name">setProfileLevel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="setSize:">
+							<string key="name">setSize:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="alternateGroup">NSPopUpButton</string>
+						<string key="forced">NSPopUpButton</string>
+						<string key="forcedLabel">NSTextField</string>
+						<string key="forcedSubs">NSPopUpButton</string>
+						<string key="forcedSubsLabel">NSTextField</string>
+						<string key="hSpacing">NSTextField</string>
+						<string key="offsetX">NSTextField</string>
+						<string key="offsetY">NSTextField</string>
+						<string key="preserveAspectRatio">NSButton</string>
+						<string key="profileLevelUnchanged">NSMenuItem</string>
+						<string key="sampleHeight">NSTextField</string>
+						<string key="sampleWidth">NSTextField</string>
+						<string key="trackHeight">NSTextField</string>
+						<string key="trackWidth">NSTextField</string>
+						<string key="vSpacing">NSTextField</string>
+						<string key="videoProfile">NSPopUpButton</string>
+						<string key="videoProfileDescription">NSTextField</string>
+						<string key="videoProfileLabel">NSTextField</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="alternateGroup">
+							<string key="name">alternateGroup</string>
+							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="forced">
+							<string key="name">forced</string>
+							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="forcedLabel">
+							<string key="name">forcedLabel</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="forcedSubs">
+							<string key="name">forcedSubs</string>
+							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="forcedSubsLabel">
+							<string key="name">forcedSubsLabel</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="hSpacing">
+							<string key="name">hSpacing</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="offsetX">
+							<string key="name">offsetX</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="offsetY">
+							<string key="name">offsetY</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="preserveAspectRatio">
+							<string key="name">preserveAspectRatio</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="profileLevelUnchanged">
+							<string key="name">profileLevelUnchanged</string>
+							<string key="candidateClassName">NSMenuItem</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sampleHeight">
+							<string key="name">sampleHeight</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sampleWidth">
+							<string key="name">sampleWidth</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="trackHeight">
+							<string key="name">trackHeight</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="trackWidth">
+							<string key="name">trackWidth</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="vSpacing">
+							<string key="name">vSpacing</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="videoProfile">
+							<string key="name">videoProfile</string>
+							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="videoProfileDescription">
+							<string key="name">videoProfileDescription</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="videoProfileLabel">
+							<string key="name">videoProfileLabel</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SBVideoViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">YES</bool>
