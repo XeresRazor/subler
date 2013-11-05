@@ -15,7 +15,7 @@
 @interface SBChapterViewController : NSViewController {
     MP42ChapterTrack *track;
 
-    NSDictionary* detailBoldAttr;
+    NSDictionary *detailBoldAttr;
 
     IBOutlet SBTableView  *chapterTableView;
     IBOutlet NSButton       *removeChapter;

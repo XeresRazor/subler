@@ -42,8 +42,8 @@ extern "C" {
 
 @interface SBLanguages : NSObject
 
-+ (SBLanguages*)defaultManager;
-- (NSArray*) languages;
++ (SBLanguages *)defaultManager;
+- (NSArray *)languages;
 + (NSString *)iso6391CodeFor:(NSString *)aLanguage;
 
 @end

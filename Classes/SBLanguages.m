@@ -602,7 +602,7 @@ iso639_lang_t * lang_for_english( const char * english )
 
 @implementation SBLanguages
 
-+ (SBLanguages*)defaultManager
++ (SBLanguages *)defaultManager
 {
     static dispatch_once_t pred;
     static SBLanguages *sharedLanguagesManager = nil;
@@ -611,13 +611,13 @@ iso639_lang_t * lang_for_english( const char * english )
     return sharedLanguagesManager;
 }
 
-- (NSArray*) languages {
+- (NSArray *)languages {
     NSMutableArray *languagesArray = [[NSMutableArray alloc] init];
     iso639_lang_t *_languages;
-    for ( _languages = (iso639_lang_t*) languages; _languages->iso639_2; _languages++ )
+    for ( _languages = (iso639_lang_t *) languages; _languages->iso639_2; _languages++ )
         [languagesArray addObject:[NSString stringWithUTF8String:_languages->eng_name]];
 
-    NSArray *top_languages = [NSArray arrayWithObjects:  @"Unknown", @"English", @"French", @"German" , @"Italian", @"Dutch",
+    NSArray *top_languages = [NSArray arrayWithObjects:  @"Unknown", @"English", @"French", @"German", @"Italian", @"Dutch",
 				  @"Swedish" , @"Spanish" , @"Danish" , @"Portuguese", @"Norwegian", @"Hebrew",
 				  @"Japanese", @"Arabic", @"Finnish", @"Modern Greek", @"Icelandic", @"Maltese", @"Turkish",
 				  @"Croatian", @"Chinese", @"Urdu", @"Hindi", @"Thai", @"Korean", @"Lithuanian", @"Polish",
