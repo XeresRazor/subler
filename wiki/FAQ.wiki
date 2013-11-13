@@ -26,9 +26,10 @@ It interleaves the audio and video samples, and puts the "MooV" atom at the begi
 
 If you are trying to OCR a non English subtitle track, you can download from https://code.google.com/p/tesseract-ocr/downloads/list the Tesseract 3.02 language files for the language you want, and copy the .tessdata file inside ~/Library/Application Support/Subler/tessdata/ (the library folder inside your home folder, it might be hidden, you can select the Go menu in Finder, press all and select "Library"). Subler will load the new .tessdata file automatically when needed.
 
-*Perian issue on Mountain Lion*
+*Perian AC-3 issue on Mountain Lion and later OS X releases*
 
-See http://code.google.com/p/subler/issues/detail?id=404#c12
+Download A52Codec from the download page, and decompress it in ~/Library/Audio/Plug-Ins/Components .
+More info in: http://code.google.com/p/subler/issues/detail?id=404#c12
 
 *Why can't I mux file larger than 4GB?*
 
