@@ -144,7 +144,7 @@
 			NSDate *date = [attrs fileCreationDate];
 			NSTimeInterval oldness = [date timeIntervalSinceNow];
 			// if less than 2 hours old
-			if (([[[[url absoluteString] pathExtension] lowercaseString] isEqualToString:@"jpg"]) || (oldness > -1000 * 60 * 60 * 2)) {
+			if (([[[[url absoluteString] pathExtension] lowercaseString] isEqualToString:@"jpg"]) || (oldness > -60 * 60 * 2)) {
 				return [NSData dataWithContentsOfFile:filename];
 			}
 		}
