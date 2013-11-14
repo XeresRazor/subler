@@ -485,18 +485,21 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
           heightOfRow: (NSInteger) rowIndex
 {
     NSString *key = [tagsArray objectAtIndex:rowIndex];
-    NSNumber *height;
+    CGFloat height;
 
-    if (!(height = [dct objectForKey:key])) {
+    if (!(height = [[dct objectForKey:key] floatValue])) {
         //calculate new row height
         NSRect r = NSMakeRect(0,0,width,1000.0);
         NSTextFieldCell *cell = [tabCol dataCellForRow:rowIndex];
         [cell setObjectValue:[tags objectForKey:[tagsArray objectAtIndex:rowIndex]]];
-        height = [NSNumber numberWithDouble:[cell cellSizeForBounds:r].height]; // Slow, but we cache it.
-        [dct setObject:height forKey:key];
+        height = [cell cellSizeForBounds:r].height; // Slow, but we cache it.
+        [dct setObject:@(height) forKey:key];
     }
 
-	return [height doubleValue];
+    if (height < 14.0)
+        return 14.0;
+    else
+        return height;
 }
 
 - (NSString *) tableView: (NSTableView *) aTableView 
