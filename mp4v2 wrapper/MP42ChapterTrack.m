@@ -172,7 +172,7 @@
 {
     BOOL success = YES;
 
-    if (_isEdited && _areChaptersEdited) {
+    if ((_isEdited && _areChaptersEdited) || !_muxed) {
         MP4Chapter_t * fileChapters = 0;
         MP4Duration refTrackDuration;
         uint32_t chapterCount = 0;
