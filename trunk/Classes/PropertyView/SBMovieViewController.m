@@ -77,7 +77,8 @@ NSString *MetadataPBoardType = @"MetadataPBoardType";
 
     [tagsTableView setDoubleAction:@selector(doubleClickAction:)];
     [tagsTableView setTarget:self];
-    [tagsTableView set_pasteboardTypes:[NSArray arrayWithObject:MetadataPBoardType]];
+    tagsTableView.pasteboardTypes = @[MetadataPBoardType];
+    tagsTableView.defaultEditingColumn = 1;
 
     dct = [[NSMutableDictionary alloc] init];
 
