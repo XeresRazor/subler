@@ -16,9 +16,7 @@
     id delegate = [self delegate];
 
     unichar key = [[event charactersIgnoringModifiers] characterAtIndex:0];
-    if (key == NSEnterCharacter || key == NSCarriageReturnCharacter)
-        [self editColumn:1 row:[self selectedRow] withEvent:nil select:YES];
-    else if ((key == NSDeleteCharacter || key == NSDeleteFunctionKey) && [delegate respondsToSelector:@selector(_deleteSelectionFromTableView:)]) {
+    if ((key == NSDeleteCharacter || key == NSDeleteFunctionKey) && [delegate respondsToSelector:@selector(_deleteSelectionFromTableView:)]) {
         if ([self selectedRow] == -1)
             NSBeep();
         else
