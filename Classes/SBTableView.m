@@ -11,12 +11,19 @@
 
 @implementation SBTableView
 
+@synthesize defaultEditingColumn = _defaultEditingColumn;
+@synthesize pasteboardTypes = _pasteboardTypes;
+
 - (void)keyDown:(NSEvent *)event
 {
     id delegate = [self delegate];
 
     unichar key = [[event charactersIgnoringModifiers] characterAtIndex:0];
-    if ((key == NSDeleteCharacter || key == NSDeleteFunctionKey) && [delegate respondsToSelector:@selector(_deleteSelectionFromTableView:)]) {
+    if ((key == NSEnterCharacter || key == NSCarriageReturnCharacter) &&
+        _defaultEditingColumn > 0) {
+        [self editColumn:_defaultEditingColumn row:[self selectedRow] withEvent:nil select:YES];
+    } else if ((key == NSDeleteCharacter || key == NSDeleteFunctionKey) &&
+               [delegate respondsToSelector:@selector(_deleteSelectionFromTableView:)]) {
         if ([self selectedRow] == -1)
             NSBeep();
         else
@@ -94,7 +101,5 @@
     [_pasteboardTypes release];
     [super dealloc];
 }
-
-@synthesize _pasteboardTypes;
 
 @end

@@ -7,6 +7,8 @@
 //
 
 #import "SBChapterViewController.h"
+#import "SBTableView.h"
+
 #import "MP42Utilities.h"
 #import "MP42SubUtilities.h"
 
@@ -23,6 +25,8 @@
                        ps, NSParagraphStyleAttributeName,
                        [NSColor grayColor], NSForegroundColorAttributeName,
                        nil] retain];
+
+    chapterTableView.defaultEditingColumn = 1;
 }
 
 - (void)setTrack:(MP42ChapterTrack *)chapterTrack
