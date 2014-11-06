@@ -6,11 +6,19 @@
         <description>Most recent changes with links to updates.</description>
         <language>en</language>
         <item>
+            <title>Version 0.28</title>
+            <sparkle:releaseNotesLink>
+                http://subler.googlecode.com/svn/doc/rnotes028.html
+            </sparkle:releaseNotesLink>
+            <pubDate>Thursday, 6 Nov 2014 1:00:00 +0000</pubDate>
+            <enclosure url="https://bitbucket.org/galad87/subler/downloads/Subler-0.28.zip" sparkle:version="0.28" length="15562409" type="application/octet-stream" sparkle:dsaSignature="MC0CFCczsJ6fhQG8rakGDr2TVuoAqhrbAhUAhtqhn5rmD3iS/JBGf+P+F6mhb38=" />
+        </item>
+        <item>
             <title>Version 0.27</title>
             <sparkle:releaseNotesLink>
                 http://subler.googlecode.com/svn/doc/rnotes027.html
             </sparkle:releaseNotesLink>
-            <pubDate>Thursday, 4 Nov 2014 1:00:00 +0000</pubDate>
+            <pubDate>Tuesday, 4 Nov 2014 1:00:00 +0000</pubDate>
             <enclosure url="https://bitbucket.org/galad87/subler/downloads/Subler-0.27.zip" sparkle:version="0.27" length="15576442" type="application/octet-stream" sparkle:dsaSignature="MCwCFAekj6s6AO2PdFde4lbEUIRVjistAhQoplTOeAcAYiR3/YdlIregTUsYZw==" />
         </item>
 		<item>
