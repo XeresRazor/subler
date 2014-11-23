@@ -1,6 +1,9 @@
 #labels Featured
 #Frequently Asked Question.
 
+* Subler homepage *
+The project new home is on bitbucket: https://bitbucket.org/galad87/subler
+
 *Why doesn't QuickTime and others Apple's devices see the subtitles/chapters?*
 
 The file extension must be .m4v, or QuickTime and iPod/AppleTV won't show any subtitles tracks.
