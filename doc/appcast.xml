@@ -5,101 +5,21 @@
         <link>http://subler.googlecode.com/svn/doc/appcast.xml</link>
         <description>Most recent changes with links to updates.</description>
         <language>en</language>
-                <item>
+        <item>
+            <title>Version 0.31</title>
+            <sparkle:releaseNotesLink>
+                http://subler.org/appcast/rnotes031.html
+            </sparkle:releaseNotesLink>
+            <pubDate>Monday, 15 Dec 2014 1:00:00 +0000</pubDate>
+            <enclosure url="https://bitbucket.org/galad87/subler/downloads/Subler-0.31.zip" sparkle:version="0.31" length="15583582" type="application/octet-stream" sparkle:dsaSignature="MC0CFFeIqd+olKYL7BjXHr9YJ3cNusplAhUApEFnXUnzHbBZawY/zLXV4KZxS4M=" />
+        </item>
+        <item>
             <title>Version 0.30</title>
             <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes030.html
+                http://subler.org/appcast/rnotes030.html
             </sparkle:releaseNotesLink>
             <pubDate>Saturday, 8 Nov 2014 1:00:00 +0000</pubDate>
             <enclosure url="https://bitbucket.org/galad87/subler/downloads/Subler-0.30.zip" sparkle:version="0.30" length="15577467" type="application/octet-stream" sparkle:dsaSignature="MCwCFHPJn1bNNt7I7L+GpZ3s7W+KK89nAhRrijQD7rrT19eQLP81FA4tJI21tQ==" />
-        </item>
-        <item>
-            <title>Version 0.29</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes029.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Friday, 7 Nov 2014 1:00:00 +0000</pubDate>
-            <enclosure url="https://bitbucket.org/galad87/subler/downloads/Subler-0.29.zip" sparkle:version="0.29" length="15562409" type="application/octet-stream" sparkle:dsaSignature="MCwCFEZgzE+dOpK7Qixc2re45Y29jgZhAhQClfn/w+ULw4J1kPvEgrifKPd88Q==" />
-        </item>
-        <item>
-            <title>Version 0.28</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes028.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Thursday, 6 Nov 2014 1:00:00 +0000</pubDate>
-            <enclosure url="https://bitbucket.org/galad87/subler/downloads/Subler-0.28.zip" sparkle:version="0.28" length="15562409" type="application/octet-stream" sparkle:dsaSignature="MC0CFCczsJ6fhQG8rakGDr2TVuoAqhrbAhUAhtqhn5rmD3iS/JBGf+P+F6mhb38=" />
-        </item>
-        <item>
-            <title>Version 0.27</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes027.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Tuesday, 4 Nov 2014 1:00:00 +0000</pubDate>
-            <enclosure url="https://bitbucket.org/galad87/subler/downloads/Subler-0.27.zip" sparkle:version="0.27" length="15576442" type="application/octet-stream" sparkle:dsaSignature="MCwCFAekj6s6AO2PdFde4lbEUIRVjistAhQoplTOeAcAYiR3/YdlIregTUsYZw==" />
-        </item>
-		<item>
-            <title>Version 0.25</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes025.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Thursday, 21 Nov 2013 1:00:00 +0000</pubDate>
-            <enclosure url="http://subler.googlecode.com/files/Subler-0.25.zip" sparkle:version="0.25" length="12726111" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCrZzJXTOesWel1XL2f9URlRYSGTwIUaCS0DJK0XHfjAp0jZIl8uhUdA2M=" />
-        </item>
-		<item>
-            <title>Version 0.24</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes024.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Saturday, 12 Oct 2013 1:00:00 +0000</pubDate>
-            <enclosure url="http://subler.googlecode.com/files/Subler-0.24.zip" sparkle:version="0.24" length="12618783" type="application/octet-stream" sparkle:dsaSignature="MC0CFC4fGjPSV/+wBusjl8Wdb4LMHQX1AhUArFzUb2WBrtYfYjwR6UE+W3jNexo=" />
-        </item>
-		<item>
-            <title>Version 0.23</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes023.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Tuesday, 24 Sep 2013 1:00:00 +0000</pubDate>
-            <enclosure url="http://subler.googlecode.com/files/Subler-0-23.zip" sparkle:version="0.23" length="12611612" type="application/octet-stream" sparkle:dsaSignature="MCwCFEVqt1IJr0Zr4PoG2F9KdIr8rGOgAhRhwME+6yHVwhXgpZyeiJerDjZnaQ==" />
-        </item>
-		<item>
-            <title>Version 0.22</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes022.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Thursday, 19 Sep 2013 1:00:00 +0000</pubDate>
-            <enclosure url="http://subler.googlecode.com/files/Subler-0.22.zip" sparkle:version="0.22" length="12610484" type="application/octet-stream" sparkle:dsaSignature="MCwCFDS3i/e/7QMN0zvrToKowrWvOj5tAhRm4it9i1yS4R4AvXBGdyLaZt3uxg==" />
-        </item>
-		<item>
-            <title>Version 0.21</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes021.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Wednesday, 18 Sep 2013 1:00:00 +0000</pubDate>
-            <enclosure url="http://subler.googlecode.com/files/Subler-0.21.zip" sparkle:version="0.21" length="12610299" type="application/octet-stream" sparkle:dsaSignature="MCwCFFSlNxQVj/4xeoaTh0SwC/T5r13+AhRcdz1RvCNmos9Ns07HY2abHj6Krg==" />
-        </item>
-		<item>
-            <title>Version 0.20</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes020.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Tuesday, 17 Sep 2013 1:00:00 +0000</pubDate>
-            <enclosure url="http://subler.googlecode.com/files/Subler-0.20.zip" sparkle:version="0.20" length="12610221" type="application/octet-stream" sparkle:dsaSignature="MC4CFQCsdYAQb6ydq0jLuVLOB05iu2Gr/QIVAKSUEvURwmqM9LrtzRhitva53USg" />
-        </item>
-		<item>
-            <title>Version 0.19</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes019.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Friday, 21 Dec 2012 1:00:00 +0000</pubDate>
-            <enclosure url="http://subler.googlecode.com/files/Subler-0.19.zip" sparkle:version="0.19" length="12887296" type="application/octet-stream" sparkle:dsaSignature="MC4CFQCWSEsDyeEkJE8bz9VRq8/5pb2zaAIVALUHQ6YhGvmCcLgWcuBfjbLLnR3r" />
-        </item>
-		<item>
-            <title>Version 0.18</title>
-            <sparkle:releaseNotesLink>
-                http://subler.googlecode.com/svn/doc/rnotes018.html
-            </sparkle:releaseNotesLink>
-            <pubDate>Saturday, 20 Oct 2012 6:00:00 +0000</pubDate>
-            <enclosure url="http://subler.googlecode.com/files/Subler-0.18.zip" sparkle:version="0.18" length="4491400" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCKpBOXCShGw2tGmhoxxPifTxtCigIUOSU/6oVo3L10NQdPt345E4rbHrA=" />
         </item>
     </channel>
 </rss>
